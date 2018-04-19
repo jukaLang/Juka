@@ -1,0 +1,9 @@
+C:\repos\GitHub\dreamCompilerCore\dreamCompiler\dreamCompiler\bin\Debug\netstandard2.0\dreamCompiler.deps.json
+C:\repos\GitHub\dreamCompilerCore\dreamCompiler\dreamCompiler\bin\Debug\netstandard2.0\dreamCompiler.dll
+C:\repos\GitHub\dreamCompilerCore\dreamCompiler\dreamCompiler\obj\Debug\netstandard2.0\dreamCompiler.csprojResolveAssemblyReference.cache
+C:\repos\GitHub\dreamCompilerCore\dreamCompiler\dreamCompiler\obj\Debug\netstandard2.0\dreamCompiler.csproj.CoreCompileInputs.cache
+C:\repos\GitHub\dreamCompilerCore\dreamCompiler\dreamCompiler\obj\Debug\netstandard2.0\dreamCompiler.AssemblyInfoInputs.cache
+C:\repos\GitHub\dreamCompilerCore\dreamCompiler\dreamCompiler\obj\Debug\netstandard2.0\dreamCompiler.AssemblyInfo.cs
+C:\repos\GitHub\dreamCompilerCore\dreamCompiler\dreamCompiler\bin\Debug\netstandard2.0\dreamCompiler.pdb
+C:\repos\GitHub\dreamCompilerCore\dreamCompiler\dreamCompiler\obj\Debug\netstandard2.0\dreamCompiler.dll
+C:\repos\GitHub\dreamCompilerCore\dreamCompiler\dreamCompiler\obj\Debug\netstandard2.0\dreamCompiler.pdb
