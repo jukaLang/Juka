@@ -1,7 +1,5 @@
 grammar DreamGrammar;
 
-
-
 /*
  * Parser Rules
  */
