@@ -8,4 +8,8 @@
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.7.1.1" />
   </ItemGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="java -jar ..\jars\antlr-4.7.1-complete.jar -Dlanguage=CSharp .\grammar\DreamGrammar.g4 -no-listener" />
+  </Target>
+
 </Project>
