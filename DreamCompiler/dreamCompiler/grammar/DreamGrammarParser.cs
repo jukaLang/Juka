@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from .\dreamcompiler\grammar\DreamGrammar.g4 by ANTLR 4.7.1
+// Generated from .\grammar\DreamGrammar.g4 by ANTLR 4.7.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -19,7 +19,6 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace DreamCompiler.Grammar {
 using System;
 using System.IO;
 using System.Text;
@@ -160,11 +159,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_compileUnit; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitCompileUnit(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -213,11 +207,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_classifications; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitClassifications(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -264,11 +253,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_statement; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStatement(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -303,11 +287,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_endLine; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEndLine(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -337,11 +316,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_semiColon; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSemiColon(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -401,11 +375,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_expression; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -514,11 +483,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_functionCall; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFunctionCall(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -628,11 +592,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_functionDeclaration; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFunctionDeclaration(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -724,11 +683,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_funcName; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFuncName(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -767,11 +721,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_returnValue; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitReturnValue(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -832,11 +781,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_leftParen; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLeftParen(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -866,11 +810,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_rightParen; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRightParen(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -925,11 +864,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_booleanExpression; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitBooleanExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1013,11 +947,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_primitives; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitPrimitives(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1083,11 +1012,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_command; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitCommand(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1181,11 +1105,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_userDefinedTypeDecl; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitUserDefinedTypeDecl(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1246,11 +1165,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_userDefinedTypeKeyWord; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitUserDefinedTypeKeyWord(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1281,11 +1195,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_userDefinedTypeName; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitUserDefinedTypeName(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1316,11 +1225,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_variable; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVariable(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1359,11 +1263,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_variableDeclaration; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVariableDeclaration(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1429,11 +1328,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_userDefinedTypeVariableDecl; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitUserDefinedTypeVariableDecl(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1491,11 +1385,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_userDefinedTypeVariableReference; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitUserDefinedTypeVariableReference(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1538,11 +1427,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_userDefinedTypeFunctionReference; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitUserDefinedTypeFunctionReference(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1588,11 +1472,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_add; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAdd(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1671,11 +1550,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_summation; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSummation(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1723,11 +1597,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_subtract; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSubtract(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1786,11 +1655,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_subtraction; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSubtraction(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1838,11 +1702,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_multiply; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitMultiply(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1901,11 +1760,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_multiplication; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitMultiplication(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1945,11 +1799,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_breakKeyWord; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitBreakKeyWord(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1988,11 +1837,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_divide; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitDivide(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2051,11 +1895,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_division; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitDivision(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2103,11 +1942,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_modulo; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitModulo(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2166,11 +2000,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_moduli; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitModuli(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2212,11 +2041,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_types; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTypes(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2252,11 +2076,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_primitiveTypes; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitPrimitiveTypes(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2319,11 +2138,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_numericTypes; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitNumericTypes(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2362,11 +2176,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_equalsign; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEqualsign(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2420,11 +2229,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_comparisonOperator; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitComparisonOperator(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2504,11 +2308,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_unaryOperator; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitUnaryOperator(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2565,11 +2364,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_bitWiseOperators; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitBitWiseOperators(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2637,11 +2431,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_equalequal; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEqualequal(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2671,11 +2460,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_lessthan; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLessthan(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2705,11 +2489,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_greaterthan; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitGreaterthan(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2739,11 +2518,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_lessthanorequalto; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLessthanorequalto(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2773,11 +2547,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_greaterthanorequalto; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitGreaterthanorequalto(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2807,11 +2576,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_booleanAndOperator; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitBooleanAndOperator(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2841,11 +2605,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_booleanOrOperator; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitBooleanOrOperator(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2875,11 +2634,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_notOperator; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitNotOperator(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2909,11 +2663,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_bitAnd; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitBitAnd(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2943,11 +2692,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_bitOr; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitBitOr(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2977,11 +2721,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_bitXor; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitBitXor(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3011,11 +2750,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_bitNot; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitBitNot(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3045,11 +2779,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_bitLeftShift; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitBitLeftShift(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3079,11 +2808,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_bitRigthShift; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitBitRigthShift(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3113,11 +2837,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_keywords; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitKeywords(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3169,11 +2888,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_ifExpr; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitIfExpr(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3247,11 +2961,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_whileExpression; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitWhileExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3326,11 +3035,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_doWhileExpr; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitDoWhileExpr(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3392,11 +3096,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_userDefinedTypeResolutionOperator; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitUserDefinedTypeResolutionOperator(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3432,11 +3131,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_expressionSequence; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitExpressionSequence(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3482,11 +3176,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_identifierName; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitIdentifierName(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3530,22 +3219,12 @@ public partial class DreamGrammarParser : Parser {
 			return GetRuleContext<SingleExpressionContext>(i);
 		}
 		public TernaryExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTernaryExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class PreIncrementExpressionContext : SingleExpressionContext {
 		public SingleExpressionContext singleExpression() {
 			return GetRuleContext<SingleExpressionContext>(0);
 		}
 		public PreIncrementExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitPreIncrementExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class InExpressionContext : SingleExpressionContext {
 		public SingleExpressionContext[] singleExpression() {
@@ -3556,11 +3235,6 @@ public partial class DreamGrammarParser : Parser {
 		}
 		public ITerminalNode In() { return GetToken(DreamGrammarParser.In, 0); }
 		public InExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitInExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class NotExpressionContext : SingleExpressionContext {
 		public NotOperatorContext notOperator() {
@@ -3570,53 +3244,28 @@ public partial class DreamGrammarParser : Parser {
 			return GetRuleContext<SingleExpressionContext>(0);
 		}
 		public NotExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitNotExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class PreDecreaseExpressionContext : SingleExpressionContext {
 		public SingleExpressionContext singleExpression() {
 			return GetRuleContext<SingleExpressionContext>(0);
 		}
 		public PreDecreaseExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitPreDecreaseExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class FunctionCallExpressionContext : SingleExpressionContext {
 		public FunctionCallContext functionCall() {
 			return GetRuleContext<FunctionCallContext>(0);
 		}
 		public FunctionCallExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitFunctionCallExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class ThisExpressionContext : SingleExpressionContext {
 		public ITerminalNode This() { return GetToken(DreamGrammarParser.This, 0); }
 		public ThisExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitThisExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class UnaryMinusExpressionContext : SingleExpressionContext {
 		public SingleExpressionContext singleExpression() {
 			return GetRuleContext<SingleExpressionContext>(0);
 		}
 		public UnaryMinusExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitUnaryMinusExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class BinaryExpressionContext : SingleExpressionContext {
 		public SingleExpressionContext[] singleExpression() {
@@ -3629,11 +3278,6 @@ public partial class DreamGrammarParser : Parser {
 			return GetRuleContext<UnaryOperatorContext>(0);
 		}
 		public BinaryExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitBinaryExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class TypeofExpressionContext : SingleExpressionContext {
 		public ITerminalNode Typeof() { return GetToken(DreamGrammarParser.Typeof, 0); }
@@ -3641,11 +3285,6 @@ public partial class DreamGrammarParser : Parser {
 			return GetRuleContext<SingleExpressionContext>(0);
 		}
 		public TypeofExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTypeofExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class InstanceofExpressionContext : SingleExpressionContext {
 		public SingleExpressionContext[] singleExpression() {
@@ -3656,22 +3295,12 @@ public partial class DreamGrammarParser : Parser {
 		}
 		public ITerminalNode Instanceof() { return GetToken(DreamGrammarParser.Instanceof, 0); }
 		public InstanceofExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitInstanceofExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class UnaryPlusExpressionContext : SingleExpressionContext {
 		public SingleExpressionContext singleExpression() {
 			return GetRuleContext<SingleExpressionContext>(0);
 		}
 		public UnaryPlusExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitUnaryPlusExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class DeleteExpressionContext : SingleExpressionContext {
 		public ITerminalNode Delete() { return GetToken(DreamGrammarParser.Delete, 0); }
@@ -3679,11 +3308,6 @@ public partial class DreamGrammarParser : Parser {
 			return GetRuleContext<SingleExpressionContext>(0);
 		}
 		public DeleteExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitDeleteExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class EqualityExpressionContext : SingleExpressionContext {
 		public SingleExpressionContext[] singleExpression() {
@@ -3696,11 +3320,6 @@ public partial class DreamGrammarParser : Parser {
 			return GetRuleContext<ComparisonOperatorContext>(0);
 		}
 		public EqualityExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEqualityExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class BitShiftExpressionContext : SingleExpressionContext {
 		public SingleExpressionContext[] singleExpression() {
@@ -3716,33 +3335,18 @@ public partial class DreamGrammarParser : Parser {
 			return GetRuleContext<BitRigthShiftContext>(0);
 		}
 		public BitShiftExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitBitShiftExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class ParenthesizedExpressionContext : SingleExpressionContext {
 		public ExpressionSequenceContext expressionSequence() {
 			return GetRuleContext<ExpressionSequenceContext>(0);
 		}
 		public ParenthesizedExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitParenthesizedExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class BitNotExpressionContext : SingleExpressionContext {
 		public SingleExpressionContext singleExpression() {
 			return GetRuleContext<SingleExpressionContext>(0);
 		}
 		public BitNotExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitBitNotExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class VariableDeclarationExpressionContext : SingleExpressionContext {
 		public KeywordsContext keywords() {
@@ -3770,22 +3374,12 @@ public partial class DreamGrammarParser : Parser {
 			return GetRuleContext<UnaryOperatorContext>(i);
 		}
 		public VariableDeclarationExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVariableDeclarationExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class LiteralExpressionContext : SingleExpressionContext {
 		public LiteralContext literal() {
 			return GetRuleContext<LiteralContext>(0);
 		}
 		public LiteralExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLiteralExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class MemberDotExpressionContext : SingleExpressionContext {
 		public SingleExpressionContext singleExpression() {
@@ -3795,22 +3389,12 @@ public partial class DreamGrammarParser : Parser {
 			return GetRuleContext<IdentifierNameContext>(0);
 		}
 		public MemberDotExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitMemberDotExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class VariableExpressionContext : SingleExpressionContext {
 		public VariableContext variable() {
 			return GetRuleContext<VariableContext>(0);
 		}
 		public VariableExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVariableExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class MemberIndexExpressionContext : SingleExpressionContext {
 		public SingleExpressionContext singleExpression() {
@@ -3820,11 +3404,6 @@ public partial class DreamGrammarParser : Parser {
 			return GetRuleContext<ExpressionSequenceContext>(0);
 		}
 		public MemberIndexExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitMemberIndexExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class BitAndExpressionContext : SingleExpressionContext {
 		public SingleExpressionContext[] singleExpression() {
@@ -3837,11 +3416,6 @@ public partial class DreamGrammarParser : Parser {
 			return GetRuleContext<BitWiseOperatorsContext>(0);
 		}
 		public BitAndExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitBitAndExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class AssignmentOperatorExpressionContext : SingleExpressionContext {
 		public VariableContext variable() {
@@ -3863,11 +3437,6 @@ public partial class DreamGrammarParser : Parser {
 			return GetRuleContext<UnaryOperatorContext>(0);
 		}
 		public AssignmentOperatorExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAssignmentOperatorExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 	public partial class VoidExpressionContext : SingleExpressionContext {
 		public ITerminalNode Void() { return GetToken(DreamGrammarParser.Void, 0); }
@@ -3875,11 +3444,6 @@ public partial class DreamGrammarParser : Parser {
 			return GetRuleContext<SingleExpressionContext>(0);
 		}
 		public VoidExpressionContext(SingleExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitVoidExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -4314,11 +3878,6 @@ public partial class DreamGrammarParser : Parser {
 			return GetRuleContext<SingleExpressionContext>(0);
 		}
 		public EvaluatableContext(EvaluatableExpressionContext context) { CopyFrom(context); }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEvaluatable(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -4373,11 +3932,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_assignmentExpression; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAssignmentExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -4491,11 +4045,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_reassignmentExpression; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitReassignmentExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -4527,11 +4076,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_assignmentOperator; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAssignmentOperator(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -4576,11 +4120,6 @@ public partial class DreamGrammarParser : Parser {
 		{
 		}
 		public override int RuleIndex { get { return RULE_literal; } }
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IDreamGrammarVisitor<TResult> typedVisitor = visitor as IDreamGrammarVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLiteral(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -5281,4 +4820,3 @@ public partial class DreamGrammarParser : Parser {
 
 
 }
-} // namespace DreamCompiler.Grammar

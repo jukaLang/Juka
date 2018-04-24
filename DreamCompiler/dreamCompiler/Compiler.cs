@@ -1,5 +1,7 @@
 ﻿//java org.antlr.v4.Tool -Dlanguage= CSharp DreamGrammar.g4 -no-listener
 
+using DreamCompiler.Visitors;
+
 namespace DreamCompiler
 {
     using DreamCompiler.Grammar;
@@ -13,28 +15,38 @@ namespace DreamCompiler
 
     public class Compiler
     {
+        private DreamGrammarParser parser;
+
         public void Go(MemoryStream memoryStream)
         {
-            var input = new AntlrInputStream(memoryStream);
+            if (SetupAntlr(memoryStream))
+            {
+                BeginVisitation();
+            }
+        }
+
+        private bool SetupAntlr(MemoryStream stream)
+        {
+            var input = new AntlrInputStream(stream);
             var lexer = new DreamGrammarLexer(input);
             var tokenStream = new CommonTokenStream(lexer);
-            var parser = new DreamGrammarParser(tokenStream);
+            this.parser = new DreamGrammarParser(tokenStream);
 
-            DreamGrammarParser.CompileUnitContext compileUnit = parser.compileUnit();
-            Trace.WriteLine(compileUnit.ToStringTree( parser ));
+            if (this.parser == null)
+            {
+                throw new ArgumentException( "The parser was not created" );
+            }
 
-            Visitor visitor = new Visitor();
-            visitor.Visit(compileUnit);
-
+            return true;
         }
-    }
 
-
-    public class Visitor : DreamGrammarBaseVisitor<String>
-    {
-        public override string VisitCompileUnit(DreamGrammarParser.CompileUnitContext context)
+        private void BeginVisitation()
         {
-            return base.VisitCompileUnit(context);
+            DreamGrammarParser.CompileUnitContext compileUnit = parser.compileUnit();
+            Trace.WriteLine(compileUnit.ToStringTree(parser));
+
+            var visitor = new DreamVisitor();
+            visitor.Visit(compileUnit);
         }
     }
 }
