@@ -1,7 +1,6 @@
 ﻿using System;
-using DreamCompiler.Tokens;
 
-namespace DreamCompiler.token
+namespace DreamCompiler.Tokens
 {
     public abstract class Token
     {

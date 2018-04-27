@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using DreamCompiler.Tokens;
 
 
 namespace DreamCompiler.Visitors
 {
     using DreamCompiler.Grammar;
-    using DreamCompiler.token;
 
     class DreamVisitor : DreamGrammarBaseVisitor<Token>
     {
