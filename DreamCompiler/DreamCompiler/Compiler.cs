@@ -50,31 +50,7 @@ namespace DreamCompiler
             var visitor = new DreamVisitor();
             visitor.Visit(compileUnit);
 
-            BinaryExpression binary = Expression.MakeBinary(
-                ExpressionType.Subtract,
-                Expression.Constant(54),
-                Expression.Constant(14));
-
-            BinaryExpression binary1 = Expression.MakeBinary(
-                ExpressionType.Subtract,
-                Expression.Constant(Convert.ToInt32("45")),
-                Expression.Constant(14));
-
-            Expression[] expressions = new Expression[2]
-            {
-                binary,
-                binary1
-            };
-
-            BlockExpression block = Expression.Block(expressions);
-
-            foreach (Expression ex in block.Expressions)
-            {
-                Trace.WriteLine(ex.ToString());
-                Trace.WriteLine(ex.Reduce().ToString());
-
-                Trace.WriteLine(Expression.Lambda(ex).Compile().DynamicInvoke());
-            }
+            
         }
     }
 }
