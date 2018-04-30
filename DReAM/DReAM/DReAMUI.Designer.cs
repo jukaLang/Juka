@@ -213,9 +213,9 @@
             // 
             this.pictureBox1.BackgroundImage = global::DReAM.Properties.Resources.DReAM_logo;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Location = new System.Drawing.Point(365, 484);
+            this.pictureBox1.Location = new System.Drawing.Point(315, 434);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(34, 34);
+            this.pictureBox1.Size = new System.Drawing.Size(84, 84);
             this.pictureBox1.TabIndex = 13;
             this.pictureBox1.TabStop = false;
             // 

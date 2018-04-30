@@ -44,5 +44,29 @@ namespace DReAM
         {
             this.Close();
         }
+
+        OpenFileDialog ifd = new OpenFileDialog();
+        SaveFileDialog sfd = new SaveFileDialog();
+
+        private void input_btn_Click(object sender, EventArgs e)
+        {
+            if(ifd.ShowDialog() == DialogResult.OK)
+            {
+                input_txt.Text = ifd.FileName;
+            }
+        }
+
+        private void output_btn_Click(object sender, EventArgs e)
+        {
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                output_txt.Text = sfd.FileName;
+            }
+        }
+
+        private void compile_btn_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

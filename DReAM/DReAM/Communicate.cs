@@ -44,5 +44,25 @@ namespace DReAM
         {
             this.Close();
         }
+
+        private void website_link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.juliar.org");
+        }
+
+        private void documentation_link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.juliar.org/documentation");
+        }
+
+        private void twitter_link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://twitter.com/juliarLang");
+        }
+
+        private void email_link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("mailto:admin@juliar.org?subject=DReaM");
+        }
     }
 }

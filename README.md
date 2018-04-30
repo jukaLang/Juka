@@ -1,11 +1,8 @@
 # DReAM
 ### (Don Reamey et Andrey Makhanov)
 
-<a href="https://scan.coverity.com/projects/juliarlang-dream">
-  <img alt="Coverity Scan Build Status"
-       src="https://scan.coverity.com/projects/15656/badge.svg"/>
-</a>
 [![Build status](https://ci.appveyor.com/api/projects/status/x8d6308cuevqm4of?svg=true)](https://ci.appveyor.com/project/TheAndreiM/dream)
+
 DReAM: A new C# port of Juliar Programming Language. DReAM focuses on fast and rapid prototyping as well as native .NET support.
 
 
@@ -24,10 +21,9 @@ DReAM: A new C# port of Juliar Programming Language. DReAM focuses on fast and r
 
 - Desktop Tools
 - .NET Framework 4.6.1
-- .NET Core 2.0
 - Latest version of NuGet
 - Antlr4.Runtime.Standard (latest version downloaded via NuGet)
 
 ### Running Development version
 - Open up DReAM.sln
-- Click Start which will compile .dll and the main application.
+- Click "Start" button which will compile .dll and the main application.
