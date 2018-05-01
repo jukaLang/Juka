@@ -14,3 +14,6 @@ skip_tags: false
 artifacts:
 - path: bin
   name: DReAM
+
+after_build:
+  - dir /s
