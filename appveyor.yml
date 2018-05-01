@@ -2,7 +2,7 @@ before_build:
   - cd DReAM
   - "nuget restore"
 build: 
-  project: DReAM.sln
+  project: DReAM/DReAM.sln
 notifications: 
   - 
     incoming_webhook: "https://hooks.slack.com/services/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"
