@@ -12,5 +12,5 @@ notifications:
     provider: Slack
 skip_tags: false
 artifacts:
-- path: bin\Debug\**
+- path: bin
   name: DReAM
