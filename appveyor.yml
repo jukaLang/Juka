@@ -1,6 +1,8 @@
 before_build: 
   - cd DReAM
   - "nuget restore"
+  - cd ../DreamCompiler/dreamCompiler
+  - ./build.bat
 build: 
   project: DReAM/DReAM.sln
 notifications: 
