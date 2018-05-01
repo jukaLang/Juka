@@ -12,8 +12,11 @@ notifications:
     provider: Slack
 skip_tags: false
 artifacts:
-- path: bin
+- path: 'bin\**'
   name: DReAM
+  type: zip
+configuration:
+- Release
 
 after_build:
   - dir /s
