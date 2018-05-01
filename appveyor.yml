@@ -12,8 +12,8 @@ notifications:
     provider: Slack
 skip_tags: false
 artifacts:
-- path: 'bin\**'
-  name: DReAM
+- path: '**'
+  name: DReAM_$(APPVEYOR_BUILD_VERSION)
   type: zip
 configuration:
 - Release
