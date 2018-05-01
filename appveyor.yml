@@ -11,3 +11,5 @@ notifications:
     incoming_webhook: "https://hooks.slack.com/services/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"
     provider: Slack
 skip_tags: false
+artifacts:
+- path: bin\Debug
