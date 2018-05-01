@@ -1,3 +1,5 @@
+before_build: 
+  - "nuget restore"
 build: 
   project: DReAM/DReAM.sln
 notifications: 
