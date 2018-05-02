@@ -1,0 +1,8 @@
+function test()={
+    printLine ("this is function test called from Serialize.lib");
+}
+
+
+function mainNot()={
+    printLine ("this is main function from Serialize.jrl");
+}
