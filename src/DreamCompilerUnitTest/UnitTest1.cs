@@ -62,7 +62,7 @@ namespace DreamCompilerUnitTest
 
             MethodCallExpression methodCall = Expression.ArrayIndex(arrayExpression, Expression.Constant(0), Expression.Constant(3));
 
-            try
+            /* try
             {
                 var theLambda = Expression.Lambda(methodCall).Compile().DynamicInvoke();
             }
@@ -70,7 +70,7 @@ namespace DreamCompilerUnitTest
             {
                 Trace.WriteLine(exception.Message);
                 throw;
-            }
+            }*/
 
 
             BinaryExpression binary = Expression.MakeBinary(
