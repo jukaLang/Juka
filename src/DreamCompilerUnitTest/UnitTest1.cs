@@ -102,11 +102,11 @@ namespace DreamCompilerUnitTest
 
         }
 
-        public static String lambda_method()
+        /* public static String lambda_method()
         {
             Trace.WriteLine("message");
             return ";";
-        }
+        }*/
     }
 
 
