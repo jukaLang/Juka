@@ -30,7 +30,7 @@ namespace DreamCompilerUnitTest
                         stream.Read(byteArray, 0, (int) stream.Length);
                         memoryStream = new MemoryStream(byteArray);
                         var compiler = new Compiler();
-                        compiler.Go(memoryStream);
+                        //compiler.Go(memoryStream);
 
                     }
 			
@@ -55,7 +55,6 @@ namespace DreamCompilerUnitTest
         [TestMethod]
         public void TestExpressions()
         {
-            /*
             string[,] gradeArray =
                 {{"chemistry", "history", "mathematics"}, {"78", "61", "82"}};
 
@@ -100,7 +99,7 @@ namespace DreamCompilerUnitTest
 
                 Trace.WriteLine(Expression.Lambda(ex).Compile().DynamicInvoke());
             }
-            */
+
         }
 
         public static String lambda_method()
