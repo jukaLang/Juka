@@ -29,6 +29,6 @@ Download the latest version at https://ci.appveyor.com/project/TheAndreiM/dream/
 
 ### Running Development version
 - Open up DReAM.sln
-- Right click on solution and click "NuGet Restore"
+- Right click on solution and click "Restore NuGet Packages"
 - (alternatively you can do this via console in src/ folder)
 - Click "Start" button which will compile .dll and the main application (Make sure the DReAM application is selected).
