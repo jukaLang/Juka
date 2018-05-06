@@ -1,6 +1,6 @@
 ﻿namespace DReAM
 {
-    partial class Communicate
+    partial class Chat
     {
         /// <summary>
         /// Required designer variable.

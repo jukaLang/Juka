@@ -59,13 +59,13 @@ namespace DReAM
 
         private void communicate_btn_Click(object sender, EventArgs e)
         {
-            Form communicate = new Communicate();
+            Form communicate = new Chat();
             communicate.Show();
         }
 
         private void settings_btn_Click(object sender, EventArgs e)
         {
-            Form settings = new Settings();
+            Form settings = new Contact();
             settings.Show();
         }
     }

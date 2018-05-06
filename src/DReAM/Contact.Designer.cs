@@ -1,6 +1,6 @@
 ﻿namespace DReAM
 {
-    partial class Settings
+    partial class Contact
     {
         /// <summary>
         /// Required designer variable.

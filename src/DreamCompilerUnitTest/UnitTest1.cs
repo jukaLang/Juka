@@ -35,14 +35,14 @@ namespace DreamCompilerUnitTest
                     }
 			
                 }
-                /*
-                using (MemoryStream memStream = new MemoryStream((int) file.Length))
+
+                using (MemoryStream memStream = new MemoryStream((int)file.Length))
                 {
                     memStream.Write(file, 0, file.Length);
                     var compiler = new Compiler();
                     compiler.Go(memStream);
                 }
-                */
+                
 
 
             }
@@ -62,7 +62,7 @@ namespace DreamCompilerUnitTest
 
             MethodCallExpression methodCall = Expression.ArrayIndex(arrayExpression, Expression.Constant(0), Expression.Constant(3));
 
-            /* try
+            try
             {
                 var theLambda = Expression.Lambda(methodCall).Compile().DynamicInvoke();
             }
@@ -70,7 +70,7 @@ namespace DreamCompilerUnitTest
             {
                 Trace.WriteLine(exception.Message);
                 throw;
-            }*/
+            }
 
 
             BinaryExpression binary = Expression.MakeBinary(
@@ -102,11 +102,11 @@ namespace DreamCompilerUnitTest
 
         }
 
-        /* public static String lambda_method()
+        public static String lambda_method()
         {
             Trace.WriteLine("message");
             return ";";
-        }*/
+        }
     }
 
 

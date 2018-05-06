@@ -3,13 +3,13 @@ using System.Windows.Forms;
 
 namespace DReAM
 {
-    public partial class Settings : Form
+    public partial class Contact : Form
     {
         private bool drag = false;
         private int mousex = 0;
         private int mousey = 0;
 
-        public Settings()
+        public Contact()
         {
             InitializeComponent();
         }
