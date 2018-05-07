@@ -57,15 +57,15 @@ namespace DReAM
             edit.Show();
         }
 
-        private void communicate_btn_Click(object sender, EventArgs e)
+        private void contact_btn_Click(object sender, EventArgs e)
         {
-            Form communicate = new Chat();
+            Form communicate = new Contact();
             communicate.Show();
         }
 
-        private void settings_btn_Click(object sender, EventArgs e)
+        private void chat_btn_Click(object sender, EventArgs e)
         {
-            Form settings = new Contact();
+            Form settings = new Chat();
             settings.Show();
         }
     }

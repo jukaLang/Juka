@@ -35,6 +35,53 @@ namespace DReAM
             // STYLING
             InitColors();
 
+            //Numbers
+            InitNumberMargin();
+
+        }
+
+        /// <summary>
+		/// the background color of the text area
+		/// </summary>
+		private const int BACK_COLOR = 0x2A211C;
+
+        /// <summary>
+        /// default text color of the text area
+        /// </summary>
+        private const int FORE_COLOR = 0xB7B7B7;
+
+        /// <summary>
+        /// change this to whatever margin you want the line numbers to show in
+        /// </summary>
+        private const int NUMBER_MARGIN = 1;
+
+        /// <summary>
+        /// change this to whatever margin you want the bookmarks/breakpoints to show in
+        /// </summary>
+        private const int BOOKMARK_MARGIN = 2;
+        private const int BOOKMARK_MARKER = 2;
+
+        /// <summary>
+        /// change this to whatever margin you want the code folding tree (+/-) to show in
+        /// </summary>
+        private const int FOLDING_MARGIN = 3;
+
+
+        private void InitNumberMargin()
+        {
+
+            TextArea.Styles[Style.LineNumber].BackColor = IntToColor(BACK_COLOR);
+            TextArea.Styles[Style.LineNumber].ForeColor = IntToColor(FORE_COLOR);
+            TextArea.Styles[Style.IndentGuide].ForeColor = IntToColor(FORE_COLOR);
+            TextArea.Styles[Style.IndentGuide].BackColor = IntToColor(BACK_COLOR);
+
+            var nums = TextArea.Margins[NUMBER_MARGIN];
+            nums.Width = 30;
+            nums.Type = MarginType.Number;
+            nums.Sensitive = true;
+            nums.Mask = 0;
+
+            //TextArea.MarginClick += TextArea_MarginClick;
         }
 
         private void OnTextChanged(object sender, EventArgs e)

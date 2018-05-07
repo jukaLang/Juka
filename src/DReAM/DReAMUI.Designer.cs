@@ -136,7 +136,7 @@
             this.chat_btn.Size = new System.Drawing.Size(117, 49);
             this.chat_btn.TabIndex = 11;
             this.chat_btn.Text = "Chat";
-            this.chat_btn.Click += new System.EventHandler(this.communicate_btn_Click);
+            this.chat_btn.Click += new System.EventHandler(this.chat_btn_Click);
             // 
             // contact_btn
             // 
@@ -149,7 +149,7 @@
             this.contact_btn.Size = new System.Drawing.Size(181, 49);
             this.contact_btn.TabIndex = 12;
             this.contact_btn.Text = "Contact";
-            this.contact_btn.Click += new System.EventHandler(this.settings_btn_Click);
+            this.contact_btn.Click += new System.EventHandler(this.contact_btn_Click);
             // 
             // contact_img
             // 
@@ -161,7 +161,7 @@
             this.contact_img.Size = new System.Drawing.Size(100, 100);
             this.contact_img.TabIndex = 7;
             this.contact_img.TabStop = false;
-            this.contact_img.Click += new System.EventHandler(this.settings_btn_Click);
+            this.contact_img.Click += new System.EventHandler(this.contact_btn_Click);
             // 
             // chat_img
             // 
@@ -173,7 +173,7 @@
             this.chat_img.Size = new System.Drawing.Size(100, 100);
             this.chat_img.TabIndex = 6;
             this.chat_img.TabStop = false;
-            this.chat_img.Click += new System.EventHandler(this.communicate_btn_Click);
+            this.chat_img.Click += new System.EventHandler(this.chat_btn_Click);
             // 
             // edit_img
             // 

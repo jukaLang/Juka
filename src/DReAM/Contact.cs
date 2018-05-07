@@ -14,7 +14,7 @@ namespace DReAM
             InitializeComponent();
         }
 
-        private void Settings_MouseMove(object sender, MouseEventArgs e)
+        private void Communicate_MouseMove(object sender, MouseEventArgs e)
         {
             if (drag)
             {
@@ -23,14 +23,14 @@ namespace DReAM
             }
         }
 
-        private void Settings_MouseDown(object sender, MouseEventArgs e)
+        private void Communicate_MouseDown(object sender, MouseEventArgs e)
         {
             drag = true;
             mousex = Cursor.Position.X - this.Left;
             mousey = Cursor.Position.Y - this.Top;
         }
 
-        private void Settings_MouseUp(object sender, MouseEventArgs e)
+        private void Communicate_MouseUp(object sender, MouseEventArgs e)
         {
             drag = false;
         }
@@ -43,6 +43,26 @@ namespace DReAM
         private void close_btn_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void website_link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.juliar.org");
+        }
+
+        private void documentation_link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://www.juliar.org/documentation");
+        }
+
+        private void twitter_link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://twitter.com/juliarLang");
+        }
+
+        private void email_link_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("mailto:admin@juliar.org?subject=DReaM");
         }
     }
 }
