@@ -113,7 +113,7 @@ namespace DreamCompilerUnitTest
             var postDecrementExpression = Expression.PostDecrementAssign(value);
             var multiplyExpression = Expression.MultiplyAssign(result, postDecrementExpression);
             var callMethodExpression = Expression.Call(null,
-                typeof(System.Diagnostics.Trace).GetMethod("WriteLine", new Type[] {typeof(String)}) ?? throw new InvalidOperationException(),
+                typeof(Trace).GetMethod("WriteLine", new Type[] {typeof(String)}) ?? throw new InvalidOperationException(),
                 Expression.Constant("World!")
             );
             var tempBlock = Expression.Block( multiplyExpression, callMethodExpression);
