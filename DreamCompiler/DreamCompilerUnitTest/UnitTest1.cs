@@ -126,6 +126,11 @@ namespace DreamCompilerUnitTest
 
             int factorial = Expression.Lambda<Func<int, int>>(block, value).Compile()(5);
 
+            if (factorial != 120)
+            {
+                throw new Exception("");
+            }
+
             Console.WriteLine(factorial);
         }
     }
