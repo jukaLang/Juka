@@ -101,10 +101,32 @@ namespace DreamCompilerUnitTest
 
         }
 
-        public static String lambda_method()
+        [TestMethod]
+        public void TestBlock()
         {
-            Trace.WriteLine("message");
-            return ";";
+            ParameterExpression value = Expression.Parameter(typeof(int), "value");  
+            ParameterExpression result = Expression.Parameter(typeof(int), "result");
+  
+            LabelTarget label = Expression.Label(typeof(int));
+            var lableExpression = Expression.Break(label, result);
+            var greaterThanExpression = Expression.GreaterThan(value, Expression.Constant(1));
+            var postDecrementExpression = Expression.PostDecrementAssign(value);
+            var multiplyExpression = Expression.MultiplyAssign(result, postDecrementExpression);
+            var callMethodExpression = Expression.Call(null,
+                typeof(System.Diagnostics.Trace).GetMethod("WriteLine", new Type[] {typeof(String)}) ?? throw new InvalidOperationException(),
+                Expression.Constant("World!")
+            );
+            var tempBlock = Expression.Block( multiplyExpression, callMethodExpression);
+            var ifThanElseExpression = Expression.IfThenElse(greaterThanExpression, tempBlock, lableExpression);
+            BlockExpression block = Expression.Block(
+                new[] { result },
+                Expression.Assign(result, Expression.Constant(1)),
+                Expression.Loop( ifThanElseExpression, label)
+            );
+
+            int factorial = Expression.Lambda<Func<int, int>>(block, value).Compile()(5);
+
+            Console.WriteLine(factorial);
         }
     }
 
