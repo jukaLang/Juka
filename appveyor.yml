@@ -1,30 +1,17 @@
 image: Visual Studio 2017
 before_build: 
-<<<<<<< HEAD
-  - cd DReAM
-  - "nuget restore"
-  - cd ../DreamCompiler/dreamCompiler
-  - ./build.bat
-build: 
-  project: DReAM/DReAM.sln
-=======
   - cd src
   - "nuget restore"
 
 build: 
   project: src/DReAM.sln
->>>>>>> refs/remotes/origin/master
 notifications: 
   - 
     incoming_webhook: "https://hooks.slack.com/services/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"
     provider: Slack
 skip_tags: false
 artifacts:
-<<<<<<< HEAD
-- path: 'DReAM\DReAM\bin\Release'
-=======
 - path: 'bin\Release'
->>>>>>> refs/remotes/origin/master
   name: DReAM_$(APPVEYOR_BUILD_VERSION)
   type: zip
 configuration:
