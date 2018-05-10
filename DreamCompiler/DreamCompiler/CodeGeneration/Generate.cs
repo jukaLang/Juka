@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace DreamCompiler.CodeGeneration
@@ -14,6 +15,11 @@ namespace DreamCompiler.CodeGeneration
             //CodeCompileUnit targetUnit;
             //CodeTypeDeclaration targetClass;
 
+        }
+
+        public BlockExpression CreateBlock()
+        {
+            return null;
         }
     }
 }
