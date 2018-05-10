@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DReAM", "DReAM\DReAM.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dreamCompiler", "DreamCompiler\dreamCompiler.csproj", "{C6C15D26-01CC-4877-9D4F-5EE89E1FE5EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DreamUnitTest", "DreamUnitTest\DreamUnitTest\DreamUnitTest.csproj", "{340210D3-8339-4AB0-861E-F9E3493CCB80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DreamUnitTest", "DreamUnitTest\DreamUnitTest.csproj", "{340210D3-8339-4AB0-861E-F9E3493CCB80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
