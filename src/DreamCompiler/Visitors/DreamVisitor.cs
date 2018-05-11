@@ -105,6 +105,38 @@ namespace DreamCompiler.Visitors
             return Expression.Constant(token);
         }
 
+        public override Expression VisitVariableDeclaration(DreamGrammarParser.VariableDeclarationContext context)
+        {
+            return base.VisitVariableDeclaration(context);
+        }
+
+        public override Expression VisitVariableDeclarationExpression(
+            DreamGrammarParser.VariableDeclarationExpressionContext context)
+        {
+            string type = context.children[0].GetText();
+            string variableName = context.children[1].GetText();
+
+            ParameterExpression expression = null;
+
+            if (type.Equals("int"))
+            {
+                expression = Expression.Parameter(typeof(int), variableName);
+            }
+
+            //return base.VisitVariableDeclarationExpression(context);
+            if (expression == null)
+            {
+                throw new Exception( "variable type not found");
+            }
+
+            return expression;
+        }
+
+        public override Expression VisitVariable(DreamGrammarParser.VariableContext context)
+        {
+            return base.VisitVariable(context);
+        }
+
         public override Expression VisitExpressionSequence(DreamGrammarParser.ExpressionSequenceContext context)
         {
             return base.VisitExpressionSequence(context);
@@ -113,7 +145,7 @@ namespace DreamCompiler.Visitors
         public override Expression VisitFuncName(DreamGrammarParser.FuncNameContext context)
         {
             SymbolToken functionName = new SymbolToken(TokenKind.Name, context.GetText());
-            //base.VisitFuncName(context);
+            //Expression[] expressions = base.VisitFuncName(context);
             return Expression.Constant(functionName);
         }
 

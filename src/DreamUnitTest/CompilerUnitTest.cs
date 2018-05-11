@@ -15,7 +15,7 @@ namespace DreamUnitTest
     using static System.Console;
 
     [TestClass]
-    public class UnitTest1
+    public class CompilerUnitTest
     {
         [TestMethod]
         public void TestCommpile()
