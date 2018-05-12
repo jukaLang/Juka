@@ -1,3 +1,9 @@
+function snap(int x, int y) = {
+
+}
+
 function main() = {
 	int i;
+	snap(32,555);
 }
+

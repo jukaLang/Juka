@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bugsnag;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace DReAM
         [STAThread]
         static void Main()
         {
+            var bugsnag = new Bugsnag.Client(new Configuration("5661e5af136881630508dac483c311fe"));
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new DReAMUI());

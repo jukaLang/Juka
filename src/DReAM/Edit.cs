@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
+using DreamCompiler;
 using ScintillaNET;
 
 namespace DReAM
@@ -145,5 +148,11 @@ namespace DReAM
             this.Close();
         }
 
+        private void run_btn_Click(object sender, EventArgs e)
+        {
+            MemoryStream input_memory = new MemoryStream(Encoding.UTF8.GetBytes(TextArea.Text ?? ""));
+            var compiler = new Compiler();
+            compiler.Go(input_memory);
+        }
     }
 }

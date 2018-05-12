@@ -118,16 +118,22 @@ namespace DreamCompiler.Visitors
 
             ParameterExpression expression = null;
 
-            if (type.Equals("int"))
+            switch(type)
             {
-                expression = Expression.Parameter(typeof(int), variableName);
+                case "int":
+                    expression = Expression.Parameter(typeof(int), variableName);
+                    break;
+                case "double":
+                    expression = Expression.Parameter(typeof(double), variableName);
+                    break;
+                case "string":
+                    expression = Expression.Parameter(typeof(string), variableName);
+                    break;
+                default:
+                    throw new Exception("variable type not found");
             }
 
             //return base.VisitVariableDeclarationExpression(context);
-            if (expression == null)
-            {
-                throw new Exception( "variable type not found");
-            }
 
             return expression;
         }
@@ -157,13 +163,27 @@ namespace DreamCompiler.Visitors
         public override Expression VisitFunctionCall(DreamGrammarParser.FunctionCallContext context)
         {
             Expression expression = base.VisitFunctionCall(context);
-            
+
+
+            List<string> funcParams = new List<string>();
+            int count = context.ChildCount - 1;
+            for(int i = 1; i < count; i++)
+            {
+                funcParams.Add(context.children[i].GetText());
+            }
+
+            /*string[,] gradeArray =
+                {{"chemistry", "history", "mathematics"}, {"78", "61", "82"}};
+
+            Expression arrayExpression = Expression.Constant(gradeArray);
+            MethodCallExpression methodCall = Expression.ArrayIndex(arrayExpression);*/
 
             string[,] gradeArray =
                 {{"chemistry", "history", "mathematics"}, {"78", "61", "82"}};
 
             Expression arrayExpression = Expression.Constant(gradeArray);
-            MethodCallExpression methodCall = Expression.ArrayIndex(arrayExpression);
+
+            MethodCallExpression methodCall = Expression.ArrayIndex(arrayExpression, Expression.Constant(0), Expression.Constant(2));
 
 
             return methodCall;

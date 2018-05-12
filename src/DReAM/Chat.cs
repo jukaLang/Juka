@@ -44,5 +44,10 @@ namespace DReAM
         {
             this.Close();
         }
+
+        private void send_btn_Click(object sender, EventArgs e)
+        {
+           
+        }
     }
 }

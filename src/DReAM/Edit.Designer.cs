@@ -32,7 +32,7 @@
             this.minimize_btn = new System.Windows.Forms.Label();
             this.window_lbl = new System.Windows.Forms.Label();
             this.textPanel = new System.Windows.Forms.Panel();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menu = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -63,7 +63,10 @@
             this.collapseAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.expandAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editorMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStrip1.SuspendLayout();
+            this.run_btn = new System.Windows.Forms.Button();
+            this.output_txt = new System.Windows.Forms.RichTextBox();
+            this.output_lbl = new System.Windows.Forms.Label();
+            this.menu.SuspendLayout();
             this.SuspendLayout();
             // 
             // close_btn
@@ -102,31 +105,35 @@
             // 
             // textPanel
             // 
+            this.textPanel.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            this.textPanel.AllowDrop = true;
+            this.textPanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.textPanel.ForeColor = System.Drawing.Color.Transparent;
             this.textPanel.Location = new System.Drawing.Point(1, 77);
             this.textPanel.Name = "textPanel";
-            this.textPanel.Size = new System.Drawing.Size(1026, 442);
+            this.textPanel.Size = new System.Drawing.Size(813, 428);
             this.textPanel.TabIndex = 8;
             // 
-            // menuStrip1
+            // menu
             // 
-            this.menuStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.menuStrip1.Dock = System.Windows.Forms.DockStyle.None;
-            this.menuStrip1.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.menu.Dock = System.Windows.Forms.DockStyle.None;
+            this.menu.Font = new System.Drawing.Font("Courier New", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.menu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
             this.searchToolStripMenuItem,
             this.viewToolStripMenuItem,
             this.editorMenu});
-            this.menuStrip1.Location = new System.Drawing.Point(16, 38);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(281, 29);
-            this.menuStrip1.TabIndex = 9;
-            this.menuStrip1.Text = "menuStrip1";
+            this.menu.Location = new System.Drawing.Point(16, 38);
+            this.menu.Name = "menu";
+            this.menu.Size = new System.Drawing.Size(281, 29);
+            this.menu.TabIndex = 9;
+            this.menu.Text = "Menu";
             // 
             // fileToolStripMenuItem
             // 
-            this.fileToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
+            this.fileToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
             this.openToolStripMenuItem,
@@ -171,7 +178,7 @@
             // 
             // editToolStripMenuItem
             // 
-            this.editToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
+            this.editToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cutToolStripMenuItem,
             this.copyToolStripMenuItem,
@@ -229,7 +236,7 @@
             // 
             // searchToolStripMenuItem
             // 
-            this.searchToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
+            this.searchToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.searchToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.findToolStripMenuItem,
             this.findAndReplaceToolStripMenuItem,
@@ -266,7 +273,7 @@
             // 
             // viewToolStripMenuItem
             // 
-            this.viewToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
+            this.viewToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.wordWrapToolStripMenuItem,
             this.showIndentGuidesToolStripMenuItem,
@@ -337,28 +344,66 @@
             // 
             // editorMenu
             // 
-            this.editorMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
+            this.editorMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
             this.editorMenu.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.editorMenu.ForeColor = System.Drawing.Color.White;
             this.editorMenu.Name = "editorMenu";
             this.editorMenu.Size = new System.Drawing.Size(54, 25);
             this.editorMenu.Text = "Help";
             // 
+            // run_btn
+            // 
+            this.run_btn.BackColor = System.Drawing.Color.Transparent;
+            this.run_btn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.run_btn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.run_btn.FlatAppearance.BorderSize = 0;
+            this.run_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.run_btn.Location = new System.Drawing.Point(336, 38);
+            this.run_btn.Name = "run_btn";
+            this.run_btn.Size = new System.Drawing.Size(270, 29);
+            this.run_btn.TabIndex = 10;
+            this.run_btn.Text = "Run";
+            this.run_btn.UseVisualStyleBackColor = false;
+            this.run_btn.Click += new System.EventHandler(this.run_btn_Click);
+            // 
+            // output_txt
+            // 
+            this.output_txt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.output_txt.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.output_txt.ForeColor = System.Drawing.SystemColors.Info;
+            this.output_txt.Location = new System.Drawing.Point(821, 77);
+            this.output_txt.Name = "output_txt";
+            this.output_txt.Size = new System.Drawing.Size(206, 428);
+            this.output_txt.TabIndex = 11;
+            this.output_txt.Text = "";
+            // 
+            // output_lbl
+            // 
+            this.output_lbl.AutoSize = true;
+            this.output_lbl.Location = new System.Drawing.Point(817, 43);
+            this.output_lbl.Name = "output_lbl";
+            this.output_lbl.Size = new System.Drawing.Size(94, 24);
+            this.output_lbl.TabIndex = 12;
+            this.output_lbl.Text = "Output:";
+            // 
             // Edit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
-            this.ClientSize = new System.Drawing.Size(1031, 504);
+            this.ClientSize = new System.Drawing.Size(1028, 504);
+            this.Controls.Add(this.output_lbl);
+            this.Controls.Add(this.output_txt);
+            this.Controls.Add(this.run_btn);
             this.Controls.Add(this.textPanel);
             this.Controls.Add(this.window_lbl);
             this.Controls.Add(this.close_btn);
             this.Controls.Add(this.minimize_btn);
-            this.Controls.Add(this.menuStrip1);
+            this.Controls.Add(this.menu);
             this.Font = new System.Drawing.Font("Consolas", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.MainMenuStrip = this.menuStrip1;
+            this.MainMenuStrip = this.menu;
             this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "Edit";
             this.Opacity = 0.9D;
@@ -367,8 +412,8 @@
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Edit_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Edit_MouseMove);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Edit_MouseUp);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.menu.ResumeLayout(false);
+            this.menu.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -380,7 +425,7 @@
         private System.Windows.Forms.Label minimize_btn;
         private System.Windows.Forms.Label window_lbl;
         private System.Windows.Forms.Panel textPanel;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip menu;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
@@ -411,5 +456,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem collapseAllToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem expandAllToolStripMenuItem;
+        private System.Windows.Forms.Button run_btn;
+        private System.Windows.Forms.RichTextBox output_txt;
+        private System.Windows.Forms.Label output_lbl;
     }
 }
