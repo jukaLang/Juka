@@ -1,5 +1,6 @@
 # DReAM
-### (Don Reamey et Andrey Makhanov)
+
+![DReAM App](https://user-images.githubusercontent.com/11934545/39957654-6c169638-55c4-11e8-9300-62264743c6ce.png)
 
 [![Build status](https://ci.appveyor.com/api/projects/status/x8d6308cuevqm4of?svg=true)](https://ci.appveyor.com/project/TheAndreiM/dream)
 
@@ -16,6 +17,8 @@ Download the latest version at https://ci.appveyor.com/project/TheAndreiM/dream/
 ### src/DReAM
 - A Windows GUI application that you can use to build and run DReAM/Juliar applications.
 
+### Examples
+- Provides you examples to get you started on DReAM
 
 ### Visual Studio/Development Requirements
 
