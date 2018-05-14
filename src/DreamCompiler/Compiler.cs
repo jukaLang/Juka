@@ -14,8 +14,12 @@ namespace DreamCompiler
     using System.IO;
     using System.Linq.Expressions;
 
+    interface ICompilerInterface
+    {
+        void Go(MemoryStream stream);
+    }
 
-    public class Compiler
+    public class Compiler : ICompilerInterface
     {
         private DreamGrammarParser parser;
 
@@ -49,8 +53,6 @@ namespace DreamCompiler
 
             var visitor = new DreamVisitor();
             visitor.Visit(compileUnit);
-
-            
         }
     }
 }

@@ -4,10 +4,12 @@ using System.Diagnostics;
 using System.IO;
 using DreamCompiler;
 using System.Linq.Expressions;
+using System.Reflection;
 
 
 namespace DreamUnitTest
 {
+    
     [TestClass]
     public class CompilerUnitTest
     {
@@ -56,7 +58,7 @@ namespace DreamUnitTest
 
             Expression arrayExpression = Expression.Constant(gradeArray);
 
-            MethodCallExpression methodCall = Expression.ArrayIndex(arrayExpression, Expression.Constant(0), Expression.Constant(2));
+            MethodCallExpression methodCall = Expression.ArrayIndex(arrayExpression, Expression.Constant(0), Expression.Constant(3));
 
             try
             {
@@ -98,22 +100,67 @@ namespace DreamUnitTest
 
         }
 
+        public static String foo( string s )
+        {
+            Trace.WriteLine("this is the foo method");
+            return s;
+        }
+        
+
         [TestMethod]
         public void TestBlock()
         {
             ParameterExpression value = Expression.Parameter(typeof(int), "value");
             ParameterExpression result = Expression.Parameter(typeof(int), "result");
 
+
+            Func<string, string> action = (s) =>
+            {
+                BlockExpression writeHelloBlockExpression = Expression.Block(
+                    Expression.Call(null,
+                        typeof(Trace).GetMethod("WriteLine", new Type[] {typeof(String)}) ??
+                        throw new InvalidOperationException(),
+                        Expression.Constant("0s")
+                    ));
+
+               return String.Empty;
+            };
+  
+            /*
+            
+
+            Expression<Func<string, string>> exp = (s) => action(s);
+          
+            
+            var methodCallExpression = Expression.Call(exp, action.Method, Expression.Parameter(typeof(string),"foo"));
+
+            Expression callExpr = Expression.Call(
+                Expression.Constant("sample string"), typeof(String).GetMethod("ToUpper", new Type[] { }));
+            
+            // Print out the expression.
+            Trace.WriteLine(callExpr.ToString());
+
+            // The following statement first creates an expression tree,
+            // then compiles it, and then executes it.  
+            Trace.WriteLine(Expression.Lambda<Func<String>>(callExpr).Compile()());
+            */
+
+            var actionType = action.GetType();
+
+
             LabelTarget label = Expression.Label(typeof(int));
             var lableExpression = Expression.Break(label, result);
             var greaterThanExpression = Expression.GreaterThan(value, Expression.Constant(1));
             var postDecrementExpression = Expression.PostDecrementAssign(value);
             var multiplyExpression = Expression.MultiplyAssign(result, postDecrementExpression);
+
+
             var callMethodExpression = Expression.Call(null,
                 typeof(Trace).GetMethod("WriteLine", new Type[] { typeof(String) }) ?? throw new InvalidOperationException(),
                 Expression.Constant("World!")
             );
-            var tempBlock = Expression.Block(multiplyExpression, callMethodExpression);
+
+            var tempBlock = Expression.Block(multiplyExpression, callMethodExpression);//, callWrite);
             var ifThanElseExpression = Expression.IfThenElse(greaterThanExpression, tempBlock, lableExpression);
             BlockExpression block = Expression.Block(
                 new[] { result },
@@ -122,6 +169,7 @@ namespace DreamUnitTest
             );
 
             int factorial = Expression.Lambda<Func<int, int>>(block, value).Compile()(5);
+                
 
             if (factorial != 120)
             {
@@ -130,7 +178,137 @@ namespace DreamUnitTest
 
             Console.WriteLine(factorial);
         }
+
+        public static MethodInfo GetMethodInfo(Expression<Action> expression)
+        {
+            return GetMethodInfo((LambdaExpression)expression);
+        }
+
+        /// <summary>
+        /// Given a lambda expression that calls a method, returns the method info.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression">The expression.</param>
+        /// <returns></returns>
+        public static MethodInfo GetMethodInfo<T>(Expression<Action<T>> expression)
+        {
+            return GetMethodInfo((LambdaExpression)expression);
+        }
+
+        /// <summary>
+        /// Given a lambda expression that calls a method, returns the method info.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression">The expression.</param>
+        /// <returns></returns>
+        public static MethodInfo GetMethodInfo<T, TResult>(Expression<Func<T, TResult>> expression)
+        {
+            return GetMethodInfo((LambdaExpression)expression);
+        }
+
+        /// <summary>
+        /// Given a lambda expression that calls a method, returns the method info.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns></returns>
+        public static MethodInfo GetMethodInfo(LambdaExpression expression)
+        {
+            MethodCallExpression outermostExpression = expression.Body as MethodCallExpression;
+
+            if (outermostExpression == null)
+            {
+                throw new ArgumentException("Invalid Expression. Expression should consist of a Method call only.");
+            }
+
+            return outermostExpression.Method;
+        }
+
+        /*
+        [TestMethod]
+        public void GetMethodInfo_should_return_method_info()
+        {
+            var methodInfo = SymbolExtensions.GetMethodInfo<CompilerUnitTest>(c => c.AMethod());
+            methodInfo.Name.CompilerUnitTest("AMethod");
+        }
+
+        [TestMethod]
+        public void GetMethodInfo_should_return_method_info_for_generic_method()
+        {
+            var methodInfo = SymbolExtensions.GetMethodInfo<CompilerUnitTest>(c => c.AGenericMethod(default(int)));
+
+            methodInfo.Name.ShouldEqual("AGenericMethod");
+            methodInfo.GetParameters().First().ParameterType.ShouldEqual(typeof(int));
+        }
+
+       
+        [TestMethod]
+        public void GetMethodInfo_should_return_method_info_for_static_method_on_static_class()
+        {
+            var methodInfo = SymbolExtensions.GetMethodInfo(() => StaticTestClass.StaticTestMethod());
+
+            methodInfo.Name.ShouldEqual("StaticTestMethod");
+            methodInfo.IsStatic.ShouldBeTrue();
+        }
+        */
+    }
+
+    public class OrganizationField
+    {
+        public string CustomField;
+        public string filter;
     }
 
 
+    public class Organization
+    {
+        /// <summary>
+        /// Given a lambda expression that calls a method, returns the method info.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression">The expression.</param>
+        /// <returns></returns>
+        public static MethodInfo GetMethodInfo(Expression<Action> expression)
+        {
+            return GetMethodInfo((LambdaExpression)expression);
+        }
+
+        /// <summary>
+        /// Given a lambda expression that calls a method, returns the method info.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression">The expression.</param>
+        /// <returns></returns>
+        public static MethodInfo GetMethodInfo<T>(Expression<Action<T>> expression)
+        {
+            return GetMethodInfo((LambdaExpression)expression);
+        }
+
+        /// <summary>
+        /// Given a lambda expression that calls a method, returns the method info.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression">The expression.</param>
+        /// <returns></returns>
+        public static MethodInfo GetMethodInfo<T, TResult>(Expression<Func<T, TResult>> expression)
+        {
+            return GetMethodInfo((LambdaExpression)expression);
+        }
+
+        /// <summary>
+        /// Given a lambda expression that calls a method, returns the method info.
+        /// </summary>
+        /// <param name="expression">The expression.</param>
+        /// <returns></returns>
+        public static MethodInfo GetMethodInfo(LambdaExpression expression)
+        {
+            MethodCallExpression outermostExpression = expression.Body as MethodCallExpression;
+
+            if (outermostExpression == null)
+            {
+                throw new ArgumentException("Invalid Expression. Expression should consist of a Method call only.");
+            }
+
+            return outermostExpression.Method;
+        }
+    }
 }
