@@ -105,7 +105,7 @@ namespace DreamUnitTest
             Trace.WriteLine("this is the foo method");
             return s;
         }
-        
+
 
         [TestMethod]
         public void TestBlock()
@@ -125,25 +125,6 @@ namespace DreamUnitTest
 
                return String.Empty;
             };
-  
-            /*
-            
-
-            Expression<Func<string, string>> exp = (s) => action(s);
-          
-            
-            var methodCallExpression = Expression.Call(exp, action.Method, Expression.Parameter(typeof(string),"foo"));
-
-            Expression callExpr = Expression.Call(
-                Expression.Constant("sample string"), typeof(String).GetMethod("ToUpper", new Type[] { }));
-            
-            // Print out the expression.
-            Trace.WriteLine(callExpr.ToString());
-
-            // The following statement first creates an expression tree,
-            // then compiles it, and then executes it.  
-            Trace.WriteLine(Expression.Lambda<Func<String>>(callExpr).Compile()());
-            */
 
             var actionType = action.GetType();
 
