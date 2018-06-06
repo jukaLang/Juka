@@ -157,7 +157,8 @@ namespace DreamCompiler.Visitors
 
         public override Expression VisitFunctionDeclaration(DreamGrammarParser.FunctionDeclarationContext context)
         {
-            return base.VisitFunctionDeclaration(context);
+            Expression expression =  base.VisitFunctionDeclaration(context);
+            return Expression.Block(expression);
         }
 
         public override Expression VisitFunctionCall(DreamGrammarParser.FunctionCallContext context)

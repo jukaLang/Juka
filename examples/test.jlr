@@ -1,5 +1,5 @@
 function snap(int x, int y) = {
-
+	int t;
 }
 
 function main() = {
