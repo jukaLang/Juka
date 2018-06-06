@@ -14,7 +14,7 @@ namespace DreamUnitTest
     public class CompilerUnitTest
     {
         [TestMethod]
-        public void TestCommpile()
+        public void TestCompile()
         {
             try
             {
