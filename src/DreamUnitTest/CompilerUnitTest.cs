@@ -106,6 +106,21 @@ namespace DreamUnitTest
             return s;
         }
 
+        [TestMethod]
+        public void TestVariables()
+        {
+            var x = 3;
+            BinaryExpression binaryExpression =
+                Expression.MakeBinary(
+                    ExpressionType.Subtract,
+                    Expression.Constant(53),
+                    Expression.Constant(14)
+               );
+
+            Console.WriteLine(Expression.Add(Expression.Constant(x),binaryExpression).ToString());
+
+        }
+
 
         [TestMethod]
         public void TestBlock()
