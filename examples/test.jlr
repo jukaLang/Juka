@@ -1,9 +1,4 @@
-function snap(int x, int y) = {
-	int t;
-}
-
 function main() = {
-	int i;
-	snap(32,555);
+	foo();
 }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using Antlr4.Runtime.Tree;
 using DreamCompiler.Tokens;
@@ -9,6 +10,11 @@ using System.Linq.Expressions;
 namespace DreamCompiler.Visitors
 {
     using DreamCompiler.Grammar;
+
+    internal class foo : DreamGrammarBaseVisitor<Expression[]>
+    {
+
+    }
 
     internal class DreamVisitor : DreamGrammarBaseVisitor<Expression>
     {
@@ -90,7 +96,8 @@ namespace DreamCompiler.Visitors
 
         public override Expression VisitEndLine(DreamGrammarParser.EndLineContext context)
         {
-            return base.VisitEndLine(context);
+            var endline = Expression.Constant(context.GetText());
+            return endline;
         }
 
         public override Expression VisitEvaluatable(DreamGrammarParser.EvaluatableContext context)
@@ -100,9 +107,7 @@ namespace DreamCompiler.Visitors
 
         public override Expression VisitTerminal(ITerminalNode node)
         {
-            base.VisitTerminal(node);
-            NameToken token = new NameToken( node.GetText() );
-            return Expression.Constant(token);
+            return Expression.Constant(node.GetText());
         }
 
         public override Expression VisitVariableDeclaration(DreamGrammarParser.VariableDeclarationContext context)
@@ -150,19 +155,63 @@ namespace DreamCompiler.Visitors
 
         public override Expression VisitFuncName(DreamGrammarParser.FuncNameContext context)
         {
-            SymbolToken functionName = new SymbolToken(TokenKind.Name, context.GetText());
-            //Expression[] expressions = base.VisitFuncName(context);
-            return Expression.Constant(functionName);
+            return Expression.Constant(context.GetText());
         }
 
         public override Expression VisitFunctionDeclaration(DreamGrammarParser.FunctionDeclarationContext context)
         {
+            var children = context.children;
+            int i = children.Count;
+            int currentChild = 0;
+
+            var functionKeyWord = children[currentChild].Accept(this);
+            if (!functionKeyWord.ToString().Equals("\"function\""))
+            {
+                throw new Exception("invalid function declaration");
+            }
+            
+            var functionName = children[++currentChild].Accept(this);
+
+            var parameters = children[++currentChild].Accept(this);
+            if (parameters.ToString().Equals("\"()\""))
+            {
+                // no input parameters read equal sign and brackets
+                var equalSign = children[++currentChild].Accept(this);
+                if (equalSign.ToString().Equals("\"=\"")) {
+                    var leftBracket = children[++currentChild].Accept(this);
+                    var firstStatement = children[++currentChild].Accept(this);
+
+                    if (firstStatement.ToString().Equals("\"}\""))
+                    {
+                        //Empty body function
+                        return Expression.Block(Expression.Constant(functionName.ToString()));
+                    }
+                    else
+                    {
+                        
+                    }
+                }
+
+            }
             Expression expression =  base.VisitFunctionDeclaration(context);
             return Expression.Block(expression);
         }
 
         public override Expression VisitFunctionCall(DreamGrammarParser.FunctionCallContext context)
         {
+            var functionCallName = context.children[0].GetText();//
+
+            object[] t = new object[context.ChildCount - 1];
+            for (int i = 1; i < context.ChildCount; i++)
+            {
+                t[i-1] = context.children[i].Accept(this);
+            }
+
+            return Expression.Constant(functionCallName);
+
+            //var functionToCall = context.Accept(this);
+            //return functionToCall;
+            /*
             Expression expression = base.VisitFunctionCall(context);
 
 
@@ -173,11 +222,11 @@ namespace DreamCompiler.Visitors
                 funcParams.Add(context.children[i].GetText());
             }
 
-            /*string[,] gradeArray =
+            string[,] gradeArray =
                 {{"chemistry", "history", "mathematics"}, {"78", "61", "82"}};
 
             Expression arrayExpression = Expression.Constant(gradeArray);
-            MethodCallExpression methodCall = Expression.ArrayIndex(arrayExpression);*/
+            MethodCallExpression methodCall = Expression.ArrayIndex(arrayExpression);
 
             string[,] gradeArray =
                 {{"chemistry", "history", "mathematics"}, {"78", "61", "82"}};
@@ -187,13 +236,32 @@ namespace DreamCompiler.Visitors
             MethodCallExpression methodCall = Expression.ArrayIndex(arrayExpression, Expression.Constant(0), Expression.Constant(2));
 
 
-            return methodCall;
+            return methodCall;*/
         }
 
         public override Expression VisitFunctionCallExpression(DreamGrammarParser.FunctionCallExpressionContext context)
         {
-            return base.VisitFunctionCallExpression(context);
+            Expression[] t = new Expression[context.ChildCount];
+            for (int i = 0; i < context.ChildCount; i++)
+            {
+                t[i] = context.children[i].Accept(this);
+            }
+
+            var afterall = base.VisitFunctionCallExpression(context);
+
+            return t[0];
         }
 
+        public override Expression VisitIdentifierName(DreamGrammarParser.IdentifierNameContext context)
+        {
+            Expression[] t = new Expression[context.ChildCount];
+            for (int i = 0; i < context.ChildCount; i++)
+            {
+                t[i] = context.children[i].Accept(this);
+            }
+
+            var afterId = base.VisitIdentifierName(context);
+            return t[0];
+        }
     }
 }
