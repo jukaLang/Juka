@@ -52,7 +52,17 @@ namespace DreamCompiler
             Trace.WriteLine(compileUnit.ToStringTree(parser));
 
             var visitor = new DreamVisitor();
-            visitor.Visit(compileUnit);
+            Expression expressionTree = visitor.Visit(compileUnit);
+
+            if (expressionTree == null)
+            {
+                throw new Exception("tree is null");
+            }
+
+            if (expressionTree is BlockExpression)
+            {
+                Expression.Lambda<Action>(expressionTree).Compile()();
+            }
         }
     }
 }

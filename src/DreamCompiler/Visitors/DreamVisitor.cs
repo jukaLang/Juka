@@ -91,7 +91,24 @@ namespace DreamCompiler.Visitors
 
         public override Expression VisitExpression(DreamGrammarParser.ExpressionContext context)
         {
-            return base.VisitExpression(context);
+            int size = context.ChildCount - 1;
+            Expression[] t = new Expression[size];
+            for (int i = 0; i < size; i++)
+            {
+                var exp = context.children[i].Accept(this);
+
+                if (size == 1)
+                {
+                    return exp;
+                }
+
+                if (i < size)
+                {
+                    t[i] = exp;
+                }
+            }
+
+            return new DremMulitipleExpressions(t);
         }
 
         public override Expression VisitEndLine(DreamGrammarParser.EndLineContext context)
@@ -126,19 +143,17 @@ namespace DreamCompiler.Visitors
             switch(type)
             {
                 case "int":
-                    expression = Expression.Parameter(typeof(int), variableName);
+                    expression = Expression.Variable(typeof(int), variableName);
                     break;
                 case "double":
-                    expression = Expression.Parameter(typeof(double), variableName);
+                    expression = Expression.Variable(typeof(double), variableName);
                     break;
                 case "string":
-                    expression = Expression.Parameter(typeof(string), variableName);
+                    expression = Expression.Variable(typeof(string), variableName);
                     break;
                 default:
                     throw new Exception("variable type not found");
             }
-
-            //return base.VisitVariableDeclarationExpression(context);
 
             return expression;
         }
@@ -173,28 +188,61 @@ namespace DreamCompiler.Visitors
             var functionName = children[++currentChild].Accept(this);
 
             var parameters = children[++currentChild].Accept(this);
+            var expressionList = new List<Expression>();
+
             if (parameters.ToString().Equals("\"()\""))
             {
                 // no input parameters read equal sign and brackets
                 var equalSign = children[++currentChild].Accept(this);
                 if (equalSign.ToString().Equals("\"=\"")) {
                     var leftBracket = children[++currentChild].Accept(this);
-                    var firstStatement = children[++currentChild].Accept(this);
-
-                    if (firstStatement.ToString().Equals("\"}\""))
+                    if (!leftBracket.ToString().Equals("\"{\""))
                     {
-                        //Empty body function
-                        return Expression.Block(Expression.Constant(functionName.ToString()));
+                        throw new Exception("No left bracket");
                     }
-                    else
+
+                    while (currentChild <= i)
                     {
-                        
+                        var currentStatementExpression = children[++currentChild].Accept(this);
+
+                        if (currentStatementExpression.ToString().Equals("\"}\""))
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            expressionList.Add(currentStatementExpression);
+                        }
                     }
                 }
 
             }
-            Expression expression =  base.VisitFunctionDeclaration(context);
-            return Expression.Block(expression);
+
+            // Test expression to add to the bottom of the list of expressions.
+            expressionList.Add(Expression.Call(null,
+                typeof(Trace).GetMethod("WriteLine", new Type[] {typeof(String)}) ??
+                throw new InvalidOperationException(),
+                Expression.Constant("0s")));
+
+            var localParameters = new List<ParameterExpression>();
+            var indices = new List<int>();
+            int index = 0;
+            foreach (var parm in expressionList)
+            {
+                if (parm is ParameterExpression)
+                {
+                    localParameters.Add( (ParameterExpression)parm);
+                    indices.Add(index);
+                    index++;
+                }
+            }
+
+            foreach (var notUsed in indices)
+            {
+                expressionList.RemoveAt(0);
+            }
+
+            return Expression.Block( localParameters, expressionList);
         }
 
         public override Expression VisitFunctionCall(DreamGrammarParser.FunctionCallContext context)
@@ -207,36 +255,8 @@ namespace DreamCompiler.Visitors
                 t[i-1] = context.children[i].Accept(this);
             }
 
-            return Expression.Constant(functionCallName);
-
-            //var functionToCall = context.Accept(this);
-            //return functionToCall;
-            /*
-            Expression expression = base.VisitFunctionCall(context);
-
-
-            List<string> funcParams = new List<string>();
-            int count = context.ChildCount - 1;
-            for(int i = 1; i < count; i++)
-            {
-                funcParams.Add(context.children[i].GetText());
-            }
-
-            string[,] gradeArray =
-                {{"chemistry", "history", "mathematics"}, {"78", "61", "82"}};
-
-            Expression arrayExpression = Expression.Constant(gradeArray);
-            MethodCallExpression methodCall = Expression.ArrayIndex(arrayExpression);
-
-            string[,] gradeArray =
-                {{"chemistry", "history", "mathematics"}, {"78", "61", "82"}};
-
-            Expression arrayExpression = Expression.Constant(gradeArray);
-
-            MethodCallExpression methodCall = Expression.ArrayIndex(arrayExpression, Expression.Constant(0), Expression.Constant(2));
-
-
-            return methodCall;*/
+            DreamMethodCall dreamMethodCall = new DreamMethodCall(Expression.Constant(functionCallName), null, null);
+            return dreamMethodCall;
         }
 
         public override Expression VisitFunctionCallExpression(DreamGrammarParser.FunctionCallExpressionContext context)
@@ -247,7 +267,7 @@ namespace DreamCompiler.Visitors
                 t[i] = context.children[i].Accept(this);
             }
 
-            var afterall = base.VisitFunctionCallExpression(context);
+            //var afterall = base.VisitFunctionCallExpression(context);
 
             return t[0];
         }
@@ -263,5 +283,41 @@ namespace DreamCompiler.Visitors
             var afterId = base.VisitIdentifierName(context);
             return t[0];
         }
+    }
+
+    internal class DreamMethodCall : Expression
+    {
+        private ConstantExpression methodName;
+        private ParameterExpression[] inputParameters;
+        private ParameterExpression returnParameters;
+
+        public DreamMethodCall(ConstantExpression methodName, ParameterExpression[] inputParameters, ParameterExpression returnParameters)
+        {
+            this.methodName = methodName;
+            this.inputParameters = inputParameters;
+            this.returnParameters = returnParameters;
+        }
+
+        public override ExpressionType NodeType => ExpressionType.Call;
+
+        public override Type Type => typeof(object);
+    }
+
+
+    internal class DremMulitipleExpressions : Expression
+    {
+        private Expression[] expressions;
+
+        public DremMulitipleExpressions(Expression[] expressionArray)
+        {
+            expressions = expressionArray;
+        }
+
+        public void AddExpressions(Expression[] expressionArray)
+        {
+            expressions = expressionArray;
+        }
+
+        public override ExpressionType NodeType => ExpressionType.Call;
     }
 }

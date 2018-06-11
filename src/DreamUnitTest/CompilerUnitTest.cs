@@ -70,6 +70,8 @@ namespace DreamUnitTest
                 throw;
             }
 
+            System.Linq.Expressions.MemberAssignment t;
+            
 
             BinaryExpression binary = Expression.MakeBinary(
                 ExpressionType.Subtract,
@@ -127,7 +129,6 @@ namespace DreamUnitTest
         {
             ParameterExpression value = Expression.Parameter(typeof(int), "value");
             ParameterExpression result = Expression.Parameter(typeof(int), "result");
-
 
             Func<string, string> action = (s) =>
             {

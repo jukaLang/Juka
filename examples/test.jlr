@@ -1,4 +1,10 @@
 function main() = {
+	int i;
+	int y;
+	/*	
 	foo();
+	
+	bar();
+	*/
 }
 
