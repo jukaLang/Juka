@@ -2,10 +2,5 @@ function main() = {
 	int i;
 	int y;
 	string s = "asdfas";
-	/*	
-	foo();
-	
-	bar();
-	*/
 }
 

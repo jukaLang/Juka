@@ -111,6 +111,9 @@ namespace DreamUnitTest
         [TestMethod]
         public void TestVariables()
         {
+            ParameterExpression expression = Expression.Variable(typeof(string), "x");
+            var binaryExpressionOne = Expression.Assign(expression, Expression.Constant("ASDF"));
+
             var x = 3;
             BinaryExpression binaryExpression =
                 Expression.MakeBinary(
