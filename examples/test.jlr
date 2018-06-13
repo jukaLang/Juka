@@ -1,6 +1,5 @@
 function main() = {
-	int i;
-	int y;
+	int y = 3 + 2 / 1;
 	string s = "asdfas";
 }
 

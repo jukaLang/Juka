@@ -5,19 +5,25 @@ using System.Text;
 using Antlr4.Runtime.Tree;
 using DreamCompiler.Tokens;
 using System.Linq.Expressions;
+using System.Net.Mime;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 
 namespace DreamCompiler.Visitors
 {
     using DreamCompiler.Grammar;
 
-    internal class foo : DreamGrammarBaseVisitor<Expression[]>
+    internal enum BinaryExpressionTypes
     {
-
+        Int,
+        Double,
+        String
     }
 
     internal class DreamVisitor : DreamGrammarBaseVisitor<Expression>
     {
+        private Stack<BinaryExpressionTypes> binaryExpressionStack = new Stack<BinaryExpressionTypes>();
+
         public override Expression VisitCompileUnit(DreamGrammarParser.CompileUnitContext context)
         {
             Expression compileUnit = base.VisitCompileUnit(context);
@@ -51,7 +57,64 @@ namespace DreamCompiler.Visitors
 
         public override Expression VisitBinaryExpression(DreamGrammarParser.BinaryExpressionContext context)
         {
-            return base.VisitBinaryExpression(context);
+            var expressions = new List<Expression>();
+            foreach (var t in context.children)
+            {
+                expressions.Add( t.Accept(this));
+            }
+
+            BinaryExpression binaryExpression = null;
+            BinaryExpressionTypes currentType = binaryExpressionStack.Peek();
+
+            String binaryOperator = StripValue(expressions[1].ToString());
+
+            switch (binaryOperator)
+            {
+                case "+":
+                case "/":
+                    if (currentType == BinaryExpressionTypes.Int)
+                    {
+                        Expression left;
+                        Expression right;
+
+                        // Assumptions: Constant Expressions may be wrapped in quotes. So strips quotes.
+                        if (expressions[0] is ConstantExpression)
+                        {
+                            left = Expression.Constant(Convert.ToInt32(StripValue(expressions[0].ToString())));
+                        }
+                        else
+                        {
+                            left = expressions[0];
+                        }
+
+                        if (expressions[2] is ConstantExpression)
+                        {
+                            right = Expression.Constant(Convert.ToInt32(StripValue(expressions[2].ToString())));
+                        }
+                        else
+                        {
+                            right = expressions[2];
+                        }
+
+                        if (binaryOperator.Equals("+"))
+                        {
+                            binaryExpression = Expression.Add(left, right);
+                        }
+                        else if (binaryOperator.Equals("/"))
+                        {
+                            binaryExpression = Expression.Divide(left, right);
+                        }
+                    }
+
+                    break;
+                
+                default:
+                    break;
+            }
+
+            Debug.Assert( binaryExpression != null);
+
+            return binaryExpression;
         }
 
         public override Expression VisitBooleanExpression(DreamGrammarParser.BooleanExpressionContext context)
@@ -147,14 +210,36 @@ namespace DreamCompiler.Visitors
             switch (type)
             {
                 case "int":
+                    binaryExpressionStack.Push(BinaryExpressionTypes.Int);
                     expression = Expression.Variable(typeof(int), variableName);
                     variableExpressions.Add( expression );
+                    if (context.ChildCount > 2)
+                    {
+                        for (int iChildCount = 2; iChildCount < context.ChildCount; iChildCount++)
+                        {
+                            var childExpression = context.children[iChildCount].Accept(this);
+                            if (childExpression is ConstantExpression)
+                            {
+                                // Need to do some validation to ensure the operator is really an equal sign.
+                                // Should be the only allowable operator for a variable declaration
+                                if ( childExpression.ToString().Equals("="))
+                                {
+                                    continue;
+                                }
+                            }
+                            variableExpressions.Add(childExpression);
+                        }
+                    }
+                    binaryExpressionStack.Pop();
                     break;
                 case "double":
+                    binaryExpressionStack.Push(BinaryExpressionTypes.Double);
                     expression = Expression.Variable(typeof(double), variableName);
                     variableExpressions.Add(expression);
+                    binaryExpressionStack.Pop();
                     break;
                 case "string":
+                    binaryExpressionStack.Push(BinaryExpressionTypes.String);
                     expression = Expression.Variable(typeof(string), variableName);
                     var binaryExpression = Expression.Assign(
                         expression, 
@@ -162,6 +247,7 @@ namespace DreamCompiler.Visitors
                             StripValue(context.children[3].GetText())));
                     variableExpressions.Add(expression);
                     variableExpressions.Add(binaryExpression);
+                    binaryExpressionStack.Pop();
                     break;
                 default:
                     throw new Exception("variable type not found");

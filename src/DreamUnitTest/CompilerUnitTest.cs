@@ -53,6 +53,14 @@ namespace DreamUnitTest
         [TestMethod]
         public void TestExpressions()
         {
+
+
+            var left = Expression.Add(Expression.Constant(3), Expression.Constant(4));
+            var right = Expression.Divide(left, Expression.Constant(3));
+
+            Expression.Lambda(Expression.Block(right)).Compile().DynamicInvoke();
+
+
             string[,] gradeArray =
                 {{"chemistry", "history", "mathematics"}, {"78", "61", "82"}};
 
