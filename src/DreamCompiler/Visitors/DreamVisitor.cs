@@ -231,12 +231,36 @@ namespace DreamCompiler.Visitors
                 case "string":
                     binaryExpressionStack.Push(BinaryExpressionTypes.String);
                     expression = Expression.Variable(typeof(string), variableName);
+
+                    var constantExpression = Expression.Constant(RemoveLeadingAndTrailingQuotes(context.children[3].GetText()));
+
                     var binaryExpression = Expression.Assign(
                         expression, 
-                        Expression.Constant( 
-                            RemoveLeadingAndTrailingQuotes(context.children[3].GetText())));
+                        constantExpression);
+
                     variableExpressions.Add(expression);
                     variableExpressions.Add(binaryExpression);
+
+#if DEBUG
+                    try
+                    {
+                        // Push a WriteLine into the expression list
+                        // to debug the variable assignement.
+                        var variableType = variableExpressions.GetType();
+                        var writeLineExpression = Expression.Call(null,
+                            typeof(Trace).GetMethod("WriteLine", new Type[] {typeof(object)}) ??
+                            throw new InvalidOperationException(),
+                            expression);
+
+                        variableExpressions.Add(writeLineExpression);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.Assert( true, ex.Message);
+                    }
+                   
+#endif                    
+
                     binaryExpressionStack.Pop();
                     break;
                 default:

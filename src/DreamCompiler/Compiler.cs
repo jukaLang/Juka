@@ -27,7 +27,8 @@ namespace DreamCompiler
         {
             if (SetupAntlr(memoryStream))
             {
-                BeginVisitation();
+                var code = BeginVisitation();
+                Expression.Lambda<Action>(code).Compile()();
             }
         }
 
@@ -46,7 +47,7 @@ namespace DreamCompiler
             return true;
         }
 
-        private void BeginVisitation()
+        private Expression BeginVisitation()
         {
             DreamGrammarParser.CompileUnitContext compileUnit = parser.compileUnit();
             Trace.WriteLine(compileUnit.ToStringTree(parser));
@@ -59,10 +60,12 @@ namespace DreamCompiler
                 throw new Exception("tree is null");
             }
 
-            if (expressionTree is BlockExpression)  
+            if (expressionTree is BlockExpression)
             {
-                Expression.Lambda<Action>(expressionTree).Compile()();
+                return expressionTree;
             }
+
+            throw new Exception("no block expression created");
         }
     }
 }
