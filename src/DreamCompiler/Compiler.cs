@@ -59,7 +59,7 @@ namespace DreamCompiler
                 throw new Exception("tree is null");
             }
 
-            if (expressionTree is BlockExpression)
+            if (expressionTree is BlockExpression)  
             {
                 Expression.Lambda<Action>(expressionTree).Compile()();
             }
