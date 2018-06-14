@@ -72,6 +72,8 @@ namespace DreamCompiler.Visitors
             {
                 case "+":
                 case "/":
+                case "-":
+                case "*":
                     if (currentType == BinaryExpressionTypes.Int)
                     {
                         Expression left;
@@ -104,6 +106,14 @@ namespace DreamCompiler.Visitors
                         {
                             binaryExpression = Expression.Divide(left, right);
                         }
+                        else if (binaryOperator.Equals("-"))
+                        {
+                            binaryExpression = Expression.Subtract(left, right);
+                        }
+                        else if (binaryOperator.Equals("*"))
+                        {
+                            binaryExpression = Expression.Multiply(left, right);
+                        }
                     }
 
                     break;
@@ -112,7 +122,7 @@ namespace DreamCompiler.Visitors
                     break;
             }
 
-            Debug.Assert( binaryExpression != null);
+            Debug.Assert( binaryExpression != null, "you probably need to add a support for a binary operator");
 
             return binaryExpression;
         }
@@ -210,48 +220,7 @@ namespace DreamCompiler.Visitors
             switch (type)
             {
                 case "int":
-                    binaryExpressionStack.Push(BinaryExpressionTypes.Int);
-                    expression = Expression.Variable(typeof(int), variableName);
-                    variableExpressions.Add( expression );
-                    const int expressionCount = 2;
-                    if (context.ChildCount > expressionCount)
-                    {
-                        for (int iChildCount = expressionCount; iChildCount < context.ChildCount; iChildCount++)
-                        {
-                            var childExpression = context.children[iChildCount].Accept(this);
-                            if (childExpression is ConstantExpression)
-                            {
-                                // Need to do some validation to ensure the operator is really an equal sign.
-                                // Should be the only allowable operator for a variable declaration
-                                if ( !RemoveLeadingAndTrailingQuotes(childExpression.ToString()).Equals("="))
-                                {
-                                    throw new Exception("Illegal assignment operator");
-                                }
-
-                               continue;
-                            }
-                            variableExpressions.Add(childExpression);
-                        }
-                    }
-
-                    if (variableExpressions.Count >= expressionCount)
-                    {
-                        //var assignExpression = Expression.Assign(variableExpressions[0], Expression.Constant(1));
-                        var assignExpression = Expression.Assign(variableExpressions[0], variableExpressions[1]);
-#if DEBUG
-                        var tempExpression0 = new List<Expression>() {assignExpression};
-                        var tempExpression1 = new List<ParameterExpression>() {(ParameterExpression)variableExpressions[0]};
-                        tempExpression0.Add(Expression.Assign(variableExpressions[0], variableExpressions[1]));
-                        var block = Expression.Block(tempExpression1, tempExpression0);
-                        Expression.Lambda(block).Compile();
-#endif 
-                        variableExpressions.RemoveAt(expressionCount - 1);
-                        //variableExpressions.Clear();
-                        variableExpressions.Add( assignExpression );
-                        
-                    }
-
-                    binaryExpressionStack.Pop();
+                    GenerateBinaryIntExpression(context, variableName, variableExpressions);
                     break;
                 case "double":
                     binaryExpressionStack.Push(BinaryExpressionTypes.Double);
@@ -276,6 +245,53 @@ namespace DreamCompiler.Visitors
 
             mulitipleExpressions.AddExpressions(variableExpressions.ToArray());
             return mulitipleExpressions;
+        }
+
+        private void GenerateBinaryIntExpression(DreamGrammarParser.VariableDeclarationExpressionContext context, string variableName,
+            List<Expression> variableExpressions)
+        {
+            ParameterExpression expression;
+            binaryExpressionStack.Push(BinaryExpressionTypes.Int);
+            expression = Expression.Variable(typeof(int), variableName);
+            variableExpressions.Add(expression);
+            const int expressionCount = 2;
+            if (context.ChildCount > expressionCount)
+            {
+                for (int iChildCount = expressionCount; iChildCount < context.ChildCount; iChildCount++)
+                {
+                    var childExpression = context.children[iChildCount].Accept(this);
+                    if (childExpression is ConstantExpression)
+                    {
+                        // Need to do some validation to ensure the operator is really an equal sign.
+                        // Should be the only allowable operator for a variable declaration
+                        if (!RemoveLeadingAndTrailingQuotes(childExpression.ToString()).Equals("="))
+                        {
+                            throw new Exception("Illegal assignment operator");
+                        }
+
+                        continue;
+                    }
+
+                    variableExpressions.Add(childExpression);
+                }
+            }
+
+            if (variableExpressions.Count == expressionCount)
+            {
+                //var assignExpression = Expression.Assign(variableExpressions[0], Expression.Constant(1));
+                var assignExpression = Expression.Assign(variableExpressions[0], variableExpressions[1]);
+#if DEBUG
+                var tempExpression0 = new List<Expression>() {assignExpression};
+                var tempExpression1 = new List<ParameterExpression>() {(ParameterExpression) variableExpressions[0]};
+                tempExpression0.Add(Expression.Assign(variableExpressions[0], variableExpressions[1]));
+                var block = Expression.Block(tempExpression1, tempExpression0);
+                Expression.Lambda(block).Compile();
+#endif
+                variableExpressions.RemoveAt(expressionCount - 1);
+                variableExpressions.Add(assignExpression);
+            }
+
+            binaryExpressionStack.Pop();
         }
 
         private string RemoveLeadingAndTrailingQuotes(String theString)
