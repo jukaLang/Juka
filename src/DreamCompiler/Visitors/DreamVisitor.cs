@@ -475,6 +475,7 @@ namespace DreamCompiler.Visitors
         private ConstantExpression methodName;
         private ParameterExpression[] inputParameters;
         private ParameterExpression returnParameters;
+        private MethodCallExpression methodCall;
 
         public DreamMethodCall(ConstantExpression methodName, ParameterExpression[] inputParameters, ParameterExpression returnParameters)
         {
@@ -486,6 +487,13 @@ namespace DreamCompiler.Visitors
         public override ExpressionType NodeType => ExpressionType.Call;
 
         public override Type Type => typeof(object);
+
+        public override bool CanReduce => true;
+
+        public override Expression Reduce()
+        {
+            return base.Reduce();
+        }
     }
 
 

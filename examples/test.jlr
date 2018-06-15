@@ -1,5 +1,6 @@
 function main() = {
 	int y = 3 + 2 / 1 * 2 + 4 -1;
 	string s = "asdfas";
+	foo();
 }
 

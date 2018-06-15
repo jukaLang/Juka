@@ -136,6 +136,42 @@ namespace DreamUnitTest
 
 
         [TestMethod]
+        public void TestFunctionCall()
+        {
+
+            //Expression.Call()
+            string[,] gradeArray =
+                {{"chemistry", "history", "mathematics"}, {"78", "61", "82"}};
+
+            System.Linq.Expressions.Expression arrayExpression =
+                System.Linq.Expressions.Expression.Constant(gradeArray);
+
+            // Create a MethodCallExpression that represents indexing
+            // into the two-dimensional array 'gradeArray' at (0, 2).
+            // Executing the expression would return "mathematics".
+            System.Linq.Expressions.MethodCallExpression methodCallExpression =
+                System.Linq.Expressions.Expression.ArrayIndex(
+                    arrayExpression,
+                    System.Linq.Expressions.Expression.Constant(0),
+                    System.Linq.Expressions.Expression.Constant(2));
+
+            var writeLineExpression = Expression.Call(null,
+                typeof(Trace).GetMethod("WriteLine", new Type[] {typeof(object)}) ??
+                throw new InvalidOperationException(),
+                Expression.Constant("this is a test"));
+
+
+            var expressionBlock = Expression.Block(new Expression[] {writeLineExpression});
+
+            //var foo = typeof(BlockExpression).GetMethod(() "foo", new Type[] {});
+
+
+
+            //ar callExpression = Expression.Call( null, )
+        }
+
+
+        [TestMethod]
         public void TestBlock()
         {
             ParameterExpression value = Expression.Parameter(typeof(int), "value");
