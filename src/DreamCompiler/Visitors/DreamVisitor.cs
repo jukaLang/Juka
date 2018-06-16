@@ -66,12 +66,14 @@ namespace DreamCompiler.Visitors
             BinaryExpression binaryExpression = null;
             BinaryExpressionTypes currentType = binaryExpressionStack.Peek();
 
-            String binaryOperator = StripValue(expressions[1].ToString());
+            String binaryOperator = RemoveLeadingAndTrailingQuotes(expressions[1].ToString());
 
             switch (binaryOperator)
             {
                 case "+":
                 case "/":
+                case "-":
+                case "*":
                     if (currentType == BinaryExpressionTypes.Int)
                     {
                         Expression left;
@@ -80,7 +82,7 @@ namespace DreamCompiler.Visitors
                         // Assumptions: Constant Expressions may be wrapped in quotes. So strips quotes.
                         if (expressions[0] is ConstantExpression)
                         {
-                            left = Expression.Constant(Convert.ToInt32(StripValue(expressions[0].ToString())));
+                            left = Expression.Constant(Convert.ToInt32(RemoveLeadingAndTrailingQuotes(expressions[0].ToString())));
                         }
                         else
                         {
@@ -89,7 +91,7 @@ namespace DreamCompiler.Visitors
 
                         if (expressions[2] is ConstantExpression)
                         {
-                            right = Expression.Constant(Convert.ToInt32(StripValue(expressions[2].ToString())));
+                            right = Expression.Constant(Convert.ToInt32(RemoveLeadingAndTrailingQuotes(expressions[2].ToString())));
                         }
                         else
                         {
@@ -104,6 +106,14 @@ namespace DreamCompiler.Visitors
                         {
                             binaryExpression = Expression.Divide(left, right);
                         }
+                        else if (binaryOperator.Equals("-"))
+                        {
+                            binaryExpression = Expression.Subtract(left, right);
+                        }
+                        else if (binaryOperator.Equals("*"))
+                        {
+                            binaryExpression = Expression.Multiply(left, right);
+                        }
                     }
 
                     break;
@@ -112,7 +122,7 @@ namespace DreamCompiler.Visitors
                     break;
             }
 
-            Debug.Assert( binaryExpression != null);
+            Debug.Assert( binaryExpression != null, "you probably need to add a support for a binary operator");
 
             return binaryExpression;
         }
@@ -210,27 +220,7 @@ namespace DreamCompiler.Visitors
             switch (type)
             {
                 case "int":
-                    binaryExpressionStack.Push(BinaryExpressionTypes.Int);
-                    expression = Expression.Variable(typeof(int), variableName);
-                    variableExpressions.Add( expression );
-                    if (context.ChildCount > 2)
-                    {
-                        for (int iChildCount = 2; iChildCount < context.ChildCount; iChildCount++)
-                        {
-                            var childExpression = context.children[iChildCount].Accept(this);
-                            if (childExpression is ConstantExpression)
-                            {
-                                // Need to do some validation to ensure the operator is really an equal sign.
-                                // Should be the only allowable operator for a variable declaration
-                                if ( childExpression.ToString().Equals("="))
-                                {
-                                    continue;
-                                }
-                            }
-                            variableExpressions.Add(childExpression);
-                        }
-                    }
-                    binaryExpressionStack.Pop();
+                    GenerateBinaryIntExpression(context, variableName, variableExpressions);
                     break;
                 case "double":
                     binaryExpressionStack.Push(BinaryExpressionTypes.Double);
@@ -241,12 +231,36 @@ namespace DreamCompiler.Visitors
                 case "string":
                     binaryExpressionStack.Push(BinaryExpressionTypes.String);
                     expression = Expression.Variable(typeof(string), variableName);
+
+                    var constantExpression = Expression.Constant(RemoveLeadingAndTrailingQuotes(context.children[3].GetText()));
+
                     var binaryExpression = Expression.Assign(
                         expression, 
-                        Expression.Constant( 
-                            StripValue(context.children[3].GetText())));
+                        constantExpression);
+
                     variableExpressions.Add(expression);
                     variableExpressions.Add(binaryExpression);
+
+#if DEBUG
+                    try
+                    {
+                        // Push a WriteLine into the expression list
+                        // to debug the variable assignement.
+                        var variableType = variableExpressions.GetType();
+                        var writeLineExpression = Expression.Call(null,
+                            typeof(Trace).GetMethod("WriteLine", new Type[] {typeof(object)}) ??
+                            throw new InvalidOperationException(),
+                            expression);
+
+                        variableExpressions.Add(writeLineExpression);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.Assert( true, ex.Message);
+                    }
+                   
+#endif                    
+
                     binaryExpressionStack.Pop();
                     break;
                 default:
@@ -257,7 +271,54 @@ namespace DreamCompiler.Visitors
             return mulitipleExpressions;
         }
 
-        private string StripValue(String theString)
+        private void GenerateBinaryIntExpression(DreamGrammarParser.VariableDeclarationExpressionContext context, string variableName,
+            List<Expression> variableExpressions)
+        {
+            ParameterExpression expression;
+            binaryExpressionStack.Push(BinaryExpressionTypes.Int);
+            expression = Expression.Variable(typeof(int), variableName);
+            variableExpressions.Add(expression);
+            const int expressionCount = 2;
+            if (context.ChildCount > expressionCount)
+            {
+                for (int iChildCount = expressionCount; iChildCount < context.ChildCount; iChildCount++)
+                {
+                    var childExpression = context.children[iChildCount].Accept(this);
+                    if (childExpression is ConstantExpression)
+                    {
+                        // Need to do some validation to ensure the operator is really an equal sign.
+                        // Should be the only allowable operator for a variable declaration
+                        if (!RemoveLeadingAndTrailingQuotes(childExpression.ToString()).Equals("="))
+                        {
+                            throw new Exception("Illegal assignment operator");
+                        }
+
+                        continue;
+                    }
+
+                    variableExpressions.Add(childExpression);
+                }
+            }
+
+            if (variableExpressions.Count == expressionCount)
+            {
+                //var assignExpression = Expression.Assign(variableExpressions[0], Expression.Constant(1));
+                var assignExpression = Expression.Assign(variableExpressions[0], variableExpressions[1]);
+#if DEBUG
+                var tempExpression0 = new List<Expression>() {assignExpression};
+                var tempExpression1 = new List<ParameterExpression>() {(ParameterExpression) variableExpressions[0]};
+                tempExpression0.Add(Expression.Assign(variableExpressions[0], variableExpressions[1]));
+                var block = Expression.Block(tempExpression1, tempExpression0);
+                Expression.Lambda(block).Compile();
+#endif
+                variableExpressions.RemoveAt(expressionCount - 1);
+                variableExpressions.Add(assignExpression);
+            }
+
+            binaryExpressionStack.Pop();
+        }
+
+        private string RemoveLeadingAndTrailingQuotes(String theString)
         {
             Trace.WriteLine(theString);
             if (theString.StartsWith(@"""") && theString.EndsWith(@""""))
@@ -289,7 +350,7 @@ namespace DreamCompiler.Visitors
             var i = children.Count;
             var currentChild = 0;
 
-            var functionKeyWord = StripValue(children[currentChild].Accept(this).ToString());
+            var functionKeyWord = RemoveLeadingAndTrailingQuotes(children[currentChild].Accept(this).ToString());
             if (!functionKeyWord.Equals("function"))
             {
                 throw new Exception("invalid function declaration");
@@ -297,16 +358,16 @@ namespace DreamCompiler.Visitors
 
             var functionName = children[++currentChild].Accept(this);
 
-            var parameters = StripValue(children[++currentChild].Accept(this).ToString());
+            var parameters = RemoveLeadingAndTrailingQuotes(children[++currentChild].Accept(this).ToString());
             var expressionList = new List<Expression>();
 
             if (parameters.Equals("()"))
             {
                 // no input parameters read equal sign and brackets
-                var equalSign = StripValue(children[++currentChild].Accept(this).ToString());
+                var equalSign = RemoveLeadingAndTrailingQuotes(children[++currentChild].Accept(this).ToString());
                 if (equalSign.Equals("="))
                 {
-                    var leftBracket = StripValue(children[++currentChild].Accept(this).ToString());
+                    var leftBracket = RemoveLeadingAndTrailingQuotes(children[++currentChild].Accept(this).ToString());
                     if (!leftBracket.Equals("{"))
                     {
                         throw new Exception("No left bracket");
@@ -316,7 +377,7 @@ namespace DreamCompiler.Visitors
                     {
                         var currentStatementExpression = children[++currentChild].Accept(this);
 
-                        if (StripValue(currentStatementExpression.ToString()).Equals("}"))
+                        if (RemoveLeadingAndTrailingQuotes(currentStatementExpression.ToString()).Equals("}"))
                         {
                             break;
                         }
@@ -414,6 +475,7 @@ namespace DreamCompiler.Visitors
         private ConstantExpression methodName;
         private ParameterExpression[] inputParameters;
         private ParameterExpression returnParameters;
+        private MethodCallExpression methodCall;
 
         public DreamMethodCall(ConstantExpression methodName, ParameterExpression[] inputParameters, ParameterExpression returnParameters)
         {
@@ -425,6 +487,13 @@ namespace DreamCompiler.Visitors
         public override ExpressionType NodeType => ExpressionType.Call;
 
         public override Type Type => typeof(object);
+
+        public override bool CanReduce => true;
+
+        public override Expression Reduce()
+        {
+            return base.Reduce();
+        }
     }
 
 
