@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -23,6 +24,7 @@ namespace DreamCompiler.Visitors
     internal class DreamVisitor : DreamGrammarBaseVisitor<Expression>
     {
         private Stack<BinaryExpressionTypes> binaryExpressionStack = new Stack<BinaryExpressionTypes>();
+        private Dictionary<string, LabelExpression> highLevelFunctions = new Dictionary<string, LabelExpression>();
 
         public override Expression VisitCompileUnit(DreamGrammarParser.CompileUnitContext context)
         {
@@ -394,6 +396,11 @@ namespace DreamCompiler.Visitors
             var localParameters = new List<ParameterExpression>();
             var expressionsToAdd = new List<Expression>();
 
+            var label = Expression.Label(Expression.Label());
+
+            expressionsToAdd.Add(label);
+            highLevelFunctions.Add( RemoveLeadingAndTrailingQuotes(functionName.ToString()) , label);
+
             foreach (var parm in expressionList)
             {
                 if (parm is ParameterExpression item)
@@ -484,7 +491,7 @@ namespace DreamCompiler.Visitors
             this.returnParameters = returnParameters;
         }
 
-        public override ExpressionType NodeType => ExpressionType.Call;
+        public override ExpressionType NodeType => ExpressionType.Extension;
 
         public override Type Type => typeof(object);
 
@@ -510,6 +517,6 @@ namespace DreamCompiler.Visitors
             return expressions;
         }
 
-        public override ExpressionType NodeType => ExpressionType.Parameter;
+        public override ExpressionType NodeType => ExpressionType.Extension;
     }
 }

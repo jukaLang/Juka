@@ -1,10 +1,12 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
+using System.Dynamic;
 using System.IO;
 using DreamCompiler;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 
 namespace DreamUnitTest
@@ -53,8 +55,6 @@ namespace DreamUnitTest
         [TestMethod]
         public void TestExpressions()
         {
-
-
             var left = Expression.Add(Expression.Constant(3), Expression.Constant(4));
             var right = Expression.Divide(left, Expression.Constant(3));
 
@@ -139,6 +139,19 @@ namespace DreamUnitTest
         public void TestFunctionCall()
         {
 
+            CallSiteBinder binder = new Binder();
+
+            ConstantExpression[] arguments = new[] { Expression.Constant(5), Expression.Constant(2) };
+            DynamicExpression exp = Expression.Dynamic(
+                binder,
+                typeof(object),
+                arguments);
+
+            var compiled = Expression.Lambda<Func<object>>(exp).Compile();
+            var result = compiled();
+
+
+
             //Expression.Call()
             string[,] gradeArray =
                 {{"chemistry", "history", "mathematics"}, {"78", "61", "82"}};
@@ -161,13 +174,13 @@ namespace DreamUnitTest
                 Expression.Constant("this is a test"));
 
 
-            var expressionBlock = Expression.Block(new Expression[] {writeLineExpression});
+            var innerLabel = Expression.Label();
+            
+            var expressionBlock = Expression.Block( Expression.Label(innerLabel), writeLineExpression);
+            var block = Expression.Block(Expression.Goto(innerLabel),expressionBlock);
+            var compiledCode = Expression.Lambda<Action>(block).Compile();
 
-            //var foo = typeof(BlockExpression).GetMethod(() "foo", new Type[] {});
-
-
-
-            //ar callExpression = Expression.Call( null, )
+            compiledCode();
         }
 
 
@@ -222,7 +235,29 @@ namespace DreamUnitTest
 
             Console.WriteLine(factorial);
         }
+    }
 
+    class Binder : BinaryOperationBinder
+    {
+        public Binder()  : base(ExpressionType.Subtract)
+        {
+        }
         
+        public override DynamicMetaObject FallbackBinaryOperation(DynamicMetaObject target, DynamicMetaObject arg,
+            DynamicMetaObject errorSuggestion)
+        {
+            if (target.RuntimeType == arg.RuntimeType)
+            {
+                var expression = Expression.Lambda<Func<int>>(Expression.MakeBinary(
+                    ExpressionType.Add,
+                    Expression.Constant(target.Value),
+                    Expression.Constant(arg.Value))).Compile()();
+
+                return new DynamicMetaObject( Expression.Convert(Expression.Constant(expression), typeof(object)) , BindingRestrictions.Empty);
+            }
+
+            throw new Exception("can't bind");
+        }
+       
     }
 }
