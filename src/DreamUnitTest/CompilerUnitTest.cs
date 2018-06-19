@@ -35,16 +35,6 @@ namespace DreamUnitTest
 
                     }
                 }
-                /*
-                using (MemoryStream memStream = new MemoryStream((int) file.Length))
-                {
-                    memStream.Write(file, 0, file.Length);
-                    var compiler = new Compiler();
-                    compiler.Go(memStream);
-                }
-                */
-
-
             }
             catch (Exception ex)
             {
@@ -58,7 +48,9 @@ namespace DreamUnitTest
             var left = Expression.Add(Expression.Constant(3), Expression.Constant(4));
             var right = Expression.Divide(left, Expression.Constant(3));
 
-            Expression.Lambda(Expression.Block(right)).Compile().DynamicInvoke();
+            var block1 = Expression.Block(right);
+
+            Expression.Lambda(block1).Compile().DynamicInvoke();
 
 
             string[,] gradeArray =

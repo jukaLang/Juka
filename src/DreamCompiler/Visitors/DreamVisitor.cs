@@ -24,11 +24,22 @@ namespace DreamCompiler.Visitors
     internal class DreamVisitor : DreamGrammarBaseVisitor<Expression>
     {
         private Stack<BinaryExpressionTypes> binaryExpressionStack = new Stack<BinaryExpressionTypes>();
-        private Dictionary<string, LabelExpression> highLevelFunctions = new Dictionary<string, LabelExpression>();
+        private Dictionary<string, LabelTarget> highLevelFunctions = new Dictionary<string, LabelTarget>();
 
         public override Expression VisitCompileUnit(DreamGrammarParser.CompileUnitContext context)
         {
-            Expression compileUnit = base.VisitCompileUnit(context);
+            var blockExpressionList = new List<BlockExpression>();
+            foreach (var classification in context.children)
+            {
+                var t = classification.Accept(this);
+
+                if (t is BlockExpression tempBlock)
+                {
+                    blockExpressionList.Add(tempBlock);
+                }
+            }
+
+            Expression compileUnit = Expression.Block(blockExpressionList);
             return compileUnit;
         }
 
@@ -396,11 +407,14 @@ namespace DreamCompiler.Visitors
             var localParameters = new List<ParameterExpression>();
             var expressionsToAdd = new List<Expression>();
 
-            var label = Expression.Label(Expression.Label());
+            LabelTarget label = Expression.Label();
 
-            expressionsToAdd.Add(label);
+            expressionsToAdd.Add(Expression.Label(label));
             highLevelFunctions.Add( RemoveLeadingAndTrailingQuotes(functionName.ToString()) , label);
 
+            // THIS LOOP NEEDS to 
+            // BE REFACTORED
+            // UGLY CODE AHEAD
             foreach (var parm in expressionList)
             {
                 if (parm is ParameterExpression item)
@@ -422,6 +436,14 @@ namespace DreamCompiler.Visitors
                             expressionsToAdd.Add(exp);
                         }
                     }
+
+                    continue;
+                }
+
+                if (parm is DreamMethodCall dreamMethodCall)
+                {
+                    expressionsToAdd.Add( dreamMethodCall );
+                    continue;
                 }
             }
 
@@ -434,12 +456,12 @@ namespace DreamCompiler.Visitors
                 Expression.Constant("0s")));
                 */
 
-            return Expression.Block(localParameters, expressionList);
+            return Expression.Block(localParameters, expressionsToAdd);
         }
 
         public override Expression VisitFunctionCall(DreamGrammarParser.FunctionCallContext context)
         {
-            var functionCallName = context.children[0].GetText();//
+            var functionCallName = RemoveLeadingAndTrailingQuotes(context.children[0].GetText());
 
             object[] t = new object[context.ChildCount - 1];
             for (int i = 1; i < context.ChildCount; i++)
@@ -447,7 +469,7 @@ namespace DreamCompiler.Visitors
                 t[i-1] = context.children[i].Accept(this);
             }
 
-            DreamMethodCall dreamMethodCall = new DreamMethodCall(Expression.Constant(functionCallName), null, null);
+            DreamMethodCall dreamMethodCall = new DreamMethodCall(functionCallName, null, null, highLevelFunctions);
             return dreamMethodCall;
         }
 
@@ -479,16 +501,18 @@ namespace DreamCompiler.Visitors
 
     internal class DreamMethodCall : Expression
     {
-        private ConstantExpression methodName;
+        private string methodName;
         private ParameterExpression[] inputParameters;
         private ParameterExpression returnParameters;
         private MethodCallExpression methodCall;
+        private Dictionary<string, LabelTarget> functionDictionary;
 
-        public DreamMethodCall(ConstantExpression methodName, ParameterExpression[] inputParameters, ParameterExpression returnParameters)
+        public DreamMethodCall(string methodName, ParameterExpression[] inputParameters, ParameterExpression returnParameters, Dictionary<string, LabelTarget> highLevelFunctions)
         {
             this.methodName = methodName;
             this.inputParameters = inputParameters;
             this.returnParameters = returnParameters;
+            this.functionDictionary = highLevelFunctions;
         }
 
         public override ExpressionType NodeType => ExpressionType.Extension;
@@ -499,7 +523,13 @@ namespace DreamCompiler.Visitors
 
         public override Expression Reduce()
         {
-            return base.Reduce();
+            LabelTarget labelExpression;
+            if (functionDictionary.TryGetValue(methodName, out labelExpression))
+            {
+                return Expression.Goto(labelExpression);
+            }
+
+            return Expression.Constant("foo", typeof(string));
         }
     }
 
