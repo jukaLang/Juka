@@ -7,6 +7,7 @@ using Antlr4.Runtime.Tree;
 using DreamCompiler.Tokens;
 using System.Linq.Expressions;
 using System.Net.Mime;
+using System.Reflection;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 
@@ -333,7 +334,6 @@ namespace DreamCompiler.Visitors
 
         private string RemoveLeadingAndTrailingQuotes(String theString)
         {
-            Trace.WriteLine(theString);
             if (theString.StartsWith(@"""") && theString.EndsWith(@""""))
             {
                 return theString.Substring(1, theString.Length - 2);
@@ -440,9 +440,15 @@ namespace DreamCompiler.Visitors
                     continue;
                 }
 
-                if (parm is DreamMethodCall dreamMethodCall)
+                if (parm is DreamMethodCall dreamMethodCall )
                 {
                     expressionsToAdd.Add( dreamMethodCall );
+                    continue;
+                }
+
+                if (parm is PrintExpression p)
+                {
+                    expressionsToAdd.Add( p);
                     continue;
                 }
             }
@@ -471,6 +477,8 @@ namespace DreamCompiler.Visitors
 
             DreamMethodCall dreamMethodCall = new DreamMethodCall(functionCallName, null, null, highLevelFunctions);
             return dreamMethodCall;
+
+            //return new PrintExpression(functionCallName);
         }
 
         public override Expression VisitFunctionCallExpression(DreamGrammarParser.FunctionCallExpressionContext context)
@@ -517,19 +525,19 @@ namespace DreamCompiler.Visitors
 
         public override ExpressionType NodeType => ExpressionType.Extension;
 
-        public override Type Type => typeof(object);
+        public override Type Type => typeof(void);
+        //The type has to match the type that the generated Expression returns
 
         public override bool CanReduce => true;
 
         public override Expression Reduce()
         {
-            LabelTarget labelExpression;
-            if (functionDictionary.TryGetValue(methodName, out labelExpression))
+            if (functionDictionary.TryGetValue(methodName, out var labelExpression))
             {
                 return Expression.Goto(labelExpression);
             }
 
-            return Expression.Constant("foo", typeof(string));
+            throw new Exception("function does not exist or does not have a matching label");
         }
     }
 
@@ -548,5 +556,39 @@ namespace DreamCompiler.Visitors
         }
 
         public override ExpressionType NodeType => ExpressionType.Extension;
+    }
+
+
+    internal class PrintExpression : Expression
+    {
+        private String text;
+        private static MethodInfo methodInfo = typeof(Console).GetMethod("WriteLine", new Type[] {typeof(string)});
+
+        public PrintExpression(String t)
+        {
+            text = t;
+        }
+
+        public string Text
+        {
+            get { return text; }
+        }
+
+        public override bool CanReduce
+        {
+            get { return true; }
+        }
+
+        public override Expression Reduce()
+        {
+            return Expression.Call(null, methodInfo, Expression.Constant(text));
+        }
+
+        public override Type Type
+        {
+            get { return methodInfo.ReturnType; }
+        }
+
+        public override ExpressionType NodeType { get{return ExpressionType.Extension;} }
     }
 }
