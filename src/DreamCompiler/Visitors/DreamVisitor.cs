@@ -443,6 +443,8 @@ namespace DreamCompiler.Visitors
                 if (parm is DreamMethodCall dreamMethodCall )
                 {
                     expressionsToAdd.Add( dreamMethodCall );
+                    expressionsToAdd.Add(Expression.Label(dreamMethodCall.ReturnTarget));
+                    expressionsToAdd.Add(Expression.Goto(dreamMethodCall.ReturnTarget));
                     continue;
                 }
 
@@ -475,7 +477,15 @@ namespace DreamCompiler.Visitors
                 t[i-1] = context.children[i].Accept(this);
             }
 
-            DreamMethodCall dreamMethodCall = new DreamMethodCall(functionCallName, null, null, highLevelFunctions);
+            var returnLabel = Expression.Label();
+
+            DreamMethodCall dreamMethodCall = new DreamMethodCall(
+                functionCallName, 
+                null, 
+                null, 
+                highLevelFunctions,
+                returnLabel);
+
             return dreamMethodCall;
 
             //return new PrintExpression(functionCallName);
@@ -515,12 +525,13 @@ namespace DreamCompiler.Visitors
         private MethodCallExpression methodCall;
         private Dictionary<string, LabelTarget> functionDictionary;
 
-        public DreamMethodCall(string methodName, ParameterExpression[] inputParameters, ParameterExpression returnParameters, Dictionary<string, LabelTarget> highLevelFunctions)
+        public DreamMethodCall(string methodName, ParameterExpression[] inputParameters, ParameterExpression returnParameters, Dictionary<string, LabelTarget> highLevelFunctions, LabelTarget label)
         {
             this.methodName = methodName;
             this.inputParameters = inputParameters;
             this.returnParameters = returnParameters;
             this.functionDictionary = highLevelFunctions;
+            this.ReturnTarget = label;
         }
 
         public override ExpressionType NodeType => ExpressionType.Extension;
@@ -539,6 +550,8 @@ namespace DreamCompiler.Visitors
 
             throw new Exception("function does not exist or does not have a matching label");
         }
+
+        internal LabelTarget ReturnTarget { get; }
     }
 
 
