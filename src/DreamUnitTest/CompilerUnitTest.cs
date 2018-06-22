@@ -58,7 +58,7 @@ namespace DreamUnitTest
 
             Expression arrayExpression = Expression.Constant(gradeArray);
 
-            MethodCallExpression methodCall = Expression.ArrayIndex(arrayExpression, Expression.Constant(0), Expression.Constant(3));
+            MethodCallExpression methodCall = Expression.ArrayIndex(arrayExpression, Expression.Constant(0), Expression.Constant(2));
 
             try
             {
