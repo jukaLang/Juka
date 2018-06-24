@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from D:\source\github\DReAM\src\\DreamCompiler\grammar\DreamGrammar.g4 by ANTLR 4.7.1
+// Generated from C:\Users\AndreiM\Documents\GitHub\DReAM\src\\DreamCompiler\grammar\DreamGrammar.g4 by ANTLR 4.7.1
 
 // Unreachable code detected
 #pragma warning disable 0162

@@ -24,24 +24,28 @@ namespace DreamCompiler.Visitors
 
     internal class DreamVisitor : DreamGrammarBaseVisitor<Expression>
     {
+        private const string V = "%";
         private Stack<BinaryExpressionTypes> binaryExpressionStack = new Stack<BinaryExpressionTypes>();
         private Dictionary<string, LabelTarget> highLevelFunctions = new Dictionary<string, LabelTarget>();
 
         public override Expression VisitCompileUnit(DreamGrammarParser.CompileUnitContext context)
         {
             var blockExpressionList = new List<BlockExpression>();
-            foreach (var classification in context.children)
+            if (context.ChildCount != 0)
             {
-                var t = classification.Accept(this);
-
-                if (t is BlockExpression tempBlock)
+                foreach (var classification in context.children)
                 {
-                    blockExpressionList.Add(tempBlock);
-                }
-            }
+                    var t = classification.Accept(this);
 
-            Expression compileUnit = Expression.Block(blockExpressionList);
-            return compileUnit;
+                    if (t is BlockExpression tempBlock)
+                    {
+                        blockExpressionList.Add(tempBlock);
+                    }
+                }
+                Expression compileUnit = Expression.Block(blockExpressionList);
+                return compileUnit;
+            }
+            return null;
         }
 
         public override Expression VisitStatement(DreamGrammarParser.StatementContext context)
@@ -88,6 +92,7 @@ namespace DreamCompiler.Visitors
                 case "/":
                 case "-":
                 case "*":
+                case V:
                     if (currentType == BinaryExpressionTypes.Int)
                     {
                         Expression left;
@@ -128,6 +133,85 @@ namespace DreamCompiler.Visitors
                         {
                             binaryExpression = Expression.Multiply(left, right);
                         }
+                        else if (binaryOperator.Equals("%"))
+                        {
+                            binaryExpression = Expression.Modulo(left, right);
+                        }
+                    }
+                    else if(currentType == BinaryExpressionTypes.Double)
+                    {
+                        Expression left;
+                        Expression right;
+
+                        if (expressions[0] is ConstantExpression)
+                        {
+                            left = Expression.Constant(Convert.ToDouble(RemoveLeadingAndTrailingQuotes(expressions[0].ToString())));
+                        }
+                        else
+                        {
+                            left = expressions[0];
+                        }
+
+                        if (expressions[2] is ConstantExpression)
+                        {
+                            right = Expression.Constant(Convert.ToDouble(RemoveLeadingAndTrailingQuotes(expressions[2].ToString())));
+                        }
+                        else
+                        {
+                            right = expressions[2];
+                        }
+
+                        if (binaryOperator.Equals("+"))
+                        {
+                            binaryExpression = Expression.Add(left, right);
+                        }
+                        else if (binaryOperator.Equals("/"))
+                        {
+                            binaryExpression = Expression.Divide(left, right);
+                        }
+                        else if (binaryOperator.Equals("-"))
+                        {
+                            binaryExpression = Expression.Subtract(left, right);
+                        }
+                        else if (binaryOperator.Equals("*"))
+                        {
+                            binaryExpression = Expression.Multiply(left, right);
+                        }
+                        else if (binaryOperator.Equals("%"))
+                        {
+                            binaryExpression = Expression.Modulo(left, right);
+                        }
+                    }
+                    else if(currentType == BinaryExpressionTypes.String)
+                    {
+                        Expression left;
+                        Expression right;
+                        var concatMethod = typeof(string).GetMethod("Concat", new[] { typeof(string), typeof(string) });
+
+                        if (binaryOperator.Equals("+"))
+                        {
+                            if (expressions[0] is ConstantExpression)
+                            {
+                                left = Expression.Constant(Convert.ToDouble(RemoveLeadingAndTrailingQuotes(expressions[0].ToString())));
+                            }
+                            else
+                            {
+                                left = expressions[0];
+                            }
+
+
+                            if (expressions[2] is ConstantExpression)
+                            {
+                                right = Expression.Constant(Convert.ToDouble(RemoveLeadingAndTrailingQuotes(expressions[2].ToString())));
+                            }
+                            else
+                            {
+                                right = expressions[2];
+                            }
+
+                            binaryExpression = Expression.Add(left, right, concatMethod);
+                        }
+
                     }
 
                     break;
@@ -178,8 +262,8 @@ namespace DreamCompiler.Visitors
 
         public override Expression VisitExpression(DreamGrammarParser.ExpressionContext context)
         {
-            int size = context.ChildCount - 1;
-            Expression[] t = new Expression[size];
+            int size = context.ChildCount - 1; 
+            Expression[] t = new Expression[size]; 
             for (int i = 0; i < size; i++)
             {
                 var exp = context.children[i].Accept(this);
