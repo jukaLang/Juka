@@ -42,6 +42,26 @@ namespace DreamUnitTest
             }
         }
 
+
+        [TestMethod]
+        public void TestCallSiteBinder()
+        {
+            CallSiteBinder binder = new Binder();
+
+            var site = CallSite<Func<CallSite, object, object, object>>.Create(binder);
+
+            var sum = site.Target(site, 5.33, 2.3234);
+
+            ConstantExpression[] arguments = new[] { Expression.Constant(5), Expression.Constant(2) };
+            DynamicExpression exp = Expression.Dynamic(
+                binder,
+                typeof(object),
+                arguments);
+
+            var compiled = Expression.Lambda<Func<object>>(exp).Compile();
+            var result = compiled();
+        }
+
         [TestMethod]
         public void TestExpressions()
         {
@@ -130,18 +150,6 @@ namespace DreamUnitTest
         [TestMethod]
         public void TestFunctionCall()
         {
-
-            CallSiteBinder binder = new Binder();
-
-            ConstantExpression[] arguments = new[] { Expression.Constant(5), Expression.Constant(2) };
-            DynamicExpression exp = Expression.Dynamic(
-                binder,
-                typeof(object),
-                arguments);
-
-            var compiled = Expression.Lambda<Func<object>>(exp).Compile();
-            var result = compiled();
-
 
 
             //Expression.Call()
@@ -245,7 +253,9 @@ namespace DreamUnitTest
                     Expression.Constant(target.Value),
                     Expression.Constant(arg.Value))).Compile()();
 
-                return new DynamicMetaObject( Expression.Convert(Expression.Constant(expression), typeof(object)) , BindingRestrictions.Empty);
+                var convertedExpression = Expression.Convert(Expression.Constant(expression), typeof(object));
+
+                return new DynamicMetaObject( convertedExpression , BindingRestrictions.Empty);
             }
 
             throw new Exception("can't bind");
