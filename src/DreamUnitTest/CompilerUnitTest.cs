@@ -11,7 +11,6 @@ using System.Runtime.CompilerServices;
 
 namespace DreamUnitTest
 {
-    
     [TestClass]
     public class CompilerUnitTest
     {
@@ -61,6 +60,24 @@ namespace DreamUnitTest
             var compiled = Expression.Lambda<Func<object>>(exp).Compile();
             var result = compiled();
         }
+
+        [TestMethod]
+        public void TestCallSiteBinder2()
+        {
+
+            CallSiteBinder binder = new Binder();
+            
+            ConstantExpression[] arguments = new[] { Expression.Constant(5), Expression.Constant(2) };
+
+            DynamicExpression exp = Expression.Dynamic(
+                binder,
+                typeof(object),
+                arguments);
+
+            var compiled = Expression.Lambda<Func<object>>(exp).Compile();
+            var result = compiled();
+        }
+
 
         [TestMethod]
         public void TestExpressions()
