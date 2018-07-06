@@ -49,9 +49,18 @@ namespace DreamUnitTest
 
             var site = CallSite<Func<CallSite, object, object, object>>.Create(binder);
 
-            var sum = site.Target(site, 5.33, 2.3234);
+            var sum = site.Target(site, 5, 2);
 
-            ConstantExpression[] arguments = new[] { Expression.Constant(5), Expression.Constant(2) };
+            ParameterExpression x = Expression.Variable(typeof(int), "x");
+            ParameterExpression y = Expression.Variable(typeof(int), "y");
+
+            Expression blockExpression = Expression.Block(new ParameterExpression[] { x, y },
+            Expression.Assign(x, Expression.Constant(2)),
+            Expression.Assign(y, Expression.Constant(5)));
+
+            
+            ParameterExpression[] arguments = new[] { x,y};
+
             DynamicExpression exp = Expression.Dynamic(
                 binder,
                 typeof(object),
@@ -59,6 +68,8 @@ namespace DreamUnitTest
 
             var compiled = Expression.Lambda<Func<object>>(exp).Compile();
             var result = compiled();
+            Console.WriteLine(result);
+            Console.WriteLine("DONE");
         }
 
         [TestMethod]
