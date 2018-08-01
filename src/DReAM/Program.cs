@@ -15,7 +15,7 @@ namespace DReAM
         [STAThread]
         static void Main()
         {
-            var bugsnag = new Bugsnag.Client(new Configuration("5661e5af136881630508dac483c311fe"));
+            //var bugsnag = new Bugsnag.Client(new Configuration("5661e5af136881630508dac483c311fe"));
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new DReAMUI());

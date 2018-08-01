@@ -24,7 +24,6 @@ namespace DreamCompiler.Visitors
 
     internal class DreamVisitor : DreamGrammarBaseVisitor<Expression>
     {
-        private const string V = "%";
         private Stack<BinaryExpressionTypes> binaryExpressionStack = new Stack<BinaryExpressionTypes>();
         private Dictionary<string, LabelTarget> highLevelFunctions = new Dictionary<string, LabelTarget>();
 
@@ -92,7 +91,7 @@ namespace DreamCompiler.Visitors
                 case "/":
                 case "-":
                 case "*":
-                case V:
+                case "%":
                     if (currentType == BinaryExpressionTypes.Int)
                     {
                         Expression left;
