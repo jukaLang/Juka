@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\Users\AndreiM\Documents\GitHub\DReAM\src\\DreamCompiler\grammar\DreamGrammar.g4 by ANTLR 4.7.1
+// Generated from C:\Users\Andrey\Desktop\DReAM\src\\DReAMCompiler\grammar\DReAMGrammar.g4 by ANTLR 4.7.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -19,7 +19,7 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace DreamCompiler.Grammar {
+namespace DReAMCompiler.Grammar {
 using System;
 using System.IO;
 using System.Text;
@@ -30,7 +30,7 @@ using DFA = Antlr4.Runtime.Dfa.DFA;
 
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.7.1")]
 [System.CLSCompliant(false)]
-public partial class DreamGrammarLexer : Lexer {
+public partial class DReAMGrammarLexer : Lexer {
 	protected static DFA[] decisionToDFA;
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int
@@ -78,10 +78,10 @@ public partial class DreamGrammarLexer : Lexer {
 	};
 
 
-	public DreamGrammarLexer(ICharStream input)
+	public DReAMGrammarLexer(ICharStream input)
 	: this(input, Console.Out, Console.Error) { }
 
-	public DreamGrammarLexer(ICharStream input, TextWriter output, TextWriter errorOutput)
+	public DReAMGrammarLexer(ICharStream input, TextWriter output, TextWriter errorOutput)
 	: base(input, output, errorOutput)
 	{
 		Interpreter = new LexerATNSimulator(this, _ATN, decisionToDFA, sharedContextCache);
@@ -124,7 +124,7 @@ public partial class DreamGrammarLexer : Lexer {
 		}
 	}
 
-	public override string GrammarFileName { get { return "DreamGrammar.g4"; } }
+	public override string GrammarFileName { get { return "DReAMGrammar.g4"; } }
 
 	public override string[] RuleNames { get { return ruleNames; } }
 
@@ -134,7 +134,7 @@ public partial class DreamGrammarLexer : Lexer {
 
 	public override string SerializedAtn { get { return new string(_serializedATN); } }
 
-	static DreamGrammarLexer() {
+	static DReAMGrammarLexer() {
 		decisionToDFA = new DFA[_ATN.NumberOfDecisions];
 		for (int i = 0; i < _ATN.NumberOfDecisions; i++) {
 			decisionToDFA[i] = new DFA(_ATN.GetDecisionState(i), i);
@@ -885,4 +885,4 @@ public partial class DreamGrammarLexer : Lexer {
 
 
 }
-} // namespace DreamCompiler.Grammar
+} // namespace DReAMCompiler.Grammar

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\Users\AndreiM\Documents\GitHub\DReAM\src\\DreamCompiler\grammar\DreamGrammar.g4 by ANTLR 4.7.1
+// Generated from C:\Users\Andrey\Desktop\DReAM\src\\DReAMCompiler\grammar\DReAMGrammar.g4 by ANTLR 4.7.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -19,23 +19,23 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace DreamCompiler.Grammar {
+namespace DReAMCompiler.Grammar {
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using IToken = Antlr4.Runtime.IToken;
 using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 
 /// <summary>
-/// This class provides an empty implementation of <see cref="IDreamGrammarVisitor{Result}"/>,
+/// This class provides an empty implementation of <see cref="IDReAMGrammarVisitor{Result}"/>,
 /// which can be extended to create a visitor which only needs to handle a subset
 /// of the available methods.
 /// </summary>
 /// <typeparam name="Result">The return type of the visit operation.</typeparam>
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.7.1")]
 [System.CLSCompliant(false)]
-public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, IDreamGrammarVisitor<Result> {
+public partial class DReAMGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<Result>, IDReAMGrammarVisitor<Result> {
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.compileUnit"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.compileUnit"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -43,9 +43,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitCompileUnit([NotNull] DreamGrammarParser.CompileUnitContext context) { return VisitChildren(context); }
+	public virtual Result VisitCompileUnit([NotNull] DReAMGrammarParser.CompileUnitContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.classifications"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.classifications"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -53,9 +53,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitClassifications([NotNull] DreamGrammarParser.ClassificationsContext context) { return VisitChildren(context); }
+	public virtual Result VisitClassifications([NotNull] DReAMGrammarParser.ClassificationsContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.statement"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.statement"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -63,9 +63,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitStatement([NotNull] DreamGrammarParser.StatementContext context) { return VisitChildren(context); }
+	public virtual Result VisitStatement([NotNull] DReAMGrammarParser.StatementContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.endLine"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.endLine"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -73,9 +73,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitEndLine([NotNull] DreamGrammarParser.EndLineContext context) { return VisitChildren(context); }
+	public virtual Result VisitEndLine([NotNull] DReAMGrammarParser.EndLineContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.semiColon"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.semiColon"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -83,9 +83,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitSemiColon([NotNull] DreamGrammarParser.SemiColonContext context) { return VisitChildren(context); }
+	public virtual Result VisitSemiColon([NotNull] DReAMGrammarParser.SemiColonContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.expression"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.expression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -93,9 +93,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitExpression([NotNull] DreamGrammarParser.ExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpression([NotNull] DReAMGrammarParser.ExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.functionCall"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.functionCall"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -103,9 +103,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitFunctionCall([NotNull] DreamGrammarParser.FunctionCallContext context) { return VisitChildren(context); }
+	public virtual Result VisitFunctionCall([NotNull] DReAMGrammarParser.FunctionCallContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.functionDeclaration"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.functionDeclaration"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -113,9 +113,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitFunctionDeclaration([NotNull] DreamGrammarParser.FunctionDeclarationContext context) { return VisitChildren(context); }
+	public virtual Result VisitFunctionDeclaration([NotNull] DReAMGrammarParser.FunctionDeclarationContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.funcName"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.funcName"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -123,9 +123,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitFuncName([NotNull] DreamGrammarParser.FuncNameContext context) { return VisitChildren(context); }
+	public virtual Result VisitFuncName([NotNull] DReAMGrammarParser.FuncNameContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.returnValue"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.returnValue"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -133,9 +133,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitReturnValue([NotNull] DreamGrammarParser.ReturnValueContext context) { return VisitChildren(context); }
+	public virtual Result VisitReturnValue([NotNull] DReAMGrammarParser.ReturnValueContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.leftParen"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.leftParen"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -143,9 +143,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitLeftParen([NotNull] DreamGrammarParser.LeftParenContext context) { return VisitChildren(context); }
+	public virtual Result VisitLeftParen([NotNull] DReAMGrammarParser.LeftParenContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.rightParen"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.rightParen"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -153,9 +153,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitRightParen([NotNull] DreamGrammarParser.RightParenContext context) { return VisitChildren(context); }
+	public virtual Result VisitRightParen([NotNull] DReAMGrammarParser.RightParenContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.booleanExpression"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.booleanExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -163,9 +163,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBooleanExpression([NotNull] DreamGrammarParser.BooleanExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitBooleanExpression([NotNull] DReAMGrammarParser.BooleanExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.primitives"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.primitives"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -173,9 +173,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitPrimitives([NotNull] DreamGrammarParser.PrimitivesContext context) { return VisitChildren(context); }
+	public virtual Result VisitPrimitives([NotNull] DReAMGrammarParser.PrimitivesContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.command"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.command"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -183,9 +183,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitCommand([NotNull] DreamGrammarParser.CommandContext context) { return VisitChildren(context); }
+	public virtual Result VisitCommand([NotNull] DReAMGrammarParser.CommandContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.userDefinedTypeDecl"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.userDefinedTypeDecl"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -193,9 +193,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitUserDefinedTypeDecl([NotNull] DreamGrammarParser.UserDefinedTypeDeclContext context) { return VisitChildren(context); }
+	public virtual Result VisitUserDefinedTypeDecl([NotNull] DReAMGrammarParser.UserDefinedTypeDeclContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.userDefinedTypeKeyWord"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.userDefinedTypeKeyWord"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -203,9 +203,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitUserDefinedTypeKeyWord([NotNull] DreamGrammarParser.UserDefinedTypeKeyWordContext context) { return VisitChildren(context); }
+	public virtual Result VisitUserDefinedTypeKeyWord([NotNull] DReAMGrammarParser.UserDefinedTypeKeyWordContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.userDefinedTypeName"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.userDefinedTypeName"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -213,9 +213,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitUserDefinedTypeName([NotNull] DreamGrammarParser.UserDefinedTypeNameContext context) { return VisitChildren(context); }
+	public virtual Result VisitUserDefinedTypeName([NotNull] DReAMGrammarParser.UserDefinedTypeNameContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.variable"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.variable"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -223,9 +223,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitVariable([NotNull] DreamGrammarParser.VariableContext context) { return VisitChildren(context); }
+	public virtual Result VisitVariable([NotNull] DReAMGrammarParser.VariableContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.variableDeclaration"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.variableDeclaration"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -233,9 +233,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitVariableDeclaration([NotNull] DreamGrammarParser.VariableDeclarationContext context) { return VisitChildren(context); }
+	public virtual Result VisitVariableDeclaration([NotNull] DReAMGrammarParser.VariableDeclarationContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.userDefinedTypeVariableDecl"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.userDefinedTypeVariableDecl"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -243,9 +243,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitUserDefinedTypeVariableDecl([NotNull] DreamGrammarParser.UserDefinedTypeVariableDeclContext context) { return VisitChildren(context); }
+	public virtual Result VisitUserDefinedTypeVariableDecl([NotNull] DReAMGrammarParser.UserDefinedTypeVariableDeclContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.userDefinedTypeVariableReference"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.userDefinedTypeVariableReference"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -253,9 +253,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitUserDefinedTypeVariableReference([NotNull] DreamGrammarParser.UserDefinedTypeVariableReferenceContext context) { return VisitChildren(context); }
+	public virtual Result VisitUserDefinedTypeVariableReference([NotNull] DReAMGrammarParser.UserDefinedTypeVariableReferenceContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.userDefinedTypeFunctionReference"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.userDefinedTypeFunctionReference"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -263,9 +263,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitUserDefinedTypeFunctionReference([NotNull] DreamGrammarParser.UserDefinedTypeFunctionReferenceContext context) { return VisitChildren(context); }
+	public virtual Result VisitUserDefinedTypeFunctionReference([NotNull] DReAMGrammarParser.UserDefinedTypeFunctionReferenceContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.add"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.add"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -273,9 +273,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitAdd([NotNull] DreamGrammarParser.AddContext context) { return VisitChildren(context); }
+	public virtual Result VisitAdd([NotNull] DReAMGrammarParser.AddContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.summation"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.summation"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -283,9 +283,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitSummation([NotNull] DreamGrammarParser.SummationContext context) { return VisitChildren(context); }
+	public virtual Result VisitSummation([NotNull] DReAMGrammarParser.SummationContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.subtract"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.subtract"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -293,9 +293,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitSubtract([NotNull] DreamGrammarParser.SubtractContext context) { return VisitChildren(context); }
+	public virtual Result VisitSubtract([NotNull] DReAMGrammarParser.SubtractContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.subtraction"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.subtraction"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -303,9 +303,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitSubtraction([NotNull] DreamGrammarParser.SubtractionContext context) { return VisitChildren(context); }
+	public virtual Result VisitSubtraction([NotNull] DReAMGrammarParser.SubtractionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.multiply"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.multiply"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -313,9 +313,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitMultiply([NotNull] DreamGrammarParser.MultiplyContext context) { return VisitChildren(context); }
+	public virtual Result VisitMultiply([NotNull] DReAMGrammarParser.MultiplyContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.multiplication"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.multiplication"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -323,9 +323,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitMultiplication([NotNull] DreamGrammarParser.MultiplicationContext context) { return VisitChildren(context); }
+	public virtual Result VisitMultiplication([NotNull] DReAMGrammarParser.MultiplicationContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.breakKeyWord"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.breakKeyWord"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -333,9 +333,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBreakKeyWord([NotNull] DreamGrammarParser.BreakKeyWordContext context) { return VisitChildren(context); }
+	public virtual Result VisitBreakKeyWord([NotNull] DReAMGrammarParser.BreakKeyWordContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.divide"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.divide"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -343,9 +343,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitDivide([NotNull] DreamGrammarParser.DivideContext context) { return VisitChildren(context); }
+	public virtual Result VisitDivide([NotNull] DReAMGrammarParser.DivideContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.division"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.division"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -353,9 +353,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitDivision([NotNull] DreamGrammarParser.DivisionContext context) { return VisitChildren(context); }
+	public virtual Result VisitDivision([NotNull] DReAMGrammarParser.DivisionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.modulo"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.modulo"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -363,9 +363,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitModulo([NotNull] DreamGrammarParser.ModuloContext context) { return VisitChildren(context); }
+	public virtual Result VisitModulo([NotNull] DReAMGrammarParser.ModuloContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.moduli"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.moduli"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -373,9 +373,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitModuli([NotNull] DreamGrammarParser.ModuliContext context) { return VisitChildren(context); }
+	public virtual Result VisitModuli([NotNull] DReAMGrammarParser.ModuliContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.types"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.types"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -383,9 +383,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitTypes([NotNull] DreamGrammarParser.TypesContext context) { return VisitChildren(context); }
+	public virtual Result VisitTypes([NotNull] DReAMGrammarParser.TypesContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.primitiveTypes"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.primitiveTypes"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -393,9 +393,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitPrimitiveTypes([NotNull] DreamGrammarParser.PrimitiveTypesContext context) { return VisitChildren(context); }
+	public virtual Result VisitPrimitiveTypes([NotNull] DReAMGrammarParser.PrimitiveTypesContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.numericTypes"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.numericTypes"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -403,9 +403,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitNumericTypes([NotNull] DreamGrammarParser.NumericTypesContext context) { return VisitChildren(context); }
+	public virtual Result VisitNumericTypes([NotNull] DReAMGrammarParser.NumericTypesContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.equalsign"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.equalsign"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -413,9 +413,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitEqualsign([NotNull] DreamGrammarParser.EqualsignContext context) { return VisitChildren(context); }
+	public virtual Result VisitEqualsign([NotNull] DReAMGrammarParser.EqualsignContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.comparisonOperator"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.comparisonOperator"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -423,9 +423,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitComparisonOperator([NotNull] DreamGrammarParser.ComparisonOperatorContext context) { return VisitChildren(context); }
+	public virtual Result VisitComparisonOperator([NotNull] DReAMGrammarParser.ComparisonOperatorContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.unaryOperator"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.unaryOperator"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -433,9 +433,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitUnaryOperator([NotNull] DreamGrammarParser.UnaryOperatorContext context) { return VisitChildren(context); }
+	public virtual Result VisitUnaryOperator([NotNull] DReAMGrammarParser.UnaryOperatorContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.bitWiseOperators"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.bitWiseOperators"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -443,9 +443,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBitWiseOperators([NotNull] DreamGrammarParser.BitWiseOperatorsContext context) { return VisitChildren(context); }
+	public virtual Result VisitBitWiseOperators([NotNull] DReAMGrammarParser.BitWiseOperatorsContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.equalequal"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.equalequal"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -453,9 +453,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitEqualequal([NotNull] DreamGrammarParser.EqualequalContext context) { return VisitChildren(context); }
+	public virtual Result VisitEqualequal([NotNull] DReAMGrammarParser.EqualequalContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.lessthan"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.lessthan"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -463,9 +463,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitLessthan([NotNull] DreamGrammarParser.LessthanContext context) { return VisitChildren(context); }
+	public virtual Result VisitLessthan([NotNull] DReAMGrammarParser.LessthanContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.greaterthan"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.greaterthan"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -473,9 +473,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitGreaterthan([NotNull] DreamGrammarParser.GreaterthanContext context) { return VisitChildren(context); }
+	public virtual Result VisitGreaterthan([NotNull] DReAMGrammarParser.GreaterthanContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.lessthanorequalto"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.lessthanorequalto"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -483,9 +483,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitLessthanorequalto([NotNull] DreamGrammarParser.LessthanorequaltoContext context) { return VisitChildren(context); }
+	public virtual Result VisitLessthanorequalto([NotNull] DReAMGrammarParser.LessthanorequaltoContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.greaterthanorequalto"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.greaterthanorequalto"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -493,9 +493,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitGreaterthanorequalto([NotNull] DreamGrammarParser.GreaterthanorequaltoContext context) { return VisitChildren(context); }
+	public virtual Result VisitGreaterthanorequalto([NotNull] DReAMGrammarParser.GreaterthanorequaltoContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.booleanAndOperator"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.booleanAndOperator"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -503,9 +503,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBooleanAndOperator([NotNull] DreamGrammarParser.BooleanAndOperatorContext context) { return VisitChildren(context); }
+	public virtual Result VisitBooleanAndOperator([NotNull] DReAMGrammarParser.BooleanAndOperatorContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.booleanOrOperator"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.booleanOrOperator"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -513,9 +513,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBooleanOrOperator([NotNull] DreamGrammarParser.BooleanOrOperatorContext context) { return VisitChildren(context); }
+	public virtual Result VisitBooleanOrOperator([NotNull] DReAMGrammarParser.BooleanOrOperatorContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.notOperator"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.notOperator"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -523,9 +523,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitNotOperator([NotNull] DreamGrammarParser.NotOperatorContext context) { return VisitChildren(context); }
+	public virtual Result VisitNotOperator([NotNull] DReAMGrammarParser.NotOperatorContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.bitAnd"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.bitAnd"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -533,9 +533,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBitAnd([NotNull] DreamGrammarParser.BitAndContext context) { return VisitChildren(context); }
+	public virtual Result VisitBitAnd([NotNull] DReAMGrammarParser.BitAndContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.bitOr"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.bitOr"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -543,9 +543,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBitOr([NotNull] DreamGrammarParser.BitOrContext context) { return VisitChildren(context); }
+	public virtual Result VisitBitOr([NotNull] DReAMGrammarParser.BitOrContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.bitXor"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.bitXor"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -553,9 +553,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBitXor([NotNull] DreamGrammarParser.BitXorContext context) { return VisitChildren(context); }
+	public virtual Result VisitBitXor([NotNull] DReAMGrammarParser.BitXorContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.bitNot"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.bitNot"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -563,9 +563,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBitNot([NotNull] DreamGrammarParser.BitNotContext context) { return VisitChildren(context); }
+	public virtual Result VisitBitNot([NotNull] DReAMGrammarParser.BitNotContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.bitLeftShift"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.bitLeftShift"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -573,9 +573,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBitLeftShift([NotNull] DreamGrammarParser.BitLeftShiftContext context) { return VisitChildren(context); }
+	public virtual Result VisitBitLeftShift([NotNull] DReAMGrammarParser.BitLeftShiftContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.bitRigthShift"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.bitRigthShift"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -583,9 +583,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBitRigthShift([NotNull] DreamGrammarParser.BitRigthShiftContext context) { return VisitChildren(context); }
+	public virtual Result VisitBitRigthShift([NotNull] DReAMGrammarParser.BitRigthShiftContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.keywords"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.keywords"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -593,9 +593,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitKeywords([NotNull] DreamGrammarParser.KeywordsContext context) { return VisitChildren(context); }
+	public virtual Result VisitKeywords([NotNull] DReAMGrammarParser.KeywordsContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.ifExpr"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.ifExpr"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -603,9 +603,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitIfExpr([NotNull] DreamGrammarParser.IfExprContext context) { return VisitChildren(context); }
+	public virtual Result VisitIfExpr([NotNull] DReAMGrammarParser.IfExprContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.whileExpression"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.whileExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -613,9 +613,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitWhileExpression([NotNull] DreamGrammarParser.WhileExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitWhileExpression([NotNull] DReAMGrammarParser.WhileExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.doWhileExpr"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.doWhileExpr"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -623,9 +623,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitDoWhileExpr([NotNull] DreamGrammarParser.DoWhileExprContext context) { return VisitChildren(context); }
+	public virtual Result VisitDoWhileExpr([NotNull] DReAMGrammarParser.DoWhileExprContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.userDefinedTypeResolutionOperator"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.userDefinedTypeResolutionOperator"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -633,9 +633,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitUserDefinedTypeResolutionOperator([NotNull] DreamGrammarParser.UserDefinedTypeResolutionOperatorContext context) { return VisitChildren(context); }
+	public virtual Result VisitUserDefinedTypeResolutionOperator([NotNull] DReAMGrammarParser.UserDefinedTypeResolutionOperatorContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.expressionSequence"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.expressionSequence"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -643,9 +643,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitExpressionSequence([NotNull] DreamGrammarParser.ExpressionSequenceContext context) { return VisitChildren(context); }
+	public virtual Result VisitExpressionSequence([NotNull] DReAMGrammarParser.ExpressionSequenceContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.identifierName"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.identifierName"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -653,10 +653,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitIdentifierName([NotNull] DreamGrammarParser.IdentifierNameContext context) { return VisitChildren(context); }
+	public virtual Result VisitIdentifierName([NotNull] DReAMGrammarParser.IdentifierNameContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>TernaryExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -664,10 +664,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitTernaryExpression([NotNull] DreamGrammarParser.TernaryExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitTernaryExpression([NotNull] DReAMGrammarParser.TernaryExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>PreIncrementExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -675,10 +675,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitPreIncrementExpression([NotNull] DreamGrammarParser.PreIncrementExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitPreIncrementExpression([NotNull] DReAMGrammarParser.PreIncrementExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>InExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -686,10 +686,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitInExpression([NotNull] DreamGrammarParser.InExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitInExpression([NotNull] DReAMGrammarParser.InExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>NotExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -697,10 +697,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitNotExpression([NotNull] DreamGrammarParser.NotExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitNotExpression([NotNull] DReAMGrammarParser.NotExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>PreDecreaseExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -708,10 +708,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitPreDecreaseExpression([NotNull] DreamGrammarParser.PreDecreaseExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitPreDecreaseExpression([NotNull] DReAMGrammarParser.PreDecreaseExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>FunctionCallExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -719,10 +719,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitFunctionCallExpression([NotNull] DreamGrammarParser.FunctionCallExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitFunctionCallExpression([NotNull] DReAMGrammarParser.FunctionCallExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>ThisExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -730,10 +730,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitThisExpression([NotNull] DreamGrammarParser.ThisExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitThisExpression([NotNull] DReAMGrammarParser.ThisExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>UnaryMinusExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -741,10 +741,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitUnaryMinusExpression([NotNull] DreamGrammarParser.UnaryMinusExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitUnaryMinusExpression([NotNull] DReAMGrammarParser.UnaryMinusExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>BinaryExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -752,10 +752,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBinaryExpression([NotNull] DreamGrammarParser.BinaryExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitBinaryExpression([NotNull] DReAMGrammarParser.BinaryExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>TypeofExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -763,10 +763,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitTypeofExpression([NotNull] DreamGrammarParser.TypeofExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitTypeofExpression([NotNull] DReAMGrammarParser.TypeofExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>InstanceofExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -774,10 +774,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitInstanceofExpression([NotNull] DreamGrammarParser.InstanceofExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitInstanceofExpression([NotNull] DReAMGrammarParser.InstanceofExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>UnaryPlusExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -785,10 +785,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitUnaryPlusExpression([NotNull] DreamGrammarParser.UnaryPlusExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitUnaryPlusExpression([NotNull] DReAMGrammarParser.UnaryPlusExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>DeleteExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -796,10 +796,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitDeleteExpression([NotNull] DreamGrammarParser.DeleteExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitDeleteExpression([NotNull] DReAMGrammarParser.DeleteExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>EqualityExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -807,10 +807,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitEqualityExpression([NotNull] DreamGrammarParser.EqualityExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitEqualityExpression([NotNull] DReAMGrammarParser.EqualityExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>BitShiftExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -818,10 +818,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBitShiftExpression([NotNull] DreamGrammarParser.BitShiftExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitBitShiftExpression([NotNull] DReAMGrammarParser.BitShiftExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>ParenthesizedExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -829,10 +829,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitParenthesizedExpression([NotNull] DreamGrammarParser.ParenthesizedExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitParenthesizedExpression([NotNull] DReAMGrammarParser.ParenthesizedExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>BitNotExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -840,10 +840,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBitNotExpression([NotNull] DreamGrammarParser.BitNotExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitBitNotExpression([NotNull] DReAMGrammarParser.BitNotExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>VariableDeclarationExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -851,10 +851,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitVariableDeclarationExpression([NotNull] DreamGrammarParser.VariableDeclarationExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitVariableDeclarationExpression([NotNull] DReAMGrammarParser.VariableDeclarationExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>LiteralExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -862,10 +862,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitLiteralExpression([NotNull] DreamGrammarParser.LiteralExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitLiteralExpression([NotNull] DReAMGrammarParser.LiteralExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>MemberDotExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -873,10 +873,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitMemberDotExpression([NotNull] DreamGrammarParser.MemberDotExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitMemberDotExpression([NotNull] DReAMGrammarParser.MemberDotExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>VariableExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -884,10 +884,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitVariableExpression([NotNull] DreamGrammarParser.VariableExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitVariableExpression([NotNull] DReAMGrammarParser.VariableExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>MemberIndexExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -895,10 +895,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitMemberIndexExpression([NotNull] DreamGrammarParser.MemberIndexExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitMemberIndexExpression([NotNull] DReAMGrammarParser.MemberIndexExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>BitAndExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -906,10 +906,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitBitAndExpression([NotNull] DreamGrammarParser.BitAndExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitBitAndExpression([NotNull] DReAMGrammarParser.BitAndExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>AssignmentOperatorExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -917,10 +917,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitAssignmentOperatorExpression([NotNull] DreamGrammarParser.AssignmentOperatorExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitAssignmentOperatorExpression([NotNull] DReAMGrammarParser.AssignmentOperatorExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>VoidExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -928,10 +928,10 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitVoidExpression([NotNull] DreamGrammarParser.VoidExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitVoidExpression([NotNull] DReAMGrammarParser.VoidExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
 	/// Visit a parse tree produced by the <c>Evaluatable</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.evaluatableExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.evaluatableExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -939,9 +939,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitEvaluatable([NotNull] DreamGrammarParser.EvaluatableContext context) { return VisitChildren(context); }
+	public virtual Result VisitEvaluatable([NotNull] DReAMGrammarParser.EvaluatableContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.assignmentExpression"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.assignmentExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -949,9 +949,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitAssignmentExpression([NotNull] DreamGrammarParser.AssignmentExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitAssignmentExpression([NotNull] DReAMGrammarParser.AssignmentExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.reassignmentExpression"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.reassignmentExpression"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -959,9 +959,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitReassignmentExpression([NotNull] DreamGrammarParser.ReassignmentExpressionContext context) { return VisitChildren(context); }
+	public virtual Result VisitReassignmentExpression([NotNull] DReAMGrammarParser.ReassignmentExpressionContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.assignmentOperator"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.assignmentOperator"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -969,9 +969,9 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitAssignmentOperator([NotNull] DreamGrammarParser.AssignmentOperatorContext context) { return VisitChildren(context); }
+	public virtual Result VisitAssignmentOperator([NotNull] DReAMGrammarParser.AssignmentOperatorContext context) { return VisitChildren(context); }
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.literal"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.literal"/>.
 	/// <para>
 	/// The default implementation returns the result of calling <see cref="AbstractParseTreeVisitor{Result}.VisitChildren(IRuleNode)"/>
 	/// on <paramref name="context"/>.
@@ -979,6 +979,6 @@ public partial class DreamGrammarBaseVisitor<Result> : AbstractParseTreeVisitor<
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	public virtual Result VisitLiteral([NotNull] DreamGrammarParser.LiteralContext context) { return VisitChildren(context); }
+	public virtual Result VisitLiteral([NotNull] DReAMGrammarParser.LiteralContext context) { return VisitChildren(context); }
 }
-} // namespace DreamCompiler.Grammar
+} // namespace DReAMCompiler.Grammar

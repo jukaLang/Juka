@@ -1,14 +1,11 @@
 ﻿//java org.antlr.v4.Tool -Dlanguage= CSharp DreamGrammar.g4 -no-listener
 
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
-using DreamCompiler.Visitors;
+using DReAMCompiler.Visitors;
 
-namespace DreamCompiler
+namespace DReAMCompiler
 {
-    using DreamCompiler.Grammar;
+    using DReAMCompiler.Grammar;
     using Antlr4.Runtime;
-    using Antlr4.Runtime.Tree;
-    using Antlr4.Runtime.Misc;
     using System;
     using System.Diagnostics;
     using System.IO;
@@ -21,7 +18,7 @@ namespace DreamCompiler
 
     public class Compiler : ICompilerInterface
     {
-        private DreamGrammarParser parser;
+        private DReAMGrammarParser parser;
 
         public void Go(MemoryStream memoryStream)
         {
@@ -35,9 +32,9 @@ namespace DreamCompiler
         private bool SetupAntlr(MemoryStream stream)
         {
             var input = new AntlrInputStream(stream);
-            var lexer = new DreamGrammarLexer(input);
+            var lexer = new DReAMGrammarLexer(input);
             var tokenStream = new CommonTokenStream(lexer);
-            this.parser = new DreamGrammarParser(tokenStream);
+            this.parser = new DReAMGrammarParser(tokenStream);
 
             if (this.parser == null)
             {
@@ -49,10 +46,10 @@ namespace DreamCompiler
 
         private Expression BeginVisitation()
         {
-            DreamGrammarParser.CompileUnitContext compileUnit = parser.compileUnit();
+            DReAMGrammarParser.CompileUnitContext compileUnit = parser.compileUnit();
             Trace.WriteLine(compileUnit.ToStringTree(parser));
 
-            var visitor = new DreamVisitor();
+            var visitor = new DReAMVisitor();
             Expression expressionTree = visitor.Visit(compileUnit);
 
             if (expressionTree == null)

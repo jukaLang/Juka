@@ -3,13 +3,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
-using DreamCompiler;
+using DReAMCompiler;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
 
-namespace DreamUnitTest
+namespace DReAMUnitTest
 {
     [TestClass]
     public class CompilerUnitTest

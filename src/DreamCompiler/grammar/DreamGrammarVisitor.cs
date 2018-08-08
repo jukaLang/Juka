@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:\Users\AndreiM\Documents\GitHub\DReAM\src\\DreamCompiler\grammar\DreamGrammar.g4 by ANTLR 4.7.1
+// Generated from C:\Users\Andrey\Desktop\DReAM\src\\DReAMCompiler\grammar\DReAMGrammar.g4 by ANTLR 4.7.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -19,596 +19,596 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace DreamCompiler.Grammar {
+namespace DReAMCompiler.Grammar {
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 using IToken = Antlr4.Runtime.IToken;
 
 /// <summary>
 /// This interface defines a complete generic visitor for a parse tree produced
-/// by <see cref="DreamGrammarParser"/>.
+/// by <see cref="DReAMGrammarParser"/>.
 /// </summary>
 /// <typeparam name="Result">The return type of the visit operation.</typeparam>
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.7.1")]
 [System.CLSCompliant(false)]
-public interface IDreamGrammarVisitor<Result> : IParseTreeVisitor<Result> {
+public interface IDReAMGrammarVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.compileUnit"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.compileUnit"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitCompileUnit([NotNull] DreamGrammarParser.CompileUnitContext context);
+	Result VisitCompileUnit([NotNull] DReAMGrammarParser.CompileUnitContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.classifications"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.classifications"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitClassifications([NotNull] DreamGrammarParser.ClassificationsContext context);
+	Result VisitClassifications([NotNull] DReAMGrammarParser.ClassificationsContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.statement"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.statement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitStatement([NotNull] DreamGrammarParser.StatementContext context);
+	Result VisitStatement([NotNull] DReAMGrammarParser.StatementContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.endLine"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.endLine"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitEndLine([NotNull] DreamGrammarParser.EndLineContext context);
+	Result VisitEndLine([NotNull] DReAMGrammarParser.EndLineContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.semiColon"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.semiColon"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSemiColon([NotNull] DreamGrammarParser.SemiColonContext context);
+	Result VisitSemiColon([NotNull] DReAMGrammarParser.SemiColonContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.expression"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.expression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpression([NotNull] DreamGrammarParser.ExpressionContext context);
+	Result VisitExpression([NotNull] DReAMGrammarParser.ExpressionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.functionCall"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.functionCall"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitFunctionCall([NotNull] DreamGrammarParser.FunctionCallContext context);
+	Result VisitFunctionCall([NotNull] DReAMGrammarParser.FunctionCallContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.functionDeclaration"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.functionDeclaration"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitFunctionDeclaration([NotNull] DreamGrammarParser.FunctionDeclarationContext context);
+	Result VisitFunctionDeclaration([NotNull] DReAMGrammarParser.FunctionDeclarationContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.funcName"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.funcName"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitFuncName([NotNull] DreamGrammarParser.FuncNameContext context);
+	Result VisitFuncName([NotNull] DReAMGrammarParser.FuncNameContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.returnValue"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.returnValue"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitReturnValue([NotNull] DreamGrammarParser.ReturnValueContext context);
+	Result VisitReturnValue([NotNull] DReAMGrammarParser.ReturnValueContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.leftParen"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.leftParen"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitLeftParen([NotNull] DreamGrammarParser.LeftParenContext context);
+	Result VisitLeftParen([NotNull] DReAMGrammarParser.LeftParenContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.rightParen"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.rightParen"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitRightParen([NotNull] DreamGrammarParser.RightParenContext context);
+	Result VisitRightParen([NotNull] DReAMGrammarParser.RightParenContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.booleanExpression"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.booleanExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBooleanExpression([NotNull] DreamGrammarParser.BooleanExpressionContext context);
+	Result VisitBooleanExpression([NotNull] DReAMGrammarParser.BooleanExpressionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.primitives"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.primitives"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitPrimitives([NotNull] DreamGrammarParser.PrimitivesContext context);
+	Result VisitPrimitives([NotNull] DReAMGrammarParser.PrimitivesContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.command"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.command"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitCommand([NotNull] DreamGrammarParser.CommandContext context);
+	Result VisitCommand([NotNull] DReAMGrammarParser.CommandContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.userDefinedTypeDecl"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.userDefinedTypeDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitUserDefinedTypeDecl([NotNull] DreamGrammarParser.UserDefinedTypeDeclContext context);
+	Result VisitUserDefinedTypeDecl([NotNull] DReAMGrammarParser.UserDefinedTypeDeclContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.userDefinedTypeKeyWord"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.userDefinedTypeKeyWord"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitUserDefinedTypeKeyWord([NotNull] DreamGrammarParser.UserDefinedTypeKeyWordContext context);
+	Result VisitUserDefinedTypeKeyWord([NotNull] DReAMGrammarParser.UserDefinedTypeKeyWordContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.userDefinedTypeName"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.userDefinedTypeName"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitUserDefinedTypeName([NotNull] DreamGrammarParser.UserDefinedTypeNameContext context);
+	Result VisitUserDefinedTypeName([NotNull] DReAMGrammarParser.UserDefinedTypeNameContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.variable"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.variable"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVariable([NotNull] DreamGrammarParser.VariableContext context);
+	Result VisitVariable([NotNull] DReAMGrammarParser.VariableContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.variableDeclaration"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.variableDeclaration"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVariableDeclaration([NotNull] DreamGrammarParser.VariableDeclarationContext context);
+	Result VisitVariableDeclaration([NotNull] DReAMGrammarParser.VariableDeclarationContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.userDefinedTypeVariableDecl"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.userDefinedTypeVariableDecl"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitUserDefinedTypeVariableDecl([NotNull] DreamGrammarParser.UserDefinedTypeVariableDeclContext context);
+	Result VisitUserDefinedTypeVariableDecl([NotNull] DReAMGrammarParser.UserDefinedTypeVariableDeclContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.userDefinedTypeVariableReference"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.userDefinedTypeVariableReference"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitUserDefinedTypeVariableReference([NotNull] DreamGrammarParser.UserDefinedTypeVariableReferenceContext context);
+	Result VisitUserDefinedTypeVariableReference([NotNull] DReAMGrammarParser.UserDefinedTypeVariableReferenceContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.userDefinedTypeFunctionReference"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.userDefinedTypeFunctionReference"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitUserDefinedTypeFunctionReference([NotNull] DreamGrammarParser.UserDefinedTypeFunctionReferenceContext context);
+	Result VisitUserDefinedTypeFunctionReference([NotNull] DReAMGrammarParser.UserDefinedTypeFunctionReferenceContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.add"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.add"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitAdd([NotNull] DreamGrammarParser.AddContext context);
+	Result VisitAdd([NotNull] DReAMGrammarParser.AddContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.summation"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.summation"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSummation([NotNull] DreamGrammarParser.SummationContext context);
+	Result VisitSummation([NotNull] DReAMGrammarParser.SummationContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.subtract"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.subtract"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSubtract([NotNull] DreamGrammarParser.SubtractContext context);
+	Result VisitSubtract([NotNull] DReAMGrammarParser.SubtractContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.subtraction"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.subtraction"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitSubtraction([NotNull] DreamGrammarParser.SubtractionContext context);
+	Result VisitSubtraction([NotNull] DReAMGrammarParser.SubtractionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.multiply"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.multiply"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitMultiply([NotNull] DreamGrammarParser.MultiplyContext context);
+	Result VisitMultiply([NotNull] DReAMGrammarParser.MultiplyContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.multiplication"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.multiplication"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitMultiplication([NotNull] DreamGrammarParser.MultiplicationContext context);
+	Result VisitMultiplication([NotNull] DReAMGrammarParser.MultiplicationContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.breakKeyWord"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.breakKeyWord"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBreakKeyWord([NotNull] DreamGrammarParser.BreakKeyWordContext context);
+	Result VisitBreakKeyWord([NotNull] DReAMGrammarParser.BreakKeyWordContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.divide"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.divide"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitDivide([NotNull] DreamGrammarParser.DivideContext context);
+	Result VisitDivide([NotNull] DReAMGrammarParser.DivideContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.division"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.division"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitDivision([NotNull] DreamGrammarParser.DivisionContext context);
+	Result VisitDivision([NotNull] DReAMGrammarParser.DivisionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.modulo"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.modulo"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitModulo([NotNull] DreamGrammarParser.ModuloContext context);
+	Result VisitModulo([NotNull] DReAMGrammarParser.ModuloContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.moduli"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.moduli"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitModuli([NotNull] DreamGrammarParser.ModuliContext context);
+	Result VisitModuli([NotNull] DReAMGrammarParser.ModuliContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.types"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.types"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTypes([NotNull] DreamGrammarParser.TypesContext context);
+	Result VisitTypes([NotNull] DReAMGrammarParser.TypesContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.primitiveTypes"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.primitiveTypes"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitPrimitiveTypes([NotNull] DreamGrammarParser.PrimitiveTypesContext context);
+	Result VisitPrimitiveTypes([NotNull] DReAMGrammarParser.PrimitiveTypesContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.numericTypes"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.numericTypes"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitNumericTypes([NotNull] DreamGrammarParser.NumericTypesContext context);
+	Result VisitNumericTypes([NotNull] DReAMGrammarParser.NumericTypesContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.equalsign"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.equalsign"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitEqualsign([NotNull] DreamGrammarParser.EqualsignContext context);
+	Result VisitEqualsign([NotNull] DReAMGrammarParser.EqualsignContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.comparisonOperator"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.comparisonOperator"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitComparisonOperator([NotNull] DreamGrammarParser.ComparisonOperatorContext context);
+	Result VisitComparisonOperator([NotNull] DReAMGrammarParser.ComparisonOperatorContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.unaryOperator"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.unaryOperator"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitUnaryOperator([NotNull] DreamGrammarParser.UnaryOperatorContext context);
+	Result VisitUnaryOperator([NotNull] DReAMGrammarParser.UnaryOperatorContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.bitWiseOperators"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.bitWiseOperators"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBitWiseOperators([NotNull] DreamGrammarParser.BitWiseOperatorsContext context);
+	Result VisitBitWiseOperators([NotNull] DReAMGrammarParser.BitWiseOperatorsContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.equalequal"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.equalequal"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitEqualequal([NotNull] DreamGrammarParser.EqualequalContext context);
+	Result VisitEqualequal([NotNull] DReAMGrammarParser.EqualequalContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.lessthan"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.lessthan"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitLessthan([NotNull] DreamGrammarParser.LessthanContext context);
+	Result VisitLessthan([NotNull] DReAMGrammarParser.LessthanContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.greaterthan"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.greaterthan"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitGreaterthan([NotNull] DreamGrammarParser.GreaterthanContext context);
+	Result VisitGreaterthan([NotNull] DReAMGrammarParser.GreaterthanContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.lessthanorequalto"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.lessthanorequalto"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitLessthanorequalto([NotNull] DreamGrammarParser.LessthanorequaltoContext context);
+	Result VisitLessthanorequalto([NotNull] DReAMGrammarParser.LessthanorequaltoContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.greaterthanorequalto"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.greaterthanorequalto"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitGreaterthanorequalto([NotNull] DreamGrammarParser.GreaterthanorequaltoContext context);
+	Result VisitGreaterthanorequalto([NotNull] DReAMGrammarParser.GreaterthanorequaltoContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.booleanAndOperator"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.booleanAndOperator"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBooleanAndOperator([NotNull] DreamGrammarParser.BooleanAndOperatorContext context);
+	Result VisitBooleanAndOperator([NotNull] DReAMGrammarParser.BooleanAndOperatorContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.booleanOrOperator"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.booleanOrOperator"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBooleanOrOperator([NotNull] DreamGrammarParser.BooleanOrOperatorContext context);
+	Result VisitBooleanOrOperator([NotNull] DReAMGrammarParser.BooleanOrOperatorContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.notOperator"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.notOperator"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitNotOperator([NotNull] DreamGrammarParser.NotOperatorContext context);
+	Result VisitNotOperator([NotNull] DReAMGrammarParser.NotOperatorContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.bitAnd"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.bitAnd"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBitAnd([NotNull] DreamGrammarParser.BitAndContext context);
+	Result VisitBitAnd([NotNull] DReAMGrammarParser.BitAndContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.bitOr"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.bitOr"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBitOr([NotNull] DreamGrammarParser.BitOrContext context);
+	Result VisitBitOr([NotNull] DReAMGrammarParser.BitOrContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.bitXor"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.bitXor"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBitXor([NotNull] DreamGrammarParser.BitXorContext context);
+	Result VisitBitXor([NotNull] DReAMGrammarParser.BitXorContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.bitNot"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.bitNot"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBitNot([NotNull] DreamGrammarParser.BitNotContext context);
+	Result VisitBitNot([NotNull] DReAMGrammarParser.BitNotContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.bitLeftShift"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.bitLeftShift"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBitLeftShift([NotNull] DreamGrammarParser.BitLeftShiftContext context);
+	Result VisitBitLeftShift([NotNull] DReAMGrammarParser.BitLeftShiftContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.bitRigthShift"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.bitRigthShift"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBitRigthShift([NotNull] DreamGrammarParser.BitRigthShiftContext context);
+	Result VisitBitRigthShift([NotNull] DReAMGrammarParser.BitRigthShiftContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.keywords"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.keywords"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitKeywords([NotNull] DreamGrammarParser.KeywordsContext context);
+	Result VisitKeywords([NotNull] DReAMGrammarParser.KeywordsContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.ifExpr"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.ifExpr"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitIfExpr([NotNull] DreamGrammarParser.IfExprContext context);
+	Result VisitIfExpr([NotNull] DReAMGrammarParser.IfExprContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.whileExpression"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.whileExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitWhileExpression([NotNull] DreamGrammarParser.WhileExpressionContext context);
+	Result VisitWhileExpression([NotNull] DReAMGrammarParser.WhileExpressionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.doWhileExpr"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.doWhileExpr"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitDoWhileExpr([NotNull] DreamGrammarParser.DoWhileExprContext context);
+	Result VisitDoWhileExpr([NotNull] DReAMGrammarParser.DoWhileExprContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.userDefinedTypeResolutionOperator"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.userDefinedTypeResolutionOperator"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitUserDefinedTypeResolutionOperator([NotNull] DreamGrammarParser.UserDefinedTypeResolutionOperatorContext context);
+	Result VisitUserDefinedTypeResolutionOperator([NotNull] DReAMGrammarParser.UserDefinedTypeResolutionOperatorContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.expressionSequence"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.expressionSequence"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitExpressionSequence([NotNull] DreamGrammarParser.ExpressionSequenceContext context);
+	Result VisitExpressionSequence([NotNull] DReAMGrammarParser.ExpressionSequenceContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.identifierName"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.identifierName"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitIdentifierName([NotNull] DreamGrammarParser.IdentifierNameContext context);
+	Result VisitIdentifierName([NotNull] DReAMGrammarParser.IdentifierNameContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>TernaryExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTernaryExpression([NotNull] DreamGrammarParser.TernaryExpressionContext context);
+	Result VisitTernaryExpression([NotNull] DReAMGrammarParser.TernaryExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>PreIncrementExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitPreIncrementExpression([NotNull] DreamGrammarParser.PreIncrementExpressionContext context);
+	Result VisitPreIncrementExpression([NotNull] DReAMGrammarParser.PreIncrementExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>InExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitInExpression([NotNull] DreamGrammarParser.InExpressionContext context);
+	Result VisitInExpression([NotNull] DReAMGrammarParser.InExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>NotExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitNotExpression([NotNull] DreamGrammarParser.NotExpressionContext context);
+	Result VisitNotExpression([NotNull] DReAMGrammarParser.NotExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>PreDecreaseExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitPreDecreaseExpression([NotNull] DreamGrammarParser.PreDecreaseExpressionContext context);
+	Result VisitPreDecreaseExpression([NotNull] DReAMGrammarParser.PreDecreaseExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>FunctionCallExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitFunctionCallExpression([NotNull] DreamGrammarParser.FunctionCallExpressionContext context);
+	Result VisitFunctionCallExpression([NotNull] DReAMGrammarParser.FunctionCallExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>ThisExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitThisExpression([NotNull] DreamGrammarParser.ThisExpressionContext context);
+	Result VisitThisExpression([NotNull] DReAMGrammarParser.ThisExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>UnaryMinusExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitUnaryMinusExpression([NotNull] DreamGrammarParser.UnaryMinusExpressionContext context);
+	Result VisitUnaryMinusExpression([NotNull] DReAMGrammarParser.UnaryMinusExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>BinaryExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBinaryExpression([NotNull] DreamGrammarParser.BinaryExpressionContext context);
+	Result VisitBinaryExpression([NotNull] DReAMGrammarParser.BinaryExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>TypeofExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTypeofExpression([NotNull] DreamGrammarParser.TypeofExpressionContext context);
+	Result VisitTypeofExpression([NotNull] DReAMGrammarParser.TypeofExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>InstanceofExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitInstanceofExpression([NotNull] DreamGrammarParser.InstanceofExpressionContext context);
+	Result VisitInstanceofExpression([NotNull] DReAMGrammarParser.InstanceofExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>UnaryPlusExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitUnaryPlusExpression([NotNull] DreamGrammarParser.UnaryPlusExpressionContext context);
+	Result VisitUnaryPlusExpression([NotNull] DReAMGrammarParser.UnaryPlusExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>DeleteExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitDeleteExpression([NotNull] DreamGrammarParser.DeleteExpressionContext context);
+	Result VisitDeleteExpression([NotNull] DReAMGrammarParser.DeleteExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>EqualityExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitEqualityExpression([NotNull] DreamGrammarParser.EqualityExpressionContext context);
+	Result VisitEqualityExpression([NotNull] DReAMGrammarParser.EqualityExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>BitShiftExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBitShiftExpression([NotNull] DreamGrammarParser.BitShiftExpressionContext context);
+	Result VisitBitShiftExpression([NotNull] DReAMGrammarParser.BitShiftExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>ParenthesizedExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitParenthesizedExpression([NotNull] DreamGrammarParser.ParenthesizedExpressionContext context);
+	Result VisitParenthesizedExpression([NotNull] DReAMGrammarParser.ParenthesizedExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>BitNotExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBitNotExpression([NotNull] DreamGrammarParser.BitNotExpressionContext context);
+	Result VisitBitNotExpression([NotNull] DReAMGrammarParser.BitNotExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>VariableDeclarationExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVariableDeclarationExpression([NotNull] DreamGrammarParser.VariableDeclarationExpressionContext context);
+	Result VisitVariableDeclarationExpression([NotNull] DReAMGrammarParser.VariableDeclarationExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>LiteralExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitLiteralExpression([NotNull] DreamGrammarParser.LiteralExpressionContext context);
+	Result VisitLiteralExpression([NotNull] DReAMGrammarParser.LiteralExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>MemberDotExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitMemberDotExpression([NotNull] DreamGrammarParser.MemberDotExpressionContext context);
+	Result VisitMemberDotExpression([NotNull] DReAMGrammarParser.MemberDotExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>VariableExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVariableExpression([NotNull] DreamGrammarParser.VariableExpressionContext context);
+	Result VisitVariableExpression([NotNull] DReAMGrammarParser.VariableExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>MemberIndexExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitMemberIndexExpression([NotNull] DreamGrammarParser.MemberIndexExpressionContext context);
+	Result VisitMemberIndexExpression([NotNull] DReAMGrammarParser.MemberIndexExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>BitAndExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitBitAndExpression([NotNull] DreamGrammarParser.BitAndExpressionContext context);
+	Result VisitBitAndExpression([NotNull] DReAMGrammarParser.BitAndExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>AssignmentOperatorExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitAssignmentOperatorExpression([NotNull] DreamGrammarParser.AssignmentOperatorExpressionContext context);
+	Result VisitAssignmentOperatorExpression([NotNull] DReAMGrammarParser.AssignmentOperatorExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>VoidExpression</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.singleExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.singleExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitVoidExpression([NotNull] DreamGrammarParser.VoidExpressionContext context);
+	Result VisitVoidExpression([NotNull] DReAMGrammarParser.VoidExpressionContext context);
 	/// <summary>
 	/// Visit a parse tree produced by the <c>Evaluatable</c>
-	/// labeled alternative in <see cref="DreamGrammarParser.evaluatableExpression"/>.
+	/// labeled alternative in <see cref="DReAMGrammarParser.evaluatableExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitEvaluatable([NotNull] DreamGrammarParser.EvaluatableContext context);
+	Result VisitEvaluatable([NotNull] DReAMGrammarParser.EvaluatableContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.assignmentExpression"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.assignmentExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitAssignmentExpression([NotNull] DreamGrammarParser.AssignmentExpressionContext context);
+	Result VisitAssignmentExpression([NotNull] DReAMGrammarParser.AssignmentExpressionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.reassignmentExpression"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.reassignmentExpression"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitReassignmentExpression([NotNull] DreamGrammarParser.ReassignmentExpressionContext context);
+	Result VisitReassignmentExpression([NotNull] DReAMGrammarParser.ReassignmentExpressionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.assignmentOperator"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.assignmentOperator"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitAssignmentOperator([NotNull] DreamGrammarParser.AssignmentOperatorContext context);
+	Result VisitAssignmentOperator([NotNull] DReAMGrammarParser.AssignmentOperatorContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="DreamGrammarParser.literal"/>.
+	/// Visit a parse tree produced by <see cref="DReAMGrammarParser.literal"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitLiteral([NotNull] DreamGrammarParser.LiteralContext context);
+	Result VisitLiteral([NotNull] DReAMGrammarParser.LiteralContext context);
 }
-} // namespace DreamCompiler.Grammar
+} // namespace DReAMCompiler.Grammar

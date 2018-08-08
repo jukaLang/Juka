@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DreamCompiler.CodeGeneration
+namespace DReAMCompiler.CodeGeneration
 {
     using System.CodeDom;
     using System.CodeDom.Compiler;

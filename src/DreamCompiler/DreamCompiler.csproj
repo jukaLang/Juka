@@ -7,10 +7,12 @@
     <ProjectGuid>{C6C15D26-01CC-4877-9D4F-5EE89E1FE5EC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DreamCompiler</RootNamespace>
-    <AssemblyName>DreamCompiler</AssemblyName>
+    <RootNamespace>DReAMCompiler</RootNamespace>
+    <AssemblyName>DReAMCompiler</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,30 +47,29 @@
   <ItemGroup>
     <Compile Include="CodeGeneration\Generate.cs" />
     <Compile Include="Compiler.cs" />
-    <Compile Include="grammar\DreamGrammarBaseVisitor.cs" />
-    <Compile Include="grammar\DreamGrammarLexer.cs" />
-    <Compile Include="grammar\DreamGrammarParser.cs" />
-    <Compile Include="grammar\DreamGrammarVisitor.cs" />
+    <Compile Include="grammar\DReAMGrammarBaseVisitor.cs" />
+    <Compile Include="grammar\DReAMGrammarLexer.cs" />
+    <Compile Include="grammar\DReAMGrammarParser.cs" />
+    <Compile Include="grammar\DReAMGrammarVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tokens\Token.cs" />
     <Compile Include="Tokens\TokenKind.cs" />
-    <Compile Include="Visitors\DreamVisitor.cs" />
+    <Compile Include="Visitors\DReAMVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\" />
     <Folder Include="bin\Release\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="grammar\DreamGrammar.g4" />
-    <None Include="grammar\DreamGrammar.interp" />
-    <None Include="grammar\DreamGrammar.tokens" />
-    <None Include="grammar\DreamGrammarLexer.interp" />
-    <None Include="grammar\DreamGrammarLexer.tokens" />
+    <None Include="grammar\DReAMGrammar.g4" />
+    <None Include="grammar\DReAMGrammar.tokens" />
+    <None Include="grammar\DReAMGrammarLexer.interp" />
+    <None Include="grammar\DReAMGrammarLexer.tokens" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>java -jar $(SolutionDir)\DreamCompiler\jars\antlr-4.7.1-complete.jar -Dlanguage=CSharp $(SolutionDir)\DreamCompiler\grammar\DreamGrammar.g4 -no-listener -visitor -package DreamCompiler.Grammar
+    <PreBuildEvent>java -jar $(SolutionDir)\DReAMCompiler\jars\antlr-4.7.1-complete.jar -Dlanguage=CSharp $(SolutionDir)\DReAMCompiler\grammar\DReAMGrammar.g4 -no-listener -visitor -package DReAMCompiler.Grammar
 </PreBuildEvent>
   </PropertyGroup>
 </Project>
