@@ -1,19 +1,15 @@
-using DReAM.View;
-using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-[assembly: XamlCompilation (XamlCompilationOptions.Compile)]
+[assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace DReAM
 {
-	public partial class App : Application
+    public partial class App : Application
 	{
 		public App ()
 		{
 			InitializeComponent();
-
-            //MainPage = new NavigationPage(new WeatherPage());
-            MainPage = new SpeakerView();
+            MainPage = new NavigationPage(new MainPage());
         }
 
 		protected override void OnStart ()

@@ -11,10 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="View\SpeakerView.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-    <EmbeddedResource Update="WeatherPage.xaml">
+    <Folder Include="Model\" />
+    <Folder Include="ViewModel\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="View\Editor.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
