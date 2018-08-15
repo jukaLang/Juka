@@ -1,19 +1,38 @@
 # Juliar DReAM Programming Language  [![Build status](https://ci.appveyor.com/api/projects/status/x8d6308cuevqm4of?svg=true)](https://ci.appveyor.com/project/TheAndreiM/dream)
 
 
-##### Dream Big
-##### мечтать больше
-##### Sueña en grand
-##### Sonhe grande
-##### Rêvez gros
-##### Traum groß
-##### 더 크게 꿈꾸다
-##### 梦想更大
-##### ドリームビガー
-
-
-![DReAM App](https://user-images.githubusercontent.com/11934545/44129730-db5e3e04-a017-11e8-968a-b83a82975f20.png)
-
+<table>
+    <tr>
+        <td>Dream Big</td>
+        <td colspan="1"><img src="https://user-images.githubusercontent.com/11934545/44129730-db5e3e04-a017-11e8-968a-b83a82975f20.png" width="400"></td>
+    </tr>
+    <tr>
+      <td>мечтать больше</td>
+    </tr>
+    <tr>
+      <td>Sueña en grand</td>
+    </tr>
+    <tr>
+        <td>Sonhe grande</td>
+    </tr>
+    <tr>
+      <td>Rêvez gros</td>
+    </tr>
+    <tr>
+      <td>Traum groß</td>
+    </tr>
+    <tr>
+        <td>더 크게 꿈꾸다</td>
+    </tr>
+    <tr>
+      <td>梦想更大</td>
+    </tr>
+    <tr>
+      <td>ドリームビガー</td>
+    </tr>
+  <tr>
+</tr>
+</table>
 
 DReAM: A C# port of Juliar Programming Language. 
 
@@ -43,13 +62,10 @@ It is currently used to compile our Xamarin Forms application.
 - Provides you examples to get you started on DReAM
 
 ### Visual Studio/Development Requirements
-#### Make sure you have XAMARIN/NMobile development with .NET installed in Visual Studio 2017
+##### Make sure you have XAMARIN/NMobile development with .NET installed in Visual Studio 2017
 
 - Xamarin Forms
 - Newtonsoft.JSON
-
-
-- Desktop Tools  [LEGACY]
 - .NET Framework 4.6.1
 - Latest version of NuGet
 - Antlr4.Runtime.Standard (latest version downloaded via NuGet)
