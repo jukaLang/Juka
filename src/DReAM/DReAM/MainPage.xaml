@@ -23,16 +23,15 @@
 
         <Button x:Name="button_new" Text="New" Grid.Row="1" Grid.Column="0" BackgroundColor="Gray" Clicked="button_Clicked" />
         <Button x:Name="button_open" Text="Open" Grid.Row="1" Grid.Column="1" BackgroundColor="Gray" Clicked="button_Clicked" />
-        <Button x:Name="button_sync" Text="Sync" Grid.Row="1" Grid.Column="2" BackgroundColor="Gray" Clicked="button_Clicked" />
-        
-        <Button x:Name="button_interpret" Text="Interpret" Grid.Row="2" Grid.Column="0" BackgroundColor="Gray" Clicked="button_Clicked" />
-        <Button x:Name="button_docs" Text="Docs" Grid.Row="2" Grid.Column="1" BackgroundColor="Gray" Clicked="button_Clicked" />
-        <Button x:Name="button_rate" Text="Rate Us" Grid.Row="2" Grid.Column="2" BackgroundColor="Gray" Clicked="button_Clicked" />
+        <Button x:Name="button_interpret" Text="Interpret" Grid.Row="1" Grid.Column="2" BackgroundColor="Gray" Clicked="button_Clicked" />
 
+        <Button x:Name="button_chat" Text="Chat" Grid.Row="2" Grid.Column="0" BackgroundColor="Gray" Clicked="button_Clicked" />
+        <Button x:Name="button_docs" Text="Docs" Grid.Row="2" Grid.Column="1" BackgroundColor="Gray" Clicked="button_Clicked" />
+        <Button x:Name="button_share" Text="Share" Grid.Row="2" Grid.Column="2" BackgroundColor="Gray" Clicked="button_Clicked" />
 
         <Button x:Name="button_contact" Text="Contact" Grid.Row="3" Grid.Column="0" BackgroundColor="Gray" Clicked="button_Clicked" />
         <Button x:Name="button_commit" Text="Help out" Grid.Row="3" Grid.Column="1" BackgroundColor="Gray" Clicked="button_Clicked" />
-        <Button x:Name="button_about" Text="About" Grid.Row="3" Grid.Column="2" BackgroundColor="Gray" Clicked="button_Clicked" />
+        <Button x:Name="button_settings" Text="Settings" Grid.Row="3" Grid.Column="2" BackgroundColor="Gray" Clicked="button_Clicked" />
 
     </Grid>
     

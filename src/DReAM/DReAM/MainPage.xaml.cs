@@ -34,11 +34,11 @@ namespace DReAM
                 {
                     await DisplayAlert("Alert", "Coming Soon", "OK");
                 }
-                else if (clickedbutton.Equals(button_sync))
+                else if (clickedbutton.Equals(button_interpret))
                 {
                     await DisplayAlert("Alert", "Coming Soon", "OK");
                 }
-                else if (clickedbutton.Equals(button_interpret))
+                else if (clickedbutton.Equals(button_chat))
                 {
                     await DisplayAlert("Alert", "Coming Soon", "OK");
                 }
@@ -46,9 +46,11 @@ namespace DReAM
                 {
                     Device.OpenUri(new Uri("https://juliar.org/documentation"));
                 }
-                else if (clickedbutton.Equals(button_rate))
+                else if (clickedbutton.Equals(button_share))
                 {
-                    var url = string.Empty;
+
+
+                    /*var url = string.Empty;
                     var appId = string.Empty;
 
 
@@ -66,7 +68,7 @@ namespace DReAM
                         default:
                             break;
                     }
-                    Device.OpenUri(new Uri(appId));
+                    Device.OpenUri(new Uri(appId));*/
                 }
                 else if (clickedbutton.Equals(button_contact))
                 {
@@ -76,9 +78,9 @@ namespace DReAM
                 {
                     Device.OpenUri(new Uri("https://juliar.org/help"));
                 }
-                else if (clickedbutton.Equals(button_about))
+                else if (clickedbutton.Equals(button_settings))
                 {
-
+                    await App.Current.MainPage.Navigation.PushAsync(new View.Settings() { Title = "Juliar DReAM Settings" });
                 }
 
             }

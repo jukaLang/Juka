@@ -4,7 +4,7 @@
 <table>
     <tr>
         <td>Dream Big</td>
-        <td colspan="1"><img src="https://user-images.githubusercontent.com/11934545/44129730-db5e3e04-a017-11e8-968a-b83a82975f20.png" width="400"></td>
+        <td rowspan="9"><img src="https://user-images.githubusercontent.com/11934545/44129730-db5e3e04-a017-11e8-968a-b83a82975f20.png" width="400"></td>
     </tr>
     <tr>
       <td>мечтать больше</td>
@@ -39,14 +39,14 @@ DReAM: A C# port of Juliar Programming Language.
 DReAM focuses on fast and rapid prototyping as well as native .NET support.
 
 DReAM uses Xamarin Forms to Cross-compile to iOS, Android, Windows 10, Windows 10 Mobile, XBOX, Hololens, Surface Hub, 
-and other IoT.
+and other IoT devices.
 
  
 
 ## Download
 <strike>Download the latest version at https://ci.appveyor.com/project/TheAndreiM/dream/build/artifacts</strike>
 
-For now, Juliar should be compiled from source code.
+For now, Juliar DReAM should be compiled directly from source code.
 
 ## Folder Structure
 
