@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Globalization;
 using Xamarin.Forms;
+
 
 namespace DReAM
 {
@@ -10,9 +12,14 @@ namespace DReAM
         public MainPage()
 		{
 			InitializeComponent();
+
+
+            //Resx.AppResources.Culture = new CultureInfo("en-US");
+
+            string welcome = Resx.AppResources.welcome;
             if (speech != null)
             {
-                speech.Speak("Welcome to Juliar DReAM Programming Language");
+                speech.Speak(welcome);
             }
         }
 

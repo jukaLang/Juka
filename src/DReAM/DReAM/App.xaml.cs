@@ -1,3 +1,4 @@
+using System.Globalization;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -9,6 +10,16 @@ namespace DReAM
 		public App ()
 		{
 			InitializeComponent();
+
+            // This lookup NOT required for Windows platforms - the Culture will be automatically set
+            if (Device.RuntimePlatform == Device.iOS || Device.RuntimePlatform == Device.Android)
+            {
+                // determine the correct, supported .NET culture
+                var ci = DependencyService.Get<ILocalize>().GetCurrentCultureInfo();
+                Resx.AppResources.Culture = ci; // set the RESX for resource localization
+                DependencyService.Get<ILocalize>().SetLocale(ci); // set the Thread for locale-aware methods
+            }
+
             MainPage = new NavigationPage(new MainPage());
         }
 
