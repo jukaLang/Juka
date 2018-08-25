@@ -1,42 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
-<Package
-  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
-  xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
-  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  IgnorableNamespaces="uap mp">
-
-  <Identity
-    Name="92127466-4bc2-4630-8291-816bb1cd38bd"
-    Publisher="CN=426f8893-0945-4f5f-aa2e-37beb7d86e93"
-    Version="1.0.0.0" />
-
-  <mp:PhoneIdentity PhoneProductId="ec0cc741-fd3e-485c-81be-68815c480690" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
-
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10" xmlns:uap4="http://schemas.microsoft.com/appx/manifest/uap/windows10/4" xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3" xmlns:uap2="http://schemas.microsoft.com/appx/manifest/uap/windows10/2" xmlns:mobile="http://schemas.microsoft.com/appx/manifest/mobile/windows10" IgnorableNamespaces="uap mp iot uap4 uap3 uap2 mobile">
+  <Identity Name="7b643aae-6960-4dc3-a2d6-18eec98958ad" Publisher="CN=8052c3d9-9f12-4f95-bb1b-e6714cc4b40e" Version="1.0.0.0" />
+  <mp:PhoneIdentity PhoneProductId="ec0cc741-fd3e-485c-81be-68815c480690" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>DReAM.UWP</DisplayName>
-    <PublisherDisplayName>426f8893-0945-4f5f-aa2e-37beb7d86e93</PublisherDisplayName>
+    <PublisherDisplayName>8052c3d9-9f12-4f95-bb1b-e6714cc4b40e</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
-
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
   </Dependencies>
-
   <Resources>
-    <Resource Language="x-generate"/>
+    <Resource Language="x-generate" />
   </Resources>
-
   <Applications>
-    <Application Id="App"
-      Executable="$targetnametoken$.exe"
-      EntryPoint="DReAM.UWP.App">
-      <uap:VisualElements
-        DisplayName="DReAM.UWP"
-        Square150x150Logo="Assets\Square150x150Logo.png"
-        Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="DReAM.UWP"
-        BackgroundColor="transparent">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="DReAM.UWP.App">
+      <uap:VisualElements DisplayName="DReAM.UWP" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="DReAM.UWP" BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" Square310x310Logo="Assets\LargeTile.png" Square71x71Logo="Assets\SmallTile.png">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo" />
@@ -48,8 +27,42 @@
       </uap:VisualElements>
     </Application>
   </Applications>
-
   <Capabilities>
     <Capability Name="internetClient" />
+    <Capability Name="privateNetworkClientServer" />
+    <Capability Name="internetClientServer" />
+    <Capability Name="codeGeneration" />
+    <Capability Name="allJoyn" />
+    <uap:Capability Name="userAccountInformation" />
+    <iot:Capability Name="systemManagement" />
+    <uap4:Capability Name="userDataTasks" />
+    <uap3:Capability Name="userNotificationListener" />
+    <uap:Capability Name="videosLibrary" />
+    <uap:Capability Name="voipCall" />
+    <uap:Capability Name="sharedUserCertificates" />
+    <uap2:Capability Name="spatialPerception" />
+    <uap:Capability Name="removableStorage" />
+    <uap3:Capability Name="remoteSystem" />
+    <mobile:Capability Name="recordedCallsFolder" />
+    <uap:Capability Name="picturesLibrary" />
+    <uap2:Capability Name="phoneCallHistoryPublic" />
+    <uap:Capability Name="phoneCall" />
+    <uap4:Capability Name="offlineMapsManagement" />
+    <uap:Capability Name="objects3D" />
+    <uap:Capability Name="musicLibrary" />
+    <iot:Capability Name="lowLevelDevices" />
+    <uap:Capability Name="enterpriseAuthentication" />
+    <uap:Capability Name="contacts" />
+    <uap:Capability Name="chat" />
+    <uap:Capability Name="blockedChatMessages" />
+    <uap:Capability Name="appointments" />
+    <uap3:Capability Name="backgroundMediaPlayback" />
+    <DeviceCapability Name="webcam" />
+    <DeviceCapability Name="proximity" />
+    <DeviceCapability Name="pointOfService" />
+    <DeviceCapability Name="microphone" />
+    <DeviceCapability Name="lowLevel" />
+    <DeviceCapability Name="location" />
+    <DeviceCapability Name="bluetooth" />
   </Capabilities>
 </Package>
