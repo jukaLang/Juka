@@ -9,9 +9,9 @@ namespace DReAM.ViewModels
     {
         public AboutViewModel()
         {
-            Title = "About";
+            Title = "About Juliar DReAM";
 
-            OpenWebCommand = new Command(() => Device.OpenUri(new Uri("https://xamarin.com/platform")));
+            OpenWebCommand = new Command(() => Device.OpenUri(new Uri("https://juliar.org")));
         }
 
         public ICommand OpenWebCommand { get; }

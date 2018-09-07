@@ -33,9 +33,9 @@
                     <Label.FormattedText>
                         <FormattedString>
                             <FormattedString.Spans>
-                                <Span Text="AppName" FontAttributes="Bold" FontSize="22" />
+                                <Span Text="Juliar DReAM" FontAttributes="Bold" FontSize="22" />
                                 <Span Text=" " />
-                                <Span Text="1.0" ForegroundColor="{StaticResource LightTextColor}" />
+                                <Span Text="0.1" ForegroundColor="{StaticResource LightTextColor}" />
                             </FormattedString.Spans>
                         </FormattedString>
                     </Label.FormattedText>

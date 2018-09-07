@@ -11,8 +11,8 @@ namespace DReAMCompiler.CodeGeneration
     {
         public Generate()
         {
-            //CodeCompileUnit targetUnit;
-            //CodeTypeDeclaration targetClass;
+            CodeCompileUnit targetUnit;
+            CodeTypeDeclaration targetClass;
 
         }
     }

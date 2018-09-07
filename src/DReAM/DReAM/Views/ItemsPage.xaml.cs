@@ -37,7 +37,45 @@ namespace DReAM.Views
                 speech.Speak(item.Text);
             }
 
-            await Navigation.PushAsync(new ItemDetailPage(new ItemDetailViewModel(item)));
+            if (item.Action == "New")
+            {
+                await Navigation.PushAsync(new View.Editor());
+            }
+            else if(item.Action == "Open")
+            {
+                await DisplayAlert("Alert", "Coming Soon", "OK");
+            }
+            else if (item.Action == "Interpret")
+            {
+                await DisplayAlert("Alert", "Coming Soon", "OK");
+            }
+            else if (item.Action == "Chat")
+            {
+                await DisplayAlert("Alert", "Coming Soon", "OK");
+            }
+            else if (item.Action == "Docs")
+            {
+                Device.OpenUri(new Uri("https://juliar.org/documentation"));
+            }
+            else if (item.Action == "Share")
+            {
+                await DisplayAlert("Alert", "Coming Soon", "OK");
+                await Navigation.PushAsync(new ItemDetailPage(new ItemDetailViewModel(item)));
+            }
+            else if (item.Action == "Contact")
+            {
+                Device.OpenUri(new Uri("mailto:admin@juliar.org?subject=Questions%20about%20DReAM"));
+            }
+            else if (item.Action == "Help")
+            {
+                Device.OpenUri(new Uri("https://juliar.org/help"));
+            }
+            else if (item.Action == "Settings")
+            {
+                await Navigation.PushAsync(new View.Settings());
+            }
+
+           
 
             // Manually deselect item.
             ItemsListView.SelectedItem = null;

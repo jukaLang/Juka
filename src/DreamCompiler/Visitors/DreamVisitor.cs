@@ -226,7 +226,36 @@ namespace DReAMCompiler.Visitors
 
         public override Expression VisitBooleanExpression(DReAMGrammarParser.BooleanExpressionContext context)
         {
-            return base.VisitBooleanExpression(context);
+            var expressions = new List<Expression>();
+            foreach (var t in context.children)
+            {
+                expressions.Add(t.Accept(this));
+            }
+
+            Expression left;
+            Expression right;
+
+            if (expressions[0] is ConstantExpression)
+            {
+                left = Expression.Constant(Convert.ToDouble(RemoveLeadingAndTrailingQuotes(expressions[0].ToString())));
+            }
+            else
+            {
+                left = expressions[0];
+            }
+
+            if (expressions[2] is ConstantExpression)
+            {
+                right = Expression.Constant(Convert.ToDouble(RemoveLeadingAndTrailingQuotes(expressions[2].ToString())));
+            }
+            else
+            {
+                right = expressions[2];
+            }
+
+            BinaryExpression binaryExpression = Expression.Equal(left, right);
+
+            return binaryExpression;
         }
 
         public override Expression VisitClassifications(DReAMGrammarParser.ClassificationsContext context)
