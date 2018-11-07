@@ -7,13 +7,42 @@ using DReAMCompiler;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Collections;
 
 
 namespace DReAMUnitTest
 {
+    using Microsoft.CodeAnalysis.CSharp;
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+
+
     [TestClass]
     public class CompilerUnitTest
     {
+        [TestMethod]
+        public void testRoslyn()
+        {
+
+            SyntaxTree tree = CSharpSyntaxTree.ParseText(
+              @"using System;
+ 
+                namespace HelloWorld
+                {
+                    class Program
+                    {
+                        static void Main(string[] args)
+                        {
+                            Console.WriteLine(args[0]);
+                        }
+                    }
+                }");
+
+            CompileRoslyn.Parse(tree);
+
+        }
+
         [TestMethod]
         public void TestCompile()
         {
@@ -58,8 +87,8 @@ namespace DReAMUnitTest
             Expression.Assign(x, Expression.Constant(2)),
             Expression.Assign(y, Expression.Constant(5)));
 
-            
-            ParameterExpression[] arguments = new[] { x,y};
+
+            ParameterExpression[] arguments = new[] { x, y };
 
             DynamicExpression exp = Expression.Dynamic(
                 binder,
@@ -77,7 +106,7 @@ namespace DReAMUnitTest
         {
 
             CallSiteBinder binder = new Binder();
-            
+
             ConstantExpression[] arguments = new[] { Expression.Constant(5), Expression.Constant(2) };
 
             DynamicExpression exp = Expression.Dynamic(
@@ -119,7 +148,7 @@ namespace DReAMUnitTest
             }
 
             System.Linq.Expressions.MemberAssignment t;
-            
+
 
             BinaryExpression binary = Expression.MakeBinary(
                 ExpressionType.Subtract,
@@ -150,7 +179,7 @@ namespace DReAMUnitTest
 
         }
 
-        public static String foo( string s )
+        public static String foo(string s)
         {
             Trace.WriteLine("this is the foo method");
             return s;
@@ -170,7 +199,7 @@ namespace DReAMUnitTest
                     Expression.Constant(14)
                );
 
-            Console.WriteLine(Expression.Add(Expression.Constant(x),binaryExpression).ToString());
+            Console.WriteLine(Expression.Add(Expression.Constant(x), binaryExpression).ToString());
 
         }
 
@@ -197,15 +226,15 @@ namespace DReAMUnitTest
                     System.Linq.Expressions.Expression.Constant(2));
 
             var writeLineExpression = Expression.Call(null,
-                typeof(Trace).GetMethod("WriteLine", new Type[] {typeof(object)}) ??
+                typeof(Trace).GetMethod("WriteLine", new Type[] { typeof(object) }) ??
                 throw new InvalidOperationException(),
                 Expression.Constant("this is a test"));
 
 
             var innerLabel = Expression.Label();
-            
-            var expressionBlock = Expression.Block( Expression.Label(innerLabel), writeLineExpression);
-            var block = Expression.Block(Expression.Goto(innerLabel),expressionBlock);
+
+            var expressionBlock = Expression.Block(Expression.Label(innerLabel), writeLineExpression);
+            var block = Expression.Block(Expression.Goto(innerLabel), expressionBlock);
             var compiledCode = Expression.Lambda<Action>(block).Compile();
 
             compiledCode();
@@ -222,12 +251,12 @@ namespace DReAMUnitTest
             {
                 BlockExpression writeHelloBlockExpression = Expression.Block(
                     Expression.Call(null,
-                        typeof(Trace).GetMethod("WriteLine", new Type[] {typeof(String)}) ??
+                        typeof(Trace).GetMethod("WriteLine", new Type[] { typeof(String) }) ??
                         throw new InvalidOperationException(),
                         Expression.Constant("0s")
                     ));
 
-               return String.Empty;
+                return String.Empty;
             };
 
             var actionType = action.GetType();
@@ -254,7 +283,7 @@ namespace DReAMUnitTest
             );
 
             int factorial = Expression.Lambda<Func<int, int>>(block, value).Compile()(5);
-                
+
 
             if (factorial != 120)
             {
@@ -267,10 +296,10 @@ namespace DReAMUnitTest
 
     class Binder : BinaryOperationBinder
     {
-        public Binder()  : base(ExpressionType.Subtract)
+        public Binder() : base(ExpressionType.Subtract)
         {
         }
-        
+
         public override DynamicMetaObject FallbackBinaryOperation(DynamicMetaObject target, DynamicMetaObject arg,
             DynamicMetaObject errorSuggestion)
         {
@@ -283,11 +312,59 @@ namespace DReAMUnitTest
 
                 var convertedExpression = Expression.Convert(Expression.Constant(expression), typeof(object));
 
-                return new DynamicMetaObject( convertedExpression , BindingRestrictions.Empty);
+                return new DynamicMetaObject(convertedExpression, BindingRestrictions.Empty);
             }
 
             throw new Exception("can't bind");
         }
-       
+
+    }
+
+    class CompileRoslyn
+    {
+        private static System.Collections.Generic.IEnumerable<string> DefaultNamespaces =
+            new[]
+            {
+                "System",
+                "System.IO",
+                "System.Net",
+                "System.Linq",
+                "System.Text",
+                "System.Text.RegularExpressions",
+                "System.Collections.Generic"
+            };
+
+        private static string runtimePath = @"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\{0}.dll";
+
+        private static readonly System.Collections.Generic.IEnumerable<MetadataReference> DefaultReferences =
+            new[]
+            {
+                MetadataReference.CreateFromFile(string.Format(runtimePath, "mscorlib")),
+                MetadataReference.CreateFromFile(string.Format(runtimePath, "System")),
+                MetadataReference.CreateFromFile(string.Format(runtimePath, "System.Core"))
+            };
+
+        private static readonly CSharpCompilationOptions DefaultCompilationOptions =
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+                    .WithOverflowChecks(true).WithOptimizationLevel(OptimizationLevel.Release)
+                    .WithUsings(DefaultNamespaces);
+
+        public static void Parse(SyntaxTree parsedSyntaxTree)
+        {
+
+            var mscorlib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
+            //var compilation = CSharpCompilation.Create("Test", syntaxTrees: new[] { parsedSyntaxTree }, references: new[] { mscorlib });
+            var compilation = CSharpCompilation.Create("Test", syntaxTrees: new[] { parsedSyntaxTree }, references: DefaultReferences);//, options: DefaultCompilationOptions);
+            try
+            {
+                var result = compilation.Emit(@"c:\temp\Test.exe", @"c:\temp\test.pdb");
+
+                Console.WriteLine(result.Success ? "Sucess!!" : "Failed");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
     }
 }

@@ -10,6 +10,7 @@ namespace DReAMCompiler
     using System.Diagnostics;
     using System.IO;
     using System.Linq.Expressions;
+    using Microsoft.CodeAnalysis;
 
     interface ICompilerInterface
     {
@@ -25,7 +26,7 @@ namespace DReAMCompiler
             if (SetupAntlr(memoryStream))
             {
                 var code = BeginVisitation();
-                Expression.Lambda<Action>(code).Compile()();
+                //Expression.Lambda<Action>(code).Compile()();
             }
         }
 
@@ -44,25 +45,16 @@ namespace DReAMCompiler
             return true;
         }
 
-        private Expression BeginVisitation()
+        private SyntaxTree BeginVisitation()
         {
             DReAMGrammarParser.CompileUnitContext compileUnit = parser.compileUnit();
             Trace.WriteLine(compileUnit.ToStringTree(parser));
 
-            var visitor = new DReAMVisitor();
-            Expression expressionTree = visitor.Visit(compileUnit);
+            //var visitor = new DReAMVisitor();
+            var visitor = new DreamRoslynVisitor();
+            SyntaxTree expressionTree = visitor.Visit(compileUnit);
 
-            if (expressionTree == null)
-            {
-                throw new Exception("tree is null");
-            }
-
-            if (expressionTree is BlockExpression)
-            {
-                return expressionTree;
-            }
-
-            throw new Exception("no block expression created");
+            return expressionTree;
         }
     }
 }
