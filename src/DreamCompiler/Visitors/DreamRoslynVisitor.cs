@@ -13,21 +13,25 @@ namespace DReAMCompiler.Visitors
     using Antlr4.Runtime.Misc;
     using Antlr4.Runtime.Tree;
 
-    class DreamRoslynVisitor : DReAMGrammarBaseVisitor<SyntaxTree>
+    class DreamRoslynVisitor : DReAMGrammarBaseVisitor<CSharpSyntaxNode>
     {
-        public override SyntaxTree VisitCompileUnit([NotNull] DReAMGrammarParser.CompileUnitContext context)
+        public override CSharpSyntaxNode VisitCompileUnit([NotNull] DReAMGrammarParser.CompileUnitContext context)
         {
-            CompilationUnitSyntax syntax = SyntaxFactory.CompilationUnit();
-            SyntaxTree tree =  base.VisitCompileUnit(context);
+            CSharpSyntaxNode tree =  base.VisitCompileUnit(context);
+ 
+                ClassDeclarationSyntax classDeclarationSyntax = SyntaxFactory.ClassDeclaration("tempClass");
+                NamespaceDeclarationSyntax namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName("tempoary"))
+                    .AddMembers(items: new[] { classDeclarationSyntax });
 
-            syntax.add
-
-            //syntax.AddMembers(items: new[] { tree });
-
-            return syntax.SyntaxTree;
+                return SyntaxFactory.CompilationUnit().AddMembers(items: new[] { namespaceDeclaration });
         }
 
-        public override SyntaxTree Visit(IParseTree tree)
+        public override CSharpSyntaxNode VisitFunctionDeclaration([NotNull] DReAMGrammarParser.FunctionDeclarationContext context)
+        {
+            return base.VisitFunctionDeclaration(context);
+        }
+
+        public override CSharpSyntaxNode Visit(IParseTree tree)
         {
             return base.Visit(tree);
         }

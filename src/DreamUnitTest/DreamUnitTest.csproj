@@ -152,12 +152,8 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Test">
-      <HintPath>..\..\..\..\..\temp\Test.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="compilationUnit.cs" />
     <Compile Include="CompilerUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
