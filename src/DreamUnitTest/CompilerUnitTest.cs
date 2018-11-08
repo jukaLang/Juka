@@ -59,7 +59,7 @@ namespace DReAMUnitTest
                         stream.Read(byteArray, 0, (int)stream.Length);
                         memoryStream = new MemoryStream(byteArray);
                         var compiler = new Compiler();
-                        compiler.Go(memoryStream);
+                        compiler.Go("testcompile.exe",memoryStream);
 
                     }
                 }
@@ -146,8 +146,6 @@ namespace DReAMUnitTest
                 Trace.WriteLine(exception.Message);
                 throw;
             }
-
-            System.Linq.Expressions.MemberAssignment t;
 
 
             BinaryExpression binary = Expression.MakeBinary(
@@ -334,14 +332,18 @@ namespace DReAMUnitTest
                 "System.Collections.Generic"
             };
 
+
+        private static readonly string rt = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory() + "{0}.dll";
+
+
         private static string runtimePath = @"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\{0}.dll";
 
         private static readonly System.Collections.Generic.IEnumerable<MetadataReference> DefaultReferences =
             new[]
             {
-                MetadataReference.CreateFromFile(string.Format(runtimePath, "mscorlib")),
-                MetadataReference.CreateFromFile(string.Format(runtimePath, "System")),
-                MetadataReference.CreateFromFile(string.Format(runtimePath, "System.Core"))
+                MetadataReference.CreateFromFile(string.Format(rt, "mscorlib")),
+                MetadataReference.CreateFromFile(string.Format(rt, "System")),
+                MetadataReference.CreateFromFile(string.Format(rt, "System.Core"))
             };
 
         private static readonly CSharpCompilationOptions DefaultCompilationOptions =
@@ -349,15 +351,18 @@ namespace DReAMUnitTest
                     .WithOverflowChecks(true).WithOptimizationLevel(OptimizationLevel.Release)
                     .WithUsings(DefaultNamespaces);
 
+        public static string Rt => rt;
+
         public static void Parse(SyntaxTree parsedSyntaxTree)
         {
 
             var mscorlib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
             //var compilation = CSharpCompilation.Create("Test", syntaxTrees: new[] { parsedSyntaxTree }, references: new[] { mscorlib });
-            var compilation = CSharpCompilation.Create("Test", syntaxTrees: new[] { parsedSyntaxTree }, references: DefaultReferences);//, options: DefaultCompilationOptions);
+            var compilation = CSharpCompilation.Create("Test", syntaxTrees: new[] {parsedSyntaxTree},
+                references: DefaultReferences);
             try
             {
-                var result = compilation.Emit(@"c:\temp\Test.exe", @"c:\temp\test.pdb");
+                var result = compilation.Emit(@"Test.exe", @"test.pdb");
 
                 Console.WriteLine(result.Success ? "Sucess!!" : "Failed");
             }

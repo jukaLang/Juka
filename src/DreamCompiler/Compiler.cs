@@ -1,5 +1,6 @@
 ﻿//java org.antlr.v4.Tool -Dlanguage= CSharp DreamGrammar.g4 -no-listener
 
+using DReAMCompiler.RoslynCompile;
 using DReAMCompiler.Visitors;
 
 namespace DReAMCompiler
@@ -15,18 +16,23 @@ namespace DReAMCompiler
 
     interface ICompilerInterface
     {
-        void Go(MemoryStream stream);
+        void Go(String ouputFileName, MemoryStream stream);
     }
 
     public class Compiler : ICompilerInterface
     {
         private DReAMGrammarParser parser;
 
-        public void Go(MemoryStream memoryStream)
+        public void Go(String ouputFileName, MemoryStream memoryStream)
         {
             if (SetupAntlr(memoryStream))
             {
                 var code = BeginVisitation();
+
+                if (code != null)
+                {
+                    CompileRoslyn.CompileSyntaxTree(code.SyntaxTree);
+                }
                 //Expression.Lambda<Action>(code).Compile()();
             }
         }
@@ -46,33 +52,14 @@ namespace DReAMCompiler
             return true;
         }
 
-        private SyntaxTree BeginVisitation()
+        private CSharpSyntaxNode BeginVisitation()
         {
             DReAMGrammarParser.CompileUnitContext compileUnit = parser.compileUnit();
             Trace.WriteLine(compileUnit.ToStringTree(parser));
 
             //var visitor = new DReAMVisitor();
             var visitor = new DreamRoslynVisitor();
-            SyntaxTree expressionTree = CSharpSyntaxTree.ParseText(
-@"using System;
-using System.Collections;
-using System.Linq;
-using System.Text;
- 
-namespace HelloWorld
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Console.WriteLine(""Hello, World!"");
-        }
-    }
-}");
-
-            //visitor.Visit(compileUnit);
-
-            return expressionTree;
+            return visitor.Visit(compileUnit);
         }
     }
 }
