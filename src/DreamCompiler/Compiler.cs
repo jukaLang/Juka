@@ -11,6 +11,7 @@ namespace DReAMCompiler
     using System.IO;
     using System.Linq.Expressions;
     using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp;
 
     interface ICompilerInterface
     {
@@ -52,7 +53,24 @@ namespace DReAMCompiler
 
             //var visitor = new DReAMVisitor();
             var visitor = new DreamRoslynVisitor();
-            SyntaxTree expressionTree = visitor.Visit(compileUnit);
+            SyntaxTree expressionTree = CSharpSyntaxTree.ParseText(
+@"using System;
+using System.Collections;
+using System.Linq;
+using System.Text;
+ 
+namespace HelloWorld
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine(""Hello, World!"");
+        }
+    }
+}");
+
+            //visitor.Visit(compileUnit);
 
             return expressionTree;
         }
