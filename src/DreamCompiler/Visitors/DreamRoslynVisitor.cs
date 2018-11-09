@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace DReAMCompiler.Visitors
 {
     using DReAMCompiler.Grammar;
+    using DReAMCompiler.RoslynCompile;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis;
@@ -17,13 +18,17 @@ namespace DReAMCompiler.Visitors
     {
         public override CSharpSyntaxNode VisitCompileUnit([NotNull] DReAMGrammarParser.CompileUnitContext context)
         {
-            CSharpSyntaxNode tree =  base.VisitCompileUnit(context);
- 
-                ClassDeclarationSyntax classDeclarationSyntax = SyntaxFactory.ClassDeclaration("tempClass");
-                NamespaceDeclarationSyntax namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName("tempoary"))
-                    .AddMembers(items: new[] { classDeclarationSyntax });
+            CSharpSyntaxNode tree = base.VisitCompileUnit(context);
 
-                return SyntaxFactory.CompilationUnit().AddMembers(items: new[] { namespaceDeclaration });
+            MethodDeclarationSyntax method = GenerateStaticMethod.CreateClass("Main");
+
+            ClassDeclarationSyntax classDeclarationSyntax = SyntaxFactory.ClassDeclaration("tempClass")
+                .AddMembers(items: new[] { method });      
+            
+            NamespaceDeclarationSyntax namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName("tempoary"))
+                .AddMembers(items: new[] { classDeclarationSyntax });
+
+            return SyntaxFactory.CompilationUnit().AddMembers(items: new[] { namespaceDeclaration });
         }
 
         public override CSharpSyntaxNode VisitFunctionDeclaration([NotNull] DReAMGrammarParser.FunctionDeclarationContext context)
