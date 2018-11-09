@@ -192,6 +192,7 @@
     <Compile Include="grammar\DReAMGrammarParser.cs" />
     <Compile Include="grammar\DReAMGrammarVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoslynCompile\GenerateStaticMethod.cs" />
     <Compile Include="RoslynCompile\RoslynCompile.cs" />
     <Compile Include="Tokens\Token.cs" />
     <Compile Include="Tokens\TokenKind.cs" />

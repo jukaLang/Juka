@@ -12,12 +12,19 @@ namespace DReAMCompiler.RoslynCompile
 
     class GenerateStaticMethod
     {
-        public MethodDeclarationSyntax CreateClass(String methodName)
+        static public MethodDeclarationSyntax CreateClass(String methodName)
         {
-            IdentifierNameSyntax name = SyntaxFactory.IdentifierName(methodName);
-            TypeDeclarationSyntax returnType = SyntaxFactory.TypeDeclaration(SyntaxKind.VoidKeyword, "void");
-            //SyntaxFactory.MethodDeclaration(TypeSyntax)
-            return null;
+            SyntaxToken name = SyntaxFactory.Identifier(methodName);
+            SyntaxToken returnType = SyntaxFactory.Token(SyntaxKind.VoidKeyword);
+
+            return SyntaxFactory.MethodDeclaration(SyntaxFactory.PredefinedType(returnType), name)
+                .WithBody(
+                    SyntaxFactory.Block())
+                     .WithModifiers(
+            SyntaxFactory.TokenList(
+                new[]{
+                    SyntaxFactory.Token(SyntaxKind.StaticKeyword),
+                    SyntaxFactory.Token(SyntaxKind.PublicKeyword)}));
         }
     }
 }
