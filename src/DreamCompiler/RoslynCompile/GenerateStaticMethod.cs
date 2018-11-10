@@ -28,12 +28,11 @@ namespace DReAMCompiler.RoslynCompile
             SyntaxToken name = SyntaxFactory.Identifier(methodName);
             SyntaxToken returnType = SyntaxFactory.Token(SyntaxKind.VoidKeyword);
 
-
             List<StatementSyntax> statementList = new List<StatementSyntax>();
 
-            foreach(IParseTree child in context.children)
+            foreach (IParseTree child in context.children)
             {
-               CSharpSyntaxNode node = child.Accept(visitor);
+                CSharpSyntaxNode node = child.Accept(visitor);
                 if (node is StatementSyntax)
                 {
                     statementList.Add(node as StatementSyntax);
