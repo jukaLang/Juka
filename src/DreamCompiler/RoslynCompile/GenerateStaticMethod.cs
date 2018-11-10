@@ -12,8 +12,12 @@ namespace DReAMCompiler.RoslynCompile
 
     class GenerateStaticMethod
     {
-        static public MethodDeclarationSyntax CreateClass(String methodName)
+        static public MethodDeclarationSyntax CreateDefaultMainMethod(String methodName)
         {
+            if (methodName.Equals("main"))
+            {
+                methodName = "Main";
+            }
             SyntaxToken name = SyntaxFactory.Identifier(methodName);
             SyntaxToken returnType = SyntaxFactory.Token(SyntaxKind.VoidKeyword);
 

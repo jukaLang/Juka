@@ -18,12 +18,21 @@ namespace DReAMCompiler.Visitors
     {
         public override CSharpSyntaxNode VisitCompileUnit([NotNull] DReAMGrammarParser.CompileUnitContext context)
         {
-            CSharpSyntaxNode tree = base.VisitCompileUnit(context);
+            //MethodDeclarationSyntax tree = base.VisitCompileUnit(context) as MethodDeclarationSyntax;
 
-            MethodDeclarationSyntax method = GenerateStaticMethod.CreateClass("Main");
+            List<MethodDeclarationSyntax> methods = new List<MethodDeclarationSyntax>();
+
+            for(int i=0; i < context.ChildCount; i++)
+            {
+                var m = context.children[i].Accept(this) as MethodDeclarationSyntax;
+                if (m != null)
+                {
+                    methods.Add(m);
+                }
+            }
 
             ClassDeclarationSyntax classDeclarationSyntax = SyntaxFactory.ClassDeclaration("tempClass")
-                .AddMembers(items: new[] { method });      
+                .AddMembers(items: methods.ToArray());      
             
             NamespaceDeclarationSyntax namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName("tempoary"))
                 .AddMembers(items: new[] { classDeclarationSyntax });
@@ -33,7 +42,10 @@ namespace DReAMCompiler.Visitors
 
         public override CSharpSyntaxNode VisitFunctionDeclaration([NotNull] DReAMGrammarParser.FunctionDeclarationContext context)
         {
-            return base.VisitFunctionDeclaration(context);
+            MethodDeclarationSyntax method = GenerateStaticMethod.CreateDefaultMainMethod( context.funcName().GetText());
+            base.VisitFunctionDeclaration(context);
+
+            return method;
         }
 
         public override CSharpSyntaxNode Visit(IParseTree tree)
