@@ -29,21 +29,65 @@ namespace DReAMCompiler.Visitors
                 }
             }
 
-            ClassDeclarationSyntax classDeclarationSyntax = SyntaxFactory.ClassDeclaration("tempClass")
-                .AddMembers(items: methods.ToArray());      
-            
+            /**
+             * A name space and a class needs to be defined to hold all of the methods. 
+             */         
             NamespaceDeclarationSyntax namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName("tempoary"))
-                .AddMembers(items: new[] { classDeclarationSyntax });
+                .AddMembers(items: new[] { SyntaxFactory.ClassDeclaration("tempClass")
+                .AddMembers(items: methods.ToArray()) });
 
             return SyntaxFactory.CompilationUnit().AddMembers(items: new[] { namespaceDeclaration });
         }
 
         public override CSharpSyntaxNode VisitFunctionDeclaration([NotNull] DReAMGrammarParser.FunctionDeclarationContext context)
         {
-            MethodDeclarationSyntax method = GenerateStaticMethod.CreateDefaultMainMethod( context.funcName().GetText());
-            base.VisitFunctionDeclaration(context);
-
+            MethodDeclarationSyntax method = GenerateStaticMethod.CreateStaticMethod( context , this);
             return method;
+        }
+
+        /*
+        public override CSharpSyntaxNode VisitAssignmentExpression([NotNull] DReAMGrammarParser.AssignmentExpressionContext context)
+        {
+            return base.VisitAssignmentExpression(context);
+        }
+        */
+
+        public override CSharpSyntaxNode VisitFunctionCall([NotNull] DReAMGrammarParser.FunctionCallContext context)
+        {
+            SyntaxToken name = SyntaxFactory.Identifier(context.funcName().GetText());
+            SyntaxToken returnType = SyntaxFactory.Token(SyntaxKind.VoidKeyword);
+
+            return SyntaxFactory.ExpressionStatement(
+                            SyntaxFactory.InvocationExpression(
+                                SyntaxFactory.IdentifierName("foo")));
+
+        }
+
+        public override CSharpSyntaxNode VisitFunctionCallExpression([NotNull] DReAMGrammarParser.FunctionCallExpressionContext context)
+        {
+            var node = base.VisitFunctionCallExpression(context);
+            return node;
+        }
+
+        public override CSharpSyntaxNode VisitStatement([NotNull] DReAMGrammarParser.StatementContext context)
+        {
+            var node = base.VisitStatement(context);
+            return node;
+        }
+
+        public override CSharpSyntaxNode VisitExpression([NotNull] DReAMGrammarParser.ExpressionContext context)
+        {
+            List<CSharpSyntaxNode> list = new List<CSharpSyntaxNode>();
+            foreach(IParseTree tree in context.children)
+            {
+                var syntaxNode = tree.Accept(this);
+                if (syntaxNode is ExpressionStatementSyntax)
+                {
+                    return syntaxNode;
+                }
+            }
+
+            return null;
         }
 
         public override CSharpSyntaxNode Visit(IParseTree tree)
