@@ -18,13 +18,11 @@ namespace DReAMCompiler.Visitors
     {
         public override CSharpSyntaxNode VisitCompileUnit([NotNull] DReAMGrammarParser.CompileUnitContext context)
         {
-            //MethodDeclarationSyntax tree = base.VisitCompileUnit(context) as MethodDeclarationSyntax;
-
             List<MethodDeclarationSyntax> methods = new List<MethodDeclarationSyntax>();
 
             for(int i=0; i < context.ChildCount; i++)
             {
-                var m = context.children[i].Accept(this) as MethodDeclarationSyntax;
+                MethodDeclarationSyntax m = context.children[i].Accept(this) as MethodDeclarationSyntax;
                 if (m != null)
                 {
                     methods.Add(m);

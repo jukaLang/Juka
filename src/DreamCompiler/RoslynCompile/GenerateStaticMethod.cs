@@ -14,10 +14,12 @@ namespace DReAMCompiler.RoslynCompile
     {
         static public MethodDeclarationSyntax CreateDefaultMainMethod(String methodName)
         {
+            //Since C# main methods musbe be named Main this converts to C# style.
             if (methodName.Equals("main"))
             {
                 methodName = "Main";
             }
+
             SyntaxToken name = SyntaxFactory.Identifier(methodName);
             SyntaxToken returnType = SyntaxFactory.Token(SyntaxKind.VoidKeyword);
 
