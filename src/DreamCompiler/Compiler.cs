@@ -33,7 +33,6 @@ namespace DReAMCompiler
                 {
                     CompileRoslyn.CompileSyntaxTree(code.SyntaxTree);
                 }
-                //Expression.Lambda<Action>(code).Compile()();
             }
         }
 

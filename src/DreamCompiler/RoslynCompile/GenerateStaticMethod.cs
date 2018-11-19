@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DReAMCompiler.RoslynCompile
 {
+    using Antlr4.Runtime.Tree;
     using DReAMCompiler.Grammar;
-    using DReAMCompiler.RoslynCompile;
+    using DReAMCompiler.Visitors;
+    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using Microsoft.CodeAnalysis;
-    using DReAMCompiler.Visitors;
-    using Antlr4.Runtime.Tree;
+    using DReAMCompiler.Constants;
 
     class GenerateStaticMethod
     {
@@ -20,27 +17,27 @@ namespace DReAMCompiler.RoslynCompile
         {
             String methodName = context.funcName().GetText();
             //Since C# main methods musbe be named Main this converts to C# style.
-            if (methodName.Equals("main"))
+            if (methodName.Equals(Constants.JuiliarMain))
             {
-                methodName = "Main";
+                methodName = Constants.RoslynMain;
             }
 
             SyntaxToken name = SyntaxFactory.Identifier(methodName);
             SyntaxToken returnType = SyntaxFactory.Token(SyntaxKind.VoidKeyword);
 
-            List<StatementSyntax> statementList = new List<StatementSyntax>();
+            var statementList = new List<StatementSyntax>();
 
             foreach (IParseTree child in context.children)
             {
                 CSharpSyntaxNode node = child.Accept(visitor);
-                if (node is StatementSyntax)
+                if (node != null)
                 {
                     statementList.Add(node as StatementSyntax);
                 }
             }
 
             var block = SyntaxFactory.Block().AddStatements(statementList.ToArray());
-
+         
             return SyntaxFactory.MethodDeclaration(SyntaxFactory.PredefinedType(returnType), name)
                 .WithBody(
                     block)

@@ -6,7 +6,7 @@ using System.IO;
 using DReAMCompiler;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Runtime.CompilerServices;
+
 using System.Collections;
 
 
@@ -14,6 +14,7 @@ namespace DReAMUnitTest
 {
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis;
+    using System.Runtime.CompilerServices;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
@@ -355,11 +356,7 @@ namespace DReAMUnitTest
 
         public static void Parse(SyntaxTree parsedSyntaxTree)
         {
-
-            var mscorlib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
-            //var compilation = CSharpCompilation.Create("Test", syntaxTrees: new[] { parsedSyntaxTree }, references: new[] { mscorlib });
-            var compilation = CSharpCompilation.Create("Test", syntaxTrees: new[] {parsedSyntaxTree},
-                references: DefaultReferences);
+            var compilation = CSharpCompilation.Create("Test", syntaxTrees: new[] {parsedSyntaxTree},references: DefaultReferences);
             try
             {
                 var result = compilation.Emit(@"Test.exe", @"test.pdb");
