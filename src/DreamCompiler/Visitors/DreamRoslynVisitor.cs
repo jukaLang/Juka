@@ -57,19 +57,29 @@ namespace DReAMCompiler.Visitors
             SyntaxToken name = SyntaxFactory.Identifier(context.funcName().GetText());
             SyntaxToken returnType = SyntaxFactory.Token(SyntaxKind.VoidKeyword);
 
+            var parameters = new List<ExpressionSyntax>();
+
+            for (int i = 2; i < context.ChildCount -1; i++)
+            {
+                parameters.Add((ExpressionSyntax)context.children[i].Accept(this));
+            }
+
             var builtinFunctions = new List<String>() { "print", "printLine", "read", "readLine" };
 
             String funcName = context.funcName().GetText();
 
             if (builtinFunctions.Contains(funcName))
             {
-                CSharpSyntaxNode builtInFunctionNode = GetBuiltInFunction(funcName);
+                CSharpSyntaxNode builtInFunctionNode = GetBuiltInFunction(
+                    funcName,
+                    parameters);
+
                 if (builtInFunctionNode != null)
                 {
-                   return builtInFunctionNode;
+                    return builtInFunctionNode;
                 }
             }
-            
+
             return SyntaxFactory.ExpressionStatement(
                             SyntaxFactory.InvocationExpression(
                                 SyntaxFactory.IdentifierName(funcName)));
@@ -77,7 +87,7 @@ namespace DReAMCompiler.Visitors
         }
 
 
-        private CSharpSyntaxNode GetBuiltInFunction(String funcName)
+        private CSharpSyntaxNode GetBuiltInFunction(String funcName, List<ExpressionSyntax> parameters)
         {
             var methodMap = new Dictionary<String, String>() { { "print", "Write" }, { "printLine", "WriteLine" } };
 
@@ -87,6 +97,8 @@ namespace DReAMCompiler.Visitors
             {
                 return null;
             }
+
+            var argument = parameters[0];
 
             return SyntaxFactory.ExpressionStatement(
               SyntaxFactory.InvocationExpression(
@@ -100,10 +112,7 @@ namespace DReAMCompiler.Visitors
                                 .WithArgumentList(
                                     SyntaxFactory.ArgumentList(
                                     SyntaxFactory.SingletonSeparatedList<ArgumentSyntax>(
-                                    SyntaxFactory.Argument(
-                                    SyntaxFactory.LiteralExpression(
-                                    SyntaxKind.StringLiteralExpression,
-                                    SyntaxFactory.Literal("foo")))))));
+                                    SyntaxFactory.Argument(argument)))));
         }
 
         public override CSharpSyntaxNode VisitFunctionCallExpression([NotNull] DReAMGrammarParser.FunctionCallExpressionContext context)
@@ -131,6 +140,13 @@ namespace DReAMCompiler.Visitors
             }
 
             return null;
+        }
+
+        public override CSharpSyntaxNode VisitStringValue([NotNull] DReAMGrammarParser.StringValueContext context)
+        {
+            return SyntaxFactory.LiteralExpression(
+                                   SyntaxKind.StringLiteralExpression,
+                                   SyntaxFactory.Literal(context.STRING().GetText()));
         }
 
         public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DReAMGrammarParser.VariableDeclarationExpressionContext context)

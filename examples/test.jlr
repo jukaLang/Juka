@@ -1,11 +1,12 @@
 function main() = {
+	print("foo");
 	int x = 3 + 2 * 5 + 2 / 2;
 	foo();
-	print(3);
+	print(33);
 }
 
 
 function foo(){
 	int y = 3 + 3;
-	print(3);
+	print(4003);
 }
