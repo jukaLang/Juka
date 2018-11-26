@@ -1,6 +1,6 @@
 function main() = {
 	int y = 3 + 2 / 1 * 2 + 4 -1;
-	foo();
+	foo(y);
 	string s = "main function";
 	
 }
