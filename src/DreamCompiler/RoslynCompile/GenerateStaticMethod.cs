@@ -1,25 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DReAMCompiler.RoslynCompile
 {
+    using Antlr4.Runtime.Tree;
+    using DReAMCompiler.Grammar;
+    using DReAMCompiler.Visitors;
+    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using Microsoft.CodeAnalysis;
+    using DReAMCompiler.Constants;
 
     class GenerateStaticMethod
     {
-        static public MethodDeclarationSyntax CreateClass(String methodName)
+        static public MethodDeclarationSyntax CreateStaticMethod(DReAMGrammarParser.FunctionDeclarationContext context, DreamRoslynVisitor visitor)
         {
+            String methodName = context.funcName().GetText();
+            //Since C# main methods musbe be named Main this converts to C# style.
+            if (methodName.Equals(Constants.JuiliarMain))
+            {
+                methodName = Constants.RoslynMain;
+            }
+
             SyntaxToken name = SyntaxFactory.Identifier(methodName);
             SyntaxToken returnType = SyntaxFactory.Token(SyntaxKind.VoidKeyword);
 
+            var statementList = new List<StatementSyntax>();
+
+            foreach (IParseTree child in context.children)
+            {
+                CSharpSyntaxNode node = child.Accept(visitor);
+                if (node != null)
+                {
+                    statementList.Add(node as StatementSyntax);
+                }
+            }
+
+            var block = SyntaxFactory.Block().AddStatements(statementList.ToArray());
+         
             return SyntaxFactory.MethodDeclaration(SyntaxFactory.PredefinedType(returnType), name)
                 .WithBody(
-                    SyntaxFactory.Block())
+                    block)
                      .WithModifiers(
             SyntaxFactory.TokenList(
                 new[]{

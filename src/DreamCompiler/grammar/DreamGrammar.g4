@@ -346,6 +346,9 @@ singleExpression
  | variable                                                               # VariableExpression
  | functionCall                                                           # FunctionCallExpression
  | '(' expressionSequence ')'                                             # ParenthesizedExpression
+ | DecimalLiteral														  # DecimalValue
+ | INT                                                                    # IntValue
+ | STRING                                                                 # StringValue
  ;
 
 
@@ -395,10 +398,6 @@ assignmentOperator
 
  literal
  : ( BOOLEAN | NULL )
- | DecimalLiteral
- | INT
- | STRING
- | StringLiteral
  ;
 
 /*
@@ -410,16 +409,6 @@ assignmentOperator
     )
   | numericLiteral
   ;
-
- numericLiteral
-  : DecimalLiteral
-  | HexIntegerLiteral
-  | OctalIntegerLiteral
-  ;
-
-
-
-
 
 /// 7.8.3 Numeric Literals
 HexIntegerLiteral

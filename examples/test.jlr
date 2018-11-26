@@ -1,11 +1,12 @@
 function main() = {
-	int y = 3 + 2 / 1 * 2 + 4 -1;
-	foo(y);
-	string s = "main function";
-	
+	print("foo");
+	int x = 3 + 2 * 5 + 2 / 2;
+	foo();
+	print(33);
 }
 
-function foo()={
-	int x = 3 + 2;
-	string x = "foo function";
+
+function foo(){
+	int y = 3 + 3;
+	print(4003);
 }
