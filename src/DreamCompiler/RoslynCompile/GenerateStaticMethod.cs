@@ -26,18 +26,35 @@ namespace DReAMCompiler.RoslynCompile
             SyntaxToken returnType = SyntaxFactory.Token(SyntaxKind.VoidKeyword);
 
             var statementList = new List<StatementSyntax>();
+            var tlist = new List<SyntaxNodeOrToken>();
 
             foreach (IParseTree child in context.children)
             {
                 CSharpSyntaxNode node = child.Accept(visitor);
                 if (node != null)
                 {
-                    statementList.Add(node as StatementSyntax);
+                    if (node is ParameterSyntax)
+                    {
+                        tlist.Add((ParameterSyntax)node);
+                    }
+                    else if (node is StatementSyntax)
+                    {
+                        statementList.Add(node as StatementSyntax);
+                    }
                 }
             }
 
             var block = SyntaxFactory.Block().AddStatements(statementList.ToArray());
-         
+
+            if (tlist.Count > 0)
+            {
+                return SyntaxFactory.MethodDeclaration(SyntaxFactory.PredefinedType(returnType), name).WithBody( block)
+                    .WithModifiers( SyntaxFactory.TokenList( new[]{
+                        SyntaxFactory.Token(SyntaxKind.StaticKeyword),
+                        SyntaxFactory.Token(SyntaxKind.PublicKeyword)}))
+                        .WithParameterList( SyntaxFactory.ParameterList( SyntaxFactory.SeparatedList<ParameterSyntax>(tlist)));
+            }
+
             return SyntaxFactory.MethodDeclaration(SyntaxFactory.PredefinedType(returnType), name)
                 .WithBody(
                     block)

@@ -50,7 +50,7 @@ functionCall
 
 functionDeclaration
     : 'function' funcName '()' equalsign '{' (statement)* '}'
-    | 'function' funcName leftParen variableDeclaration (',' variableDeclaration)? rightParen equalsign '{' (statement)* '}'
+    | 'function' funcName leftParen parameterVariableDeclaration (',' parameterVariableDeclaration)? rightParen equalsign '{' (statement)* '}'
     ;
 
 funcName
@@ -107,7 +107,12 @@ variable
     ;
 
 variableDeclaration
-    : keywords variable
+    : keywords identifierName
+    | userDefinedTypeVariableDecl
+    ;
+
+parameterVariableDeclaration
+    : keywords ID
     | userDefinedTypeVariableDecl
     ;
 
