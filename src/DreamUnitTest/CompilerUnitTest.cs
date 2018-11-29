@@ -60,8 +60,7 @@ namespace DReAMUnitTest
                         stream.Read(byteArray, 0, (int)stream.Length);
                         memoryStream = new MemoryStream(byteArray);
                         var compiler = new Compiler();
-                        compiler.Go("testcompile.exe",memoryStream);
-
+                        compiler.Go("testcompile",memoryStream);
                     }
                 }
             }

@@ -31,7 +31,7 @@ namespace DReAMCompiler
 
                 if (code != null)
                 {
-                    CompileRoslyn.CompileSyntaxTree(code.SyntaxTree);
+                    CompileRoslyn.CompileSyntaxTree(code.SyntaxTree, ouputFileName) ;
                 }
             }
         }

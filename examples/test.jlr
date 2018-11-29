@@ -1,13 +1,19 @@
 function main() = {
+	printLine("entering main");
+
 	int x = 3 + 2 * 5 + 2 / 2;
 	foo(x);
-	print("foo");
-	print(33);
+	printLine("foo");
+	printLine(33);
+
+	printLine("Leaving main");
 }
 
 
 function foo(int x){
+	printLine("Entering foo");
 	print(x);
 	int y = 3 + 3;
 	print(4003);
+	printLine("leaving foo");
 }

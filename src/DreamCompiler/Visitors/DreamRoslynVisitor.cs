@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DReAMCompiler.Visitors
 {
@@ -119,15 +117,6 @@ namespace DReAMCompiler.Visitors
             }
 
             return list;
-
-            /*
-                                    SyntaxFactory.Argument(
-                                    SyntaxFactory.LiteralExpression(
-                                            SyntaxKind.NumericLiteralExpression,
-                                            SyntaxFactory.Literal(3))),
-                                    SyntaxFactory.Token(SyntaxKind.CommaToken),
-                                    SyntaxFactory.Argument(
-                                        SyntaxFactory.IdentifierName("x"))});*/
         }
 
         private CSharpSyntaxNode GenrateBuiltInFunction(String funcName, List<ArgumentSyntax> parameters)
@@ -207,9 +196,14 @@ namespace DReAMCompiler.Visitors
 
         public override CSharpSyntaxNode VisitStringValue([NotNull] DReAMGrammarParser.StringValueContext context)
         {
+            String value = context.GetText();
+            if (value.StartsWith("\"") && value.EndsWith("\""))
+            {
+                value = value.Substring(1, value.Length - 2);
+            }
             return SyntaxFactory.LiteralExpression(
                                    SyntaxKind.StringLiteralExpression,
-                                   SyntaxFactory.Literal(context.STRING().GetText()));
+                                   SyntaxFactory.Literal(value));
         }
 
         public override CSharpSyntaxNode VisitParameterVariableDeclaration([NotNull] DReAMGrammarParser.ParameterVariableDeclarationContext context)
@@ -231,7 +225,7 @@ namespace DReAMCompiler.Visitors
                     return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.StringKeyword));
             }
 
-            throw new Exception("vo valid keyword");
+            throw new Exception("no valid keyword");
         }
 
         public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DReAMGrammarParser.VariableDeclarationExpressionContext context)
