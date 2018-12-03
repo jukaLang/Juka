@@ -15,5 +15,8 @@ function foo(int x){
 	print(x);
 	int y = 3 + 3;
 	print(4003);
+	printLine("");
+	print("y = ");
+	printLine(y);
 	printLine("leaving foo");
 }

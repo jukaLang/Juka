@@ -273,32 +273,7 @@ namespace DReAMCompiler.Visitors
        
         public override CSharpSyntaxNode VisitBinaryExpression([NotNull] DReAMGrammarParser.BinaryExpressionContext context)
         {
-            var nodeList = new List<CSharpSyntaxNode>();
-
-            foreach(var expression in context.singleExpression())
-            {
-                nodeList.Add(expression.Accept(this));
-            }
-
-            String unaryOp = context.unaryOperator().GetText();
-
-            var expressionArray = nodeList.ToArray();
-            var left = (ExpressionSyntax)expressionArray[0];
-            var right = (ExpressionSyntax)expressionArray[1];
-
-            if (unaryOp.Equals("+") || unaryOp.Equals("*"))
-            {
-                SyntaxKind kind = unaryOp.Equals("+") ? SyntaxKind.AddExpression : SyntaxKind.MultiplyExpression;
-                return SyntaxFactory.BinaryExpression(kind, left, right);
-            }
-
-            if (unaryOp.Equals("-") || unaryOp.Equals("/"))
-            {
-                SyntaxKind kind = unaryOp.Equals("-") ? SyntaxKind.SubtractExpression : SyntaxKind.DivideExpression;
-                return SyntaxFactory.BinaryExpression(kind, left, right);
-            }
-
-            throw new Exception("Invalid expression");
+            return GenerateBinaryExpression.CreateBinaryExpression(context, this);
         }
 
         public override CSharpSyntaxNode VisitDecimalValue([NotNull] DReAMGrammarParser.DecimalValueContext context)

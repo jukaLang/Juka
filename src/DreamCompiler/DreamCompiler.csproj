@@ -162,7 +162,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeGeneration\Generate.cs" />
+    <Compile Include="RoslynCompile\GenerateBinaryExpression.cs" />
     <Compile Include="Compiler.cs" />
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="grammar\DReAMGrammarBaseVisitor.cs" />
@@ -180,6 +180,7 @@
   <ItemGroup>
     <Folder Include="bin\Debug\" />
     <Folder Include="bin\Release\" />
+    <Folder Include="CodeGeneration\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
