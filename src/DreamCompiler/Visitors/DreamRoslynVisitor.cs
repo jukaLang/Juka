@@ -243,7 +243,7 @@ namespace DReAMCompiler.Visitors
                 WalkVariableDeclarationExpression(list);
             }
         }
-m
+
         public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DReAMGrammarParser.VariableDeclarationExpressionContext context)
         {
             String variableName = context.variable().GetText();
