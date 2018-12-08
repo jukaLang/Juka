@@ -51,16 +51,9 @@ namespace DReAMUnitTest
             {
                 if (File.Exists(@"..\..\..\..\examples\test.jlr"))
                 {
-
-                    MemoryStream memoryStream = null;
-
                     using (var stream = new FileStream(@"..\..\..\..\examples\test.jlr", FileMode.Open))
                     {
-                        var byteArray = new byte[stream.Length];
-                        stream.Read(byteArray, 0, (int)stream.Length);
-                        memoryStream = new MemoryStream(byteArray);
-                        var compiler = new Compiler();
-                        compiler.Go("testcompile",memoryStream);
+                       CSharpSyntaxNode node = Compile(stream); 
                     }
                 }
             }
@@ -68,6 +61,27 @@ namespace DReAMUnitTest
             {
                 throw ex;
             }
+        } 
+
+        private static CSharpSyntaxNode Compile(FileStream stream)
+        {
+            MemoryStream memoryStream;
+            var byteArray = new byte[stream.Length];
+            stream.Read(byteArray, 0, (int)stream.Length);
+            memoryStream = new MemoryStream(byteArray);
+            var compiler = new Compiler();
+            return compiler.Go("testcompile", memoryStream);
+        }
+
+        [TestMethod]
+        public void TestBinaryExpression()
+        {
+            String binaryExpression = @"function main() = { int x = 1 + 2 * 3; }";
+            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(binaryExpression);
+            MemoryStream stream = new MemoryStream(byteArray);
+
+            var node = new Compiler().Go("binaryexpression", stream);
+            Assert.IsNotNull(node);
         }
 
 
@@ -334,9 +348,7 @@ namespace DReAMUnitTest
 
 
         private static readonly string rt = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory() + "{0}.dll";
-
-
-        private static string runtimePath = @"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\{0}.dll";
+        //private static string runtimePath = @"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\{0}.dll";
 
         private static readonly System.Collections.Generic.IEnumerable<MetadataReference> DefaultReferences =
             new[]
@@ -351,7 +363,7 @@ namespace DReAMUnitTest
                     .WithOverflowChecks(true).WithOptimizationLevel(OptimizationLevel.Release)
                     .WithUsings(DefaultNamespaces);
 
-        public static string Rt => rt;
+        public static string Rt =>System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory() + "{0}.dll";
 
         public static void Parse(SyntaxTree parsedSyntaxTree)
         {

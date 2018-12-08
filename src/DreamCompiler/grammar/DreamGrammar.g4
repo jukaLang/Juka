@@ -27,11 +27,6 @@ semiColon
 
 expression
     : singleExpression endLine
-//    | variableDeclaration endLine
-//    | assignmentExpression endLine
-//    | reassignmentExpression endLine
-//    | booleanExpression endLine
-//    | breakKeyWord endLine
     | ifExpr
     | whileExpression
     | doWhileExpr
@@ -219,12 +214,16 @@ comparisonOperator
     | notOperator
     ;
 
+addSubtractOp
+	: '+' | '-';
+
+multiplyDivideOp
+	: '*' | '/';
+
 unaryOperator
-    : '+'
-    | '-'
-    | '*'
-    | '/'
-    | '%'
+    : multiplyDivideOp
+	| addSubtractOp
+	| equalsign
     ;
 
 bitWiseOperators
@@ -316,49 +315,46 @@ expressionSequence
      ;
 
 singleExpression
- /*
- : Function Identifier? '(' formalParameterList? ')' '{' functionBody '}' # FunctionExpression
- | singleExpression arguments                                             # ArgumentsExpression
- | New singleExpression arguments?                                        # NewExpression
- : singleExpression {!this.here(Visitor.LineTerminator)}? '++'   # PostIncrementExpression
- | singleExpression {!this.here(Visitor.LineTerminator)}? '--'   # PostDecreaseExpression
- */
- : Delete singleExpression                                                # DeleteExpression
- | Void singleExpression                                                  # VoidExpression
- | Typeof singleExpression                                                # TypeofExpression
- | singleExpression '[' expressionSequence ']'                            # MemberIndexExpression
- | singleExpression '.' identifierName                                    # MemberDotExpression
- | '++' singleExpression                                                  # PreIncrementExpression
- | '--' singleExpression                                                  # PreDecreaseExpression
- | '+' singleExpression                                                   # UnaryPlusExpression
- | '-' singleExpression                                                   # UnaryMinusExpression
- | '~' singleExpression                                                   # BitNotExpression
- | notOperator singleExpression                                           # NotExpression
- | singleExpression unaryOperator singleExpression                        # BinaryExpression
- | singleExpression comparisonOperator singleExpression                   # EqualityExpression
- | singleExpression bitWiseOperators singleExpression                     # BitAndExpression
- | singleExpression ( bitLeftShift | bitRigthShift ) singleExpression     # BitShiftExpression
- | singleExpression Instanceof singleExpression                           # InstanceofExpression
- | singleExpression In singleExpression                                   # InExpression
- | singleExpression '?' singleExpression ':' singleExpression             # TernaryExpression
- | variable assignmentOperator evaluatableExpression                      # AssignmentOperatorExpression
- | variable assignmentOperator singleExpression                           # AssignmentOperatorExpression
- | variable assignmentOperator ( unaryOperator ) ( singleExpression singleExpression )+ # AssignmentOperatorExpression
- | (keywords) ( variable ( assignmentOperator singleExpression)* )         # VariableDeclarationExpression
- | (keywords) variable ( assignmentOperator ( unaryOperator ) ( singleExpression singleExpression )+)*  # VariableDeclarationExpression
- | This                                                                   # ThisExpression
- | literal                                                                # LiteralExpression
- | variable                                                               # VariableExpression
- | functionCall                                                           # FunctionCallExpression
- | '(' expressionSequence ')'                                             # ParenthesizedExpression
- | DecimalLiteral														  # DecimalValue
- | INT                                                                    # IntValue
- | STRING                                                                 # StringValue
+ : Delete singleExpression                                                  # DeleteExpression
+ | Void singleExpression                                                    # VoidExpression
+ | Typeof singleExpression                                                  # TypeofExpression
+ | singleExpression '[' expressionSequence ']'                              # MemberIndexExpression
+ | singleExpression '.' identifierName                                      # MemberDotExpression
+ | '++' singleExpression                                                    # PreIncrementExpression
+ | '--' singleExpression                                                    # PreDecreaseExpression
+ | '+' singleExpression                                                     # UnaryPlusExpression
+ | '-' singleExpression                                                     # UnaryMinusExpression
+ | '~' singleExpression                                                     # BitNotExpression
+ | notOperator singleExpression                                             # NotExpression
+ | singleExpression unaryOperator singleExpression                          # BinaryExpression
+ | singleExpression comparisonOperator singleExpression                     # EqualityExpression
+ | singleExpression bitWiseOperators singleExpression                       # BitAndExpression
+ | singleExpression ( bitLeftShift | bitRigthShift ) singleExpression       # BitShiftExpression
+ | singleExpression Instanceof singleExpression                             # InstanceofExpression
+ | singleExpression In singleExpression                                     # InExpression
+ | singleExpression '?' singleExpression ':' singleExpression               # TernaryExpression
+// | variable assignmentOperator singleExpression                           # AssignmentOperatorExpression
+// | variable assignmentOperator BinaryExpression                           # AssignmentOperatorExpression
+// | variable assignmentOperator ( unaryOperator ) ( singleExpression singleExpression )+ # AssignmentOperatorExpression
+// | (keywords) variable ( assignmentOperator ( unaryOperator ) ( singleExpression )+)*  # VariableDeclarationExpression
+ | keywords variable assignmentOperator singleExpression		            # VariableDeclarationExpression
+ | This                                                                     # ThisExpression
+ | literal                                                                  # LiteralExpression
+ | variable                                                                 # VariableExpression
+ | functionCall                                                             # FunctionCallExpression
+ | '(' expressionSequence ')'                                               # ParenthesizedExpression
+ | DecimalLiteral														    # DecimalValue
+ | INT                                                                      # IntValue
+ | STRING                                                                   # StringValue
  ;
 
+ /*
+ binaryExpressionOperation
+	: singleExpression unaryOperator singleExpression	# BinaryExpression
+	;
+*/
 
 
- //evaluatableExpression : singleExpression a
  evaluatableExpression : singleExpression                               # Evaluatable ;
 
  assignmentExpression
@@ -387,18 +383,18 @@ singleExpression
 
 
 assignmentOperator
- : '='
- | '*='
- | '/='
- | '%='
- | '+='
- | '-='
- | '<<='
- | '>>='
- | '>>>='
- | '&='
- | '^='
- | '|='
+ : '=' 
+ | '*=' singleExpression
+ | '/=' singleExpression
+ | '%=' singleExpression
+ | '+=' singleExpression
+ | '-=' singleExpression
+ | '<<=' singleExpression 
+ | '>>=' singleExpression
+ | '>>>=' singleExpression
+ | '&=' singleExpression
+ | '^=' singleExpression
+ | '|=' singleExpression
  ;
 
  literal
@@ -558,3 +554,10 @@ fragment ExponentPart
  ;
 
 
+ /*
+ : Function Identifier? '(' formalParameterList? ')' '{' functionBody '}' # FunctionExpression
+ | singleExpression arguments                                             # ArgumentsExpression
+ | New singleExpression arguments?                                        # NewExpression
+ : singleExpression {!this.here(Visitor.LineTerminator)}? '++'   # PostIncrementExpression
+ | singleExpression {!this.here(Visitor.LineTerminator)}? '--'   # PostDecreaseExpression
+ */

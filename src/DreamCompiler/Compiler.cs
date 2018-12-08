@@ -16,14 +16,14 @@ namespace DReAMCompiler
 
     interface ICompilerInterface
     {
-        void Go(String ouputFileName, MemoryStream stream);
+        CSharpSyntaxNode Go(String ouputFileName, MemoryStream stream);
     }
 
-    public class Compiler : ICompilerInterface
-    {
+    public class Compiler
+    { 
         private DReAMGrammarParser parser;
 
-        public void Go(String ouputFileName, MemoryStream memoryStream)
+        public CSharpSyntaxNode Go(String ouputFileName, MemoryStream memoryStream)
         {
             if (SetupAntlr(memoryStream))
             {
@@ -31,9 +31,12 @@ namespace DReAMCompiler
 
                 if (code != null)
                 {
-                    CompileRoslyn.CompileSyntaxTree(code.SyntaxTree, ouputFileName) ;
+                    CompileRoslyn.CompileSyntaxTree(code.SyntaxTree, ouputFileName);
+                    return code;
                 }
             }
+
+            throw new Exception("Unable to compile");
         }
 
         private bool SetupAntlr(MemoryStream stream)

@@ -20,9 +20,10 @@ namespace DReAMCompiler.RoslynCompile
         {
             var nodeList = new List<CSharpSyntaxNode>();
 
-            foreach (var expression in context.singleExpression())
+            foreach (var expression in context.children)
             {
-                nodeList.Add(expression.Accept(visitor));
+                var item = expression.Accept(visitor);
+                nodeList.Add(item);
             }
 
             String unaryOp = context.unaryOperator().GetText();

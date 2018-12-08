@@ -228,32 +228,55 @@ namespace DReAMCompiler.Visitors
             throw new Exception("no valid keyword");
         }
 
+
+        private void WalkVariableDeclarationExpression([NotNull] IList<IParseTree> context)
+        {
+            foreach(var e in context)
+            {
+                var list = new List<IParseTree>();
+                for (int i = 0; i < e.ChildCount; i++)
+                {
+                    System.Diagnostics.Trace.WriteLine(e.GetChild(i).GetText());
+                    list.Add( e.GetChild(i) );
+                }
+
+                WalkVariableDeclarationExpression(list);
+            }
+        }
+m
         public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DReAMGrammarParser.VariableDeclarationExpressionContext context)
         {
             String variableName = context.variable().GetText();
   
             var expressions = context.singleExpression();
             var nodeList = new List<CSharpSyntaxNode>();
+            WalkVariableDeclarationExpression(context.singleExpression().children);
 
-            foreach (var expression in expressions)
-            {
-                nodeList.Add(expression.Accept(this));
-            }
-
-            var keywordToken = GetKeywordTokenType(context.keywords().GetText());
+            SyntaxToken keywordToken = GetKeywordTokenType(context.keywords().GetText());
             var binaryExpression = nodeList[0] ?? nodeList[0] as BinaryExpressionSyntax;
 
             return SyntaxFactory.LocalDeclarationStatement(
             SyntaxFactory.VariableDeclaration(
-                SyntaxFactory.PredefinedType( 
-                    SyntaxFactory.Token(SyntaxKind.IntKeyword)))
+                SyntaxFactory.PredefinedType(keywordToken))
             .WithVariables(
                 SyntaxFactory.SingletonSeparatedList<VariableDeclaratorSyntax>(
                     SyntaxFactory.VariableDeclarator(
-                        SyntaxFactory.Identifier(variableName))
+                        SyntaxFactory.Identifier(variableName)) )));
+            /*
                     .WithInitializer(
                         SyntaxFactory.EqualsValueClause(
                            (BinaryExpressionSyntax)binaryExpression)))));
+            */
+        }
+
+        public override CSharpSyntaxNode VisitAssignmentOperator([NotNull] DReAMGrammarParser.AssignmentOperatorContext context)
+        {
+            return base.VisitAssignmentOperator(context);
+        }
+
+        public override CSharpSyntaxNode VisitUnaryOperator([NotNull] DReAMGrammarParser.UnaryOperatorContext context)
+        {
+            return base.VisitUnaryOperator(context);
         }
 
         private SyntaxToken GetKeywordTokenType(String keyword)
@@ -270,7 +293,7 @@ namespace DReAMCompiler.Visitors
 
             return SyntaxFactory.Token(SyntaxKind.ErrorKeyword);
         }
-       
+
         public override CSharpSyntaxNode VisitBinaryExpression([NotNull] DReAMGrammarParser.BinaryExpressionContext context)
         {
             return GenerateBinaryExpression.CreateBinaryExpression(context, this);
@@ -298,7 +321,6 @@ namespace DReAMCompiler.Visitors
 
         private CSharpSyntaxNode GetNumericAsNode([NotNull]String numberValue, NumberValueEnum type)
         {
-            CSharpSyntaxNode node = null;
             switch (type)
             {
                 case NumberValueEnum.jinteger:

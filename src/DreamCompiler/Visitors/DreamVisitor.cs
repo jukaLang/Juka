@@ -67,11 +67,6 @@ namespace DReAMCompiler.Visitors
             return base.VisitAssignmentOperator(context);
         }
 
-        public override Expression VisitAssignmentOperatorExpression(DReAMGrammarParser.AssignmentOperatorExpressionContext context)
-        {
-            return base.VisitAssignmentOperatorExpression(context);
-        }
-
         public override Expression VisitBinaryExpression(DReAMGrammarParser.BinaryExpressionContext context)
         {
             var expressions = new List<Expression>();
@@ -634,7 +629,6 @@ namespace DReAMCompiler.Visitors
         private string methodName;
         private ParameterExpression[] inputParameters;
         private ParameterExpression returnParameters;
-        private MethodCallExpression methodCall;
         private Dictionary<string, LabelTarget> functionDictionary;
 
         public DReAMMethodCall(string methodName, ParameterExpression[] inputParameters, ParameterExpression returnParameters, Dictionary<string, LabelTarget> highLevelFunctions, LabelTarget label)
