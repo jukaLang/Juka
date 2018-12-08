@@ -229,19 +229,24 @@ namespace DReAMCompiler.Visitors
         }
 
 
-        private void WalkVariableDeclarationExpression([NotNull] IList<IParseTree> context)
+        private List<IParseTree> WalkVariableDeclarationExpression([NotNull] IList<IParseTree> context)
         {
             foreach(var e in context)
             {
                 var list = new List<IParseTree>();
-                for (int i = 0; i < e.ChildCount; i++)
+                if (e.ChildCount > 1)
                 {
-                    System.Diagnostics.Trace.WriteLine(e.GetChild(i).GetText());
-                    list.Add( e.GetChild(i) );
-                }
+                    for (int i = 0; i < e.ChildCount; i++)
+                    {
+                        System.Diagnostics.Trace.WriteLine(e.GetChild(i).GetText());
+                        list.Add(e.GetChild(i));
+                    }
 
-                WalkVariableDeclarationExpression(list);
+                    return WalkVariableDeclarationExpression(list);
+                }
             }
+
+            return null;
         }
 
         public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DReAMGrammarParser.VariableDeclarationExpressionContext context)
@@ -250,7 +255,8 @@ namespace DReAMCompiler.Visitors
   
             var expressions = context.singleExpression();
             var nodeList = new List<CSharpSyntaxNode>();
-            WalkVariableDeclarationExpression(context.singleExpression().children);
+            
+            WalkVariableDeclarationExpression( new List<IParseTree>() { context.singleExpression() } );
 
             SyntaxToken keywordToken = GetKeywordTokenType(context.keywords().GetText());
             var binaryExpression = nodeList[0] ?? nodeList[0] as BinaryExpressionSyntax;
