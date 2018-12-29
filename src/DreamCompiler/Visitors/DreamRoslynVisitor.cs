@@ -236,17 +236,26 @@ namespace DReAMCompiler.Visitors
                 var list = new List<IParseTree>();
                 if (e.ChildCount > 1)
                 {
-                    for (int i = 0; i < e.ChildCount; i++)
-                    {
-                        System.Diagnostics.Trace.WriteLine(e.GetChild(i).GetText());
-                        list.Add(e.GetChild(i));
-                    }
-
-                    return WalkVariableDeclarationExpression(list);
+                    return WalkVariableDeclarationExpression(GetChildren(e));
                 }
             }
 
             return null;
+        }
+
+        private List<IParseTree> GetChildren(IParseTree tree)
+        {
+            List<IParseTree> children = new List<IParseTree>();
+
+            for (int i = 0; i < tree.ChildCount; i++)
+            {
+                children.Add(tree.GetChild(i));
+            }
+
+            HashSet<int> t = new HashSet<int>();
+            t.Add(2);
+
+            return children;
         }
 
         public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DReAMGrammarParser.VariableDeclarationExpressionContext context)
