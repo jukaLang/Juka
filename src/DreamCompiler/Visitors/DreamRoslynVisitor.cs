@@ -197,7 +197,7 @@ namespace DReAMCompiler.Visitors
         public override CSharpSyntaxNode VisitStringValue([NotNull] DReAMGrammarParser.StringValueContext context)
         {
             String value = context.GetText();
-            if (value.StartsWith("\"") && value.EndsWith("\""))
+            if ((value.StartsWith("\"") && value.EndsWith("\"")) || (value.StartsWith("'") && value.EndsWith("'")))
             {
                 value = value.Substring(1, value.Length - 2);
             }
@@ -221,6 +221,10 @@ namespace DReAMCompiler.Visitors
             {
                 case "int":
                     return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.IntKeyword));
+                case "float":
+                    return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.FloatKeyword));
+                case "double":
+                    return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.DoubleKeyword));
                 case "string":
                     return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.StringKeyword));
             }

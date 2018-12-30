@@ -45,6 +45,25 @@ namespace DReAMUnitTest
         }
 
         [TestMethod]
+        public void TestEmpty()
+        {
+            try
+            {
+                if (File.Exists(@"..\..\..\..\examples\empty.jlr"))
+                {
+                    using (var stream = new FileStream(@"..\..\..\..\examples\empty.jlr", FileMode.Open))
+                    {
+                        CSharpSyntaxNode node = Compile(stream);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [TestMethod]
         public void TestCompile()
         {
             try
