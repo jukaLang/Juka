@@ -266,7 +266,8 @@ namespace DReAMCompiler.Visitors
 
             new GenerateBinaryExpression()
                 .Walk(context)
-                .PostWalk();
+                .PostWalk()
+                .Eval();
            
             var expressions = context.singleExpression();
             var nodeList = new List<CSharpSyntaxNode>();

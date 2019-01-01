@@ -7,23 +7,24 @@ using System.Threading.Tasks;
 namespace DReAMCompiler.RoslynCompile
 {
     using Antlr4.Runtime.Tree;
+    using Antlr4.Runtime;
     using DReAMCompiler.Grammar;
     using DReAMCompiler.Visitors;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using DReAMCompiler.Constants;
+ 
 
     class GenerateBinaryExpression
     {
 
-        private DReAMCompiler.Grammar.DReAMGrammarParser.VariableContext currentVariable;
-        private Antlr4.Runtime.ParserRuleContext currentKeyWord;
-        private Stack<Antlr4.Runtime.ParserRuleContext> operators = new Stack<Antlr4.Runtime.ParserRuleContext>();
-        private List<Antlr4.Runtime.ParserRuleContext> postfix = new List<Antlr4.Runtime.ParserRuleContext>();
+        private DReAMGrammarParser.VariableContext currentVariable;
+        private ParserRuleContext currentKeyWord;
+        private Stack<ParserRuleContext> operators = new Stack<ParserRuleContext>();
+        private List<ParserRuleContext> postfix = new List<ParserRuleContext>();
         private static readonly string leftParen = "(";
         private static readonly string rightParen = ")";
-        private static readonly int numberOfChildren = 1; 
+        private static readonly int numberOfChildren = 1;
 
         static public CSharpSyntaxNode CreateBinaryExpression(DReAMGrammarParser.BinaryExpressionContext context, DreamRoslynVisitor visitor)
         {
@@ -197,14 +198,68 @@ namespace DReAMCompiler.RoslynCompile
             }
         }
 
-        public void PostWalk()
+        public GenerateBinaryExpression PostWalk()
         {
             while (operators.Count > 0)
             {
                 postfix.Add(operators.Pop());
             }
+
+            return this;
         }
-        
+
+        private Stack<ParserRuleContext> stackOne = new Stack<ParserRuleContext>();
+        private Stack<ExpressionSyntax> stackTwo = new Stack<ExpressionSyntax>();
+
+        public void Eval()
+        {
+            foreach (var token in postfix)
+            {
+                if (token is DReAMGrammarParser.BinaryOperatorContext)
+                {
+                    if (stackTwo.Count >= 2)
+                    {
+                        var right = stackTwo.Pop();
+                        var left = stackTwo.Pop();
+                    }
+                    else if (stackOne.Count >= 2)
+                    {
+                        var right = CreateNumericLiteralExpression(stackOne.Pop());
+                        var left = CreateNumericLiteralExpression(stackOne.Pop());
+
+                        stackTwo.Push(SyntaxFactory.BinaryExpression(SyntaxKind.DivideExpression,
+                            left,
+                            right));
+                    }
+                    else if (stackOne.Count == 1 && stackTwo.Count == 1)
+                    {
+                        var left = CreateNumericLiteralExpression(stackOne.Pop());
+                        var right = stackTwo.Pop();
+
+                        var finalExpression = SyntaxFactory.BinaryExpression(SyntaxKind.DivideExpression,
+                            left,
+                            right);
+                    }
+                }
+                else
+                {
+                    stackOne.Push(token);
+                }
+            }
+        }
+
+        private LiteralExpressionSyntax CreateNumericLiteralExpression(ParserRuleContext context)
+        {
+            return SyntaxFactory.LiteralExpression(
+                SyntaxKind.NumericLiteralExpression, 
+                CreateNumericLiteral(context));
+        }
+
+        private SyntaxToken CreateNumericLiteral(ParserRuleContext context)
+        {
+            return SyntaxFactory.Literal(context.GetChild(0).GetText());
+        }
+
         private enum SrEval
         {
             Shift,
