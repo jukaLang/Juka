@@ -1,7 +1,7 @@
 function main() = {
 	printLine("entering main");
 
-	int x = 1 + 2 * 3 + 4 / 5;
+	int x = foo(x) + 1 + 2 * 5;
 	foo(x);
 	printLine("foo");
 	printLine(33);

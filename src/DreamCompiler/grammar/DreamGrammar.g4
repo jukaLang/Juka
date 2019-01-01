@@ -220,7 +220,7 @@ addSubtractOp
 multiplyDivideOp
 	: '*' | '/';
 
-unaryOperator
+binaryOperator
     : multiplyDivideOp
 	| addSubtractOp
 	| equalsign
@@ -326,7 +326,7 @@ singleExpression
  | '-' singleExpression                                                     # UnaryMinusExpression
  | '~' singleExpression                                                     # BitNotExpression
  | notOperator singleExpression                                             # NotExpression
- | singleExpression unaryOperator singleExpression                          # BinaryExpression
+ | singleExpression binaryOperator singleExpression                          # BinaryExpression
  | singleExpression comparisonOperator singleExpression                     # EqualityExpression
  | singleExpression bitWiseOperators singleExpression                       # BitAndExpression
  | singleExpression ( bitLeftShift | bitRigthShift ) singleExpression       # BitShiftExpression
@@ -335,8 +335,8 @@ singleExpression
  | singleExpression '?' singleExpression ':' singleExpression               # TernaryExpression
 // | variable assignmentOperator singleExpression                           # AssignmentOperatorExpression
 // | variable assignmentOperator BinaryExpression                           # AssignmentOperatorExpression
-// | variable assignmentOperator ( unaryOperator ) ( singleExpression singleExpression )+ # AssignmentOperatorExpression
-// | (keywords) variable ( assignmentOperator ( unaryOperator ) ( singleExpression )+)*  # VariableDeclarationExpression
+// | variable assignmentOperator ( binaryOperator ) ( singleExpression singleExpression )+ # AssignmentOperatorExpression
+// | (keywords) variable ( assignmentOperator ( binaryOperator ) ( singleExpression )+)*  # VariableDeclarationExpression
  | keywords variable assignmentOperator singleExpression		            # VariableDeclarationExpression
  | This                                                                     # ThisExpression
  | literal                                                                  # LiteralExpression
@@ -350,7 +350,7 @@ singleExpression
 
  /*
  binaryExpressionOperation
-	: singleExpression unaryOperator singleExpression	# BinaryExpression
+	: singleExpression binaryOperator singleExpression	# BinaryExpression
 	;
 */
 

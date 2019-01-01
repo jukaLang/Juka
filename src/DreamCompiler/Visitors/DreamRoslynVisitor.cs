@@ -11,6 +11,7 @@ namespace DReAMCompiler.Visitors
     using Microsoft.CodeAnalysis;
     using Antlr4.Runtime.Misc;
     using Antlr4.Runtime.Tree;
+    using System.Diagnostics.Tracing;
 
     class DreamRoslynVisitor : DReAMGrammarBaseVisitor<CSharpSyntaxNode>
     {
@@ -258,10 +259,15 @@ namespace DReAMCompiler.Visitors
             return children;
         }
 
+
         public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DReAMGrammarParser.VariableDeclarationExpressionContext context)
         {
-            String variableName = context.variable().GetText();
-  
+            string variableName = context.variable().GetText();
+
+            new GenerateBinaryExpression()
+                .Walk(context)
+                .PostWalk();
+           
             var expressions = context.singleExpression();
             var nodeList = new List<CSharpSyntaxNode>();
             
@@ -287,11 +293,6 @@ namespace DReAMCompiler.Visitors
         public override CSharpSyntaxNode VisitAssignmentOperator([NotNull] DReAMGrammarParser.AssignmentOperatorContext context)
         {
             return base.VisitAssignmentOperator(context);
-        }
-
-        public override CSharpSyntaxNode VisitUnaryOperator([NotNull] DReAMGrammarParser.UnaryOperatorContext context)
-        {
-            return base.VisitUnaryOperator(context);
         }
 
         private SyntaxToken GetKeywordTokenType(String keyword)
