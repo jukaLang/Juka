@@ -5,9 +5,6 @@ using System.Dynamic;
 using System.IO;
 using DReAMCompiler;
 using System.Linq.Expressions;
-using System.Reflection;
-
-using System.Collections;
 
 
 namespace DReAMUnitTest
@@ -15,7 +12,6 @@ namespace DReAMUnitTest
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis;
     using System.Runtime.CompilerServices;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 
@@ -42,6 +38,34 @@ namespace DReAMUnitTest
 
             CompileRoslyn.Parse(tree);
 
+        }
+
+        [TestMethod]
+        public void TestVar()
+        {
+            string s = @"function main() = { 
+                int x = 3;
+            }";
+            var memoryStream = GenerateStreamFromString(s);
+            try
+            {
+                var compiler = new Compiler();
+                compiler.Go("testcompile", memoryStream);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static MemoryStream GenerateStreamFromString(string s)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
         }
 
         [TestMethod]
