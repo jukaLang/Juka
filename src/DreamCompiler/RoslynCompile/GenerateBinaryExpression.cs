@@ -172,39 +172,6 @@ namespace DReAMCompiler.RoslynCompile
         {
             int precedence =  operaterLookup[op.GetChild(0).GetText()];
             return precedence;
-            
-            /*
-             * 
-            //LiteralExpressionSyntax opAndOne;
-            //LiteralExpressionSyntax opAndTwo;
-            //BinaryExpressionSyntax binaryExpression;
-            opAndOne = SyntaxFactory.LiteralExpression(
-                            SyntaxKind.NumericLiteralExpression,
-                            SyntaxFactory.Literal(operators.Pop().children[0].GetText()));
-
-            opAndTwo = SyntaxFactory.LiteralExpression(
-                      SyntaxKind.NumericLiteralExpression,
-                      SyntaxFactory.Literal(operators.Pop().children[0].GetText()));
-
-            binaryExpression = SyntaxFactory.BinaryExpression(SyntaxKind.MultiplyExpression,
-                opAndOne,
-                opAndTwo);
-                */
-            /*
-            opAndOne = SyntaxFactory.LiteralExpression(
-                SyntaxKind.NumericLiteralExpression,
-                SyntaxFactory.Literal(operators.Pop().children[0].GetText()));
-
-            opAndTwo = SyntaxFactory.LiteralExpression(
-                SyntaxKind.NumericLiteralExpression,
-                SyntaxFactory.Literal(operators.Pop().children[0].GetText()));
-
-
-            binaryExpression = SyntaxFactory.BinaryExpression(SyntaxKind.AddExpression,
-                opAndOne,
-                opAndTwo);
-
-            */
         }
 
         private void WalkChildren(IList<IParseTree> children)
@@ -238,62 +205,49 @@ namespace DReAMCompiler.RoslynCompile
             {
                 if (token is DReAMGrammarParser.BinaryOperatorContext)
                 {
-                    if (stackTwo.Count >= 2)
+                    var right = stackOne.Pop();
+                    var left = stackOne.Pop();
+
+                    LiteralExpressionSyntax rightLiteralExpressionSyntax = null;
+                    LiteralExpressionSyntax leftLiteralExpressionSyntax = null;
+
+                    if (right is DReAMGrammarParser.DecimalValueContext)
                     {
-                        var right = stackTwo.Pop();
-                        var left = stackTwo.Pop();
+                        rightLiteralExpressionSyntax = CreateNumericLiteralExpression(right);
                     }
-                    else if (stackOne.Count >= 2)
+                    if (right is DReAMGrammarParser.StringValueContext)
                     {
-                        var right = stackOne.Pop();
-                        var left = stackOne.Pop();
-
-                        LiteralExpressionSyntax rightLiteralExpressionSyntax = null;
-                        LiteralExpressionSyntax leftLiteralExpressionSyntax = null;
-                    
-                        if (right is DReAMGrammarParser.DecimalValueContext)
-                        {
-                            rightLiteralExpressionSyntax = CreateNumericLiteralExpression(right);
-                        }
-                        if (right is DReAMGrammarParser.StringValueContext)
-                        {
-                            rightLiteralExpressionSyntax = CreateStringLiteralExpression(right);
-                        }
-
-
-                        if (left is DReAMGrammarParser.DecimalValueContext)
-                        {
-                            leftLiteralExpressionSyntax = CreateNumericLiteralExpression(left);
-                        }
-                        if (right is DReAMGrammarParser.StringValueContext)
-                        {
-                            leftLiteralExpressionSyntax = CreateStringLiteralExpression(left);
-                        }
-
-                        if (rightLiteralExpressionSyntax == null || leftLiteralExpressionSyntax == null)
-                        {
-                            throw new Exception("invalid ");
-                        }
-
-
-                        stackTwo.Push(SyntaxFactory.BinaryExpression(SyntaxKind.DivideExpression,
-                            leftLiteralExpressionSyntax,
-                            rightLiteralExpressionSyntax));
+                        rightLiteralExpressionSyntax = CreateStringLiteralExpression(right);
                     }
-                    else if (stackOne.Count == 1 && stackTwo.Count == 1)
+
+
+                    if (left is DReAMGrammarParser.DecimalValueContext)
                     {
-                        var left = CreateNumericLiteralExpression(stackOne.Pop());
-                        var right = stackTwo.Pop();
-
-                        var finalExpression = SyntaxFactory.BinaryExpression(SyntaxKind.DivideExpression,
-                            left,
-                            right);
+                        leftLiteralExpressionSyntax = CreateNumericLiteralExpression(left);
                     }
+                    if (right is DReAMGrammarParser.StringValueContext)
+                    {
+                        leftLiteralExpressionSyntax = CreateStringLiteralExpression(left);
+                    }
+
+                    if (rightLiteralExpressionSyntax == null || leftLiteralExpressionSyntax == null)
+                    {
+                        throw new Exception("invalid ");
+                    }
+
+                    string binaryOp = token.GetChild(0).GetText();
+
+                    SyntaxKind op = syntaxKindLookup[operaterLookup[binaryOp]];
+
+                    stackTwo.Push(SyntaxFactory.BinaryExpression(op,
+                        leftLiteralExpressionSyntax,
+                        rightLiteralExpressionSyntax));
                 }
                 else
                 {
                     stackOne.Push(token);
                 }
+                
             }
         }
 
@@ -349,7 +303,26 @@ namespace DReAMCompiler.RoslynCompile
             { ".",  15 }
         };
 
-        internal Dictionary<string, int> OperaterLookup => operaterLookup;
+
+        private readonly Dictionary<int, SyntaxKind> syntaxKindLookup = new Dictionary<int, SyntaxKind>()
+        {
+            { 0 , SyntaxKind.SimpleAssignmentExpression},
+            { 1 , SyntaxKind.LogicalOrExpression},
+            { 2 , SyntaxKind.LogicalAndExpression},
+            { 3 , SyntaxKind.EqualsEqualsToken},
+            { 4 , SyntaxKind.NotEqualsExpression},
+            { 5 , SyntaxKind.GreaterThanOrEqualExpression},
+            { 6 , SyntaxKind.LessThanOrEqualExpression},
+            { 7 , SyntaxKind.GreaterThanExpression},
+            { 8 , SyntaxKind.LessThanExpression },
+            { 9 , SyntaxKind.AddExpression},
+            { 10 , SyntaxKind.SubtractExpression},
+            { 11 , SyntaxKind.DivideExpression},
+            { 12 , SyntaxKind.ModuloExpression},
+            { 13 ,SyntaxKind.MultiplyExpression},
+            { 14 , SyntaxKind.LocalFunctionStatement},
+            { 15 , SyntaxKind.DotToken}
+        };
 
         private class operatorState
         {

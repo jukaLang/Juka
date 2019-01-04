@@ -21,8 +21,7 @@ namespace DReAMCompiler.Visitors
 
             for(int i=0; i < context.ChildCount; i++)
             {
-                MethodDeclarationSyntax m = context.children[i].Accept(this) as MethodDeclarationSyntax;
-                if (m != null)
+                if (context.children[i].Accept(this) is MethodDeclarationSyntax m)
                 {
                     methods.Add(m);
                 }
