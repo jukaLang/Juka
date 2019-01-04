@@ -13,6 +13,7 @@ namespace DReAMCompiler.RoslynCompile
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
+    using System.Diagnostics;
 
 
     class GenerateBinaryExpression
@@ -22,9 +23,11 @@ namespace DReAMCompiler.RoslynCompile
         private ParserRuleContext currentKeyWord;
         private Stack<ParserRuleContext> operators = new Stack<ParserRuleContext>();
         private List<ParserRuleContext> postfix = new List<ParserRuleContext>();
-        private static readonly string leftParen = "(";
-        private static readonly string rightParen = ")";
-        private static readonly int numberOfChildren = 1;
+        private Stack<ParserRuleContext> stackOne = new Stack<ParserRuleContext>();
+        private Stack<ExpressionSyntax> stackTwo = new Stack<ExpressionSyntax>();
+        private const string LeftParen = "(";
+        private const string RightParen = ")";
+        private const int DefaultNumberOfChildren = 1;
 
         static public CSharpSyntaxNode CreateBinaryExpression(DReAMGrammarParser.BinaryExpressionContext context, DreamRoslynVisitor visitor)
         {
@@ -59,76 +62,107 @@ namespace DReAMCompiler.RoslynCompile
 
         public GenerateBinaryExpression Walk(Antlr4.Runtime.ParserRuleContext node)
         {
-            if (node != null)
+            try
             {
-                WalkChildren(node.children);
-                if (node is DReAMGrammarParser.VariableContext)
+                if (node != null)
                 {
-                    currentVariable = node as DReAMGrammarParser.VariableContext;
-                    return this;
-                }
-                else if (node is DReAMGrammarParser.KeywordsContext)
-                {
-                    currentKeyWord = node;
-                    System.Diagnostics.Trace.WriteLine(node.GetText());
-                    return this;
-                }
-                else if (node is DReAMGrammarParser.VariableDeclarationContext)
-                {
-                    System.Diagnostics.Trace.WriteLine(node.GetText());
-                    return this;
-                }
-                else if (node is DReAMGrammarParser.AssignmentOperatorContext)
-                {
-                    return this;
-                }
-                else if (!(node is DReAMGrammarParser.BinaryOperatorContext))
-                {
-                    // other non binary operands will need to be tested here.
-                    if (node.children.Count() == numberOfChildren)
+                    WalkChildren(node.children);
+                    if (node is DReAMGrammarParser.VariableContext)
                     {
-                        if (node.children[0].GetText().Equals(leftParen))
+                        //currentVariable = node as DReAMGrammarParser.VariableContext;
+                        postfix.Add(node);
+                        return this;
+                    }
+                    else if (node is DReAMGrammarParser.KeywordsContext)
+                    {
+                        currentKeyWord = node;
+                        Trace.WriteLine(node.GetText());
+                        return this;
+                    }
+                    else if (node is DReAMGrammarParser.VariableDeclarationContext)
+                    {
+                        System.Diagnostics.Trace.WriteLine(node.GetText());
+                        return this;
+                    }
+                    else if (node is DReAMGrammarParser.AssignmentOperatorContext)
+                    {
+                        if (operators.Count == 0)
                         {
                             operators.Push(node);
+                            return this;
                         }
-                        else if (node.children[0].GetText().Equals(rightParen))
-                        {
-                            while (operators.Count > 0 && !operators.Peek().children[0].GetText().Equals(leftParen))
-                            {
-                                postfix.Add(operators.Pop());
-                            }
 
-                            if (operators.Count > 0 && !operators.Peek().children[0].GetText().Equals(leftParen))
-                            {
-                                throw new Exception("invalid expression");
-                            }
-                            else
-                            {
-                                operators.Pop();
-                            }
-                        }
-                        else if (node is DReAMGrammarParser.DecimalValueContext)
-                        {
-                            postfix.Add(node);
-                            System.Diagnostics.Trace.WriteLine(node.GetText());
-                        }
-                        else if (node is DReAMGrammarParser.FunctionCallExpressionContext)
-                        {
-                            postfix.Add(node);
-                        }
+                        throw new ArgumentException("Invalid expressions");
                     }
-                    return this;
-                }
-                else if (node is DReAMGrammarParser.BinaryOperatorContext)
-                {
-                    while (operators.Count > 0 && Precedence(node) <= Precedence(operators.Peek()))
+                    else if (!(node is DReAMGrammarParser.BinaryOperatorContext))
                     {
-                        postfix.Add(operators.Pop());
-                    }
+                        // other non binary operands will need to be tested here.
+                        if (node.children.Count() == DefaultNumberOfChildren)
+                        {
+                            if (node.children[0].GetText().Equals(LeftParen))
+                            {
+                                operators.Push(node);
+                            }
+                            else if (node.children[0].GetText().Equals(RightParen))
+                            {
+                                while (operators.Count > 0 && !operators.Peek().children[0].GetText().Equals(LeftParen))
+                                {
+                                    postfix.Add(operators.Pop());
+                                }
 
-                    operators.Push(node);
-                    return this;
+                                if (operators.Count > 0 && !operators.Peek().children[0].GetText().Equals(LeftParen))
+                                {
+                                    throw new Exception("invalid expression");
+                                }
+                                else
+                                {
+                                    operators.Pop();
+                                }
+                            }
+                            else if (node is DReAMGrammarParser.DecimalValueContext)
+                            {
+                                postfix.Add(node);
+                                Trace.WriteLine(node.GetText());
+                            }
+                            else if (node is DReAMGrammarParser.FunctionCallExpressionContext)
+                            {
+                                postfix.Add(node);
+                            }
+                        }
+                        return this;
+                    }
+                    else if (node is DReAMGrammarParser.BinaryOperatorContext)
+                    {
+                        if (Precedence(operators.Peek()) > Precedence(node) ||
+                            Precedence(operators.Peek()) == Precedence(node))
+                        {
+                            postfix.Add(operators.Pop());
+                            Trace.WriteLine(postfix.Last().children[0].GetText());
+                            operators.Push(node);
+                            return this;
+                        }
+
+                        if (Precedence(operators.Peek()) < Precedence(node))
+                        {
+                            operators.Push(node);
+                            return this;
+                        }
+
+                        /*
+                        while (operators.Count > 0 && Precedence(node) <= Precedence(operators.Peek()))
+                        {
+                            postfix.Add(operators.Pop());
+                        }
+
+                        operators.Push(node);
+                        return this;
+                        */
+                    }
                 }
+            }
+            catch(Exception ex)
+            {
+                throw;
             }
 
             return this;
@@ -136,16 +170,9 @@ namespace DReAMCompiler.RoslynCompile
 
         private int Precedence(IParseTree op)
         {
-            if (op.GetChild(0).GetType().Name.Equals("AddSubtractOpContext"))
-            {
-                return 5;
-            }
-
-            if (op.GetChild(0).GetType().Name.Equals("MultiplyDivideOpContext"))
-            {
-                return 10;
-            }
-
+            int precedence =  operaterLookup[op.GetChild(0).GetText()];
+            return precedence;
+            
             /*
              * 
             //LiteralExpressionSyntax opAndOne;
@@ -178,9 +205,6 @@ namespace DReAMCompiler.RoslynCompile
                 opAndTwo);
 
             */
-
-
-            return 0;
         }
 
         private void WalkChildren(IList<IParseTree> children)
@@ -198,7 +222,7 @@ namespace DReAMCompiler.RoslynCompile
             }
         }
 
-        public GenerateBinaryExpression PostWalk()
+        internal GenerateBinaryExpression PostWalk()
         {
             while (operators.Count > 0)
             {
@@ -208,10 +232,7 @@ namespace DReAMCompiler.RoslynCompile
             return this;
         }
 
-        private Stack<ParserRuleContext> stackOne = new Stack<ParserRuleContext>();
-        private Stack<ExpressionSyntax> stackTwo = new Stack<ExpressionSyntax>();
-
-        public void Eval()
+        internal void Eval()
         {
             foreach (var token in postfix)
             {
@@ -224,12 +245,40 @@ namespace DReAMCompiler.RoslynCompile
                     }
                     else if (stackOne.Count >= 2)
                     {
-                        var right = CreateNumericLiteralExpression(stackOne.Pop());
-                        var left = CreateNumericLiteralExpression(stackOne.Pop());
+                        var right = stackOne.Pop();
+                        var left = stackOne.Pop();
+
+                        LiteralExpressionSyntax rightLiteralExpressionSyntax = null;
+                        LiteralExpressionSyntax leftLiteralExpressionSyntax = null;
+                    
+                        if (right is DReAMGrammarParser.DecimalValueContext)
+                        {
+                            rightLiteralExpressionSyntax = CreateNumericLiteralExpression(right);
+                        }
+                        if (right is DReAMGrammarParser.StringValueContext)
+                        {
+                            rightLiteralExpressionSyntax = CreateStringLiteralExpression(right);
+                        }
+
+
+                        if (left is DReAMGrammarParser.DecimalValueContext)
+                        {
+                            leftLiteralExpressionSyntax = CreateNumericLiteralExpression(left);
+                        }
+                        if (right is DReAMGrammarParser.StringValueContext)
+                        {
+                            leftLiteralExpressionSyntax = CreateStringLiteralExpression(left);
+                        }
+
+                        if (rightLiteralExpressionSyntax == null || leftLiteralExpressionSyntax == null)
+                        {
+                            throw new Exception("invalid ");
+                        }
+
 
                         stackTwo.Push(SyntaxFactory.BinaryExpression(SyntaxKind.DivideExpression,
-                            left,
-                            right));
+                            leftLiteralExpressionSyntax,
+                            rightLiteralExpressionSyntax));
                     }
                     else if (stackOne.Count == 1 && stackTwo.Count == 1)
                     {
@@ -255,7 +304,19 @@ namespace DReAMCompiler.RoslynCompile
                 CreateNumericLiteral(context));
         }
 
+        private LiteralExpressionSyntax CreateStringLiteralExpression(ParserRuleContext context)
+        {
+            return SyntaxFactory.LiteralExpression(
+                SyntaxKind.StringLiteralExpression,
+                CreateStringLiteral(context));
+        }
+
         private SyntaxToken CreateNumericLiteral(ParserRuleContext context)
+        {
+            return SyntaxFactory.Literal(context.GetChild(0).GetText());
+        }
+
+        private SyntaxToken CreateStringLiteral(ParserRuleContext context)
         {
             return SyntaxFactory.Literal(context.GetChild(0).GetText());
         }
@@ -288,7 +349,7 @@ namespace DReAMCompiler.RoslynCompile
             { ".",  15 }
         };
 
-        public Dictionary<string, int> OperaterLookup => operaterLookup;
+        internal Dictionary<string, int> OperaterLookup => operaterLookup;
 
         private class operatorState
         {
