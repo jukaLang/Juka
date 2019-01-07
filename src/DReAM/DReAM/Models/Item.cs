@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DReAM.Models
+namespace Dream.Models
 {
     public class Item
     {

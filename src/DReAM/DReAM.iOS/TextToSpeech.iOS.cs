@@ -1,9 +1,9 @@
 ﻿using AVFoundation;
-using DReAM.iOS;
+using Dream.iOS;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(TextToSpeechImplementation))]
-namespace DReAM.iOS
+namespace Dream.iOS
 {
     public class TextToSpeechImplementation : ITextToSpeech
     {

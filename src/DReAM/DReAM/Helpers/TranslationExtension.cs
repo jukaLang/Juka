@@ -10,7 +10,7 @@ using Xamarin.Forms.Xaml;
 [ContentProperty("Text")]
 public class TranslateExtension : IMarkupExtension
 {
-    const string ResourceId = "DReAM.Resx.AppResources";
+    const string ResourceId = "Dream.Resx.AppResources";
 
     static readonly Lazy<ResourceManager> resmgr = new Lazy<ResourceManager>(() => new ResourceManager(ResourceId, typeof(TranslateExtension).GetTypeInfo().Assembly));
 

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DReAMCompiler")]
-[assembly: AssemblyDescription("Core compiler for Juliar DReAM Programming Language")]
+[assembly: AssemblyTitle("DreamCompiler")]
+[assembly: AssemblyDescription("Core compiler for Juliar Dream Programming Language")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("JuliarLang")]
-[assembly: AssemblyProduct("DReAMCompiler")]
+[assembly: AssemblyProduct("DreamCompiler")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("Juliar")]
 [assembly: AssemblyCulture("")]

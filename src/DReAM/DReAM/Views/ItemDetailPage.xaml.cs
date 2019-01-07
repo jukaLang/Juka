@@ -3,10 +3,10 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-using DReAM.Models;
-using DReAM.ViewModels;
+using Dream.Models;
+using Dream.ViewModels;
 
-namespace DReAM.Views
+namespace Dream.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ItemDetailPage : ContentPage

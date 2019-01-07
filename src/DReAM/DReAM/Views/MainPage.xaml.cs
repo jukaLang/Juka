@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.Globalization;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using DReAM.Resx;
+using Dream.Resx;
 
-namespace DReAM.Views
+namespace Dream.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class MainPage : TabbedPage

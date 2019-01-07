@@ -199,7 +199,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>java -jar $(SolutionDir)DReAMCompiler\jars\antlr-4.7.1-complete.jar -Dlanguage=CSharp $(SolutionDir)DReAMCompiler\grammar\DReAMGrammar.g4 -no-listener -visitor -package DReAMCompiler.Grammar
+    <PreBuildEvent>java -jar $(SolutionDir)DReAMCompiler\jars\antlr-4.7.1-complete.jar -Dlanguage=CSharp $(SolutionDir)DReAMCompiler\grammar\DreamGrammar.g4 -no-listener -visitor -package DreamCompiler.Grammar
 </PreBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.2\build\SQLitePCLRaw.lib.e_sqlite3.linux.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.2\build\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" />

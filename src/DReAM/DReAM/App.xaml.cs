@@ -1,13 +1,13 @@
 ﻿using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using DReAM.Views;
+using Dream.Views;
 using Plugin.Multilingual;
-using DReAM.Resx;
+using Dream.Resx;
 using System.Globalization;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
-namespace DReAM
+namespace Dream
 {
     public partial class App : Application
     {

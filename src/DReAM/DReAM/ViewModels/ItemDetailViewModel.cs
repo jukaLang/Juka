@@ -1,8 +1,8 @@
 ﻿using System;
 
-using DReAM.Models;
+using Dream.Models;
 
-namespace DReAM.ViewModels
+namespace Dream.ViewModels
 {
     public class ItemDetailViewModel : BaseViewModel
     {

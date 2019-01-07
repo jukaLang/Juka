@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace DReAM.Resx {
+namespace Dream.Resx {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace DReAM.Resx {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DReAM.Resx.AppResources", typeof(AppResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Dream.Resx.AppResources", typeof(AppResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace DReAM.Resx {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Welcome to Juliar DReAM Programming Language.
+        ///   Looks up a localized string similar to Welcome to Juliar Dream Programming Language.
         /// </summary>
         internal static string welcome {
             get {

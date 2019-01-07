@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-namespace DReAM.UWP
+namespace Dream.UWP
 {
     public sealed partial class MainPage
     {
@@ -21,7 +21,7 @@ namespace DReAM.UWP
         {
             this.InitializeComponent();
 
-            LoadApplication(new DReAM.App());
+            LoadApplication(new Dream.App());
         }
     }
 }

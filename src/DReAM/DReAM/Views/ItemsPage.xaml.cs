@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-using DReAM.Models;
-using DReAM.Views;
-using DReAM.ViewModels;
+using Dream.Models;
+using Dream.Views;
+using Dream.ViewModels;
 
-namespace DReAM.Views
+namespace Dream.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ItemsPage : ContentPage
@@ -64,7 +64,7 @@ namespace DReAM.Views
             }
             else if (item.Action == "Contact")
             {
-                Device.OpenUri(new Uri("mailto:admin@juliar.org?subject=Questions%20about%20DReAM"));
+                Device.OpenUri(new Uri("mailto:admin@juliar.org?subject=Questions%20about%20Dream"));
             }
             else if (item.Action == "Help")
             {

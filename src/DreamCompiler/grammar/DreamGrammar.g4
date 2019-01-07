@@ -1,4 +1,4 @@
-grammar DReAMGrammar;
+grammar DreamGrammar;
 
 /*
  * Parser Rules

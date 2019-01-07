@@ -7,11 +7,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: NeutralResourcesLanguage("en-US")]
-[assembly: AssemblyTitle("DReAM.UWP")]
+[assembly: AssemblyTitle("Dream.UWP")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DReAM.UWP")]
+[assembly: AssemblyProduct("Dream.UWP")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

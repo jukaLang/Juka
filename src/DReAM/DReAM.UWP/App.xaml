@@ -1,8 +1,8 @@
 ﻿<Application
-    x:Class="DReAM.UWP.App"
+    x:Class="Dream.UWP.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:DReAM.UWP"
+    xmlns:local="using:Dream.UWP"
     RequestedTheme="Light">
 
 </Application>

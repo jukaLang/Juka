@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DReAM
+namespace Dream
 {
     public interface ITextToSpeech
     {

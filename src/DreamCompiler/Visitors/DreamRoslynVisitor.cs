@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DReAMCompiler.Visitors
+namespace DreamCompiler.Visitors
 {
-    using DReAMCompiler.Grammar;
-    using DReAMCompiler.RoslynCompile;
+    using DreamCompiler.Grammar;
+    using DreamCompiler.RoslynCompile;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.CodeAnalysis;
@@ -13,9 +13,9 @@ namespace DReAMCompiler.Visitors
     using Antlr4.Runtime.Tree;
     using System.Diagnostics.Tracing;
 
-    class DreamRoslynVisitor : DReAMGrammarBaseVisitor<CSharpSyntaxNode>
+    class DreamRoslynVisitor : DreamGrammarBaseVisitor<CSharpSyntaxNode>
     {
-        public override CSharpSyntaxNode VisitCompileUnit([NotNull] DReAMGrammarParser.CompileUnitContext context)
+        public override CSharpSyntaxNode VisitCompileUnit([NotNull] DreamGrammarParser.CompileUnitContext context)
         {
             List<MethodDeclarationSyntax> methods = new List<MethodDeclarationSyntax>();
 
@@ -37,20 +37,20 @@ namespace DReAMCompiler.Visitors
             return SyntaxFactory.CompilationUnit().AddMembers(items: new[] { namespaceDeclaration });
         }
 
-        public override CSharpSyntaxNode VisitFunctionDeclaration([NotNull] DReAMGrammarParser.FunctionDeclarationContext context)
+        public override CSharpSyntaxNode VisitFunctionDeclaration([NotNull] DreamGrammarParser.FunctionDeclarationContext context)
         {
             MethodDeclarationSyntax method = GenerateStaticMethod.CreateStaticMethod( context , this);
             return method;
         }
 
         /*
-        public override CSharpSyntaxNode VisitAssignmentExpression([NotNull] DReAMGrammarParser.AssignmentExpressionContext context)
+        public override CSharpSyntaxNode VisitAssignmentExpression([NotNull] DreamGrammarParser.AssignmentExpressionContext context)
         {
             return base.VisitAssignmentExpression(context);
         }
         */
 
-        public override CSharpSyntaxNode VisitFunctionCall([NotNull] DReAMGrammarParser.FunctionCallContext context)
+        public override CSharpSyntaxNode VisitFunctionCall([NotNull] DreamGrammarParser.FunctionCallContext context)
         {
             SyntaxToken name = SyntaxFactory.Identifier(context.funcName().GetText());
             SyntaxToken returnType = SyntaxFactory.Token(SyntaxKind.VoidKeyword);
@@ -161,25 +161,25 @@ namespace DReAMCompiler.Visitors
                                     SyntaxFactory.SingletonSeparatedList<ArgumentSyntax>(argument))));
         }
 
-        public override CSharpSyntaxNode VisitVariable([NotNull] DReAMGrammarParser.VariableContext context)
+        public override CSharpSyntaxNode VisitVariable([NotNull] DreamGrammarParser.VariableContext context)
         {
             return SyntaxFactory.Argument(SyntaxFactory.IdentifierName(context.ID().GetText()));
             //return base.VisitVariable(context);
         }
 
-        public override CSharpSyntaxNode VisitFunctionCallExpression([NotNull] DReAMGrammarParser.FunctionCallExpressionContext context)
+        public override CSharpSyntaxNode VisitFunctionCallExpression([NotNull] DreamGrammarParser.FunctionCallExpressionContext context)
         {
             var node = base.VisitFunctionCallExpression(context);
             return node;
         }
 
-        public override CSharpSyntaxNode VisitStatement([NotNull] DReAMGrammarParser.StatementContext context)
+        public override CSharpSyntaxNode VisitStatement([NotNull] DreamGrammarParser.StatementContext context)
         {
             var node = base.VisitStatement(context);
             return node;
         }
 
-        public override CSharpSyntaxNode VisitExpression([NotNull] DReAMGrammarParser.ExpressionContext context)
+        public override CSharpSyntaxNode VisitExpression([NotNull] DreamGrammarParser.ExpressionContext context)
         {
             List<CSharpSyntaxNode> list = new List<CSharpSyntaxNode>();
             foreach (IParseTree tree in context.children)
@@ -194,7 +194,7 @@ namespace DReAMCompiler.Visitors
             return null;
         }
 
-        public override CSharpSyntaxNode VisitStringValue([NotNull] DReAMGrammarParser.StringValueContext context)
+        public override CSharpSyntaxNode VisitStringValue([NotNull] DreamGrammarParser.StringValueContext context)
         {
             String value = context.GetText();
             if (value.StartsWith("\"") && value.EndsWith("\""))
@@ -206,7 +206,7 @@ namespace DReAMCompiler.Visitors
                                    SyntaxFactory.Literal(value));
         }
 
-        public override CSharpSyntaxNode VisitParameterVariableDeclaration([NotNull] DReAMGrammarParser.ParameterVariableDeclarationContext context)
+        public override CSharpSyntaxNode VisitParameterVariableDeclaration([NotNull] DreamGrammarParser.ParameterVariableDeclarationContext context)
         {
             var paramType = context.children[0].Accept(this) as PredefinedTypeSyntax;
             var paramName = SyntaxFactory.Identifier(context.children[1].GetText());
@@ -214,7 +214,7 @@ namespace DReAMCompiler.Visitors
             return SyntaxFactory.Parameter(paramName).WithType(paramType);
         }
         
-        public override CSharpSyntaxNode VisitKeywords([NotNull] DReAMGrammarParser.KeywordsContext context)
+        public override CSharpSyntaxNode VisitKeywords([NotNull] DreamGrammarParser.KeywordsContext context)
         {
             String keyword = context.GetText();
             switch (keyword)
@@ -259,7 +259,7 @@ namespace DReAMCompiler.Visitors
         }
 
 
-        public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DReAMGrammarParser.VariableDeclarationExpressionContext context)
+        public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DreamGrammarParser.VariableDeclarationExpressionContext context)
         {
             string variableName = context.variable().GetText();
 
@@ -290,7 +290,7 @@ namespace DReAMCompiler.Visitors
             */
         }
 
-        public override CSharpSyntaxNode VisitAssignmentOperator([NotNull] DReAMGrammarParser.AssignmentOperatorContext context)
+        public override CSharpSyntaxNode VisitAssignmentOperator([NotNull] DreamGrammarParser.AssignmentOperatorContext context)
         {
             return base.VisitAssignmentOperator(context);
         }
@@ -310,12 +310,12 @@ namespace DReAMCompiler.Visitors
             return SyntaxFactory.Token(SyntaxKind.ErrorKeyword);
         }
 
-        public override CSharpSyntaxNode VisitBinaryExpression([NotNull] DReAMGrammarParser.BinaryExpressionContext context)
+        public override CSharpSyntaxNode VisitBinaryExpression([NotNull] DreamGrammarParser.BinaryExpressionContext context)
         {
             return GenerateBinaryExpression.CreateBinaryExpression(context, this);
         }
 
-        public override CSharpSyntaxNode VisitDecimalValue([NotNull] DReAMGrammarParser.DecimalValueContext context)
+        public override CSharpSyntaxNode VisitDecimalValue([NotNull] DreamGrammarParser.DecimalValueContext context)
         {
             try
             {
@@ -368,18 +368,18 @@ namespace DReAMCompiler.Visitors
             throw new InvalidCastException("Can't parse types");
         }
 
-        public override CSharpSyntaxNode VisitIntValue([NotNull] DReAMGrammarParser.IntValueContext context)
+        public override CSharpSyntaxNode VisitIntValue([NotNull] DreamGrammarParser.IntValueContext context)
         {
             return SyntaxFactory.LiteralExpression(SyntaxKind.DecimalKeyword, SyntaxFactory.Literal(int.Parse(context.GetText())));
         }
 
-        public override CSharpSyntaxNode VisitLiteral([NotNull] DReAMGrammarParser.LiteralContext context)
+        public override CSharpSyntaxNode VisitLiteral([NotNull] DreamGrammarParser.LiteralContext context)
         {
             var literal =  SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(context.GetText()));
             return literal;
         }
 
-        public override CSharpSyntaxNode VisitNumericTypes([NotNull] DReAMGrammarParser.NumericTypesContext context)
+        public override CSharpSyntaxNode VisitNumericTypes([NotNull] DreamGrammarParser.NumericTypesContext context)
         {
             return base.VisitNumericTypes(context);
         }

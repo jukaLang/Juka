@@ -1,10 +1,10 @@
 ﻿using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using DReAMCompiler;
+using DreamCompiler;
 using System.IO;
 using System.Text;
 
-namespace DReAM.View
+namespace Dream.View
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Editor : ContentPage

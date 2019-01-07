@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 
-using DReAM.Models;
-using DReAM.Views;
+using Dream.Models;
+using Dream.Views;
 
-namespace DReAM.ViewModels
+namespace Dream.ViewModels
 {
     public class ItemsViewModel : BaseViewModel
     {
@@ -17,7 +17,7 @@ namespace DReAM.ViewModels
 
         public ItemsViewModel()
         {
-            Title = "Juliar DReAM Programming Language";
+            Title = "Juliar Dream Programming Language";
             Items = new ObservableCollection<Item>();
             LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
 

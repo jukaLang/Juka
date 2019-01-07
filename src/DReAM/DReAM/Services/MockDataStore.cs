@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DReAM.Models;
+using Dream.Models;
 
-namespace DReAM.Services
+namespace Dream.Services
 {
     public class MockDataStore : IDataStore<Item>
     {
@@ -15,10 +15,10 @@ namespace DReAM.Services
             items = new List<Item>();
             var mockItems = new List<Item>
             {
-                new Item { Id = Guid.NewGuid().ToString(), Action="New", Text = "New", Description="Create a new Juliar DReAM Program" },
-                new Item { Id = Guid.NewGuid().ToString(), Action="Open", Text = "Open", Description="Open existing Juliar DReAM Program" },
+                new Item { Id = Guid.NewGuid().ToString(), Action="New", Text = "New", Description="Create a new Juliar Dream Program" },
+                new Item { Id = Guid.NewGuid().ToString(), Action="Open", Text = "Open", Description="Open existing Juliar Dream Program" },
                 new Item { Id = Guid.NewGuid().ToString(), Action="Interpret", Text = "Interpret", Description="Interpret your commands live" },
-                new Item { Id = Guid.NewGuid().ToString(), Action="Chat", Text = "Chat", Description="Chat with other DReAM users" },
+                new Item { Id = Guid.NewGuid().ToString(), Action="Chat", Text = "Chat", Description="Chat with other Dream users" },
                 new Item { Id = Guid.NewGuid().ToString(), Action="Docs", Text = "Docs", Description="Get Documentation" },
                 new Item { Id = Guid.NewGuid().ToString(), Action="Share", Text = "Share", Description="Tell your friends about the program" },
                 new Item { Id = Guid.NewGuid().ToString(), Action="Contact", Text = "Contact", Description="Contact the development team" },

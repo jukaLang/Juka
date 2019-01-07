@@ -5,7 +5,7 @@ using System.Linq;
 using Foundation;
 using UIKit;
 
-namespace DReAM.iOS
+namespace Dream.iOS
 {
     public class Application
     {

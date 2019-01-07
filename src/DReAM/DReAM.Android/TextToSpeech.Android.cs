@@ -1,11 +1,11 @@
 ﻿using Android.Speech.Tts;
 using Android.App;
 using Android.OS;
-using DReAM.Droid;
+using Dream.Droid;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(TextToSpeechImplementation))]
-namespace DReAM.Droid
+namespace Dream.Droid
 {
     public class TextToSpeechImplementation : Java.Lang.Object, ITextToSpeech, TextToSpeech.IOnInitListener
     {

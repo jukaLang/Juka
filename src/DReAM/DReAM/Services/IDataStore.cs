@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace DReAM.Services
+namespace Dream.Services
 {
     public interface IDataStore<T>
     {

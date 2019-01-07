@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using Antlr4.Runtime.Tree;
-using DReAMCompiler.Tokens;
+using DreamCompiler.Tokens;
 using System.Linq.Expressions;
 using System.Net.Mime;
 using System.Reflection;
 using System.Runtime.Remoting.Metadata.W3cXsd2001;
 
 
-namespace DReAMCompiler.Visitors
+namespace DreamCompiler.Visitors
 {
-    using DReAMCompiler.Grammar;
+    using DreamCompiler.Grammar;
 
     internal enum BinaryExpressionTypes
     {
@@ -22,12 +22,12 @@ namespace DReAMCompiler.Visitors
         String
     }
 
-    internal class DReAMVisitor : DReAMGrammarBaseVisitor<Expression>
+    internal class DreamVisitor : DreamGrammarBaseVisitor<Expression>
     {
         private Stack<BinaryExpressionTypes> binaryExpressionStack = new Stack<BinaryExpressionTypes>();
         private Dictionary<string, LabelTarget> highLevelFunctions = new Dictionary<string, LabelTarget>();
 
-        public override Expression VisitCompileUnit(DReAMGrammarParser.CompileUnitContext context)
+        public override Expression VisitCompileUnit(DreamGrammarParser.CompileUnitContext context)
         {
             var blockExpressionList = new List<BlockExpression>();
             if (context.ChildCount != 0)
@@ -47,27 +47,27 @@ namespace DReAMCompiler.Visitors
             return null;
         }
 
-        public override Expression VisitStatement(DReAMGrammarParser.StatementContext context)
+        public override Expression VisitStatement(DreamGrammarParser.StatementContext context)
         {
             return base.VisitStatement(context);
         }
 
-        public override Expression VisitAdd(DReAMGrammarParser.AddContext context)
+        public override Expression VisitAdd(DreamGrammarParser.AddContext context)
         {
             return base.VisitAdd(context);
         }
 
-        public override Expression VisitAssignmentExpression(DReAMGrammarParser.AssignmentExpressionContext context)
+        public override Expression VisitAssignmentExpression(DreamGrammarParser.AssignmentExpressionContext context)
         {
             return base.VisitAssignmentExpression(context);
         }
 
-        public override Expression VisitAssignmentOperator(DReAMGrammarParser.AssignmentOperatorContext context)
+        public override Expression VisitAssignmentOperator(DreamGrammarParser.AssignmentOperatorContext context)
         {
             return base.VisitAssignmentOperator(context);
         }
 
-        public override Expression VisitBinaryExpression(DReAMGrammarParser.BinaryExpressionContext context)
+        public override Expression VisitBinaryExpression(DreamGrammarParser.BinaryExpressionContext context)
         {
             var expressions = new List<Expression>();
             foreach (var t in context.children)
@@ -219,7 +219,7 @@ namespace DReAMCompiler.Visitors
             return binaryExpression;
         }
 
-        public override Expression VisitBooleanExpression(DReAMGrammarParser.BooleanExpressionContext context)
+        public override Expression VisitBooleanExpression(DreamGrammarParser.BooleanExpressionContext context)
         {
             var expressions = new List<Expression>();
             foreach (var t in context.children)
@@ -253,12 +253,12 @@ namespace DReAMCompiler.Visitors
             return binaryExpression;
         }
 
-        public override Expression VisitClassifications(DReAMGrammarParser.ClassificationsContext context)
+        public override Expression VisitClassifications(DreamGrammarParser.ClassificationsContext context)
         {
             return base.VisitClassifications(context);
         }
 
-        public override Expression VisitLiteral(DReAMGrammarParser.LiteralContext context)
+        public override Expression VisitLiteral(DreamGrammarParser.LiteralContext context)
         {
             return base.VisitLiteral(context);
         }
@@ -268,22 +268,22 @@ namespace DReAMCompiler.Visitors
             return base.Visit(tree);
         }
 
-        public override Expression VisitEqualsign(DReAMGrammarParser.EqualsignContext context)
+        public override Expression VisitEqualsign(DreamGrammarParser.EqualsignContext context)
         {
             return base.VisitEqualsign(context);
         }
 
-        public override Expression VisitEqualequal(DReAMGrammarParser.EqualequalContext context)
+        public override Expression VisitEqualequal(DreamGrammarParser.EqualequalContext context)
         {
             return base.VisitEqualequal(context);
         }
 
-        public override Expression VisitEqualityExpression(DReAMGrammarParser.EqualityExpressionContext context)
+        public override Expression VisitEqualityExpression(DreamGrammarParser.EqualityExpressionContext context)
         {
             return base.VisitEqualityExpression(context);
         }
 
-        public override Expression VisitExpression(DReAMGrammarParser.ExpressionContext context)
+        public override Expression VisitExpression(DreamGrammarParser.ExpressionContext context)
         {
             int size = context.ChildCount - 1; 
             Expression[] t = new Expression[size]; 
@@ -306,13 +306,13 @@ namespace DReAMCompiler.Visitors
             //return new DreamMulitipleVariableExpressions(t);
         }
 
-        public override Expression VisitEndLine(DReAMGrammarParser.EndLineContext context)
+        public override Expression VisitEndLine(DreamGrammarParser.EndLineContext context)
         {
             var endline = Expression.Constant(context.GetText());
             return endline;
         }
 
-        public override Expression VisitEvaluatable(DReAMGrammarParser.EvaluatableContext context)
+        public override Expression VisitEvaluatable(DreamGrammarParser.EvaluatableContext context)
         {
             return base.VisitEvaluatable(context);
         }
@@ -322,13 +322,13 @@ namespace DReAMCompiler.Visitors
             return Expression.Constant(node.GetText());
         }
 
-        public override Expression VisitVariableDeclaration(DReAMGrammarParser.VariableDeclarationContext context)
+        public override Expression VisitVariableDeclaration(DreamGrammarParser.VariableDeclarationContext context)
         {
             return base.VisitVariableDeclaration(context);
         }
 
         public override Expression VisitVariableDeclarationExpression(
-            DReAMGrammarParser.VariableDeclarationExpressionContext context)
+            DreamGrammarParser.VariableDeclarationExpressionContext context)
         {
             string type = context.children[0].GetText();
             string variableName = context.children[1].GetText();
@@ -392,7 +392,7 @@ namespace DReAMCompiler.Visitors
             return mulitipleExpressions;
         }
 
-        private void GenerateBinaryIntExpression(DReAMGrammarParser.VariableDeclarationExpressionContext context, string variableName,
+        private void GenerateBinaryIntExpression(DreamGrammarParser.VariableDeclarationExpressionContext context, string variableName,
             List<Expression> variableExpressions)
         {
             ParameterExpression expression;
@@ -449,22 +449,22 @@ namespace DReAMCompiler.Visitors
             return theString;
         }
 
-        public override Expression VisitVariable(DReAMGrammarParser.VariableContext context)
+        public override Expression VisitVariable(DreamGrammarParser.VariableContext context)
         {
             return base.VisitVariable(context);
         }
 
-        public override Expression VisitExpressionSequence(DReAMGrammarParser.ExpressionSequenceContext context)
+        public override Expression VisitExpressionSequence(DreamGrammarParser.ExpressionSequenceContext context)
         {
             return base.VisitExpressionSequence(context);
         }
 
-        public override Expression VisitFuncName(DReAMGrammarParser.FuncNameContext context)
+        public override Expression VisitFuncName(DreamGrammarParser.FuncNameContext context)
         {
             return Expression.Constant(context.GetText());
         }
 
-        public override Expression VisitFunctionDeclaration(DReAMGrammarParser.FunctionDeclarationContext context)
+        public override Expression VisitFunctionDeclaration(DreamGrammarParser.FunctionDeclarationContext context)
         {
             var children = context.children;
             var i = children.Count;
@@ -547,7 +547,7 @@ namespace DReAMCompiler.Visitors
                     continue;
                 }
 
-                if (parm is DReAMMethodCall dreamMethodCall )
+                if (parm is DreamMethodCall dreamMethodCall )
                 {
                     expressionsToAdd.Add( dreamMethodCall );
                     expressionsToAdd.Add(Expression.Label(dreamMethodCall.ReturnTarget));
@@ -574,7 +574,7 @@ namespace DReAMCompiler.Visitors
             return Expression.Block(localParameters, expressionsToAdd);
         }
 
-        public override Expression VisitFunctionCall(DReAMGrammarParser.FunctionCallContext context)
+        public override Expression VisitFunctionCall(DreamGrammarParser.FunctionCallContext context)
         {
             var functionCallName = RemoveLeadingAndTrailingQuotes(context.children[0].GetText());
 
@@ -586,7 +586,7 @@ namespace DReAMCompiler.Visitors
 
             var returnLabel = Expression.Label();
 
-            DReAMMethodCall dreamMethodCall = new DReAMMethodCall(
+            DreamMethodCall dreamMethodCall = new DreamMethodCall(
                 functionCallName, 
                 null, 
                 null, 
@@ -598,7 +598,7 @@ namespace DReAMCompiler.Visitors
             //return new PrintExpression(functionCallName);
         }
 
-        public override Expression VisitFunctionCallExpression(DReAMGrammarParser.FunctionCallExpressionContext context)
+        public override Expression VisitFunctionCallExpression(DreamGrammarParser.FunctionCallExpressionContext context)
         {
             Expression[] t = new Expression[context.ChildCount];
             for (int i = 0; i < context.ChildCount; i++)
@@ -611,7 +611,7 @@ namespace DReAMCompiler.Visitors
             return t[0];
         }
 
-        public override Expression VisitIdentifierName(DReAMGrammarParser.IdentifierNameContext context)
+        public override Expression VisitIdentifierName(DreamGrammarParser.IdentifierNameContext context)
         {
             Expression[] t = new Expression[context.ChildCount];
             for (int i = 0; i < context.ChildCount; i++)
@@ -624,14 +624,14 @@ namespace DReAMCompiler.Visitors
         }
     }
 
-    internal class DReAMMethodCall : Expression
+    internal class DreamMethodCall : Expression
     {
         private string methodName;
         private ParameterExpression[] inputParameters;
         private ParameterExpression returnParameters;
         private Dictionary<string, LabelTarget> functionDictionary;
 
-        public DReAMMethodCall(string methodName, ParameterExpression[] inputParameters, ParameterExpression returnParameters, Dictionary<string, LabelTarget> highLevelFunctions, LabelTarget label)
+        public DreamMethodCall(string methodName, ParameterExpression[] inputParameters, ParameterExpression returnParameters, Dictionary<string, LabelTarget> highLevelFunctions, LabelTarget label)
         {
             this.methodName = methodName;
             this.inputParameters = inputParameters;

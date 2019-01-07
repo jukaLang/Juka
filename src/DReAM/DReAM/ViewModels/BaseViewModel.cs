@@ -5,10 +5,10 @@ using System.Runtime.CompilerServices;
 
 using Xamarin.Forms;
 
-using DReAM.Models;
-using DReAM.Services;
+using Dream.Models;
+using Dream.Services;
 
-namespace DReAM.ViewModels
+namespace Dream.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {

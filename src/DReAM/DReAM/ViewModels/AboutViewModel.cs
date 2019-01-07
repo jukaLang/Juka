@@ -3,13 +3,13 @@ using System.Windows.Input;
 
 using Xamarin.Forms;
 
-namespace DReAM.ViewModels
+namespace Dream.ViewModels
 {
     public class AboutViewModel : BaseViewModel
     {
         public AboutViewModel()
         {
-            Title = "About Juliar DReAM";
+            Title = "About Juliar Dream";
 
             OpenWebCommand = new Command(() => Device.OpenUri(new Uri("https://juliar.org")));
         }

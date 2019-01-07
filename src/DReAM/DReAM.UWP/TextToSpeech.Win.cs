@@ -1,10 +1,10 @@
-﻿using DReAM.UWP;
+﻿using Dream.UWP;
 using System;
 using Windows.UI.Xaml.Controls;
 using Xamarin.Forms;
 
 [assembly: Dependency(typeof(TextToSpeechImplementation))]
-namespace DReAM.UWP
+namespace Dream.UWP
 {
     public class TextToSpeechImplementation : ITextToSpeech
     {

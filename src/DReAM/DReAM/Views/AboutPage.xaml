@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="DReAM.Views.AboutPage"
-             xmlns:vm="clr-namespace:DReAM.ViewModels"
+             x:Class="Dream.Views.AboutPage"
+             xmlns:vm="clr-namespace:Dream.ViewModels"
              Title="{Binding Title}">
     <ContentPage.BindingContext>
         <vm:AboutViewModel />
@@ -33,7 +33,7 @@
                     <Label.FormattedText>
                         <FormattedString>
                             <FormattedString.Spans>
-                                <Span Text="Juliar DReAM" FontAttributes="Bold" FontSize="22" />
+                                <Span Text="Juliar Dream" FontAttributes="Bold" FontSize="22" />
                                 <Span Text=" " />
                                 <Span Text="0.1" ForegroundColor="{StaticResource LightTextColor}" />
                             </FormattedString.Spans>
@@ -44,7 +44,7 @@
                     <Label.FormattedText>
                         <FormattedString>
                             <FormattedString.Spans>
-                                <Span Text="Welcome to Juliar DReAM Programming Language" />
+                                <Span Text="Welcome to Juliar Dream Programming Language" />
                                 <Span Text=" " />
                                 <Span Text="Created by Juliar Team" FontAttributes="Bold" />
                                 <Span Text="." />

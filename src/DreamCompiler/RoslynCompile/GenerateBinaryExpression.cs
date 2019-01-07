@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DReAMCompiler.RoslynCompile
+namespace DreamCompiler.RoslynCompile
 {
     using Antlr4.Runtime.Tree;
     using Antlr4.Runtime;
-    using DReAMCompiler.Grammar;
-    using DReAMCompiler.Visitors;
+    using DreamCompiler.Grammar;
+    using DreamCompiler.Visitors;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -19,7 +19,7 @@ namespace DReAMCompiler.RoslynCompile
     class GenerateBinaryExpression
     {
 
-        private DReAMGrammarParser.VariableContext currentVariable;
+        private DreamGrammarParser.VariableContext currentVariable;
         private ParserRuleContext currentKeyWord;
         private Stack<ParserRuleContext> operators = new Stack<ParserRuleContext>();
         private List<ParserRuleContext> postfix = new List<ParserRuleContext>();
@@ -29,7 +29,7 @@ namespace DReAMCompiler.RoslynCompile
         private const string RightParen = ")";
         private const int DefaultNumberOfChildren = 1;
 
-        static public CSharpSyntaxNode CreateBinaryExpression(DReAMGrammarParser.BinaryExpressionContext context, DreamRoslynVisitor visitor)
+        static public CSharpSyntaxNode CreateBinaryExpression(DreamGrammarParser.BinaryExpressionContext context, DreamRoslynVisitor visitor)
         {
             var nodeList = new List<CSharpSyntaxNode>();
 
@@ -67,24 +67,24 @@ namespace DReAMCompiler.RoslynCompile
                 if (node != null)
                 {
                     WalkChildren(node.children);
-                    if (node is DReAMGrammarParser.VariableContext)
+                    if (node is DreamGrammarParser.VariableContext)
                     {
-                        //currentVariable = node as DReAMGrammarParser.VariableContext;
+                        //currentVariable = node as DreamGrammarParser.VariableContext;
                         postfix.Add(node);
                         return this;
                     }
-                    else if (node is DReAMGrammarParser.KeywordsContext)
+                    else if (node is DreamGrammarParser.KeywordsContext)
                     {
                         currentKeyWord = node;
                         Trace.WriteLine(node.GetText());
                         return this;
                     }
-                    else if (node is DReAMGrammarParser.VariableDeclarationContext)
+                    else if (node is DreamGrammarParser.VariableDeclarationContext)
                     {
                         Trace.WriteLine(node.GetText());
                         return this;
                     }
-                    else if (node is DReAMGrammarParser.AssignmentOperatorContext)
+                    else if (node is DreamGrammarParser.AssignmentOperatorContext)
                     {
                         if (operators.Count == 0)
                         {
@@ -94,7 +94,7 @@ namespace DReAMCompiler.RoslynCompile
 
                         throw new ArgumentException("Invalid expressions");
                     }
-                    else if (!(node is DReAMGrammarParser.BinaryOperatorContext))
+                    else if (!(node is DreamGrammarParser.BinaryOperatorContext))
                     {
                         // other non binary operands will need to be tested here.
                         if (node.children.Count() == DefaultNumberOfChildren)
@@ -119,19 +119,19 @@ namespace DReAMCompiler.RoslynCompile
                                     operators.Pop();
                                 }
                             }
-                            else if (node is DReAMGrammarParser.DecimalValueContext)
+                            else if (node is DreamGrammarParser.DecimalValueContext)
                             {
                                 postfix.Add(node);
                                 Trace.WriteLine(node.GetText());
                             }
-                            else if (node is DReAMGrammarParser.FunctionCallExpressionContext)
+                            else if (node is DreamGrammarParser.FunctionCallExpressionContext)
                             {
                                 postfix.Add(node);
                             }
                         }
                         return this;
                     }
-                    else if (node is DReAMGrammarParser.BinaryOperatorContext)
+                    else if (node is DreamGrammarParser.BinaryOperatorContext)
                     {
                         if (Precedence(operators.Peek()) > Precedence(node) ||
                             Precedence(operators.Peek()) == Precedence(node))
@@ -194,7 +194,7 @@ namespace DReAMCompiler.RoslynCompile
         {
             foreach (var token in postfix)
             {
-                if (token is DReAMGrammarParser.BinaryOperatorContext)
+                if (token is DreamGrammarParser.BinaryOperatorContext)
                 {
                     var right = stackOne.Pop();
                     var left = stackOne.Pop();
@@ -202,21 +202,21 @@ namespace DReAMCompiler.RoslynCompile
                     LiteralExpressionSyntax rightLiteralExpressionSyntax = null;
                     LiteralExpressionSyntax leftLiteralExpressionSyntax = null;
 
-                    if (right is DReAMGrammarParser.DecimalValueContext)
+                    if (right is DreamGrammarParser.DecimalValueContext)
                     {
                         rightLiteralExpressionSyntax = CreateNumericLiteralExpression(right);
                     }
-                    if (right is DReAMGrammarParser.StringValueContext)
+                    if (right is DreamGrammarParser.StringValueContext)
                     {
                         rightLiteralExpressionSyntax = CreateStringLiteralExpression(right);
                     }
 
 
-                    if (left is DReAMGrammarParser.DecimalValueContext)
+                    if (left is DreamGrammarParser.DecimalValueContext)
                     {
                         leftLiteralExpressionSyntax = CreateNumericLiteralExpression(left);
                     }
-                    if (right is DReAMGrammarParser.StringValueContext)
+                    if (right is DreamGrammarParser.StringValueContext)
                     {
                         leftLiteralExpressionSyntax = CreateStringLiteralExpression(left);
                     }

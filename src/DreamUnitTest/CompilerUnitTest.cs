@@ -3,14 +3,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
 using System.Dynamic;
 using System.IO;
-using DReAMCompiler;
+using DreamCompiler;
 using System.Linq.Expressions;
 using System.Reflection;
 
 using System.Collections;
 
 
-namespace DReAMUnitTest
+namespace DreamUnitTest
 {
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis;

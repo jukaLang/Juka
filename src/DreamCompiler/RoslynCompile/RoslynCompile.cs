@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DReAMCompiler.RoslynCompile
+namespace DreamCompiler.RoslynCompile
 {
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis;

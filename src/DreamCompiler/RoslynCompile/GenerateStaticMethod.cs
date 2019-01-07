@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DReAMCompiler.RoslynCompile
+namespace DreamCompiler.RoslynCompile
 {
     using Antlr4.Runtime.Tree;
-    using DReAMCompiler.Grammar;
-    using DReAMCompiler.Visitors;
+    using DreamCompiler.Grammar;
+    using DreamCompiler.Visitors;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
-    using DReAMCompiler.Constants;
+    using DreamCompiler.Constants;
 
     class GenerateStaticMethod
     {
-        static public MethodDeclarationSyntax CreateStaticMethod(DReAMGrammarParser.FunctionDeclarationContext context, DreamRoslynVisitor visitor)
+        static public MethodDeclarationSyntax CreateStaticMethod(DreamGrammarParser.FunctionDeclarationContext context, DreamRoslynVisitor visitor)
         {
             String methodName = context.funcName().GetText();
             //Since C# main methods musbe be named Main this converts to C# style.
