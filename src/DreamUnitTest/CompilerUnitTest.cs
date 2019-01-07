@@ -5,9 +5,6 @@ using System.Dynamic;
 using System.IO;
 using DreamCompiler;
 using System.Linq.Expressions;
-using System.Reflection;
-
-using System.Collections;
 
 
 namespace DreamUnitTest
@@ -15,7 +12,6 @@ namespace DreamUnitTest
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis;
     using System.Runtime.CompilerServices;
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 
@@ -42,6 +38,53 @@ namespace DreamUnitTest
 
             CompileRoslyn.Parse(tree);
 
+        }
+
+        [TestMethod]
+        public void TestVar()
+        {
+            string s = @"function main() = { 
+                int x = 3;
+            }";
+            var memoryStream = GenerateStreamFromString(s);
+            try
+            {
+                var compiler = new Compiler();
+                compiler.Go("testcompile", memoryStream);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static MemoryStream GenerateStreamFromString(string s)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+
+        [TestMethod]
+        public void TestEmpty()
+        {
+            try
+            {
+                if (File.Exists(@"..\..\..\..\examples\empty.jlr"))
+                {
+                    using (var stream = new FileStream(@"..\..\..\..\examples\empty.jlr", FileMode.Open))
+                    {
+                        CSharpSyntaxNode node = Compile(stream);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [TestMethod]

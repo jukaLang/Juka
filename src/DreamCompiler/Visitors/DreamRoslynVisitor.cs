@@ -30,7 +30,7 @@ namespace DreamCompiler.Visitors
             /**
              * A name space and a class needs to be defined to hold all of the methods. 
              */         
-            NamespaceDeclarationSyntax namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName("tempoary"))
+            NamespaceDeclarationSyntax namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName("temporary"))
                 .AddMembers(items: new[] { SyntaxFactory.ClassDeclaration("tempClass")
                 .AddMembers(items: methods.ToArray()) });
 
@@ -197,7 +197,7 @@ namespace DreamCompiler.Visitors
         public override CSharpSyntaxNode VisitStringValue([NotNull] DreamGrammarParser.StringValueContext context)
         {
             String value = context.GetText();
-            if (value.StartsWith("\"") && value.EndsWith("\""))
+            if ((value.StartsWith("\"") && value.EndsWith("\"")) || (value.StartsWith("'") && value.EndsWith("'")))
             {
                 value = value.Substring(1, value.Length - 2);
             }
@@ -221,6 +221,10 @@ namespace DreamCompiler.Visitors
             {
                 case "int":
                     return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.IntKeyword));
+                case "float":
+                    return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.FloatKeyword));
+                case "double":
+                    return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.DoubleKeyword));
                 case "string":
                     return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.StringKeyword));
             }
@@ -239,6 +243,7 @@ namespace DreamCompiler.Visitors
                     return WalkVariableDeclarationExpression(GetChildren(e));
                 }
             }
+            System.Diagnostics.Trace.WriteLine("NULL RETURNED");
 
             return null;
         }
@@ -269,20 +274,45 @@ namespace DreamCompiler.Visitors
                 .Eval();
            
             var expressions = context.singleExpression();
-            var nodeList = new List<CSharpSyntaxNode>();
-            
-            WalkVariableDeclarationExpression( new List<IParseTree>() { context.singleExpression() } );
+            List<CSharpSyntaxNode> nodeList = new List<CSharpSyntaxNode>();
+
+            System.Diagnostics.Trace.WriteLine("Tracing Walk=>");
+            System.Diagnostics.Trace.WriteLine(WalkVariableDeclarationExpression( new List<IParseTree>() { context.singleExpression() } ));
+            System.Diagnostics.Trace.WriteLine("<=");
 
             SyntaxToken keywordToken = GetKeywordTokenType(context.keywords().GetText());
-            var binaryExpression = nodeList[0] ?? nodeList[0] as BinaryExpressionSyntax;
 
-            return SyntaxFactory.LocalDeclarationStatement(
-            SyntaxFactory.VariableDeclaration(
-                SyntaxFactory.PredefinedType(keywordToken))
-            .WithVariables(
-                SyntaxFactory.SingletonSeparatedList<VariableDeclaratorSyntax>(
-                    SyntaxFactory.VariableDeclarator(
-                        SyntaxFactory.Identifier(variableName)) )));
+
+            if (nodeList.Count > 0) { 
+                var binaryExpression = nodeList[0] ?? nodeList[0] as BinaryExpressionSyntax;
+
+
+
+
+                var vardec = SyntaxFactory.LocalDeclarationStatement(
+                 declaration: SyntaxFactory.VariableDeclaration(
+                    SyntaxFactory.PredefinedType(keywordToken))
+                .WithVariables(
+                    SyntaxFactory.SingletonSeparatedList<VariableDeclaratorSyntax>(
+                        SyntaxFactory.VariableDeclarator(
+                            SyntaxFactory.Identifier(variableName)).WithInitializer(
+                        SyntaxFactory.EqualsValueClause(
+                           (BinaryExpressionSyntax)binaryExpression)))));
+                return vardec;
+            }
+            else
+            {
+                var vardec = SyntaxFactory.LocalDeclarationStatement(
+                 declaration: SyntaxFactory.VariableDeclaration(
+                    SyntaxFactory.PredefinedType(keywordToken))
+                .WithVariables(
+                    SyntaxFactory.SingletonSeparatedList<VariableDeclaratorSyntax>(
+                        SyntaxFactory.VariableDeclarator(
+                            SyntaxFactory.Identifier(variableName)))));
+                return vardec;
+            }
+
+
             /*
                     .WithInitializer(
                         SyntaxFactory.EqualsValueClause(
