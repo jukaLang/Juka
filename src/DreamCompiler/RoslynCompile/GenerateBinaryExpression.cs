@@ -81,7 +81,7 @@ namespace DReAMCompiler.RoslynCompile
                     }
                     else if (node is DReAMGrammarParser.VariableDeclarationContext)
                     {
-                        System.Diagnostics.Trace.WriteLine(node.GetText());
+                        Trace.WriteLine(node.GetText());
                         return this;
                     }
                     else if (node is DReAMGrammarParser.AssignmentOperatorContext)
@@ -148,21 +148,12 @@ namespace DReAMCompiler.RoslynCompile
                             return this;
                         }
 
-                        /*
-                        while (operators.Count > 0 && Precedence(node) <= Precedence(operators.Peek()))
-                        {
-                            postfix.Add(operators.Pop());
-                        }
-
-                        operators.Push(node);
-                        return this;
-                        */
                     }
                 }
             }
             catch(Exception ex)
             {
-                throw;
+                throw ex;
             }
 
             return this;
