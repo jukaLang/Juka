@@ -182,17 +182,17 @@
     <Compile Include="RoslynCompile\GenerateBinaryExpression.cs" />
     <Compile Include="Compiler.cs" />
     <Compile Include="Constants\Constants.cs" />
-    <Compile Include="grammar\DReAMGrammarBaseVisitor.cs" />
-    <Compile Include="grammar\DReAMGrammarLexer.cs" />
-    <Compile Include="grammar\DReAMGrammarParser.cs" />
-    <Compile Include="grammar\DReAMGrammarVisitor.cs" />
+    <Compile Include="grammar\DreamGrammarBaseVisitor.cs" />
+    <Compile Include="grammar\DreamGrammarLexer.cs" />
+    <Compile Include="grammar\DreamGrammarParser.cs" />
+    <Compile Include="grammar\DreamGrammarVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoslynCompile\GenerateStaticMethod.cs" />
     <Compile Include="RoslynCompile\RoslynCompile.cs" />
     <Compile Include="Tokens\Token.cs" />
     <Compile Include="Tokens\TokenKind.cs" />
     <Compile Include="Visitors\DreamRoslynVisitor.cs" />
-    <Compile Include="Visitors\DReAMVisitor.cs" />
+    <Compile Include="Visitors\DreamVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\" />
@@ -201,10 +201,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="grammar\DReAMGrammar.g4" />
-    <None Include="grammar\DReAMGrammar.tokens" />
-    <None Include="grammar\DReAMGrammarLexer.interp" />
-    <None Include="grammar\DReAMGrammarLexer.tokens" />
+    <None Include="grammar\DreamGrammar.g4" />
+    <None Include="grammar\DreamGrammar.tokens" />
+    <None Include="grammar\DreamGrammarLexer.interp" />
+    <None Include="grammar\DreamGrammarLexer.tokens" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -213,7 +213,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>java -jar $(SolutionDir)DReAMCompiler\jars\antlr-4.7.1-complete.jar -Dlanguage=CSharp $(SolutionDir)DReAMCompiler\grammar\DreamGrammar.g4 -no-listener -visitor -package DreamCompiler.Grammar
+    <PreBuildEvent>java -jar $(SolutionDir)DreamCompiler\jars\antlr-4.7.1-complete.jar -Dlanguage=CSharp $(SolutionDir)DreamCompiler\grammar\DreamGrammar.g4 -no-listener -visitor -package DreamCompiler.Grammar
 </PreBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.12\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets" Condition="Exists('..\packages\SQLitePCLRaw.lib.e_sqlite3.linux.1.1.12\build\net35\SQLitePCLRaw.lib.e_sqlite3.linux.targets')" />

@@ -2,9 +2,10 @@ function main() = {
 	printLine("entering main");
 
 	int x = 1 * 3 + 42 * 5;
-	foo(x);
+	
 	printLine("foo");
 	printLine(33);
+	foo(x);
 
 	printLine("Leaving main");
 }
@@ -12,9 +13,9 @@ function main() = {
 
 function foo(int x){
 	printLine("Entering foo");
-	print(x);
+	printLine(x);
 	int y = 3 + 3;
-	print(4003);
+	printLine(4003);
 	printLine("");
 	print("y = ");
 	printLine(y);

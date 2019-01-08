@@ -19,7 +19,7 @@ namespace DreamUnitTest
     public class CompilerUnitTest
     {
         [TestMethod]
-        public void testRoslyn()
+        public void TestRoslyn()
         {
 
             SyntaxTree tree = CSharpSyntaxTree.ParseText(
@@ -234,12 +234,6 @@ namespace DreamUnitTest
 
         }
 
-        public static String foo(string s)
-        {
-            Trace.WriteLine("this is the foo method");
-            return s;
-        }
-
         [TestMethod]
         public void TestVariables()
         {
@@ -377,7 +371,7 @@ namespace DreamUnitTest
 
     class CompileRoslyn
     {
-        private static System.Collections.Generic.IEnumerable<string> DefaultNamespaces =
+        private static readonly System.Collections.Generic.IEnumerable<string> DefaultNamespaces =
             new[]
             {
                 "System",
