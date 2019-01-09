@@ -14,11 +14,10 @@ namespace DreamCompiler.RoslynCompile
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using System.Diagnostics;
-
+    using Antlr4.Runtime.Misc;
 
     class GenerateBinaryExpression
     {
-
         private LocalDeclarationStatementSyntax statementSyntax;
         private ParserRuleContext currentKeyWord;
         private Stack<ParserRuleContext> operators = new Stack<ParserRuleContext>();
@@ -64,12 +63,13 @@ namespace DreamCompiler.RoslynCompile
             return statementSyntax;
         }
 
-        public GenerateBinaryExpression Walk(Antlr4.Runtime.ParserRuleContext node)
+        public GenerateBinaryExpression Walk(ContextExpressionUnion root)
         {
             try
             {
-                if (node != null)
+                if (root.context != null)
                 {
+                    var node = root.context;
                     WalkChildren(node.children);
                     if (node is DreamGrammarParser.VariableContext)
                     {
@@ -104,28 +104,7 @@ namespace DreamCompiler.RoslynCompile
                         // other non binary operands will need to be tested here.
                         if (node.children.Count() == DefaultNumberOfChildren)
                         {
-                            if (node.children[0].GetText().Equals(LeftParen))
-                            {
-                                operators.Push(node);
-                            }
-                            else if (node.children[0].GetText().Equals(RightParen))
-                            {
-                                while (operators.Count > 0 && !operators.Peek().children[0].GetText().Equals(LeftParen))
-                                {
-                                    Trace.WriteLine(operators.Peek().GetText());
-                                    postfix.Add(operators.Pop());
-                                }
-
-                                if (operators.Count > 0 && !operators.Peek().children[0].GetText().Equals(LeftParen))
-                                {
-                                    throw new Exception("invalid expression");
-                                }
-                                else
-                                {
-                                    operators.Pop();
-                                }
-                            }
-                            else if (node is DreamGrammarParser.DecimalValueContext)
+                            if (node is DreamGrammarParser.DecimalValueContext)
                             {
                                 postfix.Add(node);
                                 Trace.WriteLine(node.GetText());
@@ -156,6 +135,29 @@ namespace DreamCompiler.RoslynCompile
 
                     }
                 }
+                if (root.terminal != null)
+                {
+                    //WalkChildren(root.terminal.GetChild(0))
+                    var child = root.terminal as TerminalNodeImpl;
+                    TerminalNodeParseTree terminal = new TerminalNodeParseTree(child.GetText());
+                    if (child.GetText().Equals(LeftParen))
+                    {
+                        operators.Push(terminal);
+                    }
+                    else if (child.GetText().Equals(RightParen))
+                    {
+                        while (operators.Count > 0 && !(operators.Peek() is TerminalNodeParseTree))
+                        {
+                            Trace.WriteLine(operators.Peek().GetText());
+                            postfix.Add(operators.Pop());
+                        }
+                        if (operators.Peek() is TerminalNodeParseTree && operators.Peek().GetText().Equals(LeftParen))
+                        {
+                            operators.Pop();
+                        }
+
+                    }
+                }
             }
             catch(Exception ex)
             {
@@ -177,7 +179,24 @@ namespace DreamCompiler.RoslynCompile
             {
                 if (children.Count > 1)
                 {
-                    Walk(child as Antlr4.Runtime.ParserRuleContext);
+                    if (child as ParserRuleContext != null)
+                    {
+                        Walk(new ContextExpressionUnion()
+                        {
+                            context = child as ParserRuleContext,
+                            syntax = null,
+                            terminal = null
+                        });
+                    }
+                    if (child as TerminalNodeImpl != null)
+                    {
+                        Walk(new ContextExpressionUnion()
+                        {
+                            context = null,
+                            syntax = null,
+                            terminal = child as TerminalNodeImpl
+                        });
+                    }
                 }
                 else
                 {
@@ -417,10 +436,26 @@ namespace DreamCompiler.RoslynCompile
             };
         }
 
-        private class ContextExpressionUnion
+        internal class ContextExpressionUnion
         {
             public ParserRuleContext context;
             public ExpressionSyntax syntax;
+            public TerminalNodeImpl terminal; 
+        }
+
+        private class TerminalNodeParseTree : ParserRuleContext
+        {
+            private string terminalText;
+            public TerminalNodeParseTree(String text)
+            {
+                terminalText = text;
+            }
+
+            public override string GetText()
+            {
+                return terminalText;
+            }
+
         }
     }
 }

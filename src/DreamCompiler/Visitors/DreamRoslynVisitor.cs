@@ -262,16 +262,21 @@ namespace DreamCompiler.Visitors
 
             return children;
         }
-        public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DreamGrammarParser.VariableDeclarationExpressionContext context)
+        public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DreamGrammarParser.VariableDeclarationExpressionContext contextNode)
         {
-            string variableName = context.variable().GetText();
+            string variableName = contextNode.variable().GetText();
 
             var binaryExpression = new GenerateBinaryExpression();
 
-            binaryExpression.Walk(context)
-                .PostWalk()
-                .PrintPostFix()
-                .Eval();
+            binaryExpression.Walk( new GenerateBinaryExpression.ContextExpressionUnion()
+            {
+                context = contextNode,
+                terminal = null,
+                syntax = null
+            })
+            .PostWalk()
+            .PrintPostFix()
+            .Eval();
 
             return binaryExpression.GetLocalDeclarationStatementSyntax();
   
