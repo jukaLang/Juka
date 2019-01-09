@@ -262,62 +262,19 @@ namespace DreamCompiler.Visitors
 
             return children;
         }
-
-
         public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DreamGrammarParser.VariableDeclarationExpressionContext context)
         {
             string variableName = context.variable().GetText();
 
-            new GenerateBinaryExpression()
-                .Walk(context)
+            var binaryExpression = new GenerateBinaryExpression();
+
+            binaryExpression.Walk(context)
                 .PostWalk()
+                .PrintPostFix()
                 .Eval();
-           
-            var expressions = context.singleExpression();
-            List<CSharpSyntaxNode> nodeList = new List<CSharpSyntaxNode>();
 
-            System.Diagnostics.Trace.WriteLine("Tracing Walk=>");
-            System.Diagnostics.Trace.WriteLine(WalkVariableDeclarationExpression( new List<IParseTree>() { context.singleExpression() } ));
-            System.Diagnostics.Trace.WriteLine("<=");
-
-            SyntaxToken keywordToken = GetKeywordTokenType(context.keywords().GetText());
-
-
-            if (nodeList.Count > 0) { 
-                var binaryExpression = nodeList[0] ?? nodeList[0] as BinaryExpressionSyntax;
-
-
-
-
-                var vardec = SyntaxFactory.LocalDeclarationStatement(
-                 declaration: SyntaxFactory.VariableDeclaration(
-                    SyntaxFactory.PredefinedType(keywordToken))
-                .WithVariables(
-                    SyntaxFactory.SingletonSeparatedList<VariableDeclaratorSyntax>(
-                        SyntaxFactory.VariableDeclarator(
-                            SyntaxFactory.Identifier(variableName)).WithInitializer(
-                        SyntaxFactory.EqualsValueClause(
-                           (BinaryExpressionSyntax)binaryExpression)))));
-                return vardec;
-            }
-            else
-            {
-                var vardec = SyntaxFactory.LocalDeclarationStatement(
-                 declaration: SyntaxFactory.VariableDeclaration(
-                    SyntaxFactory.PredefinedType(keywordToken))
-                .WithVariables(
-                    SyntaxFactory.SingletonSeparatedList<VariableDeclaratorSyntax>(
-                        SyntaxFactory.VariableDeclarator(
-                            SyntaxFactory.Identifier(variableName)))));
-                return vardec;
-            }
-
-
-            /*
-                    .WithInitializer(
-                        SyntaxFactory.EqualsValueClause(
-                           (BinaryExpressionSyntax)binaryExpression)))));
-            */
+            return binaryExpression.GetLocalDeclarationStatementSyntax();
+  
         }
 
         public override CSharpSyntaxNode VisitAssignmentOperator([NotNull] DreamGrammarParser.AssignmentOperatorContext context)

@@ -19,12 +19,11 @@ namespace DreamCompiler.RoslynCompile
     class GenerateBinaryExpression
     {
 
-        private DreamGrammarParser.VariableContext currentVariable;
+        private LocalDeclarationStatementSyntax statementSyntax;
         private ParserRuleContext currentKeyWord;
         private Stack<ParserRuleContext> operators = new Stack<ParserRuleContext>();
         private List<ParserRuleContext> postfix = new List<ParserRuleContext>();
-        private Stack<ParserRuleContext> stackOne = new Stack<ParserRuleContext>();
-        private Stack<ExpressionSyntax> stackTwo = new Stack<ExpressionSyntax>();
+        private Stack<ContextExpressionUnion> unionStack = new Stack<ContextExpressionUnion>();
         private const string LeftParen = "(";
         private const string RightParen = ")";
         private const int DefaultNumberOfChildren = 1;
@@ -60,6 +59,11 @@ namespace DreamCompiler.RoslynCompile
             throw new Exception("Invalid expression");
         }
 
+        internal LocalDeclarationStatementSyntax GetLocalDeclarationStatementSyntax()
+        {
+            return statementSyntax;
+        }
+
         public GenerateBinaryExpression Walk(Antlr4.Runtime.ParserRuleContext node)
         {
             try
@@ -71,12 +75,12 @@ namespace DreamCompiler.RoslynCompile
                     {
                         //currentVariable = node as DreamGrammarParser.VariableContext;
                         postfix.Add(node);
+                        Trace.WriteLine(node.GetText());
                         return this;
                     }
                     else if (node is DreamGrammarParser.KeywordsContext)
                     {
                         currentKeyWord = node;
-                        Trace.WriteLine(node.GetText());
                         return this;
                     }
                     else if (node is DreamGrammarParser.VariableDeclarationContext)
@@ -88,6 +92,7 @@ namespace DreamCompiler.RoslynCompile
                     {
                         if (operators.Count == 0)
                         {
+                            Trace.WriteLine(node.GetText());
                             operators.Push(node);
                             return this;
                         }
@@ -107,6 +112,7 @@ namespace DreamCompiler.RoslynCompile
                             {
                                 while (operators.Count > 0 && !operators.Peek().children[0].GetText().Equals(LeftParen))
                                 {
+                                    Trace.WriteLine(operators.Peek().GetText());
                                     postfix.Add(operators.Pop());
                                 }
 
@@ -136,8 +142,8 @@ namespace DreamCompiler.RoslynCompile
                         if (Precedence(operators.Peek()) > Precedence(node) ||
                             Precedence(operators.Peek()) == Precedence(node))
                         {
+                            Trace.WriteLine(operators.Peek().GetText());
                             postfix.Add(operators.Pop());
-                            Trace.WriteLine(postfix.Last().children[0].GetText());
                             operators.Push(node);
                             return this;
                         }
@@ -190,57 +196,98 @@ namespace DreamCompiler.RoslynCompile
             return this;
         }
 
+        internal GenerateBinaryExpression PrintPostFix()
+        {
+            foreach(var p in postfix)
+            {
+                Trace.WriteLine(p.GetText());
+            }
+
+            return this;
+        }
+
         internal void Eval()
         {
             foreach (var token in postfix)
             {
+                if (token is DreamGrammarParser.AssignmentOperatorContext)
+                {
+                    CreateBinaryLeftAndRight(unionStack);
+
+                }
                 if (token is DreamGrammarParser.BinaryOperatorContext)
                 {
-                    var right = stackOne.Pop();
-                    var left = stackOne.Pop();
-
-                    LiteralExpressionSyntax rightLiteralExpressionSyntax = null;
-                    LiteralExpressionSyntax leftLiteralExpressionSyntax = null;
-
-                    if (right is DreamGrammarParser.DecimalValueContext)
-                    {
-                        rightLiteralExpressionSyntax = CreateNumericLiteralExpression(right);
-                    }
-                    if (right is DreamGrammarParser.StringValueContext)
-                    {
-                        rightLiteralExpressionSyntax = CreateStringLiteralExpression(right);
-                    }
-
-
-                    if (left is DreamGrammarParser.DecimalValueContext)
-                    {
-                        leftLiteralExpressionSyntax = CreateNumericLiteralExpression(left);
-                    }
-                    if (right is DreamGrammarParser.StringValueContext)
-                    {
-                        leftLiteralExpressionSyntax = CreateStringLiteralExpression(left);
-                    }
-
-                    if (rightLiteralExpressionSyntax == null || leftLiteralExpressionSyntax == null)
-                    {
-                        throw new Exception("invalid ");
-                    }
+                    CreateBinaryLeftAndRight(unionStack);
 
                     string binaryOp = token.GetChild(0).GetText();
 
                     SyntaxKind op = syntaxKindLookup[operaterLookup[binaryOp]];
 
-                    stackTwo.Push(SyntaxFactory.BinaryExpression(op,
-                        leftLiteralExpressionSyntax,
-                        rightLiteralExpressionSyntax));
+                    unionStack.Push(new ContextExpressionUnion()
+                    {
+                        context = null,
+                        syntax = SyntaxFactory.BinaryExpression(op,
+                        unionStack.Pop().syntax,
+                        unionStack.Pop().syntax)
+                    });
                 }
                 else
                 {
-                    stackOne.Push(token);
+                    unionStack.Push(new ContextExpressionUnion() { context = token, syntax = null });
                 }
-                
             }
         }
+
+        private void CreateBinaryLeftAndRight(Stack<ContextExpressionUnion> stack)
+        {
+            var right = stack.Pop();
+            var left = stack.Pop();
+
+            if (right.context != null)
+            {
+                CheckContextType(right.context, stack);
+            }
+            else if (right.syntax != null)
+            {
+                stack.Push(right);
+            }
+
+            if (left.context != null)
+            { 
+                CheckContextType(left.context, stack);
+            }
+            else if (left.syntax != null)
+            {
+                stack.Push(left);
+            }
+        }
+
+        private void CheckContextType(ParserRuleContext context, Stack<ContextExpressionUnion> stack) {
+            if (context != null)
+            {
+                if (context is DreamGrammarParser.DecimalValueContext)
+                {
+                    stack.Push(new ContextExpressionUnion()
+                    {
+                        context = null,
+                        syntax = CreateNumericLiteralExpression(context)
+                    });
+                }
+                else if (context is DreamGrammarParser.StringValueContext)
+                {
+                    stack.Push(new ContextExpressionUnion()
+                    {
+                        context = null,
+                        syntax = CreateStringLiteralExpression(context)
+                    });
+                }
+                else if (context is DreamGrammarParser.VariableContext)
+                {
+                    CreateVariableDeclarator(context, stack.Pop().syntax as BinaryExpressionSyntax);
+                }
+            }
+        }
+        
 
         private LiteralExpressionSyntax CreateNumericLiteralExpression(ParserRuleContext context)
         {
@@ -256,9 +303,26 @@ namespace DreamCompiler.RoslynCompile
                 CreateStringLiteral(context));
         }
 
+        private void CreateVariableDeclarator(ParserRuleContext context, BinaryExpressionSyntax binaryExpression)
+        {
+            if (!string.IsNullOrEmpty(currentKeyWord.GetText()))
+            {
+                statementSyntax = SyntaxFactory.LocalDeclarationStatement(
+                  declaration: SyntaxFactory.VariableDeclaration(
+                     SyntaxFactory.PredefinedType(GetKeywordTokenType(currentKeyWord.GetText())))
+                 .WithVariables(
+                     SyntaxFactory.SingletonSeparatedList(
+                         SyntaxFactory.VariableDeclarator(
+                             SyntaxFactory.Identifier(context.GetText())).WithInitializer(
+                         SyntaxFactory.EqualsValueClause(
+                           binaryExpression)))));
+            }
+        }
+
         private SyntaxToken CreateNumericLiteral(ParserRuleContext context)
         {
-            return SyntaxFactory.Literal(context.GetChild(0).GetText());
+            int value = Int16.Parse(context.GetChild(0).GetText());
+            return SyntaxFactory.Literal(value);
         }
 
         private SyntaxToken CreateStringLiteral(ParserRuleContext context)
@@ -272,6 +336,22 @@ namespace DreamCompiler.RoslynCompile
             Red,
             Err,
             End,
+        }
+
+
+        private SyntaxToken GetKeywordTokenType(String keyword)
+        {
+            switch (keyword)
+            {
+                case "int":
+                    return SyntaxFactory.Token(SyntaxKind.IntKeyword);
+                case "string":
+                    break;
+                case "double":
+                    break;
+            }
+
+            return SyntaxFactory.Token(SyntaxKind.ErrorKeyword);
         }
 
         private readonly Dictionary<string, int> operaterLookup = new Dictionary<string, int>()
@@ -294,7 +374,6 @@ namespace DreamCompiler.RoslynCompile
             { ".",  15 }
         };
 
-
         private readonly Dictionary<int, SyntaxKind> syntaxKindLookup = new Dictionary<int, SyntaxKind>()
         {
             { 0 , SyntaxKind.SimpleAssignmentExpression},
@@ -315,7 +394,7 @@ namespace DreamCompiler.RoslynCompile
             { 15 , SyntaxKind.DotToken}
         };
 
-        private class operatorState
+        private class OperatorState
         {
             public SrEval[,] shiftReduceOperationTable = new SrEval[,]
             { /*             assign      OR          AND         EQEQ        NOTEQ       GTEQ        LTEQ        GT          LT          PLUS        MINUS       DIV         MOD         MULT        FUNC        DOT        /*
@@ -336,6 +415,12 @@ namespace DreamCompiler.RoslynCompile
               /* FUNC */  {  SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Sht},
               /* DOT  */  {  SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red},
             };
+        }
+
+        private class ContextExpressionUnion
+        {
+            public ParserRuleContext context;
+            public ExpressionSyntax syntax;
         }
     }
 }
