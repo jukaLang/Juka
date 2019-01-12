@@ -59,7 +59,6 @@ namespace DreamCompiler
             DreamGrammarParser.CompileUnitContext compileUnit = parser.compileUnit();
             Trace.WriteLine(compileUnit.ToStringTree(parser));
 
-            //var visitor = new DreamVisitor();
             var visitor = new DreamRoslynVisitor();
             return visitor.Visit(compileUnit);
         }

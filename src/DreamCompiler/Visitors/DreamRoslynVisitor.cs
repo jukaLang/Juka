@@ -257,14 +257,24 @@ namespace DreamCompiler.Visitors
                 children.Add(tree.GetChild(i));
             }
 
-            HashSet<int> t = new HashSet<int>();
-            t.Add(2);
-
             return children;
         }
+
+        public override CSharpSyntaxNode VisitCombinedExpressions([NotNull] DreamGrammarParser.CombinedExpressionsContext context)
+        {
+            var binaryExpression = new GenerateBinaryExpression();
+
+            binaryExpression.Walk(context)
+                .PostWalk()
+                .PrintPostFix()
+                .Eval();
+
+            return binaryExpression.GetLocalDeclarationStatementSyntax();
+        }
+
         public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DreamGrammarParser.VariableDeclarationExpressionContext context)
         {
-            string variableName = context.variable().GetText();
+            string variableName = context.variableDeclarationAssignment().variable().GetText();
 
             var binaryExpression = new GenerateBinaryExpression();
 
@@ -297,7 +307,8 @@ namespace DreamCompiler.Visitors
             return SyntaxFactory.Token(SyntaxKind.ErrorKeyword);
         }
 
-        public override CSharpSyntaxNode VisitBinaryExpression([NotNull] DreamGrammarParser.BinaryExpressionContext context)
+
+        public override CSharpSyntaxNode VisitMultiplyBinaryExpression([NotNull] DreamGrammarParser.MultiplyBinaryExpressionContext context)
         {
             return GenerateBinaryExpression.CreateBinaryExpression(context, this);
         }

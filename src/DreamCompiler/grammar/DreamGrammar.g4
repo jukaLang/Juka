@@ -26,7 +26,7 @@ semiColon
     ;
 
 expression
-    : singleExpression endLine
+    : variableDeclarationAssignment endLine
     | ifExpr
     | whileExpression
     | doWhileExpr
@@ -314,6 +314,7 @@ expressionSequence
      ID
      ;
 
+	 /*
 singleExpression
  : Delete singleExpression                                                  # DeleteExpression
  | Void singleExpression                                                    # VoidExpression
@@ -326,18 +327,11 @@ singleExpression
  | '-' singleExpression                                                     # UnaryMinusExpression
  | '~' singleExpression                                                     # BitNotExpression
  | notOperator singleExpression                                             # NotExpression
- | singleExpression binaryOperator singleExpression                          # BinaryExpression
- | singleExpression comparisonOperator singleExpression                     # EqualityExpression
  | singleExpression bitWiseOperators singleExpression                       # BitAndExpression
  | singleExpression ( bitLeftShift | bitRigthShift ) singleExpression       # BitShiftExpression
  | singleExpression Instanceof singleExpression                             # InstanceofExpression
  | singleExpression In singleExpression                                     # InExpression
  | singleExpression '?' singleExpression ':' singleExpression               # TernaryExpression
-// | variable assignmentOperator singleExpression                           # AssignmentOperatorExpression
-// | variable assignmentOperator BinaryExpression                           # AssignmentOperatorExpression
-// | variable assignmentOperator ( binaryOperator ) ( singleExpression singleExpression )+ # AssignmentOperatorExpression
-// | (keywords) variable ( assignmentOperator ( binaryOperator ) ( singleExpression )+)*  # VariableDeclarationExpression
- | keywords variable assignmentOperator singleExpression		            # VariableDeclarationExpression
  | This                                                                     # ThisExpression
  | literal                                                                  # LiteralExpression
  | variable                                                                 # VariableExpression
@@ -346,13 +340,57 @@ singleExpression
  | DecimalLiteral														    # DecimalValue
  | INT                                                                      # IntValue
  | STRING                                                                   # StringValue
+ | variableDeclarationExpression										    # VBD
+ ;
+ */
+
+
+variableExpressions
+ : binaryExpressions
+ | singleExpression
+;
+
+assignExpression
+ : singleExpression
  ;
 
- /*
- binaryExpressionOperation
-	: singleExpression binaryOperator singleExpression	# BinaryExpression
-	;
-*/
+assignEqualEqualBinaryExpression
+ : singleExpression equalequal singleExpression
+ ;
+
+addSubtractBinaryExpression
+ : singleExpression addSubtractOp singleExpression
+ ;
+
+multiplyBinaryExpression
+ : singleExpression ('*' | '/') singleExpression
+ ;
+
+binaryExpressions
+ : assignEqualEqualBinaryExpression
+ | addSubtractBinaryExpression
+ | multiplyBinaryExpression
+ ;
+
+combinedExpressions
+ :  binaryExpressions (binaryOperator binaryExpressions)*
+ ;
+
+ variableDeclarationAssignment
+ : keywords variable assignmentOperator combinedExpressions
+ ; 
+
+singleExpression
+ : literal																	# LiteralExpression
+ | variable                                                                 # VariableExpression
+ | functionCall                                                             # FunctionCallExpression
+ | DecimalLiteral														    # DecimalValue
+ | INT                                                                      # IntValue
+ | STRING                                                                   # StringValue
+ | variableDeclarationAssignment											# VariableDeclarationExpression
+ ;
+
+
 
 
  evaluatableExpression : singleExpression                               # Evaluatable ;

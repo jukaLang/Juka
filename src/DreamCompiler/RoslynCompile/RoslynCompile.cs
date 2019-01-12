@@ -8,7 +8,7 @@ namespace DreamCompiler.RoslynCompile
 
     public class CompileRoslyn
     {
-        private static IEnumerable<string> DefaultNamespaces =
+        private static readonly IEnumerable<string> DefaultNamespaces =
             new[]
             {
                 "System",

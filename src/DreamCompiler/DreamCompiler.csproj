@@ -192,7 +192,6 @@
     <Compile Include="Tokens\Token.cs" />
     <Compile Include="Tokens\TokenKind.cs" />
     <Compile Include="Visitors\DreamRoslynVisitor.cs" />
-    <Compile Include="Visitors\DreamVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\" />

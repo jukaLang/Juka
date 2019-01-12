@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DreamCompiler.RoslynCompile
 {
@@ -15,10 +13,8 @@ namespace DreamCompiler.RoslynCompile
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using System.Diagnostics;
 
-
     class GenerateBinaryExpression
     {
-
         private LocalDeclarationStatementSyntax statementSyntax;
         private ParserRuleContext currentKeyWord;
         private Stack<ParserRuleContext> operators = new Stack<ParserRuleContext>();
@@ -28,8 +24,9 @@ namespace DreamCompiler.RoslynCompile
         private const string RightParen = ")";
         private const int DefaultNumberOfChildren = 1;
 
-        static public CSharpSyntaxNode CreateBinaryExpression(DreamGrammarParser.BinaryExpressionContext context, DreamRoslynVisitor visitor)
+        static internal CSharpSyntaxNode CreateBinaryExpression(ParserRuleContext context, DreamRoslynVisitor visitor)
         {
+            /*
             var nodeList = new List<CSharpSyntaxNode>();
 
             foreach (var expression in context.children)
@@ -38,7 +35,7 @@ namespace DreamCompiler.RoslynCompile
                 nodeList.Add(item);
             }
 
-            String unaryOp = context.binaryOperator().GetText();
+            String unaryOp = context..GetText();
 
             var expressionArray = nodeList.ToArray();
             var left = (ExpressionSyntax)expressionArray[0];
@@ -57,6 +54,10 @@ namespace DreamCompiler.RoslynCompile
             }
 
             throw new Exception("Invalid expression");
+            */
+
+            return null;
+             
         }
 
         internal LocalDeclarationStatementSyntax GetLocalDeclarationStatementSyntax()
@@ -64,14 +65,37 @@ namespace DreamCompiler.RoslynCompile
             return statementSyntax;
         }
 
-        public GenerateBinaryExpression Walk(Antlr4.Runtime.ParserRuleContext node)
+
+        internal GenerateBinaryExpression Walk(ParserRuleContext node)
         {
             try
             {
                 if (node != null)
                 {
+                    /*
+                    if (node is DreamGrammarParser.ParenthesizedBinaryExpressionContext)
+                    {
+                        if (node.children[0] is TerminalNodeImpl && node.children[node.ChildCount-1] is TerminalNodeImpl)
+                        {
+                            ParserRuleContext singleExpression = node.children[1] as ParserRuleContext;
+                            if (singleExpression != null)
+                            {
+                                WalkChildren(singleExpression.children);
+                            }
+                        }
+                        return this;
+                    }
+                    else
+                    {
+                    */
+                    
                     WalkChildren(node.children);
-                    if (node is DreamGrammarParser.VariableContext)
+                    if (node is DreamGrammarParser.BinaryExpressionsContext || 
+                        node is DreamGrammarParser.MultiplyBinaryExpressionContext)
+                    {
+                        WalkChildren(node.children);
+                    }
+                    else if (node is DreamGrammarParser.VariableContext)
                     {
                         //currentVariable = node as DreamGrammarParser.VariableContext;
                         postfix.Add(node);
@@ -99,46 +123,37 @@ namespace DreamCompiler.RoslynCompile
 
                         throw new ArgumentException("Invalid expressions");
                     }
+                    else if (node is DreamGrammarParser.DecimalValueContext)
+                    {
+                        postfix.Add(node);
+                        Trace.WriteLine(node.GetText());
+                        return this;
+                    }
+                    /*
+                    
                     else if (!(node is DreamGrammarParser.BinaryOperatorContext))
                     {
                         // other non binary operands will need to be tested here.
                         if (node.children.Count() == DefaultNumberOfChildren)
                         {
-                            if (node.children[0].GetText().Equals(LeftParen))
-                            {
-                                operators.Push(node);
-                            }
-                            else if (node.children[0].GetText().Equals(RightParen))
-                            {
-                                while (operators.Count > 0 && !operators.Peek().children[0].GetText().Equals(LeftParen))
-                                {
-                                    Trace.WriteLine(operators.Peek().GetText());
-                                    postfix.Add(operators.Pop());
-                                }
-
-                                if (operators.Count > 0 && !operators.Peek().children[0].GetText().Equals(LeftParen))
-                                {
-                                    throw new Exception("invalid expression");
-                                }
-                                else
-                                {
-                                    operators.Pop();
-                                }
-                            }
-                            else if (node is DreamGrammarParser.DecimalValueContext)
-                            {
-                                postfix.Add(node);
-                                Trace.WriteLine(node.GetText());
-                            }
-                            else if (node is DreamGrammarParser.FunctionCallExpressionContext)
+                            if (node is DreamGrammarParser.FunctionCallExpressionContext)
                             {
                                 postfix.Add(node);
                             }
                         }
                         return this;
                     }
-                    else if (node is DreamGrammarParser.BinaryOperatorContext)
+                    */
+                    else if (
+                        node is DreamGrammarParser.AddSubtractOpContext || 
+                        node is DreamGrammarParser.BinaryOperatorContext ||
+                        node is DreamGrammarParser.MultiplyDivideOpContext )
                     {
+                        if (operators.Count == 0)
+                        {
+                            operators.Push(node);
+                            return this;
+                        }
                         if (Precedence(operators.Peek()) > Precedence(node) ||
                             Precedence(operators.Peek()) == Precedence(node))
                         {
@@ -155,6 +170,7 @@ namespace DreamCompiler.RoslynCompile
                         }
 
                     }
+                    //}
                 }
             }
             catch(Exception ex)
@@ -175,13 +191,9 @@ namespace DreamCompiler.RoslynCompile
         {
             foreach (var child in children)
             {
-                if (children.Count > 1)
+                if (child is ParserRuleContext)
                 {
-                    Walk(child as Antlr4.Runtime.ParserRuleContext);
-                }
-                else
-                {
-                    return;
+                    Walk(child as ParserRuleContext);
                 }
             }
         }
@@ -389,7 +401,7 @@ namespace DreamCompiler.RoslynCompile
             { 10 , SyntaxKind.SubtractExpression},
             { 11 , SyntaxKind.DivideExpression},
             { 12 , SyntaxKind.ModuloExpression},
-            { 13 ,SyntaxKind.MultiplyExpression},
+            { 13 , SyntaxKind.MultiplyExpression},
             { 14 , SyntaxKind.LocalFunctionStatement},
             { 15 , SyntaxKind.DotToken}
         };
@@ -398,7 +410,7 @@ namespace DreamCompiler.RoslynCompile
         {
             public SrEval[,] shiftReduceOperationTable = new SrEval[,]
             { /*             assign      OR          AND         EQEQ        NOTEQ       GTEQ        LTEQ        GT          LT          PLUS        MINUS       DIV         MOD         MULT        FUNC        DOT        /*
-              /* assn*/   {  SrEval.Red, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht},
+              /* assn */  {  SrEval.Red, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht},
               /* OR   */  {  SrEval.Red, SrEval.Red, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht},
               /* AND  */  {  SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht},
               /* EQEQ */  {  SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Red, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht, SrEval.Sht},
