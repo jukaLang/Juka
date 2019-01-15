@@ -72,28 +72,28 @@ namespace DreamCompiler.RoslynCompile
             {
                 if (node != null)
                 {
-                    /*
-                    if (node is DreamGrammarParser.ParenthesizedBinaryExpressionContext)
-                    {
-                        if (node.children[0] is TerminalNodeImpl && node.children[node.ChildCount-1] is TerminalNodeImpl)
-                        {
-                            ParserRuleContext singleExpression = node.children[1] as ParserRuleContext;
-                            if (singleExpression != null)
-                            {
-                                WalkChildren(singleExpression.children);
-                            }
-                        }
-                        return this;
-                    }
-                    else
-                    {
-                    */
-                    
                     WalkChildren(node.children);
                     if (node is DreamGrammarParser.BinaryExpressionsContext || 
-                        node is DreamGrammarParser.MultiplyBinaryExpressionContext)
+                        node is DreamGrammarParser.MultiplyDivideBinaryExpressionContext ||
+                        node is DreamGrammarParser.AddSubtractBinaryExpressionContext ||
+                        node is DreamGrammarParser.CombinedExpressionsContext ||
+                        node is DreamGrammarParser.VariableDeclarationAssignmentContext)
                     {
-                        WalkChildren(node.children);
+                        return this;
+                    }
+                    else if (node is DreamGrammarParser.LeftParenContext)
+                    {
+                        operators.Push(node);
+                        return this;
+                    }
+                    else if (node is DreamGrammarParser.RightParenContext)
+                    {
+                        while(!(operators.Peek() is DreamGrammarParser.LeftParenContext))
+                        {
+                            postfix.Add(operators.Pop());
+                        }
+
+                        operators.Pop();
                     }
                     else if (node is DreamGrammarParser.VariableContext)
                     {
@@ -129,21 +129,6 @@ namespace DreamCompiler.RoslynCompile
                         Trace.WriteLine(node.GetText());
                         return this;
                     }
-                    /*
-                    
-                    else if (!(node is DreamGrammarParser.BinaryOperatorContext))
-                    {
-                        // other non binary operands will need to be tested here.
-                        if (node.children.Count() == DefaultNumberOfChildren)
-                        {
-                            if (node is DreamGrammarParser.FunctionCallExpressionContext)
-                            {
-                                postfix.Add(node);
-                            }
-                        }
-                        return this;
-                    }
-                    */
                     else if (
                         node is DreamGrammarParser.AddSubtractOpContext || 
                         node is DreamGrammarParser.BinaryOperatorContext ||
@@ -170,7 +155,6 @@ namespace DreamCompiler.RoslynCompile
                         }
 
                     }
-                    //}
                 }
             }
             catch(Exception ex)
@@ -183,8 +167,16 @@ namespace DreamCompiler.RoslynCompile
 
         private int Precedence(IParseTree op)
         {
-            int precedence =  operaterLookup[op.GetChild(0).GetText()];
-            return precedence;
+            string opText = op.GetChild(0).GetText();
+            int value = -1;
+            if (operaterLookup.TryGetValue(opText, out value))
+            {
+                return value;
+            }
+            else
+            {
+                return value;
+            }
         }
 
         private void WalkChildren(IList<IParseTree> children)
@@ -227,7 +219,8 @@ namespace DreamCompiler.RoslynCompile
                     CreateBinaryLeftAndRight(unionStack);
 
                 }
-                if (token is DreamGrammarParser.BinaryOperatorContext)
+                if (token is DreamGrammarParser.AddSubtractOpContext ||
+                    token is DreamGrammarParser.MultiplyDivideOpContext)
                 {
                     CreateBinaryLeftAndRight(unionStack);
 
@@ -300,7 +293,6 @@ namespace DreamCompiler.RoslynCompile
             }
         }
         
-
         private LiteralExpressionSyntax CreateNumericLiteralExpression(ParserRuleContext context)
         {
             return SyntaxFactory.LiteralExpression(
@@ -328,6 +320,11 @@ namespace DreamCompiler.RoslynCompile
                              SyntaxFactory.Identifier(context.GetText())).WithInitializer(
                          SyntaxFactory.EqualsValueClause(
                            binaryExpression)))));
+            }
+
+            if (statementSyntax == null)
+            {
+                throw new Exception("Invalid variable declaration");
             }
         }
 
@@ -380,10 +377,12 @@ namespace DreamCompiler.RoslynCompile
             { "+",  9 },
             { "-",  10 },
             { "/",  11 },
-            { "%",  12 },
-            { "*",  13 },
-            { "()", 14 },
-            { ".",  15 }
+            { "(",  -1 },
+            { ")",  12 },
+            { "%",  13 },
+            { "*",  14 },
+            { "()", 15 },
+            { ".",  16 }
         };
 
         private readonly Dictionary<int, SyntaxKind> syntaxKindLookup = new Dictionary<int, SyntaxKind>()
@@ -400,10 +399,17 @@ namespace DreamCompiler.RoslynCompile
             { 9 , SyntaxKind.AddExpression},
             { 10 , SyntaxKind.SubtractExpression},
             { 11 , SyntaxKind.DivideExpression},
-            { 12 , SyntaxKind.ModuloExpression},
-            { 13 , SyntaxKind.MultiplyExpression},
-            { 14 , SyntaxKind.LocalFunctionStatement},
-            { 15 , SyntaxKind.DotToken}
+            { 12 , SyntaxKind.DivideExpression},
+            { 13 , SyntaxKind.ModuloExpression},
+            { 14 , SyntaxKind.MultiplyExpression},
+            { 15 , SyntaxKind.LocalFunctionStatement},
+            { 16 , SyntaxKind.DotToken}
+        };
+
+        private readonly Dictionary<int, string> terminalKindLookUP = new Dictionary<int, string>()
+        {
+            { 12, "(" },
+            { 13, ")" },
         };
 
         private class OperatorState

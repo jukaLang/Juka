@@ -362,15 +362,18 @@ addSubtractBinaryExpression
  : singleExpression addSubtractOp singleExpression
  ;
 
-multiplyBinaryExpression
+multiplyDivideBinaryExpression
  : singleExpression ('*' | '/') singleExpression
  ;
 
 binaryExpressions
  : assignEqualEqualBinaryExpression
  | addSubtractBinaryExpression
- | multiplyBinaryExpression
- ;
+ | multiplyDivideBinaryExpression
+ | leftParen assignEqualEqualBinaryExpression rightParen
+ | leftParen addSubtractBinaryExpression rightParen
+ | leftParen multiplyDivideBinaryExpression rightParen
+;
 
 combinedExpressions
  :  binaryExpressions (binaryOperator binaryExpressions)*

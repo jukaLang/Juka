@@ -1,3 +1,4 @@
 function main() = {
-	int x = 1 + 2;
+	int x = 3 * (1 + 2);
+	printLine(x);
 }
