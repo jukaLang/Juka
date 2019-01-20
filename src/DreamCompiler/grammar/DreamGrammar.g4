@@ -26,7 +26,8 @@ semiColon
     ;
 
 expression
-    : variableDeclarationAssignment endLine
+	: variableDeclarationAssignment endLine
+	| fooExpression endLine
     | ifExpr
     | whileExpression
     | doWhileExpr
@@ -76,15 +77,6 @@ primitives
     | 'sysExec' '(' variable ')'
     ;
 
-command
-    : add
-    | primitives
-	| subtract
-	| multiply
-	| divide
-	| modulo
-    ;
-
 userDefinedTypeDecl
     : userDefinedTypeKeyWord userDefinedTypeName equalsign '{' (statement)* (functionDeclaration)* '}'
     ;
@@ -125,82 +117,49 @@ userDefinedTypeFunctionReference
     : userDefinedTypeName(userDefinedTypeResolutionOperator)functionCall
     ;
 
-add
-    : summation types (types)*
-    | summation types types
-    | summation variable (types)+
-    ;
-
-summation
-    : '+'
-    | 'add'
-    ;
-
-subtract
-	: subtraction types (types)*
-	| subtraction types types
-	;
-	
-subtraction
-	: '-'
-	| 'subtract'
-	;
-
-multiply
-    : multiplication types (types)*
-    | multiplication types types
-    ;
-
 multiplication
     : '*'
-    | 'multiply'
     ;
 
 breakKeyWord
     : Break
     ;
 	
-divide
-    : division types (types)*
-    | division types types
-    ;
-	
 division
     : '/'
-    | 'divide'
     ;
 
 modulo
-    : moduli types (types)*
-    | moduli types types
+    :'%'
     ;
 
-moduli
-    :'%'
-    |'modulo'
+equalsign
+    : '='
     ;
 
 types
     : primitiveTypes
     ;
 
-
 primitiveTypes
-    : numericTypes
+    : INT
+	/*
+	| FLOAT
+	| DOUBLE
+	| LONG
     | STRING
     | BOOLEAN
     | NULL
+	*/
     ;
 
 numericTypes
     : INT
+	/*
     | FLOAT
     | DOUBLE
     | LONG
-    ;
-
-equalsign
-    : '='
+	*/
     ;
 
 comparisonOperator
@@ -350,6 +309,19 @@ variableExpressions
  | singleExpression
 ;
 
+ variableDeclarationAssignment
+ : keywords variable assignmentOperator combinedExpressions
+ ; 
+
+ combinedExpressions
+ : binaryExpressions (binaryOperator binaryExpressions)* 
+   /*
+ | (leftParen)? binaryExpressions (rightParen)?
+ | (leftParen)? binaryExpressions (binaryOperator binaryExpressions)* (rightParen)?
+   */
+ ;
+
+
 assignExpression
  : singleExpression
  ;
@@ -363,40 +335,54 @@ addSubtractBinaryExpression
  ;
 
 multiplyDivideBinaryExpression
- : singleExpression ('*' | '/') singleExpression
+ : singleExpression multiplyDivideOp singleExpression
  ;
 
 binaryExpressions
  : assignEqualEqualBinaryExpression
  | addSubtractBinaryExpression
  | multiplyDivideBinaryExpression
- | leftParen assignEqualEqualBinaryExpression rightParen
- | leftParen addSubtractBinaryExpression rightParen
- | leftParen multiplyDivideBinaryExpression rightParen
 ;
 
-combinedExpressions
- :  binaryExpressions (binaryOperator binaryExpressions)*
- ;
 
- variableDeclarationAssignment
- : keywords variable assignmentOperator combinedExpressions
- ; 
+
 
 singleExpression
  : literal																	# LiteralExpression
  | variable                                                                 # VariableExpression
  | functionCall                                                             # FunctionCallExpression
- | DecimalLiteral														    # DecimalValue
  | INT                                                                      # IntValue
  | STRING                                                                   # StringValue
  | variableDeclarationAssignment											# VariableDeclarationExpression
  ;
 
+ fooExpression
+	: variable equalsign comboBarExp
+	;
+
+comboBarExp
+	: barExpression (singleBarExpression)* {System.Diagnostics.Trace.WriteLine("foo");}
+	| barExpression (doubleBarExpression)*
+	;
+
+doubleBarExpression
+	: binaryOperator barExpression
+	;
+
+barExpression
+	: (types) binaryOperator (types)
+	;
+
+singleBarExpression
+	: binaryOperator types
+	;
+
+simpleBar
+	: types
+	;
 
 
-
- evaluatableExpression : singleExpression                               # Evaluatable ;
+evaluatableExpression : singleExpression                               # Evaluatable ;
 
  assignmentExpression
      : variableDeclaration equalsign ( singleExpression | variable | functionCall | primitiveTypes | booleanExpression | userDefinedTypeVariableReference | userDefinedTypeVariableReference)
@@ -468,11 +454,13 @@ OctalIntegerLiteral
  */
 
 /// 7.8.3 Numeric Literals
+/*
 DecimalLiteral
  : DecimalIntegerLiteral '.' DecimalDigit* ExponentPart?
  | '.' DecimalDigit+ ExponentPart?
  | DecimalIntegerLiteral ExponentPart?
  ;
+*/
 
 NULL
     :'null'
@@ -487,6 +475,7 @@ INT
     : [0-9]+
     ;
 
+/*
 FLOAT
     : ('0'..'9')+ '.' ('0'..'9')*
     ;
@@ -498,6 +487,7 @@ DOUBLE
 LONG
     : ('0'..'9')+ '.' ('0'..'9')*
     ;
+*/
 
 ESC_CHARS
     : '\\' ('\\"'|'\\'|'/'|'b'|'f'|'n'|'r'|'t')
@@ -523,7 +513,7 @@ COMMENT
 LINE_COMMENT
     : '//' .*? '\n' -> channel(HIDDEN)
     ;
-
+ /*
 StringLiteral
  : '"' DoubleStringCharacter* '"'
  | '\'' SingleStringCharacter* '\''
@@ -559,6 +549,7 @@ StringLiteral
  fragment SingleEscapeCharacter
   : ['"\\bfnrtv]
   ;
+  */
 
   fragment LineContinuation
    : '\\' LineTerminatorSequence
@@ -577,6 +568,7 @@ fragment LineTerminatorSequence
    : ~['"\\bfnrtv0-9xu\r\n]
    ;
 
+/*
 fragment DecimalDigit
  : [0-9]
  ;
@@ -593,7 +585,7 @@ fragment DecimalIntegerLiteral
 fragment ExponentPart
  : [eE] [+-]? DecimalDigit+
  ;
-
+ */
 
  /*
  : Function Identifier? '(' formalParameterList? ')' '{' functionBody '}' # FunctionExpression

@@ -62,6 +62,10 @@ namespace DreamCompiler.RoslynCompile
 
         internal LocalDeclarationStatementSyntax GetLocalDeclarationStatementSyntax()
         {
+            if (statementSyntax == null)
+            {
+                throw new Exception("Statement not created");
+            }
             return statementSyntax;
         }
 
@@ -123,7 +127,7 @@ namespace DreamCompiler.RoslynCompile
 
                         throw new ArgumentException("Invalid expressions");
                     }
-                    else if (node is DreamGrammarParser.DecimalValueContext)
+                    else if (node is DreamGrammarParser.IntValueContext)
                     {
                         postfix.Add(node);
                         Trace.WriteLine(node.GetText());
@@ -270,7 +274,7 @@ namespace DreamCompiler.RoslynCompile
         private void CheckContextType(ParserRuleContext context, Stack<ContextExpressionUnion> stack) {
             if (context != null)
             {
-                if (context is DreamGrammarParser.DecimalValueContext)
+                if (context is DreamGrammarParser.IntValueContext)
                 {
                     stack.Push(new ContextExpressionUnion()
                     {
@@ -377,12 +381,12 @@ namespace DreamCompiler.RoslynCompile
             { "+",  9 },
             { "-",  10 },
             { "/",  11 },
+            { "*",  12 },
             { "(",  -1 },
-            { ")",  12 },
+            { ")",  -1 },
             { "%",  13 },
-            { "*",  14 },
-            { "()", 15 },
-            { ".",  16 }
+            { "()", 14 },
+            { ".",  15 }
         };
 
         private readonly Dictionary<int, SyntaxKind> syntaxKindLookup = new Dictionary<int, SyntaxKind>()
@@ -399,11 +403,10 @@ namespace DreamCompiler.RoslynCompile
             { 9 , SyntaxKind.AddExpression},
             { 10 , SyntaxKind.SubtractExpression},
             { 11 , SyntaxKind.DivideExpression},
-            { 12 , SyntaxKind.DivideExpression},
+            { 12 , SyntaxKind.MultiplyExpression},
             { 13 , SyntaxKind.ModuloExpression},
-            { 14 , SyntaxKind.MultiplyExpression},
-            { 15 , SyntaxKind.LocalFunctionStatement},
-            { 16 , SyntaxKind.DotToken}
+            { 14 , SyntaxKind.LocalFunctionStatement},
+            { 15 , SyntaxKind.DotToken}
         };
 
         private readonly Dictionary<int, string> terminalKindLookUP = new Dictionary<int, string>()

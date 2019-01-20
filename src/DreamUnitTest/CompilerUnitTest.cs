@@ -11,9 +11,6 @@ namespace DreamUnitTest
 {
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis;
-    using System.Runtime.CompilerServices;
-
-
 
     [TestClass]
     public class CompilerUnitTest
@@ -41,11 +38,13 @@ namespace DreamUnitTest
         }
 
         [TestMethod]
-        public void TestVar()
+        public void TestEmptyMain()
         {
-            string s = @"function main() = { 
-                int x = 3;
+            string s = 
+            @"function main() = 
+            { 
             }";
+
             var memoryStream = GenerateStreamFromString(s);
             try
             {
@@ -58,7 +57,7 @@ namespace DreamUnitTest
             }
         }
 
-        public static MemoryStream GenerateStreamFromString(string s)
+        private static MemoryStream GenerateStreamFromString(string s)
         {
             var stream = new MemoryStream();
             var writer = new StreamWriter(stream);
@@ -68,7 +67,7 @@ namespace DreamUnitTest
             return stream;
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void TestEmpty()
         {
             try
@@ -88,7 +87,7 @@ namespace DreamUnitTest
         }
 
         [TestMethod]
-        public void TestCompile()
+        public void TestFullFileCompile()
         {
             try
             {
@@ -112,71 +111,43 @@ namespace DreamUnitTest
             var byteArray = new byte[stream.Length];
             stream.Read(byteArray, 0, (int)stream.Length);
             memoryStream = new MemoryStream(byteArray);
-            var compiler = new Compiler();
-            return compiler.Go("testcompile", memoryStream);
+            return new Compiler().Go("testcompile", memoryStream);
         }
 
         [TestMethod]
-        public void TestBinaryExpression()
+        public void TestAddBinaryExpression()
         {
-            String binaryExpression = @"function main() = { int x = 1 + 2 * 3; }";
+            String binaryExpression = 
+                @"function main() = { 
+                    int x = 1 + 3 + 2; 
+                    printLine(x);
+                }";
+
             byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(binaryExpression);
             MemoryStream stream = new MemoryStream(byteArray);
 
-            var node = new Compiler().Go("binaryexpression", stream);
+            var node = new Compiler().Go("addBinaryexpression", stream);
             Assert.IsNotNull(node);
         }
 
 
         [TestMethod]
-        public void TestCallSiteBinder()
+        public void TestMultiplyBinaryExpression()
         {
-            CallSiteBinder binder = new Binder();
+            String binaryExpression =
+                @"function main() = { 
+                    int x = 1 * 3; 
+                    printLine(x);
+                }";
 
-            var site = CallSite<Func<CallSite, object, object, object>>.Create(binder);
+            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(binaryExpression);
+            MemoryStream stream = new MemoryStream(byteArray);
 
-            var sum = site.Target(site, 5, 2);
-
-            ParameterExpression x = Expression.Variable(typeof(int), "x");
-            ParameterExpression y = Expression.Variable(typeof(int), "y");
-
-            Expression blockExpression = Expression.Block(new ParameterExpression[] { x, y },
-            Expression.Assign(x, Expression.Constant(2)),
-            Expression.Assign(y, Expression.Constant(5)));
-
-
-            ParameterExpression[] arguments = new[] { x, y };
-
-            DynamicExpression exp = Expression.Dynamic(
-                binder,
-                typeof(object),
-                arguments);
-
-            var compiled = Expression.Lambda<Func<object>>(exp).Compile();
-            var result = compiled();
-            Console.WriteLine(result);
-            Console.WriteLine("DONE");
-        }
-
-        [TestMethod]
-        public void TestCallSiteBinder2()
-        {
-
-            CallSiteBinder binder = new Binder();
-
-            ConstantExpression[] arguments = new[] { Expression.Constant(5), Expression.Constant(2) };
-
-            DynamicExpression exp = Expression.Dynamic(
-                binder,
-                typeof(object),
-                arguments);
-
-            var compiled = Expression.Lambda<Func<object>>(exp).Compile();
-            var result = compiled();
+            var node = new Compiler().Go("addBinaryexpression", stream);
+            Assert.IsNotNull(node);
         }
 
 
-        [TestMethod]
         public void TestExpressions()
         {
             var left = Expression.Add(Expression.Constant(3), Expression.Constant(4));
@@ -234,7 +205,6 @@ namespace DreamUnitTest
 
         }
 
-        [TestMethod]
         public void TestVariables()
         {
             ParameterExpression expression = Expression.Variable(typeof(string), "x");
@@ -253,7 +223,6 @@ namespace DreamUnitTest
         }
 
 
-        [TestMethod]
         public void TestFunctionCall()
         {
 
@@ -290,7 +259,6 @@ namespace DreamUnitTest
         }
 
 
-        [TestMethod]
         public void TestBlock()
         {
             ParameterExpression value = Expression.Parameter(typeof(int), "value");
@@ -341,32 +309,6 @@ namespace DreamUnitTest
 
             Console.WriteLine(factorial);
         }
-    }
-
-    class Binder : BinaryOperationBinder
-    {
-        public Binder() : base(ExpressionType.Subtract)
-        {
-        }
-
-        public override DynamicMetaObject FallbackBinaryOperation(DynamicMetaObject target, DynamicMetaObject arg,
-            DynamicMetaObject errorSuggestion)
-        {
-            if (target.RuntimeType == arg.RuntimeType)
-            {
-                var expression = Expression.Lambda<Func<int>>(Expression.MakeBinary(
-                    ExpressionType.Add,
-                    Expression.Constant(target.Value),
-                    Expression.Constant(arg.Value))).Compile()();
-
-                var convertedExpression = Expression.Convert(Expression.Constant(expression), typeof(object));
-
-                return new DynamicMetaObject(convertedExpression, BindingRestrictions.Empty);
-            }
-
-            throw new Exception("can't bind");
-        }
-
     }
 
     class CompileRoslyn

@@ -325,6 +325,7 @@ namespace DreamCompiler.Visitors
             return GenerateBinaryExpression.CreateBinaryExpression(context, this);
         }
 
+        /*
         public override CSharpSyntaxNode VisitDecimalValue([NotNull] DreamGrammarParser.DecimalValueContext context)
         {
             try
@@ -336,6 +337,7 @@ namespace DreamCompiler.Visitors
                 throw ex;
             }
         }
+        */
 
         enum NumberValueEnum
         {

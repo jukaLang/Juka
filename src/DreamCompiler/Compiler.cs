@@ -44,12 +44,14 @@ namespace DreamCompiler
             var input = new AntlrInputStream(stream);
             var lexer = new DreamGrammarLexer(input);
             var tokenStream = new CommonTokenStream(lexer);
-            this.parser = new DreamGrammarParser(tokenStream);
+            parser = new DreamGrammarParser(tokenStream);
 
-            if (this.parser == null)
+            if (parser == null)
             {
                 throw new ArgumentException( "The parser was not created" );
             }
+
+            parser.AddErrorListener(new DReAMCompiler.Error.ErrorListener());
 
             return true;
         }
