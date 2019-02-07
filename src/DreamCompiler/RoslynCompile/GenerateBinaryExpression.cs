@@ -26,38 +26,7 @@ namespace DreamCompiler.RoslynCompile
 
         static internal CSharpSyntaxNode CreateBinaryExpression(ParserRuleContext context, DreamRoslynVisitor visitor)
         {
-            /*
-            var nodeList = new List<CSharpSyntaxNode>();
-
-            foreach (var expression in context.children)
-            {
-                var item = expression.Accept(visitor);
-                nodeList.Add(item);
-            }
-
-            String unaryOp = context..GetText();
-
-            var expressionArray = nodeList.ToArray();
-            var left = (ExpressionSyntax)expressionArray[0];
-            var right = (ExpressionSyntax)expressionArray[1];
-
-            if (unaryOp.Equals("+") || unaryOp.Equals("*"))
-            {
-                SyntaxKind kind = unaryOp.Equals("+") ? SyntaxKind.AddExpression : SyntaxKind.MultiplyExpression;
-                return SyntaxFactory.BinaryExpression(kind, left, right);
-            }
-
-            if (unaryOp.Equals("-") || unaryOp.Equals("/"))
-            {
-                SyntaxKind kind = unaryOp.Equals("-") ? SyntaxKind.SubtractExpression : SyntaxKind.DivideExpression;
-                return SyntaxFactory.BinaryExpression(kind, left, right);
-            }
-
-            throw new Exception("Invalid expression");
-            */
-
             return null;
-             
         }
 
         internal LocalDeclarationStatementSyntax GetLocalDeclarationStatementSyntax()
@@ -77,10 +46,7 @@ namespace DreamCompiler.RoslynCompile
                 if (node != null)
                 {
                     WalkChildren(node.children);
-                    if (node is DreamGrammarParser.BinaryExpressionsContext || 
-                        node is DreamGrammarParser.MultiplyDivideBinaryExpressionContext ||
-                        node is DreamGrammarParser.AddSubtractBinaryExpressionContext ||
-                        node is DreamGrammarParser.CombinedExpressionsContext ||
+                    if (node is DreamGrammarParser.CombinedExpressionsContext ||
                         node is DreamGrammarParser.VariableDeclarationAssignmentContext)
                     {
                         return this;
@@ -101,9 +67,7 @@ namespace DreamCompiler.RoslynCompile
                     }
                     else if (node is DreamGrammarParser.VariableContext)
                     {
-                        //currentVariable = node as DreamGrammarParser.VariableContext;
                         postfix.Add(node);
-                        Trace.WriteLine(node.GetText());
                         return this;
                     }
                     else if (node is DreamGrammarParser.KeywordsContext)
@@ -113,14 +77,12 @@ namespace DreamCompiler.RoslynCompile
                     }
                     else if (node is DreamGrammarParser.VariableDeclarationContext)
                     {
-                        Trace.WriteLine(node.GetText());
                         return this;
                     }
                     else if (node is DreamGrammarParser.AssignmentOperatorContext)
                     {
                         if (operators.Count == 0)
                         {
-                            Trace.WriteLine(node.GetText());
                             operators.Push(node);
                             return this;
                         }
@@ -130,12 +92,10 @@ namespace DreamCompiler.RoslynCompile
                     else if (node is DreamGrammarParser.IntValueContext)
                     {
                         postfix.Add(node);
-                        Trace.WriteLine(node.GetText());
                         return this;
                     }
                     else if (
                         node is DreamGrammarParser.AddSubtractOpContext || 
-                        node is DreamGrammarParser.BinaryOperatorContext ||
                         node is DreamGrammarParser.MultiplyDivideOpContext )
                     {
                         if (operators.Count == 0)
@@ -143,10 +103,10 @@ namespace DreamCompiler.RoslynCompile
                             operators.Push(node);
                             return this;
                         }
+
                         if (Precedence(operators.Peek()) > Precedence(node) ||
                             Precedence(operators.Peek()) == Precedence(node))
                         {
-                            Trace.WriteLine(operators.Peek().GetText());
                             postfix.Add(operators.Pop());
                             operators.Push(node);
                             return this;
@@ -220,54 +180,47 @@ namespace DreamCompiler.RoslynCompile
             {
                 if (token is DreamGrammarParser.AssignmentOperatorContext)
                 {
-                    CreateBinaryLeftAndRight(unionStack);
+                    if (postfix.Count > 0 && postfix[0] is DreamGrammarParser.VariableContext)
+                    {
+                        CreateVariableDeclarator(postfix[0], (BinaryExpressionSyntax)unionStack.Pop().syntax);
+                    }
+                    else
+                    {
+                        throw new Exception("No variable to assign expression");
+                    }
 
+                    continue;
                 }
-                if (token is DreamGrammarParser.AddSubtractOpContext ||
-                    token is DreamGrammarParser.MultiplyDivideOpContext)
+                else if (token is DreamGrammarParser.AddSubtractOpContext ||
+                        token is DreamGrammarParser.MultiplyDivideOpContext)
                 {
-                    CreateBinaryLeftAndRight(unionStack);
-
                     string binaryOp = token.GetChild(0).GetText();
 
                     SyntaxKind op = syntaxKindLookup[operaterLookup[binaryOp]];
+                    
+                    var right = unionStack.Pop().syntax;
+                    var left = unionStack.Pop().syntax;
 
                     unionStack.Push(new ContextExpressionUnion()
                     {
                         context = null,
                         syntax = SyntaxFactory.BinaryExpression(op,
-                        unionStack.Pop().syntax,
-                        unionStack.Pop().syntax)
+                        left,
+                        right)
                     });
+                }
+                else if (token is DreamGrammarParser.VariableContext)
+                {
+                    if (unionStack.Count == 0)
+                    {
+                        continue;
+                    }
                 }
                 else
                 {
-                    unionStack.Push(new ContextExpressionUnion() { context = token, syntax = null });
+                    CheckContextType(token, unionStack);
+                    continue;
                 }
-            }
-        }
-
-        private void CreateBinaryLeftAndRight(Stack<ContextExpressionUnion> stack)
-        {
-            var right = stack.Pop();
-            var left = stack.Pop();
-
-            if (right.context != null)
-            {
-                CheckContextType(right.context, stack);
-            }
-            else if (right.syntax != null)
-            {
-                stack.Push(right);
-            }
-
-            if (left.context != null)
-            { 
-                CheckContextType(left.context, stack);
-            }
-            else if (left.syntax != null)
-            {
-                stack.Push(left);
             }
         }
 
@@ -292,7 +245,7 @@ namespace DreamCompiler.RoslynCompile
                 }
                 else if (context is DreamGrammarParser.VariableContext)
                 {
-                    CreateVariableDeclarator(context, stack.Pop().syntax as BinaryExpressionSyntax);
+                   // CreateVariableDeclarator(context, stack.Pop().syntax as BinaryExpressionSyntax);
                 }
             }
         }
@@ -350,7 +303,6 @@ namespace DreamCompiler.RoslynCompile
             Err,
             End,
         }
-
 
         private SyntaxToken GetKeywordTokenType(String keyword)
         {

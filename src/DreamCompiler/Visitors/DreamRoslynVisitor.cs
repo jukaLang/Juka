@@ -320,11 +320,6 @@ namespace DreamCompiler.Visitors
         }
 
 
-        public override CSharpSyntaxNode VisitMultiplyDivideBinaryExpression([NotNull] DreamGrammarParser.MultiplyDivideBinaryExpressionContext context)
-        {
-            return GenerateBinaryExpression.CreateBinaryExpression(context, this);
-        }
-
         /*
         public override CSharpSyntaxNode VisitDecimalValue([NotNull] DreamGrammarParser.DecimalValueContext context)
         {

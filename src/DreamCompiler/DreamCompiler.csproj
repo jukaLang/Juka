@@ -197,7 +197,6 @@
   <ItemGroup>
     <Folder Include="bin\Debug\" />
     <Folder Include="bin\Release\" />
-    <Folder Include="CodeGeneration\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

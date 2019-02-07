@@ -305,46 +305,18 @@ singleExpression
 
 
 variableExpressions
- : binaryExpressions
- | singleExpression
+ : singleExpression
 ;
 
  variableDeclarationAssignment
  : keywords variable assignmentOperator combinedExpressions
  ; 
 
- combinedExpressions
- : binaryExpressions (binaryOperator binaryExpressions)* 
-   /*
- | (leftParen)? binaryExpressions (rightParen)?
- | (leftParen)? binaryExpressions (binaryOperator binaryExpressions)* (rightParen)?
-   */
- ;
-
-
-assignExpression
+  combinedExpressions
  : singleExpression
+ | singleExpression (binaryOperator singleExpression)+
+ | singleExpression (binaryOperator (singleExpression binaryOperator singleExpression))+
  ;
-
-assignEqualEqualBinaryExpression
- : singleExpression equalequal singleExpression
- ;
-
-addSubtractBinaryExpression
- : singleExpression addSubtractOp singleExpression
- ;
-
-multiplyDivideBinaryExpression
- : singleExpression multiplyDivideOp singleExpression
- ;
-
-binaryExpressions
- : assignEqualEqualBinaryExpression
- | addSubtractBinaryExpression
- | multiplyDivideBinaryExpression
-;
-
-
 
 
 singleExpression
