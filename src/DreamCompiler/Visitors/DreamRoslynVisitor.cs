@@ -19,7 +19,7 @@ namespace DreamCompiler.Visitors
         {
             List<MethodDeclarationSyntax> methods = new List<MethodDeclarationSyntax>();
 
-            for(int i=0; i < context.ChildCount; i++)
+            for (int i = 0; i < context.ChildCount; i++)
             {
                 if (context.children[i].Accept(this) is MethodDeclarationSyntax m)
                 {
@@ -29,7 +29,7 @@ namespace DreamCompiler.Visitors
 
             /**
              * A name space and a class needs to be defined to hold all of the methods. 
-             */         
+             */
             NamespaceDeclarationSyntax namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName("temporary"))
                 .AddMembers(items: new[] { SyntaxFactory.ClassDeclaration("tempClass")
                 .AddMembers(items: methods.ToArray()) });
@@ -39,7 +39,7 @@ namespace DreamCompiler.Visitors
 
         public override CSharpSyntaxNode VisitFunctionDeclaration([NotNull] DreamGrammarParser.FunctionDeclarationContext context)
         {
-            MethodDeclarationSyntax method = GenerateStaticMethod.CreateStaticMethod( context , this);
+            MethodDeclarationSyntax method = GenerateStaticMethod.CreateStaticMethod(context, this);
             return method;
         }
 
@@ -57,7 +57,7 @@ namespace DreamCompiler.Visitors
 
             var parameters = new List<ArgumentSyntax>();
 
-            for (int i = 2; i < context.ChildCount -1; i++)
+            for (int i = 2; i < context.ChildCount - 1; i++)
             {
                 var param = context.children[i].Accept(this);
                 if (param != null)
@@ -109,7 +109,7 @@ namespace DreamCompiler.Visitors
         private SeparatedSyntaxList<ArgumentSyntax> BuildArgumentList(List<ArgumentSyntax> parameters)
         {
             var list = SyntaxFactory.SeparatedList<ArgumentSyntax>(
-                                new SyntaxNodeOrToken[]{ parameters[0] });
+                                new SyntaxNodeOrToken[] { parameters[0] });
 
             for (int i = 1; i < parameters.Count; i++)
             {
@@ -213,7 +213,7 @@ namespace DreamCompiler.Visitors
 
             return SyntaxFactory.Parameter(paramName).WithType(paramType);
         }
-        
+
         public override CSharpSyntaxNode VisitKeywords([NotNull] DreamGrammarParser.KeywordsContext context)
         {
             String keyword = context.GetText();
@@ -235,7 +235,7 @@ namespace DreamCompiler.Visitors
 
         private List<IParseTree> WalkVariableDeclarationExpression([NotNull] IList<IParseTree> context)
         {
-            foreach(var e in context)
+            foreach (var e in context)
             {
                 var list = new List<IParseTree>();
                 if (e.ChildCount > 1)
@@ -257,29 +257,50 @@ namespace DreamCompiler.Visitors
                 children.Add(tree.GetChild(i));
             }
 
-            HashSet<int> t = new HashSet<int>();
-            t.Add(2);
-
             return children;
         }
-        public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DreamGrammarParser.VariableDeclarationExpressionContext contextNode)
+
+        LocalDeclarationStatementSyntax statementSyntax;
+
+        public override CSharpSyntaxNode VisitVariableDeclarationAssignment([NotNull] DreamGrammarParser.VariableDeclarationAssignmentContext context)
         {
-            string variableName = contextNode.variable().GetText();
+            var binaryExpression = new GenerateBinaryExpression();
+
+            binaryExpression.Walk(context)
+                .PostWalk()
+                .PrintPostFix()
+                .Eval();
+
+            statementSyntax = binaryExpression.GetLocalDeclarationStatement();
+
+            return binaryExpression.GetLocalDeclarationStatementSyntax();
+        }
+
+        public override CSharpSyntaxNode VisitCombinedExpressions([NotNull] DreamGrammarParser.CombinedExpressionsContext context)
+        {
+            var binaryExpression = new GenerateBinaryExpression();
+
+            binaryExpression.Walk(context)
+                .PostWalk()
+                .PrintPostFix()
+                .Eval();
+
+            return binaryExpression.GetLocalDeclarationStatementSyntax();
+        }
+
+        public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DreamGrammarParser.VariableDeclarationExpressionContext context)
+        {
+            string variableName = context.variableDeclarationAssignment().variable().GetText();
 
             var binaryExpression = new GenerateBinaryExpression();
 
-            binaryExpression.Walk( new GenerateBinaryExpression.ContextExpressionUnion()
-            {
-                context = contextNode,
-                terminal = null,
-                syntax = null
-            })
-            .PostWalk()
-            .PrintPostFix()
-            .Eval();
+            binaryExpression.Walk(context)
+                .PostWalk()
+                .PrintPostFix()
+                .Eval();
 
             return binaryExpression.GetLocalDeclarationStatementSyntax();
-  
+
         }
 
         public override CSharpSyntaxNode VisitAssignmentOperator([NotNull] DreamGrammarParser.AssignmentOperatorContext context)
@@ -302,11 +323,8 @@ namespace DreamCompiler.Visitors
             return SyntaxFactory.Token(SyntaxKind.ErrorKeyword);
         }
 
-        public override CSharpSyntaxNode VisitBinaryExpression([NotNull] DreamGrammarParser.BinaryExpressionContext context)
-        {
-            return GenerateBinaryExpression.CreateBinaryExpression(context, this);
-        }
 
+        /*
         public override CSharpSyntaxNode VisitDecimalValue([NotNull] DreamGrammarParser.DecimalValueContext context)
         {
             try
@@ -318,6 +336,7 @@ namespace DreamCompiler.Visitors
                 throw ex;
             }
         }
+        */
 
         enum NumberValueEnum
         {
@@ -367,7 +386,7 @@ namespace DreamCompiler.Visitors
 
         public override CSharpSyntaxNode VisitLiteral([NotNull] DreamGrammarParser.LiteralContext context)
         {
-            var literal =  SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(context.GetText()));
+            var literal = SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(context.GetText()));
             return literal;
         }
 
