@@ -257,47 +257,26 @@ namespace DreamCompiler.Visitors
                 children.Add(tree.GetChild(i));
             }
 
+            HashSet<int> t = new HashSet<int>();
+            t.Add(2);
+
             return children;
         }
-
-        LocalDeclarationStatementSyntax statementSyntax;
-
-        public override CSharpSyntaxNode VisitVariableDeclarationAssignment([NotNull] DreamGrammarParser.VariableDeclarationAssignmentContext context)
+        public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DreamGrammarParser.VariableDeclarationExpressionContext contextNode)
         {
-            var binaryExpression = new GenerateBinaryExpression();
-
-            binaryExpression.Walk(context)
-                .PostWalk()
-                .PrintPostFix()
-                .Eval();
-
-            statementSyntax = binaryExpression.GetLocalDeclarationStatement();
-
-            return binaryExpression.GetLocalDeclarationStatementSyntax();
-        }
-
-        public override CSharpSyntaxNode VisitCombinedExpressions([NotNull] DreamGrammarParser.CombinedExpressionsContext context)
-        {
-            var binaryExpression = new GenerateBinaryExpression();
-
-            binaryExpression.Walk(context)
-                .PostWalk()
-                .PrintPostFix()
-                .Eval();
-
-            return binaryExpression.GetLocalDeclarationStatementSyntax();
-        }
-
-        public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DreamGrammarParser.VariableDeclarationExpressionContext context)
-        {
-            string variableName = context.variableDeclarationAssignment().variable().GetText();
+            string variableName = contextNode.variable().GetText();
 
             var binaryExpression = new GenerateBinaryExpression();
 
-            binaryExpression.Walk(context)
-                .PostWalk()
-                .PrintPostFix()
-                .Eval();
+            binaryExpression.Walk( new GenerateBinaryExpression.ContextExpressionUnion()
+            {
+                context = contextNode,
+                terminal = null,
+                syntax = null
+            })
+            .PostWalk()
+            .PrintPostFix()
+            .Eval();
 
             return binaryExpression.GetLocalDeclarationStatementSyntax();
   
@@ -323,8 +302,11 @@ namespace DreamCompiler.Visitors
             return SyntaxFactory.Token(SyntaxKind.ErrorKeyword);
         }
 
+        public override CSharpSyntaxNode VisitBinaryExpression([NotNull] DreamGrammarParser.BinaryExpressionContext context)
+        {
+            return GenerateBinaryExpression.CreateBinaryExpression(context, this);
+        }
 
-        /*
         public override CSharpSyntaxNode VisitDecimalValue([NotNull] DreamGrammarParser.DecimalValueContext context)
         {
             try
@@ -336,7 +318,6 @@ namespace DreamCompiler.Visitors
                 throw ex;
             }
         }
-        */
 
         enum NumberValueEnum
         {
