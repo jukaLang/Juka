@@ -47,7 +47,11 @@ namespace DreamCompiler.RoslynCompile
                 {
                     WalkChildren(node.children);
                     if (node is DreamGrammarParser.CombinedExpressionsContext ||
-                        node is DreamGrammarParser.VariableDeclarationAssignmentContext)
+                        node is DreamGrammarParser.VariableDeclarationAssignmentContext ||
+                        node is DreamGrammarParser.BinaryOpAndDoubleExpressionContext ||
+                        node is DreamGrammarParser.BinaryOpAndSingleExpressionContext ||
+                        node is DreamGrammarParser.BinaryOperatorContext)
+
                     {
                         return this;
                     }
@@ -283,6 +287,11 @@ namespace DreamCompiler.RoslynCompile
             {
                 throw new Exception("Invalid variable declaration");
             }
+        }
+
+        internal LocalDeclarationStatementSyntax GetLocalDeclarationStatement()
+        {
+            return statementSyntax;
         }
 
         private SyntaxToken CreateNumericLiteral(ParserRuleContext context)

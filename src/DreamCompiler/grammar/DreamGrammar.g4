@@ -27,7 +27,6 @@ semiColon
 
 expression
 	: variableDeclarationAssignment endLine
-	| fooExpression endLine
     | ifExpr
     | whileExpression
     | doWhileExpr
@@ -313,10 +312,22 @@ variableExpressions
  ; 
 
   combinedExpressions
- : singleExpression
- | singleExpression (binaryOperator singleExpression)+
- | singleExpression (binaryOperator (singleExpression binaryOperator singleExpression))+
+ : (leftParen)* singleExpression (rightParen)*
+ | (leftParen)* singleExpression (binaryOpAndSingleExpression)+ (rightParen)*
+ | (leftParen)* singleExpression (binaryOperator binaryOpAndDoubleExpression)+ (rightParen)*
+ | (binaryOpAndDoubleExpression)+ (binaryOpAndSingleExpression)*
+ | (binaryOpAndDoubleExpression)+ (binaryOperator binaryOpAndDoubleExpression)?
  ;
+
+ binaryOpAndSingleExpression
+ : (leftParen)* binaryOperator singleExpression (rightParen)*
+ ;
+
+ binaryOpAndDoubleExpression
+ : (leftParen)* singleExpression binaryOpAndSingleExpression (rightParen)*
+ ;
+
+
 
 
 singleExpression
@@ -327,32 +338,6 @@ singleExpression
  | STRING                                                                   # StringValue
  | variableDeclarationAssignment											# VariableDeclarationExpression
  ;
-
- fooExpression
-	: variable equalsign comboBarExp
-	;
-
-comboBarExp
-	: barExpression (singleBarExpression)* {System.Diagnostics.Trace.WriteLine("foo");}
-	| barExpression (doubleBarExpression)*
-	;
-
-doubleBarExpression
-	: binaryOperator barExpression
-	;
-
-barExpression
-	: (types) binaryOperator (types)
-	;
-
-singleBarExpression
-	: binaryOperator types
-	;
-
-simpleBar
-	: types
-	;
-
 
 evaluatableExpression : singleExpression                               # Evaluatable ;
 

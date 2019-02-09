@@ -130,6 +130,21 @@ namespace DreamUnitTest
             Assert.IsNotNull(node);
         }
 
+        [TestMethod]
+        public void TestMultiplyParenthisizedExpression()
+        {
+            String binaryExpression =
+                @"function main() = { 
+                    int x = (2 + 3)+ 1 * 3; 
+                    printLine(x);
+                }";
+
+            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(binaryExpression);
+            MemoryStream stream = new MemoryStream(byteArray);
+
+            var node = new Compiler().Go("addBinaryexpression", stream);
+            Assert.IsNotNull(node);
+        }
 
         [TestMethod]
         public void TestMultiplyBinaryExpression()

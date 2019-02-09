@@ -260,6 +260,8 @@ namespace DreamCompiler.Visitors
             return children;
         }
 
+        LocalDeclarationStatementSyntax statementSyntax;
+
         public override CSharpSyntaxNode VisitVariableDeclarationAssignment([NotNull] DreamGrammarParser.VariableDeclarationAssignmentContext context)
         {
             var binaryExpression = new GenerateBinaryExpression();
@@ -268,6 +270,8 @@ namespace DreamCompiler.Visitors
                 .PostWalk()
                 .PrintPostFix()
                 .Eval();
+
+            statementSyntax = binaryExpression.GetLocalDeclarationStatement();
 
             return binaryExpression.GetLocalDeclarationStatementSyntax();
         }

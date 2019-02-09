@@ -1,4 +1,4 @@
 function main() = {
-	int xyz = 4+3*2;
+	int xyz = (2 + 3) * (1 + 4); 
 	printLine(xyz);
 }
