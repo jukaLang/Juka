@@ -27,7 +27,7 @@ namespace DreamCompiler.RoslynCompile
             return null;
         }
 
-        internal GenerateIfStatement Walk(ParserRuleContext node, DreamRoslynVisitor visitor)
+        internal IfStatementSyntax Walk(ParserRuleContext node, DreamRoslynVisitor visitor)
         {
             int count = node.ChildCount - 2;
 
@@ -45,7 +45,7 @@ namespace DreamCompiler.RoslynCompile
             var ifStatement = SyntaxFactory.IfStatement(expression, statementSyntax);
             //SyntaxFactory.FieldDeclaration(SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxTriviaList.Create()))
 
-            return this;
+            return ifStatement;
         }
     }
 }

@@ -306,9 +306,7 @@ namespace DreamCompiler.Visitors
         public override CSharpSyntaxNode VisitIfExpr([NotNull] DreamGrammarParser.IfExprContext context)
         {
             var ifExpression = new GenerateIfStatement();
-            ifExpression.Walk(context, this);
-
-            return base.VisitIfExpr(context);
+            return ifExpression.Walk(context, this);
         }
 
         public override CSharpSyntaxNode VisitAssignmentOperator([NotNull] DreamGrammarParser.AssignmentOperatorContext context)
