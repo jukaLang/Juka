@@ -23,21 +23,32 @@ namespace DreamCompiler.RoslynCompile
         private const string LeftParen = "(";
         private const string RightParen = ")";
         private const int DefaultNumberOfChildren = 1;
+        private bool isDeclaration = false;
 
         static internal CSharpSyntaxNode CreateBinaryExpression(ParserRuleContext context, DreamRoslynVisitor visitor)
         {
             return null;
         }
 
-        internal LocalDeclarationStatementSyntax GetLocalDeclarationStatementSyntax()
+        internal CSharpSyntaxNode GetLocalDeclarationStatementSyntax()
         {
-            if (statementSyntax == null)
+            if (isDeclaration)
             {
-                throw new Exception("Statement not created");
+                if (statementSyntax == null)
+                {
+                    throw new Exception("Statement not created");
+                }
+                return statementSyntax;
             }
-            return statementSyntax;
+            else if (unionStack.Count >= 1)
+            {
+                return unionStack.Pop().syntax as BinaryExpressionSyntax;
+            }
+            else
+            {
+                throw new Exception("No binary expression on stack");
+            }
         }
-
 
         internal GenerateBinaryExpression Walk(ParserRuleContext node)
         {
@@ -187,13 +198,16 @@ namespace DreamCompiler.RoslynCompile
                     if (postfix.Count > 0 && postfix[0] is DreamGrammarParser.VariableContext)
                     {
                         CreateVariableDeclarator(postfix[0], (BinaryExpressionSyntax)unionStack.Pop().syntax);
+                        if (statementSyntax != null)
+                        {
+                            isDeclaration = true;
+                        }
+                        break;
                     }
                     else
                     {
                         throw new Exception("No variable to assign expression");
                     }
-
-                    continue;
                 }
                 else if (token is DreamGrammarParser.AddSubtractOpContext ||
                         token is DreamGrammarParser.MultiplyDivideOpContext)
@@ -225,6 +239,12 @@ namespace DreamCompiler.RoslynCompile
                     CheckContextType(token, unionStack);
                     continue;
                 }
+            }
+
+            if (postfix.Count >= 2)
+            {
+                //Assume that there is a binary expression but not an assignment.
+                isDeclaration = false;
             }
         }
 
@@ -282,7 +302,7 @@ namespace DreamCompiler.RoslynCompile
                          SyntaxFactory.EqualsValueClause(
                            binaryExpression)))));
             }
-
+            
             if (statementSyntax == null)
             {
                 throw new Exception("Invalid variable declaration");

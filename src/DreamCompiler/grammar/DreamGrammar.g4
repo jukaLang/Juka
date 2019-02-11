@@ -247,7 +247,7 @@ keywords
     ;
 
 ifExpr
-    : If '(' ( singleExpression )+ ')' '{' ( statement )* '}'
+    : If '(' ( combinedExpressions )+ ')' '{' ( statement )* '}'
     ;
 
 

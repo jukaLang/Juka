@@ -188,6 +188,7 @@
     <Compile Include="grammar\DreamGrammarParser.cs" />
     <Compile Include="grammar\DreamGrammarVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoslynCompile\GenerateIfStatement.cs" />
     <Compile Include="RoslynCompile\GenerateStaticMethod.cs" />
     <Compile Include="RoslynCompile\RoslynCompile.cs" />
     <Compile Include="Tokens\Token.cs" />
