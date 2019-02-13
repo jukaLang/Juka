@@ -247,16 +247,16 @@ keywords
     ;
 
 ifExpr
-    : If '(' ( combinedExpressions )+ ')' '{' ( statement )* '}'
+    : If '(' ( combinedComparisonExpressions )+ ')' '{' ( statement )* '}'
     ;
 
 
 whileExpression
-    : While '(' ( evaluatableExpression )+ ')' '{' ( statement )* '}'
+    : While '(' ( combinedComparisonExpressions )+ ')' '{' ( statement )* '}'
     ;
 
 doWhileExpr
-    : Do '{' ( statement )* '}' While '(' ( singleExpression )+ ')'
+    : Do '{' ( statement )* '}' While '(' ( combinedComparisonExpressions )+ ')'
     ;
 
 
@@ -328,6 +328,22 @@ variableExpressions
  ;
 
 
+ combinedComparisonExpressions
+ : (leftParen)* singleExpression (rightParen)*
+ | (leftParen)* singleExpression (binaryOpAndSingleComparisonExpression)+ (rightParen)*
+ | (leftParen)* singleExpression (comparisonOperator binaryOpAndDoubleComparisonExpression)+ (rightParen)*
+ | (binaryOpAndDoubleComparisonExpression)+ (binaryOpAndSingleComparisonExpression)*
+ | (binaryOpAndDoubleComparisonExpression)+ (binaryOperator binaryOpAndDoubleComparisonExpression)?
+ ;
+
+ binaryOpAndDoubleComparisonExpression
+ : (leftParen)* singleExpression binaryOpAndSingleComparisonExpression (rightParen)*
+ ;
+
+  binaryOpAndSingleComparisonExpression
+ : (leftParen)* comparisonOperator singleExpression (rightParen)*
+ ;
+
 
 
 singleExpression
@@ -347,23 +363,8 @@ evaluatableExpression : singleExpression                               # Evaluat
  	;
 
  reassignmentExpression
-     : variable equalsign singleExpression // ( variable | functionCall | primitiveTypes | singleExpression | BinaryExpression | userDefinedTypeVariableReference | userDefinedTypeFunctionReference )
-     ;
-/*
-
-*/
-/*
- | singleExpression
-    ( lessthan |
-      greaterthan |
-      lessthanorequalto |
-      greaterthanorequalto
-    ) singleExpression                                                    # RelationalExpression
-*/
-/*
- | arrayLiteral                                                           # ArrayLiteralExpression
- | objectLiteral                                                          # ObjectLiteralExpression
- */
+     : variable equalsign singleExpression 
+	;
 
 
 assignmentOperator

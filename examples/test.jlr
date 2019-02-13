@@ -1,5 +1,5 @@
 function main() = {
-	if ( 2+3 ) {
+	if ( 2<3 ) {
 		printLine("foo");
 	}
 }
