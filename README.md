@@ -1,4 +1,4 @@
-# Juliar DReAM Programming Language  [![Build status](https://ci.appveyor.com/api/projects/status/x8d6308cuevqm4of?svg=true)](https://ci.appveyor.com/project/TheAndreiM/dream)
+# Juka DReAM Programming Language  [![Build status](https://ci.appveyor.com/api/projects/status/x8d6308cuevqm4of?svg=true)](https://ci.appveyor.com/project/TheAndreiM/dream)
 
 
 <table>
@@ -34,7 +34,7 @@
 </tr>
 </table>
 
-DReAM: A C# port of Juliar Programming Language. 
+DReAM: A C# port of Juka Programming Language. 
 
 DReAM focuses on fast and rapid prototyping as well as native .NET support.
 
@@ -46,7 +46,7 @@ and other IoT devices.
 ## Download
 <strike>Download the latest version at https://ci.appveyor.com/project/TheAndreiM/dream/build/artifacts</strike>
 
-For now, Juliar DReAM should be compiled directly from source code.
+For now, Juka DReAM should be compiled directly from source code.
 
 ## Folder Structure
 
