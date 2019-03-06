@@ -126,7 +126,7 @@ namespace DreamUnitTest
             byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(binaryExpression);
             MemoryStream stream = new MemoryStream(byteArray);
 
-            var node = new Compiler().Go("addBinaryexpression", stream);
+            var node = new Compiler().Go("TestAddBinaryExpression", stream);
             Assert.IsNotNull(node);
         }
 
@@ -142,7 +142,7 @@ namespace DreamUnitTest
             byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(binaryExpression);
             MemoryStream stream = new MemoryStream(byteArray);
 
-            var node = new Compiler().Go("addBinaryexpression", stream);
+            var node = new Compiler().Go("TestMultiplyParenthisizedExpression", stream);
             Assert.IsNotNull(node);
         }
 
@@ -158,7 +158,7 @@ namespace DreamUnitTest
             byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(binaryExpression);
             MemoryStream stream = new MemoryStream(byteArray);
 
-            var node = new Compiler().Go("addBinaryexpression", stream);
+            var node = new Compiler().Go("TestMultiplyBinaryExpression", stream);
             Assert.IsNotNull(node);
         }
 

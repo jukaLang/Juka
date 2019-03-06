@@ -1,4 +1,5 @@
 function main() = {
-	int xyz = (2 + 3) * (1 + 4); 
-	printLine(xyz);
+	if ( 2<3 ) {
+		printLine("foo");
+	}
 }
