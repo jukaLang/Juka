@@ -198,6 +198,7 @@ lessthan            : '<'  ;
 greaterthan         : '>'  ;
 lessthanorequalto   : '<=' ;
 greaterthanorequalto: '>=' ;
+spaceshipOperator	: '<=>';
 booleanAndOperator  : '&&' ;
 booleanOrOperator   : '||' ;
 notOperator         : '!'  ;
