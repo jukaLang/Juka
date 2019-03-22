@@ -387,7 +387,7 @@ namespace DreamCompiler.Visitors
 
         public override CSharpSyntaxNode VisitIntValue([NotNull] DreamGrammarParser.IntValueContext context)
         {
-            return SyntaxFactory.LiteralExpression(SyntaxKind.DecimalKeyword, SyntaxFactory.Literal(int.Parse(context.GetText())));
+            return SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(int.Parse(context.GetText())));
         }
 
         public override CSharpSyntaxNode VisitLiteral([NotNull] DreamGrammarParser.LiteralContext context)

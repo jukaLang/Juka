@@ -25,7 +25,7 @@ namespace DreamCompiler.RoslynCompile
         private const int DefaultNumberOfChildren = 1;
         private bool isDeclaration = false;
 
-        static internal CSharpSyntaxNode CreateBinaryExpression(ParserRuleContext context, DreamRoslynVisitor visitor)
+        internal static CSharpSyntaxNode CreateBinaryExpression(ParserRuleContext context, DreamRoslynVisitor visitor)
         {
             return null;
         }

@@ -39,13 +39,24 @@ namespace DreamCompiler.RoslynCompile
 
             for (int i = 2; i < count; i++)
             {
-                expression = node.children[i].Accept(visitor) as ExpressionSyntax;
+                var binaryExpression = new GenerateBinaryExpression();
+                binaryExpression.Walk(node.children[i] as ParserRuleContext)
+                    .PostWalk()
+                    .PrintPostFix()
+                    .Eval();
+
+                statementSyntax = binaryExpression.GetLocalDeclarationStatement();
             }
 
-            var ifStatement = SyntaxFactory.IfStatement(expression, statementSyntax);
-            //SyntaxFactory.FieldDeclaration(SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxTriviaList.Create()))
+            if (statementSyntax != null)
+            {
+                var ifStatement = SyntaxFactory.IfStatement(expression, statementSyntax);
+                //SyntaxFactory.FieldDeclaration(SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxTriviaList.Create()))
 
-            return ifStatement;
+                return ifStatement;
+            }
+
+            throw new Exception("shit broke");
         }
     }
 }
