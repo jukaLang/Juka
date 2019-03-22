@@ -73,7 +73,7 @@ namespace DreamCompiler.RoslynCompile
                     }
                     else if (node is DreamGrammarParser.RightParenContext)
                     {
-                        while(!(operators.Peek() is DreamGrammarParser.LeftParenContext))
+                        while (!(operators.Peek() is DreamGrammarParser.LeftParenContext))
                         {
                             postfix.Add(operators.Pop());
                         }
@@ -110,8 +110,8 @@ namespace DreamCompiler.RoslynCompile
                         return this;
                     }
                     else if (
-                        node is DreamGrammarParser.AddSubtractOpContext || 
-                        node is DreamGrammarParser.MultiplyDivideOpContext )
+                        node is DreamGrammarParser.AddSubtractOpContext ||
+                        node is DreamGrammarParser.MultiplyDivideOpContext)
                     {
                         if (operators.Count == 0)
                         {
@@ -136,7 +136,7 @@ namespace DreamCompiler.RoslynCompile
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -181,7 +181,7 @@ namespace DreamCompiler.RoslynCompile
 
         internal GenerateBinaryExpression PrintPostFix()
         {
-            foreach(var p in postfix)
+            foreach (var p in postfix)
             {
                 Trace.WriteLine(p.GetText());
             }
@@ -215,7 +215,7 @@ namespace DreamCompiler.RoslynCompile
                     string binaryOp = token.GetChild(0).GetText();
 
                     SyntaxKind op = syntaxKindLookup[operaterLookup[binaryOp]];
-                    
+
                     var right = unionStack.Pop().syntax;
                     var left = unionStack.Pop().syntax;
 
@@ -248,7 +248,8 @@ namespace DreamCompiler.RoslynCompile
             }
         }
 
-        private void CheckContextType(ParserRuleContext context, Stack<ContextExpressionUnion> stack) {
+        private void CheckContextType(ParserRuleContext context, Stack<ContextExpressionUnion> stack)
+        {
             if (context != null)
             {
                 if (context is DreamGrammarParser.IntValueContext)
@@ -269,11 +270,11 @@ namespace DreamCompiler.RoslynCompile
                 }
                 else if (context is DreamGrammarParser.VariableContext)
                 {
-                   // CreateVariableDeclarator(context, stack.Pop().syntax as BinaryExpressionSyntax);
+                    // CreateVariableDeclarator(context, stack.Pop().syntax as BinaryExpressionSyntax);
                 }
             }
         }
-        
+
         private LiteralExpressionSyntax CreateNumericLiteralExpression(ParserRuleContext context)
         {
             return SyntaxFactory.LiteralExpression(

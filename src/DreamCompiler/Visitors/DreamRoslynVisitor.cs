@@ -19,7 +19,7 @@ namespace DreamCompiler.Visitors
         {
             List<MethodDeclarationSyntax> methods = new List<MethodDeclarationSyntax>();
 
-            for(int i=0; i < context.ChildCount; i++)
+            for (int i = 0; i < context.ChildCount; i++)
             {
                 if (context.children[i].Accept(this) is MethodDeclarationSyntax m)
                 {
@@ -29,7 +29,7 @@ namespace DreamCompiler.Visitors
 
             /**
              * A name space and a class needs to be defined to hold all of the methods. 
-             */         
+             */
             NamespaceDeclarationSyntax namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName("temporary"))
                 .AddMembers(items: new[] { SyntaxFactory.ClassDeclaration("tempClass")
                 .AddMembers(items: methods.ToArray()) });
@@ -39,7 +39,7 @@ namespace DreamCompiler.Visitors
 
         public override CSharpSyntaxNode VisitFunctionDeclaration([NotNull] DreamGrammarParser.FunctionDeclarationContext context)
         {
-            MethodDeclarationSyntax method = GenerateStaticMethod.CreateStaticMethod( context , this);
+            MethodDeclarationSyntax method = GenerateStaticMethod.CreateStaticMethod(context, this);
             return method;
         }
 
@@ -57,7 +57,7 @@ namespace DreamCompiler.Visitors
 
             var parameters = new List<ArgumentSyntax>();
 
-            for (int i = 2; i < context.ChildCount -1; i++)
+            for (int i = 2; i < context.ChildCount - 1; i++)
             {
                 var param = context.children[i].Accept(this);
                 if (param != null)
@@ -109,7 +109,7 @@ namespace DreamCompiler.Visitors
         private SeparatedSyntaxList<ArgumentSyntax> BuildArgumentList(List<ArgumentSyntax> parameters)
         {
             var list = SyntaxFactory.SeparatedList<ArgumentSyntax>(
-                                new SyntaxNodeOrToken[]{ parameters[0] });
+                                new SyntaxNodeOrToken[] { parameters[0] });
 
             for (int i = 1; i < parameters.Count; i++)
             {
@@ -213,7 +213,7 @@ namespace DreamCompiler.Visitors
 
             return SyntaxFactory.Parameter(paramName).WithType(paramType);
         }
-        
+
         public override CSharpSyntaxNode VisitKeywords([NotNull] DreamGrammarParser.KeywordsContext context)
         {
             String keyword = context.GetText();
@@ -235,7 +235,7 @@ namespace DreamCompiler.Visitors
 
         private List<IParseTree> WalkVariableDeclarationExpression([NotNull] IList<IParseTree> context)
         {
-            foreach(var e in context)
+            foreach (var e in context)
             {
                 var list = new List<IParseTree>();
                 if (e.ChildCount > 1)
@@ -300,7 +300,7 @@ namespace DreamCompiler.Visitors
                 .Eval();
 
             return binaryExpression.GetLocalDeclarationStatementSyntax();
-  
+
         }
 
         public override CSharpSyntaxNode VisitIfExpr([NotNull] DreamGrammarParser.IfExprContext context)
@@ -392,7 +392,7 @@ namespace DreamCompiler.Visitors
 
         public override CSharpSyntaxNode VisitLiteral([NotNull] DreamGrammarParser.LiteralContext context)
         {
-            var literal =  SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(context.GetText()));
+            var literal = SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(context.GetText()));
             return literal;
         }
 
