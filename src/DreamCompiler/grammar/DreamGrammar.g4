@@ -248,7 +248,7 @@ keywords
     ;
 
 ifExpr
-    : If '(' ( combinedComparisonExpressions )+ ')' '{' ( statement )* '}'
+    : If '(' ( binaryExpression )+ ')' '{' ( statement )* '}'
     ;
 
 
@@ -311,6 +311,11 @@ variableExpressions
  variableDeclarationAssignment
  : keywords variable assignmentOperator combinedExpressions
  ; 
+
+
+ binaryExpression
+ : singleExpression binaryOperator singleExpression
+ ;
 
   combinedExpressions
  : (leftParen)* singleExpression (rightParen)*

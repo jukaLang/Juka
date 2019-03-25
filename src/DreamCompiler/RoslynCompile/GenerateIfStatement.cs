@@ -35,28 +35,26 @@ namespace DreamCompiler.RoslynCompile
             var leftParen = node.children[1];
 
             ExpressionSyntax expression = null;
-            StatementSyntax statementSyntax = null;
+            StatementSyntax statementSyntax = SyntaxFactory.Block();
 
             for (int i = 2; i < count; i++)
             {
-                var binaryExpression = new GenerateBinaryExpression();
-                binaryExpression.Walk(node.children[i] as ParserRuleContext)
-                    .PostWalk()
-                    .PrintPostFix()
-                    .Eval();
+                if (node.children[i] is DreamGrammarParser.BinaryExpressionContext)
+                {
+                    var binaryExpression = new GenerateBinaryExpression();
+                    binaryExpression.Walk(node.children[i] as ParserRuleContext)
+                        .PostWalk()
+                        .Eval(true);
 
-                statementSyntax = binaryExpression.GetLocalDeclarationStatement();
+                    expression = binaryExpression.BinaryExpressionSyntax();
+                }
             }
 
-            if (statementSyntax != null)
-            {
-                var ifStatement = SyntaxFactory.IfStatement(expression, statementSyntax);
-                //SyntaxFactory.FieldDeclaration(SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxTriviaList.Create()))
 
-                return ifStatement;
-            }
+            var ifStatement = SyntaxFactory.IfStatement(expression, statementSyntax);
+            //SyntaxFactory.FieldDeclaration(SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxTriviaList.Create()))
 
-            throw new Exception("shit broke");
+            return ifStatement;
         }
     }
 }
