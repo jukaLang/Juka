@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("DreamCompiler")]
-[assembly: AssemblyDescription("Core compiler for Juliar Dream Programming Language")]
+[assembly: AssemblyDescription("Core compiler for Juka Programming Language")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("JuliarLang")]
+[assembly: AssemblyCompany("Juka")]
 [assembly: AssemblyProduct("DreamCompiler")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
-[assembly: AssemblyTrademark("Juliar")]
+[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyTrademark("Juka")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(false)]
 

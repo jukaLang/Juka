@@ -220,7 +220,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>java -jar $(SolutionDir)DreamCompiler\jars\antlr-4.7.1-complete.jar -Dlanguage=CSharp $(SolutionDir)DreamCompiler\grammar\DreamGrammar.g4 -no-listener -visitor -package DreamCompiler.Grammar
+    <PreBuildEvent>java -jar $(ProjectDir)jars\antlr-4.7.1-complete.jar -Dlanguage=CSharp $(ProjectDir)grammar\DreamGrammar.g4 -no-listener -visitor -package DreamCompiler.Grammar
 </PreBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

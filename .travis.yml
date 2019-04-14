@@ -1,0 +1,6 @@
+language: csharp
+solution: src/DReAM.sln
+install:
+  - nuget restore src/DReAM.sln
+script:
+  - xbuild /p:Configuration=Release src/DReAM.sln /p:TargetFrameworkVersion="v4.6.1"

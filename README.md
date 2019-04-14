@@ -1,11 +1,13 @@
 # Dream Juka - Dream Programming Language 
 
-Dream Juka is the core component of Juka platform. It can compile programs into executables as well as compile itself into a "Standard .NET dll".
+[![Build Status](https://travis-ci.com/jukaLang/Juka.svg?branch=master)](https://travis-ci.com/jukaLang/Juka)
+
+Dream Juka is the core component of Juka platform. It can compile programs into executables as well as compile itself into a .NET Standard .dll which can be used in other projects.
 
 Juka library is used for running Juka server.
 
 ## Running Juka
-Juka can be ran as a server. Check out https://github.com/jukaLang/juka
+Juka can be ran on a server. Check out https://github.com/jukaLang/juka
 
 ## Contributing
 
@@ -18,7 +20,7 @@ It is currently used to compile our Xamarin Forms application.
 - Provides you examples to get you started on DReAM
 
 ### Visual Studio/Development Requirements
-##### Make sure you have .NET installed in Visual Studio 2017
+##### Make sure you have .NET installed in Visual Studio 2019
 
 The following packages that are required:
 

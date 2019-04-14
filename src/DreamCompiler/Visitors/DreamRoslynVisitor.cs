@@ -11,7 +11,6 @@ namespace DreamCompiler.Visitors
     using Microsoft.CodeAnalysis;
     using Antlr4.Runtime.Misc;
     using Antlr4.Runtime.Tree;
-    using System.Diagnostics.Tracing;
 
     class DreamRoslynVisitor : DreamGrammarBaseVisitor<CSharpSyntaxNode>
     {
