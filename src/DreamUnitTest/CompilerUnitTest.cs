@@ -5,7 +5,9 @@ using System.Dynamic;
 using System.IO;
 using DreamCompiler;
 using System.Linq.Expressions;
-
+using System.ServiceProcess;
+using System.Threading;
+using DreamCompiler.Scanner;
 
 namespace DreamUnitTest
 {
@@ -36,6 +38,8 @@ namespace DreamUnitTest
             CompileRoslyn.Parse(tree);
 
         }
+
+
 
         [TestMethod]
         public void TestEmptyMain()
@@ -95,9 +99,23 @@ namespace DreamUnitTest
                 {
                     using (var stream = new FileStream(@"..\..\..\..\examples\test.jlr", FileMode.Open))
                     {
-                       CSharpSyntaxNode node = Compile(stream); 
+                        CSharpSyntaxNode node = Compile(stream);
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [TestMethod]
+        public void TestScanner()
+        {
+            try
+            {
+                Scanner scanner = new Scanner(@"..\..\..\..\examples\test.jlr");
+                var t = scanner.GetNextToken();
             }
             catch (Exception ex)
             {
