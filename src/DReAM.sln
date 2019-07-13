@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DreamUnitTest", "DreamUnitTest\DreamUnitTest.csproj", "{340210D3-8339-4AB0-861E-F9E3493CCB80}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DreamCompiler", "DreamCompiler\DreamCompiler.csproj", "{C6C15D26-01CC-4877-9D4F-5EE89E1FE5EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Juka", "Juka\Juka.csproj", "{AE8A7059-8F21-41B2-BD8F-36D58E1F8330}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{C6C15D26-01CC-4877-9D4F-5EE89E1FE5EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C6C15D26-01CC-4877-9D4F-5EE89E1FE5EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C6C15D26-01CC-4877-9D4F-5EE89E1FE5EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE8A7059-8F21-41B2-BD8F-36D58E1F8330}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE8A7059-8F21-41B2-BD8F-36D58E1F8330}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE8A7059-8F21-41B2-BD8F-36D58E1F8330}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE8A7059-8F21-41B2-BD8F-36D58E1F8330}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
