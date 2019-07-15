@@ -13,6 +13,7 @@ namespace DreamUnitTest
 {
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis;
+    using DReAMCompiler.Lexer;
 
     [TestClass]
     public class CompilerUnitTest
@@ -114,8 +115,9 @@ namespace DreamUnitTest
         {
             try
             {
-                Scanner scanner = new Scanner(@"..\..\..\..\examples\test.jlr");
-                var t = scanner.GetNextToken();
+                LexicalAnalysis lexicalAnalysis = new LexicalAnalysis(new Scanner(@"..\..\..\..\examples\test.jlr"));
+                lexicalAnalysis.Analyze();
+
             }
             catch (Exception ex)
             {

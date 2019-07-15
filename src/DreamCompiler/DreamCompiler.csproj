@@ -187,6 +187,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Error\ErrorListener.cs" />
+    <Compile Include="Lexer\Keywords.cs" />
+    <Compile Include="Lexer\LexicalAnalysis.cs" />
     <Compile Include="RoslynCompile\GenerateBinaryExpression.cs" />
     <Compile Include="Compiler.cs" />
     <Compile Include="Constants\Constants.cs" />
