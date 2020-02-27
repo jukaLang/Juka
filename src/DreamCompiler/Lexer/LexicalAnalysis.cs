@@ -29,59 +29,97 @@ namespace DReAMCompiler.Lexer
             while (true)
             {
                 IToken token = scanner.ReadToken();
-                if (token.TokenType() == TokenType.EofType)
+                if (token.TokenType() == TokenType.Eof)
                 {
                     return;
                 }
 
-                if (token.TokenType() == TokenType.IdentifierType)
+                switch (token.TokenType())
                 {
-                    VisitIdentifier(token);
-                }
+                    case TokenType.Character:
+                    {
+                        GetIdentifier(token);
+                        break;
+                    }
 
-                Trace.Write(token.ToString());
+                    case TokenType.NumberDigit:
+                    {
+                        GetNumber(token);
+                        break;
+                    }
+
+                    case TokenType.Symbol:
+                    {
+                        GetSymbol(token);
+                        break;
+                    }
+                }
             }
         }
 
 
-        private IToken GetIdentifier(IToken token)
+        private Lexem GetIdentifier(IToken token)
         {
-            if (token.TokenType() == TokenType.WhiteSpaceType)
+            if (token.TokenType() == TokenType.WhiteSpace)
             {
-                while (token.TokenType() == TokenType.WhiteSpaceType)
+                while (token.TokenType() == TokenType.WhiteSpace)
                 {
                     token = scanner.ReadToken();
                 }
             }
 
-            StringBuilder identifier = new StringBuilder();
-            identifier.Append(token.ToString());
-
-            IToken next;
+            Lexem identifier = new Lexem(LexemType.Identifier);
+            identifier.AddToken(token);
 
             while (true)
             {
-                next = this.scanner.ReadToken();
-                if (next.TokenType() == TokenType.SymbolType || next.TokenType() == TokenType.WhiteSpaceType || next.TokenType() == TokenType.PunctuationType)
+                var next = this.scanner.ReadToken();
+                if (next.TokenType() == TokenType.Symbol || next.TokenType() == TokenType.WhiteSpace)
                 {
                     this.scanner.PutTokenBack();
                     break;
                 }
 
-                identifier.Append(next.ToString());
+                identifier.AddToken(next);
             }
 
-            return new Identifier() { tokenIdentifierValue = identifier.ToString() };
+            identifier.PrintLexem("Identifier");
+
+            return identifier;
+        }
+
+
+        private Lexem GetNumber(IToken token)
+        {
+            Lexem number = new Lexem(LexemType.Number);
+            number.AddToken(token);
+
+            while(true)
+            {
+                var next = this.scanner.ReadToken();
+                if (next.TokenType() == TokenType.NumberDigit)
+                {
+                    number.AddToken(token);
+                }
+                else
+                {
+                    this.scanner.PutTokenBack();
+                    break;
+                }
+            }
+
+            number.PrintLexem("Number");
+            return number;
         }
 
         private IToken GetPunctuation(IToken token)
         {
-            while (token.TokenType() == TokenType.WhiteSpaceType)
+            while (token.TokenType() == TokenType.WhiteSpace)
             {
                 token = scanner.ReadToken();
             }
 
-            if (token.TokenType() == TokenType.PunctuationType)
+            if (token.TokenType() == TokenType.Symbol)
             {
                 return token;
             }
@@ -89,25 +127,69 @@ namespace DReAMCompiler.Lexer
             throw new Exception("No Punctuation found;");
         }
 
-        private IToken GetSymbol(IToken token)
+        private Lexem GetSymbol(IToken token)
         {
-            while (token.TokenType() == TokenType.WhiteSpaceType)
+            Lexem symbol = new Lexem(LexemType.Number);
+
+
+            var currentSymbol = token.GetTokenData();
+            if (currentSymbol == '(' ||
+                currentSymbol == ')' ||
+                currentSymbol == '"' ||
+                currentSymbol == '{' ||
+                currentSymbol == '}'
+                )
             {
-                token = scanner.ReadToken();
+                symbol.AddToken(token);
+                symbol.PrintLexem("Symbol");
+                return symbol;
             }
 
-            if (token.TokenType() == TokenType.SymbolType)
+
+            if (currentSymbol == '=')
             {
-                return token;
+                symbol.AddToken(token);
+                while (true)
+                {
+                    var next = this.scanner.ReadToken();
+                    if (next.GetTokenData() == '=')
+                    {
+                        symbol.AddToken(next);
+                    }
+                    else
+                    {
+                        this.scanner.PutTokenBack();
+                        break;
+                    }
+                }
+            }
+            else if (currentSymbol == '<')
+            {
+                symbol.AddToken(token);
+                while (true)
+                {
+                    var next = this.scanner.ReadToken();
+                    if (next.GetTokenData() == '=')
+                    {
+                        symbol.AddToken(next);
+                    }
+                    else
+                    {
+                        this.scanner.PutTokenBack();
+                        break;
+                    }
+                }
             }
 
-            throw new Exception("No symbol found;");
+            symbol.PrintLexem("Symbol");
+            return symbol;
         }
 
         private void VisitIdentifier(IToken token)
         {
-            IToken tokenIdentifier = GetIdentifier(token);
+            Lexem tokenIdentifier = GetIdentifier(token);
 
+            /*
             if (KeyWords.keyValuePairs.TryGetValue(tokenIdentifier.ToString(), out KeyWords.KeyWordsEnum keyWordsEnum))
             {
                 if (keywordActions.ContainsKey(keyWordsEnum))
@@ -115,11 +197,12 @@ namespace DReAMCompiler.Lexer
                     keywordActions[keyWordsEnum](tokenIdentifier);
                 }
             }
+            */
         }
 
         private void MainAction(IToken token)
         {
-            if (token.TokenType() != TokenType.IdentifierType)
+            if (token.TokenType() != TokenType.Character)
             {
                 throw new Exception("no function name");
             }
@@ -129,7 +212,7 @@ namespace DReAMCompiler.Lexer
                 if (token.ToString().Equals(KeyWords.FUNCTION))
                 {
 
-                    IToken functionName = GetIdentifier(scanner.ReadToken());
+                    Lexem functionName = GetIdentifier(scanner.ReadToken());
                     IToken leftParen = GetPunctuation(scanner.ReadToken());
 
                     if (!leftParen.ToString().Equals(KeyWords.LPAREN))
@@ -146,7 +229,7 @@ namespace DReAMCompiler.Lexer
                         throw new Exception();
                     }
 
-                    IToken isEqualSign = GetSymbol(scanner.ReadToken());
+                    Lexem isEqualSign = GetSymbol(scanner.ReadToken());
                     IToken isLeftBracket = GetPunctuation(scanner.ReadToken());
                 }
             }
