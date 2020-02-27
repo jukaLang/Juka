@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +14,8 @@ namespace DReAMCompiler.Lexer
     {
         private Scanner scanner;
         public Dictionary<KeyWords.KeyWordsEnum, Action<IToken>> keywordActions = new Dictionary<KeyWords.KeyWordsEnum, Action<IToken>>();
+        
+        
         public LexicalAnalysis(Scanner scanner)
         {
             this.scanner = scanner;
@@ -24,37 +27,46 @@ namespace DReAMCompiler.Lexer
             };
         }
 
-        public void Analyze()
+        public List<Lexem> Analyze()
         {
+            List<Lexem> lexemsList = new List<Lexem>();
             while (true)
             {
                 IToken token = scanner.ReadToken();
                 if (token.TokenType() == TokenType.Eof)
                 {
-                    return;
+                    break;
                 }
 
                 switch (token.TokenType())
                 {
                     case TokenType.Character:
                     {
-                        GetIdentifier(token);
+                        lexemsList.Add(GetIdentifier(token));
                         break;
                     }
 
                     case TokenType.NumberDigit:
                     {
-                        GetNumber(token);
+                        lexemsList.Add(GetNumber(token));
                         break;
                     }
 
                     case TokenType.Symbol:
                     {
-                        GetSymbol(token);
+                        lexemsList.Add(GetSymbol(token));
+                        break;
+                    }
+
+                    case TokenType.WhiteSpace:
+                    {
+                        lexemsList.Add(GetWhiteSpace(token));
                         break;
                     }
                 }
             }
+
+            return lexemsList;
         }
 
 
@@ -131,13 +143,13 @@ namespace DReAMCompiler.Lexer
         {
             Lexem symbol = new Lexem(LexemType.Number);
 
-
             var currentSymbol = token.GetTokenData();
             if (currentSymbol == '(' ||
                 currentSymbol == ')' ||
                 currentSymbol == '"' ||
                 currentSymbol == '{' ||
-                currentSymbol == '}'
+                currentSymbol == '}' ||
+                currentSymbol == ';'
                 )
             {
                 symbol.AddToken(token);
@@ -183,6 +195,22 @@ namespace DReAMCompiler.Lexer
 
             symbol.PrintLexem("Symbol");
             return symbol;
+        }
+
+        private Lexem GetWhiteSpace(IToken token)
+        {
+            Lexem whiteSpace = new Lexem(LexemType.WhiteSpace);
+
+            if (token.GetTokenData().Equals('\n') ||
+                token.GetTokenData().Equals('\r') ||
+                token.GetTokenData().Equals('\t') ||
+                token.GetTokenData().Equals(' '))
+            {
+                whiteSpace.AddToken(token);
+                whiteSpace.PrintLexem("WhiteSpace");
+            }
+
+            return whiteSpace;
         }
 
         private void VisitIdentifier(IToken token)

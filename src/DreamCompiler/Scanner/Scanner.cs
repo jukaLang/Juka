@@ -31,6 +31,20 @@ namespace DreamCompiler.Scanner
             }
         }
 
+        public Scanner(MemoryStream memoryStream)
+        {
+            int memoryStreamLength = (int)memoryStream.Length;
+            
+            fileData = new byte[memoryStreamLength];
+            
+            int dataRead = memoryStream.Read(fileData, 0, memoryStreamLength);
+
+            if (dataRead != memoryStreamLength)
+            {
+                throw new Exception("bad memory read");
+            }
+        }
+
 
         internal IToken ReadToken()
         {
@@ -116,6 +130,7 @@ namespace DreamCompiler.Scanner
     {
         Identifier,
         Number,
+        WhiteSpace,
     }
 
     public class Lexem

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
 using System.Dynamic;
@@ -6,6 +7,7 @@ using System.IO;
 using DreamCompiler;
 using System.Linq.Expressions;
 using System.ServiceProcess;
+using System.Text;
 using System.Threading;
 using DreamCompiler.Scanner;
 
@@ -19,6 +21,45 @@ namespace DreamUnitTest
     public class CompilerUnitTest
     {
         [TestMethod]
+        public void TestScanner()
+        {
+            List<string> tokenArray = new List<string>()
+            {
+                "function", "main", "(", ")", "=", "{", "if", "(", "2", "<","3", ")" , "{" ,"printLine", "(","\"","foo","\"", ")", ";", "}", "}"
+            };
+
+            LexicalAnalysis lexicalAnalysis = new LexicalAnalysis(new Scanner(@"..\..\..\..\examples\test.jlr"));
+            var lexemList = lexicalAnalysis.Analyze();
+
+            Assert.AreEqual(tokenArray.Count, lexemList.Count, "The numbers of tokens are not accurate");
+        }
+
+
+        [TestMethod]
+        public void TestScannerWithMemoryStream()
+        {
+            string program = "function main() = {{\r\n\tif ( 2<3 ) {{\r\n\t\tprintLine(\"foo\");\r\n\t}}\r\n}}\r\n";
+            MemoryStream s = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(program));
+
+            LexicalAnalysis lexicalAnalysis = new LexicalAnalysis(new Scanner(s));
+            var lexemList = lexicalAnalysis.Analyze();
+
+            Assert.AreEqual(s.Length, lexemList.Count, "The numbers of tokens are not accurate");
+        }
+
+        public void TestFullFileCompile()
+        {
+            if (File.Exists(@"..\..\..\..\examples\test.jlr"))
+            {
+                using (var stream = new FileStream(@"..\..\..\..\examples\test.jlr", FileMode.Open))
+                {
+                    CSharpSyntaxNode node = Compile(stream);
+                }
+            }
+        }
+
+
+        //[TestMethod]
         public void TestRoslyn()
         {
 
@@ -40,9 +81,7 @@ namespace DreamUnitTest
 
         }
 
-
-
-        [TestMethod]
+        //[TestMethod]
         public void TestEmptyMain()
         {
             string s = 
@@ -91,39 +130,7 @@ namespace DreamUnitTest
             }
         }
 
-        [TestMethod]
-        public void TestFullFileCompile()
-        {
-            try
-            {
-                if (File.Exists(@"..\..\..\..\examples\test.jlr"))
-                {
-                    using (var stream = new FileStream(@"..\..\..\..\examples\test.jlr", FileMode.Open))
-                    {
-                        CSharpSyntaxNode node = Compile(stream);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
-        [TestMethod]
-        public void TestScanner()
-        {
-            try
-            {
-                LexicalAnalysis lexicalAnalysis = new LexicalAnalysis(new Scanner(@"..\..\..\..\examples\test.jlr"));
-                lexicalAnalysis.Analyze();
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        } 
+        //[TestMethod]
 
         private static CSharpSyntaxNode Compile(FileStream stream)
         {
@@ -134,7 +141,7 @@ namespace DreamUnitTest
             return new Compiler().Go("testcompile", memoryStream);
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void TestAddBinaryExpression()
         {
             String binaryExpression = 
@@ -151,7 +158,7 @@ namespace DreamUnitTest
         }
 
 
-        [TestMethod]
+        //[TestMethod]
         public void TestBooleanExpression()
         {
             String binaryExpression =
@@ -167,7 +174,7 @@ namespace DreamUnitTest
             Assert.IsNotNull(node);
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void TestMultiplyParenthisizedExpression()
         {
             String binaryExpression =
@@ -183,7 +190,7 @@ namespace DreamUnitTest
             Assert.IsNotNull(node);
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void TestMultiplyBinaryExpression()
         {
             String binaryExpression =
