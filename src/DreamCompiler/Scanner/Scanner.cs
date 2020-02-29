@@ -8,6 +8,7 @@ using System.IO.MemoryMappedFiles;
 using System.Diagnostics;
 using System.Dynamic;
 using Antlr4.Runtime;
+using DreamCompiler.Lexer;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using DreamCompiler.Tokens;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -126,21 +127,22 @@ namespace DreamCompiler.Scanner
         Symbol,
     }
 
-    internal enum LexemType
+    internal enum LexemeType
     {
         Identifier,
         Number,
         WhiteSpace,
     }
 
-    public class Lexem
+    public class Lexeme : IDisposable
     {
         private List<IToken> tokenList = new List<IToken>();
-        private LexemType lexemType;
+        private LexemeType _lexemeType;
+        private bool isKeyWord;
 
-        internal Lexem(LexemType ltype)
+        internal Lexeme(LexemeType ltype)
         {
-            this.lexemType = ltype;
+            this._lexemeType = ltype;
         }
 
         internal void AddToken(IToken token)
@@ -148,23 +150,59 @@ namespace DreamCompiler.Scanner
             tokenList.Add(token);
         }
 
-#if DEBUG
-        internal void PrintLexem(string lexemType)
+        public bool IsKeyWord()
         {
-            Trace.Write($"Lexem - Type:{lexemType} {{ ");
-            foreach (var token in tokenList)
+            return isKeyWord;
+        }
+
+        public override string ToString()
+        {
+            var s = new StringBuilder();
+            foreach (var t in tokenList)
             {
-                if (token is Token t)
-                {
-                    Trace.Write(t.data);
-                }
+                s.Append(t.GetTokenData());
             }
 
-            Trace.Write(" }");
+            return s.ToString();
+        }
+
+        void IDisposable.Dispose()
+        {
+            if (_lexemeType == LexemeType.Identifier)
+            {
+                if (KeyWords.keyValuePairs.ContainsKey(ToString()))
+                {
+                    isKeyWord = true;
+                }
+            }
+        }
+
+#if DEBUG
+        internal void PrintLexeme(string lexemeType, Action action = null)
+        {
+            Trace.Write($"Lexeme - Type:{lexemeType} {{ '");
+
+            if (action == null)
+            {
+                foreach (var token in tokenList)
+                {
+                    if (token is Token t)
+                    {
+                        Trace.Write(t.data);
+                    }
+                }
+            }
+            else
+            {
+                action();
+            }
+
+            Trace.Write("' }");
 
             Trace.WriteLine(string.Empty);
 
         }
+
 #endif
     }
 

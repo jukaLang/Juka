@@ -51,7 +51,7 @@ namespace DreamCompiler
                 throw new ArgumentException( "The parser was not created" );
             }
 
-            parser.AddErrorListener(new DReAMCompiler.Error.ErrorListener());
+            parser.AddErrorListener(new DreamCompiler.Error.ErrorListener());
 
             return true;
         }

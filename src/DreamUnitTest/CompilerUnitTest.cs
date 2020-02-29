@@ -15,7 +15,8 @@ namespace DreamUnitTest
 {
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis;
-    using DReAMCompiler.Lexer;
+    using DreamCompiler.Lexer;
+    using DreamCompiler.SyntaxAnalyzer;
 
     [TestClass]
     public class CompilerUnitTest
@@ -23,15 +24,22 @@ namespace DreamUnitTest
         [TestMethod]
         public void TestScanner()
         {
-            List<string> tokenArray = new List<string>()
-            {
-                "function", "main", "(", ")", "=", "{", "if", "(", "2", "<","3", ")" , "{" ,"printLine", "(","\"","foo","\"", ")", ";", "}", "}"
-            };
-
             LexicalAnalysis lexicalAnalysis = new LexicalAnalysis(new Scanner(@"..\..\..\..\examples\test.jlr"));
-            var lexemList = lexicalAnalysis.Analyze();
+            var lexemeList = lexicalAnalysis.Analyze();
 
-            Assert.AreEqual(tokenArray.Count, lexemList.Count, "The numbers of tokens are not accurate");
+            int i = 0;
+            foreach (var lex in lexemeList)
+            {
+                if (lex.IsKeyWord())
+                {
+                    i++;
+                }
+            }
+
+            Assert.AreEqual(3,i);
+
+            SyntaxAnalyzer sa = new SyntaxAnalyzer();
+            sa.Analyze(lexemeList);
         }
 
 
@@ -42,9 +50,9 @@ namespace DreamUnitTest
             MemoryStream s = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(program));
 
             LexicalAnalysis lexicalAnalysis = new LexicalAnalysis(new Scanner(s));
-            var lexemList = lexicalAnalysis.Analyze();
+            var lexemeList = lexicalAnalysis.Analyze();
 
-            Assert.AreEqual(s.Length, lexemList.Count, "The numbers of tokens are not accurate");
+            Assert.AreEqual(s.Length, lexemeList.Count, "The numbers of tokens are not accurate");
         }
 
         public void TestFullFileCompile()

@@ -8,15 +8,16 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DReAMCompiler.Lexer
+
+namespace DreamCompiler.Lexer
 {
     public class LexicalAnalysis
     {
-        private Scanner scanner;
+        private Scanner.Scanner scanner;
         public Dictionary<KeyWords.KeyWordsEnum, Action<IToken>> keywordActions = new Dictionary<KeyWords.KeyWordsEnum, Action<IToken>>();
         
         
-        public LexicalAnalysis(Scanner scanner)
+        public LexicalAnalysis(Scanner.Scanner scanner)
         {
             this.scanner = scanner;
 
@@ -27,9 +28,9 @@ namespace DReAMCompiler.Lexer
             };
         }
 
-        public List<Lexem> Analyze()
+        public List<Lexeme> Analyze()
         {
-            List<Lexem> lexemsList = new List<Lexem>();
+            List<Lexeme> lexemeList = new List<Lexeme>();
             while (true)
             {
                 IToken token = scanner.ReadToken();
@@ -42,35 +43,37 @@ namespace DReAMCompiler.Lexer
                 {
                     case TokenType.Character:
                     {
-                        lexemsList.Add(GetIdentifier(token));
+                        lexemeList.Add(GetIdentifier(token));
                         break;
                     }
 
                     case TokenType.NumberDigit:
                     {
-                        lexemsList.Add(GetNumber(token));
+                        lexemeList.Add(GetNumber(token));
                         break;
                     }
 
                     case TokenType.Symbol:
                     {
-                        lexemsList.Add(GetSymbol(token));
+                        lexemeList.Add(GetSymbol(token));
                         break;
                     }
 
                     case TokenType.WhiteSpace:
                     {
-                        lexemsList.Add(GetWhiteSpace(token));
+                        lexemeList.Add(GetWhiteSpace(token));
                         break;
                     }
                 }
             }
 
-            return lexemsList;
+            return lexemeList;
         }
 
+        //public void 
 
-        private Lexem GetIdentifier(IToken token)
+
+        private Lexeme GetIdentifier(IToken token)
         {
             if (token.TokenType() == TokenType.WhiteSpace)
             {
@@ -80,30 +83,34 @@ namespace DReAMCompiler.Lexer
                 }
             }
 
-            Lexem identifier = new Lexem(LexemType.Identifier);
-            identifier.AddToken(token);
-
-            while (true)
+            using (Lexeme identifier = new Lexeme(LexemeType.Identifier))
             {
-                var next = this.scanner.ReadToken();
-                if (next.TokenType() == TokenType.Symbol || next.TokenType() == TokenType.WhiteSpace)
+                identifier.AddToken(token);
+
+                while (true)
                 {
-                    this.scanner.PutTokenBack();
-                    break;
+                    var next = this.scanner.ReadToken();
+                    if (next.TokenType() == TokenType.Symbol || next.TokenType() == TokenType.WhiteSpace)
+                    {
+                        this.scanner.PutTokenBack();
+                        break;
+                    }
+
+                    identifier.AddToken(next);
                 }
 
-                identifier.AddToken(next);
+                identifier.PrintLexeme("Identifier");
+
+                return identifier;
             }
 
-            identifier.PrintLexem("Identifier");
-
-            return identifier;
+            throw new Exception();
         }
 
 
-        private Lexem GetNumber(IToken token)
+        private Lexeme GetNumber(IToken token)
         {
-            Lexem number = new Lexem(LexemType.Number);
+            Lexeme number = new Lexeme(LexemeType.Number);
             number.AddToken(token);
 
             while(true)
@@ -120,7 +127,7 @@ namespace DReAMCompiler.Lexer
                 }
             }
 
-            number.PrintLexem("Number");
+            number.PrintLexeme("Number");
             return number;
         }
 
@@ -139,9 +146,9 @@ namespace DReAMCompiler.Lexer
             throw new Exception("No Punctuation found;");
         }
 
-        private Lexem GetSymbol(IToken token)
+        private Lexeme GetSymbol(IToken token)
         {
-            Lexem symbol = new Lexem(LexemType.Number);
+            Lexeme symbol = new Lexeme(LexemeType.Number);
 
             var currentSymbol = token.GetTokenData();
             if (currentSymbol == '(' ||
@@ -153,7 +160,7 @@ namespace DReAMCompiler.Lexer
                 )
             {
                 symbol.AddToken(token);
-                symbol.PrintLexem("Symbol");
+                symbol.PrintLexeme("Symbol");
                 return symbol;
             }
 
@@ -193,13 +200,13 @@ namespace DReAMCompiler.Lexer
                 }
             }
 
-            symbol.PrintLexem("Symbol");
+            symbol.PrintLexeme("Symbol");
             return symbol;
         }
 
-        private Lexem GetWhiteSpace(IToken token)
+        private Lexeme GetWhiteSpace(IToken token)
         {
-            Lexem whiteSpace = new Lexem(LexemType.WhiteSpace);
+            Lexeme whiteSpace = new Lexeme(LexemeType.WhiteSpace);
 
             if (token.GetTokenData().Equals('\n') ||
                 token.GetTokenData().Equals('\r') ||
@@ -207,7 +214,25 @@ namespace DReAMCompiler.Lexer
                 token.GetTokenData().Equals(' '))
             {
                 whiteSpace.AddToken(token);
-                whiteSpace.PrintLexem("WhiteSpace");
+                whiteSpace.PrintLexeme("WhiteSpace", ()=>
+                {
+                    if (token.GetTokenData().Equals('\n'))
+                    {
+                        Trace.Write("\\n");
+                    }
+                    else if (token.GetTokenData().Equals('\r'))
+                    {
+                        Trace.Write("\\r");
+                    }
+                    else if (token.GetTokenData().Equals('\t'))
+                    {
+                        Trace.Write("\\t");
+                    }
+                    else if (token.GetTokenData().Equals(' '))
+                    {
+                        Trace.Write("_");
+                    }
+                });
             }
 
             return whiteSpace;
@@ -215,7 +240,7 @@ namespace DReAMCompiler.Lexer
 
         private void VisitIdentifier(IToken token)
         {
-            Lexem tokenIdentifier = GetIdentifier(token);
+            Lexeme tokenIdentifier = GetIdentifier(token);
 
             /*
             if (KeyWords.keyValuePairs.TryGetValue(tokenIdentifier.ToString(), out KeyWords.KeyWordsEnum keyWordsEnum))
@@ -240,7 +265,7 @@ namespace DReAMCompiler.Lexer
                 if (token.ToString().Equals(KeyWords.FUNCTION))
                 {
 
-                    Lexem functionName = GetIdentifier(scanner.ReadToken());
+                    Lexeme functionName = GetIdentifier(scanner.ReadToken());
                     IToken leftParen = GetPunctuation(scanner.ReadToken());
 
                     if (!leftParen.ToString().Equals(KeyWords.LPAREN))
@@ -257,7 +282,7 @@ namespace DReAMCompiler.Lexer
                         throw new Exception();
                     }
 
-                    Lexem isEqualSign = GetSymbol(scanner.ReadToken());
+                    Lexeme isEqualSign = GetSymbol(scanner.ReadToken());
                     IToken isLeftBracket = GetPunctuation(scanner.ReadToken());
                 }
             }

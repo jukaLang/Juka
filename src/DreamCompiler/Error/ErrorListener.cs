@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DReAMCompiler.Error
+namespace DreamCompiler.Error
 {
     using System.IO;
     using Antlr4.Runtime;
