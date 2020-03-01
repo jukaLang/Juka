@@ -28,7 +28,7 @@ namespace DreamCompiler.Lexer
             };
         }
 
-        public List<Lexeme> Analyze()
+        public LexemeListManager Analyze()
         {
             List<Lexeme> lexemeList = new List<Lexeme>();
             while (true)
@@ -67,7 +67,7 @@ namespace DreamCompiler.Lexer
                 }
             }
 
-            return lexemeList;
+            return new LexemeListManager(lexemeList);
         }
 
         //public void 
@@ -243,7 +243,7 @@ namespace DreamCompiler.Lexer
             Lexeme tokenIdentifier = GetIdentifier(token);
 
             /*
-            if (KeyWords.keyValuePairs.TryGetValue(tokenIdentifier.ToString(), out KeyWords.KeyWordsEnum keyWordsEnum))
+            if (KeyWords.keyValuePairs.TryGetValue(tokenIdentifier.ToString(), out KeyWords.KeyWordType keyWordsEnum))
             {
                 if (keywordActions.ContainsKey(keyWordsEnum))
                 {
