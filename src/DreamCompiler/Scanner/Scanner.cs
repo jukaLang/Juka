@@ -265,6 +265,26 @@ namespace DreamCompiler.Scanner
             return (position < lexemeList.Count);
         }
 
+        public Lexeme MoveNextSkipWhite()
+        {
+            if (position < 0)
+            {
+                position++;
+            }
+
+            while (lexemeList[position].LexemeType == LexemeType.WhiteSpace)
+            {
+                position++;
+            }
+
+            if (position < lexemeList.Count)
+            {
+                return lexemeList[position++];
+            }
+
+            throw new InvalidOperationException();
+        }
+
         public void Reset()
         {
             position = -1;

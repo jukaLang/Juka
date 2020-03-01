@@ -43,7 +43,7 @@ namespace DreamUnitTest
         }
 
 
-        [TestMethod]
+        //[TestMethod]
         public void TestScannerWithMemoryStream()
         {
             string program = "function main() = {{\r\n\tif ( 2<3 ) {{\r\n\t\tprintLine(\"foo\");\r\n\t}}\r\n}}\r\n";

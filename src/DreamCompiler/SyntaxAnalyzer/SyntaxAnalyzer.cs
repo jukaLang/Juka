@@ -14,29 +14,18 @@ namespace DreamCompiler.SyntaxAnalyzer
     {
         private LexemeListManager list;
         private int currentLocation = 0;
+        private LexemeEnumerator lexemeEnumerator;
+
         public void Analyze(LexemeListManager listManager)
         {
             list = listManager;
 
-            var listEnumerator = listManager.GetEnumerator();
-            while (listEnumerator.MoveNext())
+            lexemeEnumerator = listManager.GetEnumerator();
+            var value = lexemeEnumerator.MoveNextSkipWhite();
+            if (value.IsKeyWord())
             {
-                if (listEnumerator.Current.IsKeyWord())
-                {
-                    KeyWords(listEnumerator.Current);
-                }
+                KeyWords(value);
             }
-
-            /*
-            while(list.NextNotWhiteSpace())
-            for(; currentLocation < list.Count; currentLocation++)
-            {
-                if (list[currentLocation].IsKeyWord())
-                {
-                    KeyWords(list[currentLocation]);
-                }
-            }
-            */
         }
 
         private void KeyWords(Lexeme lex)
@@ -62,27 +51,31 @@ namespace DreamCompiler.SyntaxAnalyzer
 
         private void ParseFunction()
         {
-            currentLocation++; // skip space;
-            var funcName = list[this.currentLocation++];
-            var leftParen = list[this.currentLocation++];
-            var rightParen = list[this.currentLocation++];
-            var equalSign = list[this.currentLocation++];
-            var leftBracket = list[this.currentLocation++];
+            var funcName = lexemeEnumerator.MoveNextSkipWhite();
+            var leftParen = lexemeEnumerator.MoveNextSkipWhite();
+            var rightParen = lexemeEnumerator.MoveNextSkipWhite();
+            var equalSign = lexemeEnumerator.MoveNextSkipWhite();
+            var leftBracket = lexemeEnumerator.MoveNextSkipWhite();
         }
 
         private void ParseIfStatement()
         {
-            var token = list[++currentLocation];
-            if (!token.IsKeyWord() && token.ToString().Equals(SymbolConstants.LeftParen))
+            /*
+            if (lexemeEnumerator.MoveNextSkipWhite())
             {
-                ParseExpression();
+                var token = lexemeEnumerator.Current;
+                if (!token.IsKeyWord() && token.ToString().Equals(SymbolConstants.LeftParen))
+                {
+                    ParseExpression();
+                }
             }
+            */
         }
 
 
         private void ParseExpression()
         {
-            var token = list[++currentLocation];
+            var token = lexemeEnumerator.MoveNextSkipWhite();
 
         }
     }
