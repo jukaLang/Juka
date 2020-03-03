@@ -6,6 +6,7 @@ using System.IO;
 using System.Diagnostics;
 using DreamCompiler.Lexer;
 using static System.Char;
+using System.Runtime.Remoting.Messaging;
 
 namespace DreamCompiler.Scanner
 {
@@ -261,25 +262,47 @@ namespace DreamCompiler.Scanner
 
         public bool MoveNext()
         {
-            position++;
-            return (position < lexemeList.Count);
+            //position++;
+            //return (position < lexemeList.Count);
+            throw new NotImplementedException();
         }
 
-        public Lexeme MoveNextSkipWhite()
+        public bool MoveNextEx()
         {
-            if (position < 0)
+            position++;
+            if (lexemeList[position].LexemeType == LexemeType.WhiteSpace)
             {
-                position++;
-            }
-
-            while (lexemeList[position].LexemeType == LexemeType.WhiteSpace)
-            {
-                position++;
+                return MoveNextEx();
             }
 
             if (position < lexemeList.Count)
             {
-                return lexemeList[position++];
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+            throw new InvalidOperationException();
+        }
+
+        public bool MoveBackEx()
+        {
+            position--;
+            if (lexemeList[position].LexemeType == LexemeType.WhiteSpace)
+            {
+                return MoveNextEx();
+            }
+
+            if (position < 0)
+            {
+                return false;
+            }
+
+            if (position >= 0)
+            {
+                return true;
             }
 
             throw new InvalidOperationException();

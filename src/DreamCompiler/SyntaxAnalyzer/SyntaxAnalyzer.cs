@@ -21,10 +21,10 @@ namespace DreamCompiler.SyntaxAnalyzer
             list = listManager;
 
             lexemeEnumerator = listManager.GetEnumerator();
-            var value = lexemeEnumerator.MoveNextSkipWhite();
-            if (value.IsKeyWord())
+            
+            if (lexemeEnumerator.MoveNextEx())
             {
-                KeyWords(value);
+                KeyWords(lexemeEnumerator.Current);
             }
         }
 
@@ -51,11 +51,25 @@ namespace DreamCompiler.SyntaxAnalyzer
 
         private void ParseFunction()
         {
-            var funcName = lexemeEnumerator.MoveNextSkipWhite();
-            var leftParen = lexemeEnumerator.MoveNextSkipWhite();
-            var rightParen = lexemeEnumerator.MoveNextSkipWhite();
-            var equalSign = lexemeEnumerator.MoveNextSkipWhite();
-            var leftBracket = lexemeEnumerator.MoveNextSkipWhite();
+            while (lexemeEnumerator.MoveNextEx())
+            {
+                var current = lexemeEnumerator.Current;
+                if (current.IsKeyWord() && current.KeyWordType == Lexer.KeyWords.KeyWordsEnum.If)
+                {
+                    lexemeEnumerator.MoveNextEx();
+                    List<Lexeme> ifExpression = new List<Lexeme>();
+
+                    if (lexemeEnumerator.Current.ToString().Equals("("))
+                    {
+                        lexemeEnumerator.MoveNextEx();
+                        while (!lexemeEnumerator.Current.ToString().Equals(")"))
+                        {
+                            ifExpression.Add(lexemeEnumerator.Current);
+                            lexemeEnumerator.MoveNextEx();
+                        }
+                    }
+                }
+            }
         }
 
         private void ParseIfStatement()
@@ -75,7 +89,7 @@ namespace DreamCompiler.SyntaxAnalyzer
 
         private void ParseExpression()
         {
-            var token = lexemeEnumerator.MoveNextSkipWhite();
+            var token = lexemeEnumerator.MoveNextEx();
 
         }
     }
