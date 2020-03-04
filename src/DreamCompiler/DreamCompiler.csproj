@@ -192,10 +192,6 @@
     <Compile Include="RoslynCompile\GenerateBinaryExpression.cs" />
     <Compile Include="Compiler.cs" />
     <Compile Include="Constants\Constants.cs" />
-    <Compile Include="grammar\DreamGrammarBaseVisitor.cs" />
-    <Compile Include="grammar\DreamGrammarLexer.cs" />
-    <Compile Include="grammar\DreamGrammarParser.cs" />
-    <Compile Include="grammar\DreamGrammarVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoslynCompile\GenerateIfStatement.cs" />
     <Compile Include="RoslynCompile\GenerateStaticMethod.cs" />
@@ -212,10 +208,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="grammar\DreamGrammar.g4" />
-    <None Include="grammar\DreamGrammar.tokens" />
-    <None Include="grammar\DreamGrammarLexer.interp" />
-    <None Include="grammar\DreamGrammarLexer.tokens" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -224,8 +216,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>java -jar $(ProjectDir)jars\antlr-4.7.1-complete.jar -Dlanguage=CSharp $(ProjectDir)grammar\DreamGrammar.g4 -no-listener -visitor -package DreamCompiler.Grammar
-</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

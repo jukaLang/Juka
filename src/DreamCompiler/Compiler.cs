@@ -5,8 +5,6 @@ using DreamCompiler.Visitors;
 
 namespace DreamCompiler
 {
-    using DreamCompiler.Grammar;
-    using Antlr4.Runtime;
     using System;
     using System.Diagnostics;
     using System.IO;
@@ -20,49 +18,20 @@ namespace DreamCompiler
     }
 
     public class Compiler
-    { 
-        private DreamGrammarParser parser;
-
+    {
         public CSharpSyntaxNode Go(String ouputFileName, MemoryStream memoryStream)
         {
-            if (SetupAntlr(memoryStream))
+            try
             {
-                var code = BeginVisitation();
 
-                if (code != null)
-                {
-                    CompileRoslyn.CompileSyntaxTree(code.SyntaxTree, ouputFileName);
-                    return code;
-                }
+                CompileRoslyn.CompileSyntaxTree(null, ouputFileName);
+                return null;
+
             }
-
-            throw new Exception("Unable to compile");
-        }
-
-        private bool SetupAntlr(MemoryStream stream)
-        {
-            var input = new AntlrInputStream(stream);
-            var lexer = new DreamGrammarLexer(input);
-            var tokenStream = new CommonTokenStream(lexer);
-            parser = new DreamGrammarParser(tokenStream);
-
-            if (parser == null)
+            catch (Exception)
             {
-                throw new ArgumentException( "The parser was not created" );
+                throw;
             }
-
-            parser.AddErrorListener(new DreamCompiler.Error.ErrorListener());
-
-            return true;
-        }
-
-        private CSharpSyntaxNode BeginVisitation()
-        {
-            DreamGrammarParser.CompileUnitContext compileUnit = parser.compileUnit();
-            Trace.WriteLine(compileUnit.ToStringTree(parser));
-
-            var visitor = new DreamRoslynVisitor();
-            return visitor.Visit(compileUnit);
         }
     }
 }
