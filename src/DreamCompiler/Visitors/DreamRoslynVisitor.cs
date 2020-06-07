@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace DreamCompiler.Visitors
 {
-    using DreamCompiler.Grammar;
     using DreamCompiler.RoslynCompile;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -12,35 +11,35 @@ namespace DreamCompiler.Visitors
     using Antlr4.Runtime.Misc;
     using Antlr4.Runtime.Tree;
 
-    class DreamRoslynVisitor : DreamGrammarBaseVisitor<CSharpSyntaxNode>
+    class DreamRoslynVisitor 
     {
-        public override CSharpSyntaxNode VisitCompileUnit([NotNull] DreamGrammarParser.CompileUnitContext context)
-        {
-            List<MethodDeclarationSyntax> methods = new List<MethodDeclarationSyntax>();
+    //    public override CSharpSyntaxNode VisitCompileUnit([NotNull] DreamGrammarParser.CompileUnitContext context)
+    //    {
+    //        List<MethodDeclarationSyntax> methods = new List<MethodDeclarationSyntax>();
 
-            for (int i = 0; i < context.ChildCount; i++)
-            {
-                if (context.children[i].Accept(this) is MethodDeclarationSyntax m)
-                {
-                    methods.Add(m);
-                }
-            }
+    //        for (int i = 0; i < context.ChildCount; i++)
+    //        {
+    //            if (context.children[i].Accept(this) is MethodDeclarationSyntax m)
+    //            {
+    //                methods.Add(m);
+    //            }
+    //        }
 
-            /**
-             * A name space and a class needs to be defined to hold all of the methods. 
-             */
-            NamespaceDeclarationSyntax namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName("temporary"))
-                .AddMembers(items: new[] { SyntaxFactory.ClassDeclaration("tempClass")
-                .AddMembers(items: methods.ToArray()) });
+    //        /**
+    //         * A name space and a class needs to be defined to hold all of the methods. 
+    //         */
+    //        NamespaceDeclarationSyntax namespaceDeclaration = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.IdentifierName("temporary"))
+    //            .AddMembers(items: new[] { SyntaxFactory.ClassDeclaration("tempClass")
+    //            .AddMembers(items: methods.ToArray()) });
 
-            return SyntaxFactory.CompilationUnit().AddMembers(items: new[] { namespaceDeclaration });
-        }
+    //        return SyntaxFactory.CompilationUnit().AddMembers(items: new[] { namespaceDeclaration });
+    //    }
 
-        public override CSharpSyntaxNode VisitFunctionDeclaration([NotNull] DreamGrammarParser.FunctionDeclarationContext context)
-        {
-            MethodDeclarationSyntax method = GenerateStaticMethod.CreateStaticMethod(context, this);
-            return method;
-        }
+        //public override CSharpSyntaxNode VisitFunctionDeclaration([NotNull] DreamGrammarParser.FunctionDeclarationContext context)
+        //{
+        //    MethodDeclarationSyntax method = GenerateStaticMethod.CreateStaticMethod(context, this);
+        //    return method;
+        //}
 
         /*
         public override CSharpSyntaxNode VisitAssignmentExpression([NotNull] DreamGrammarParser.AssignmentExpressionContext context)
@@ -49,61 +48,61 @@ namespace DreamCompiler.Visitors
         }
         */
 
-        public override CSharpSyntaxNode VisitFunctionCall([NotNull] DreamGrammarParser.FunctionCallContext context)
-        {
-            SyntaxToken name = SyntaxFactory.Identifier(context.funcName().GetText());
-            SyntaxToken returnType = SyntaxFactory.Token(SyntaxKind.VoidKeyword);
+        //public override CSharpSyntaxNode VisitFunctionCall([NotNull] DreamGrammarParser.FunctionCallContext context)
+        //{
+        //    SyntaxToken name = SyntaxFactory.Identifier(context.funcName().GetText());
+        //    SyntaxToken returnType = SyntaxFactory.Token(SyntaxKind.VoidKeyword);
 
-            var parameters = new List<ArgumentSyntax>();
+        //    var parameters = new List<ArgumentSyntax>();
 
-            for (int i = 2; i < context.ChildCount - 1; i++)
-            {
-                var param = context.children[i].Accept(this);
-                if (param != null)
-                {
-                    if (param is LiteralExpressionSyntax)
-                    {
-                        parameters.Add(SyntaxFactory.Argument(param as LiteralExpressionSyntax));
-                        continue;
-                    }
+        //    for (int i = 2; i < context.ChildCount - 1; i++)
+        //    {
+        //        var param = context.children[i].Accept(this);
+        //        if (param != null)
+        //        {
+        //            if (param is LiteralExpressionSyntax)
+        //            {
+        //                parameters.Add(SyntaxFactory.Argument(param as LiteralExpressionSyntax));
+        //                continue;
+        //            }
 
-                    if (param is IdentifierNameSyntax)
-                    {
-                        parameters.Add(SyntaxFactory.Argument(param as IdentifierNameSyntax));
-                        continue;
-                    }
+        //            if (param is IdentifierNameSyntax)
+        //            {
+        //                parameters.Add(SyntaxFactory.Argument(param as IdentifierNameSyntax));
+        //                continue;
+        //            }
 
-                    if (param is ArgumentSyntax)
-                    {
-                        parameters.Add(param as ArgumentSyntax);
-                        continue;
-                    }
-                }
-            }
+        //            if (param is ArgumentSyntax)
+        //            {
+        //                parameters.Add(param as ArgumentSyntax);
+        //                continue;
+        //            }
+        //        }
+        //    }
 
-            var builtinFunctions = new List<String>() { "print", "printLine", "read", "readLine" };
+        //    var builtinFunctions = new List<String>() { "print", "printLine", "read", "readLine" };
 
-            String funcName = context.funcName().GetText();
+        //    String funcName = context.funcName().GetText();
 
-            if (builtinFunctions.Contains(funcName))
-            {
-                return GenrateBuiltInFunction(funcName, parameters);
-            }
+        //    if (builtinFunctions.Contains(funcName))
+        //    {
+        //        return GenrateBuiltInFunction(funcName, parameters);
+        //    }
 
-            if (parameters.Count() > 0)
-            {
-                var seperatedList = BuildArgumentList(parameters);
-                return SyntaxFactory.ExpressionStatement(
-                            SyntaxFactory.InvocationExpression(
-                                SyntaxFactory.IdentifierName(funcName)).WithArgumentList(
-                                SyntaxFactory.ArgumentList(BuildArgumentList(parameters))));
-            }
+        //    if (parameters.Count() > 0)
+        //    {
+        //        var seperatedList = BuildArgumentList(parameters);
+        //        return SyntaxFactory.ExpressionStatement(
+        //                    SyntaxFactory.InvocationExpression(
+        //                        SyntaxFactory.IdentifierName(funcName)).WithArgumentList(
+        //                        SyntaxFactory.ArgumentList(BuildArgumentList(parameters))));
+        //    }
 
-            return SyntaxFactory.ExpressionStatement(
-                            SyntaxFactory.InvocationExpression(
-                                SyntaxFactory.IdentifierName(funcName)));
+        //    return SyntaxFactory.ExpressionStatement(
+        //                    SyntaxFactory.InvocationExpression(
+        //                        SyntaxFactory.IdentifierName(funcName)));
 
-        }
+        //}
 
         private SeparatedSyntaxList<ArgumentSyntax> BuildArgumentList(List<ArgumentSyntax> parameters)
         {
@@ -160,76 +159,76 @@ namespace DreamCompiler.Visitors
                                     SyntaxFactory.SingletonSeparatedList<ArgumentSyntax>(argument))));
         }
 
-        public override CSharpSyntaxNode VisitVariable([NotNull] DreamGrammarParser.VariableContext context)
-        {
-            return SyntaxFactory.Argument(SyntaxFactory.IdentifierName(context.ID().GetText()));
-            //return base.VisitVariable(context);
-        }
+        //public override CSharpSyntaxNode VisitVariable([NotNull] DreamGrammarParser.VariableContext context)
+        //{
+        //    return SyntaxFactory.Argument(SyntaxFactory.IdentifierName(context.ID().GetText()));
+        //    //return base.VisitVariable(context);
+        //}
 
-        public override CSharpSyntaxNode VisitFunctionCallExpression([NotNull] DreamGrammarParser.FunctionCallExpressionContext context)
-        {
-            var node = base.VisitFunctionCallExpression(context);
-            return node;
-        }
+        //public override CSharpSyntaxNode VisitFunctionCallExpression([NotNull] DreamGrammarParser.FunctionCallExpressionContext context)
+        //{
+        //    var node = base.VisitFunctionCallExpression(context);
+        //    return node;
+        //}
 
-        public override CSharpSyntaxNode VisitStatement([NotNull] DreamGrammarParser.StatementContext context)
-        {
-            var node = base.VisitStatement(context);
-            return node;
-        }
+        //public override CSharpSyntaxNode VisitStatement([NotNull] DreamGrammarParser.StatementContext context)
+        //{
+        //    var node = base.VisitStatement(context);
+        //    return node;
+        //}
 
-        public override CSharpSyntaxNode VisitExpression([NotNull] DreamGrammarParser.ExpressionContext context)
-        {
-            List<CSharpSyntaxNode> list = new List<CSharpSyntaxNode>();
-            foreach (IParseTree tree in context.children)
-            {
-                var syntaxNode = tree.Accept(this);
-                if (syntaxNode is StatementSyntax)
-                {
-                    return syntaxNode;
-                }
-            }
+        //public override CSharpSyntaxNode VisitExpression([NotNull] DreamGrammarParser.ExpressionContext context)
+        //{
+        //    List<CSharpSyntaxNode> list = new List<CSharpSyntaxNode>();
+        //    foreach (IParseTree tree in context.children)
+        //    {
+        //        var syntaxNode = tree.Accept(this);
+        //        if (syntaxNode is StatementSyntax)
+        //        {
+        //            return syntaxNode;
+        //        }
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
-        public override CSharpSyntaxNode VisitStringValue([NotNull] DreamGrammarParser.StringValueContext context)
-        {
-            String value = context.GetText();
-            if ((value.StartsWith("\"") && value.EndsWith("\"")) || (value.StartsWith("'") && value.EndsWith("'")))
-            {
-                value = value.Substring(1, value.Length - 2);
-            }
-            return SyntaxFactory.LiteralExpression(
-                                   SyntaxKind.StringLiteralExpression,
-                                   SyntaxFactory.Literal(value));
-        }
+        //public override CSharpSyntaxNode VisitStringValue([NotNull] DreamGrammarParser.StringValueContext context)
+        //{
+        //    String value = context.GetText();
+        //    if ((value.StartsWith("\"") && value.EndsWith("\"")) || (value.StartsWith("'") && value.EndsWith("'")))
+        //    {
+        //        value = value.Substring(1, value.Length - 2);
+        //    }
+        //    return SyntaxFactory.LiteralExpression(
+        //                           SyntaxKind.StringLiteralExpression,
+        //                           SyntaxFactory.Literal(value));
+        //}
 
-        public override CSharpSyntaxNode VisitParameterVariableDeclaration([NotNull] DreamGrammarParser.ParameterVariableDeclarationContext context)
-        {
-            var paramType = context.children[0].Accept(this) as PredefinedTypeSyntax;
-            var paramName = SyntaxFactory.Identifier(context.children[1].GetText());
+        //public override CSharpSyntaxNode VisitParameterVariableDeclaration([NotNull] DreamGrammarParser.ParameterVariableDeclarationContext context)
+        //{
+        //    var paramType = context.children[0].Accept(this) as PredefinedTypeSyntax;
+        //    var paramName = SyntaxFactory.Identifier(context.children[1].GetText());
 
-            return SyntaxFactory.Parameter(paramName).WithType(paramType);
-        }
+        //    return SyntaxFactory.Parameter(paramName).WithType(paramType);
+        //}
 
-        public override CSharpSyntaxNode VisitKeywords([NotNull] DreamGrammarParser.KeywordsContext context)
-        {
-            String keyword = context.GetText();
-            switch (keyword)
-            {
-                case "int":
-                    return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.IntKeyword));
-                case "float":
-                    return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.FloatKeyword));
-                case "double":
-                    return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.DoubleKeyword));
-                case "string":
-                    return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.StringKeyword));
-            }
+        //public override CSharpSyntaxNode VisitKeywords([NotNull] DreamGrammarParser.KeywordsContext context)
+        //{
+        //    String keyword = context.GetText();
+        //    switch (keyword)
+        //    {
+        //        case "int":
+        //            return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.IntKeyword));
+        //        case "float":
+        //            return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.FloatKeyword));
+        //        case "double":
+        //            return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.DoubleKeyword));
+        //        case "string":
+        //            return SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.StringKeyword));
+        //    }
 
-            throw new Exception("no valid keyword");
-        }
+        //    throw new Exception("no valid keyword");
+        //}
 
 
         private List<IParseTree> WalkVariableDeclarationExpression([NotNull] IList<IParseTree> context)
@@ -261,57 +260,57 @@ namespace DreamCompiler.Visitors
 
         LocalDeclarationStatementSyntax statementSyntax;
 
-        public override CSharpSyntaxNode VisitVariableDeclarationAssignment([NotNull] DreamGrammarParser.VariableDeclarationAssignmentContext context)
-        {
-            var binaryExpression = new GenerateBinaryExpression();
+        //public override CSharpSyntaxNode VisitVariableDeclarationAssignment([NotNull] DreamGrammarParser.VariableDeclarationAssignmentContext context)
+        //{
+        //    var binaryExpression = new GenerateBinaryExpression();
 
-            binaryExpression.Walk(context)
-                .PostWalk()
-                .PrintPostFix()
-                .Eval();
+        //    binaryExpression.Walk(context)
+        //        .PostWalk()
+        //        .PrintPostFix()
+        //        .Eval();
 
-            statementSyntax = binaryExpression.GetLocalDeclarationStatement();
+        //    statementSyntax = binaryExpression.GetLocalDeclarationStatement();
 
-            return binaryExpression.GetLocalDeclarationStatementSyntax();
-        }
+        //    return binaryExpression.GetLocalDeclarationStatementSyntax();
+        //}
 
-        public override CSharpSyntaxNode VisitCombinedExpressions([NotNull] DreamGrammarParser.CombinedExpressionsContext context)
-        {
-            var binaryExpression = new GenerateBinaryExpression();
+        //public override CSharpSyntaxNode VisitCombinedExpressions([NotNull] DreamGrammarParser.CombinedExpressionsContext context)
+        //{
+        //    var binaryExpression = new GenerateBinaryExpression();
 
-            binaryExpression.Walk(context)
-                .PostWalk()
-                .PrintPostFix()
-                .Eval();
+        //    binaryExpression.Walk(context)
+        //        .PostWalk()
+        //        .PrintPostFix()
+        //        .Eval();
 
-            return binaryExpression.GetLocalDeclarationStatementSyntax();
-        }
+        //    return binaryExpression.GetLocalDeclarationStatementSyntax();
+        //}
 
-        public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DreamGrammarParser.VariableDeclarationExpressionContext context)
-        {
-            string variableName = context.variableDeclarationAssignment().variable().GetText();
+        //public override CSharpSyntaxNode VisitVariableDeclarationExpression([NotNull] DreamGrammarParser.VariableDeclarationExpressionContext context)
+        //{
+        //    string variableName = context.variableDeclarationAssignment().variable().GetText();
 
-            var binaryExpression = new GenerateBinaryExpression();
+        //    var binaryExpression = new GenerateBinaryExpression();
 
-            binaryExpression.Walk(context)
-                .PostWalk()
-                .PrintPostFix()
-                .Eval();
+        //    binaryExpression.Walk(context)
+        //        .PostWalk()
+        //        .PrintPostFix()
+        //        .Eval();
 
-            return binaryExpression.GetLocalDeclarationStatementSyntax();
+        //    return binaryExpression.GetLocalDeclarationStatementSyntax();
 
-        }
+        //}
 
-        public override CSharpSyntaxNode VisitIfExpr([NotNull] DreamGrammarParser.IfExprContext context)
-        {
-            var ifExpression = new GenerateIfStatement();
-            return ifExpression.Walk(context, this);
-        }
+        //public override CSharpSyntaxNode VisitIfExpr([NotNull] DreamGrammarParser.IfExprContext context)
+        //{
+        //    var ifExpression = new GenerateIfStatement();
+        //    return ifExpression.Walk(context, this);
+        //}
 
-        public override CSharpSyntaxNode VisitAssignmentOperator([NotNull] DreamGrammarParser.AssignmentOperatorContext context)
-        {
-            return base.VisitAssignmentOperator(context);
-        }
+        //public override CSharpSyntaxNode VisitAssignmentOperator([NotNull] DreamGrammarParser.AssignmentOperatorContext context)
+        //{
+        //    return base.VisitAssignmentOperator(context);
+        //}
 
         private SyntaxToken GetKeywordTokenType(String keyword)
         {
@@ -384,25 +383,25 @@ namespace DreamCompiler.Visitors
             throw new InvalidCastException("Can't parse types");
         }
 
-        public override CSharpSyntaxNode VisitIntValue([NotNull] DreamGrammarParser.IntValueContext context)
-        {
-            return SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(int.Parse(context.GetText())));
-        }
+        //public override CSharpSyntaxNode VisitIntValue([NotNull] DreamGrammarParser.IntValueContext context)
+        //{
+        //    return SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(int.Parse(context.GetText())));
+        //}
 
-        public override CSharpSyntaxNode VisitLiteral([NotNull] DreamGrammarParser.LiteralContext context)
-        {
-            var literal = SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(context.GetText()));
-            return literal;
-        }
+        //public override CSharpSyntaxNode VisitLiteral([NotNull] DreamGrammarParser.LiteralContext context)
+        //{
+        //    var literal = SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(context.GetText()));
+        //    return literal;
+        //}
 
-        public override CSharpSyntaxNode VisitNumericTypes([NotNull] DreamGrammarParser.NumericTypesContext context)
-        {
-            return base.VisitNumericTypes(context);
-        }
+        //public override CSharpSyntaxNode VisitNumericTypes([NotNull] DreamGrammarParser.NumericTypesContext context)
+        //{
+        //    return base.VisitNumericTypes(context);
+        //}
 
-        public override CSharpSyntaxNode Visit(IParseTree tree)
-        {
-            return base.Visit(tree);
-        }
+        //public override CSharpSyntaxNode Visit(IParseTree tree)
+        //{
+        //    return base.Visit(tree);
+        //}
     }
 }

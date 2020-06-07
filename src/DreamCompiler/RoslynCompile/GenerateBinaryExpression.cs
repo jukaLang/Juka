@@ -6,7 +6,6 @@ namespace DreamCompiler.RoslynCompile
 {
     using Antlr4.Runtime.Tree;
     using Antlr4.Runtime;
-    using DreamCompiler.Grammar;
     using DreamCompiler.Visitors;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
@@ -52,95 +51,95 @@ namespace DreamCompiler.RoslynCompile
 
         internal GenerateBinaryExpression Walk(ParserRuleContext node)
         {
-            try
-            {
-                if (node != null)
-                {
-                    WalkChildren(node.children);
-                    if (node is DreamGrammarParser.CombinedExpressionsContext ||
-                        node is DreamGrammarParser.VariableDeclarationAssignmentContext ||
-                        node is DreamGrammarParser.BinaryOpAndDoubleExpressionContext ||
-                        node is DreamGrammarParser.BinaryOpAndSingleExpressionContext ||
-                        node is DreamGrammarParser.BinaryExpressionContext)
+            //try
+            //{
+            //    if (node != null)
+            //    {
+            //        WalkChildren(node.children);
+            //        if (node is DreamGrammarParser.CombinedExpressionsContext ||
+            //            node is DreamGrammarParser.VariableDeclarationAssignmentContext ||
+            //            node is DreamGrammarParser.BinaryOpAndDoubleExpressionContext ||
+            //            node is DreamGrammarParser.BinaryOpAndSingleExpressionContext ||
+            //            node is DreamGrammarParser.BinaryExpressionContext)
 
-                    {
-                        return this;
-                    }
-                    else if (node is DreamGrammarParser.LeftParenContext)
-                    {
-                        operators.Push(node);
-                        return this;
-                    }
-                    else if (node is DreamGrammarParser.RightParenContext)
-                    {
-                        while (!(operators.Peek() is DreamGrammarParser.LeftParenContext))
-                        {
-                            postfix.Add(operators.Pop());
-                        }
+            //        {
+            //            return this;
+            //        }
+            //        else if (node is DreamGrammarParser.LeftParenContext)
+            //        {
+            //            operators.Push(node);
+            //            return this;
+            //        }
+            //        else if (node is DreamGrammarParser.RightParenContext)
+            //        {
+            //            while (!(operators.Peek() is DreamGrammarParser.LeftParenContext))
+            //            {
+            //                postfix.Add(operators.Pop());
+            //            }
 
-                        operators.Pop();
-                    }
-                    else if (node is DreamGrammarParser.VariableContext)
-                    {
-                        postfix.Add(node);
-                        return this;
-                    }
-                    else if (node is DreamGrammarParser.KeywordsContext)
-                    {
-                        currentKeyWord = node;
-                        return this;
-                    }
-                    else if (node is DreamGrammarParser.VariableDeclarationContext)
-                    {
-                        return this;
-                    }
-                    else if (node is DreamGrammarParser.AssignmentOperatorContext)
-                    {
-                        if (operators.Count == 0)
-                        {
-                            operators.Push(node);
-                            return this;
-                        }
+            //            operators.Pop();
+            //        }
+            //        else if (node is DreamGrammarParser.VariableContext)
+            //        {
+            //            postfix.Add(node);
+            //            return this;
+            //        }
+            //        else if (node is DreamGrammarParser.KeywordsContext)
+            //        {
+            //            currentKeyWord = node;
+            //            return this;
+            //        }
+            //        else if (node is DreamGrammarParser.VariableDeclarationContext)
+            //        {
+            //            return this;
+            //        }
+            //        else if (node is DreamGrammarParser.AssignmentOperatorContext)
+            //        {
+            //            if (operators.Count == 0)
+            //            {
+            //                operators.Push(node);
+            //                return this;
+            //            }
 
-                        throw new ArgumentException("Invalid expressions");
-                    }
-                    else if (node is DreamGrammarParser.IntValueContext)
-                    {
-                        postfix.Add(node);
-                        return this;
-                    }
-                    else if (
-                        node is DreamGrammarParser.BinaryOperatorContext ||
-                        node is DreamGrammarParser.AddSubtractOpContext ||
-                        node is DreamGrammarParser.MultiplyDivideOpContext)
-                    {
-                        if (operators.Count == 0)
-                        {
-                            operators.Push(node);
-                            return this;
-                        }
+            //            throw new ArgumentException("Invalid expressions");
+            //        }
+            //        else if (node is DreamGrammarParser.IntValueContext)
+            //        {
+            //            postfix.Add(node);
+            //            return this;
+            //        }
+            //        else if (
+            //            node is DreamGrammarParser.BinaryOperatorContext ||
+            //            node is DreamGrammarParser.AddSubtractOpContext ||
+            //            node is DreamGrammarParser.MultiplyDivideOpContext)
+            //        {
+            //            if (operators.Count == 0)
+            //            {
+            //                operators.Push(node);
+            //                return this;
+            //            }
 
-                        if (Precedence(operators.Peek()) > Precedence(node) ||
-                            Precedence(operators.Peek()) == Precedence(node))
-                        {
-                            postfix.Add(operators.Pop());
-                            operators.Push(node);
-                            return this;
-                        }
+            //            if (Precedence(operators.Peek()) > Precedence(node) ||
+            //                Precedence(operators.Peek()) == Precedence(node))
+            //            {
+            //                postfix.Add(operators.Pop());
+            //                operators.Push(node);
+            //                return this;
+            //            }
 
-                        if (Precedence(operators.Peek()) < Precedence(node))
-                        {
-                            operators.Push(node);
-                            return this;
-                        }
+            //            if (Precedence(operators.Peek()) < Precedence(node))
+            //            {
+            //                operators.Push(node);
+            //                return this;
+            //            }
 
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw ex;
+            //}
 
             return this;
         }
@@ -190,127 +189,6 @@ namespace DreamCompiler.RoslynCompile
             return this;
         }
 
-        internal void Eval(bool isAssignment)
-        {
-            if (!isAssignment)
-            {
-                Eval();
-            }
-            else
-            {
-                foreach (var token in postfix)
-                {
-                    if (token is DreamGrammarParser.BinaryOperatorContext)
-                    {
-                        string binaryOp = token.GetChild(0).GetText();
-
-                        SyntaxKind op = syntaxKindLookup[operaterLookup[binaryOp]];
-
-                        var right = unionStack.Pop().syntax;
-                        var left = unionStack.Pop().syntax;
-
-                        unionStack.Push(new ContextExpressionUnion()
-                        {
-                            context = null,
-                            syntax = SyntaxFactory.BinaryExpression(op,
-                            left,
-                            right)
-                        });
-                    }
-                    else
-                    {
-                        CheckContextType(token, unionStack);
-                    }
-                }
-            }
-        }
-
-        internal void Eval()
-        {
-            foreach (var token in postfix)
-            {
-                if (token is DreamGrammarParser.AssignmentOperatorContext)
-                {
-                    if (postfix.Count > 0 && postfix[0] is DreamGrammarParser.VariableContext)
-                    {
-                        CreateVariableDeclarator(postfix[0], (BinaryExpressionSyntax)unionStack.Pop().syntax);
-                        if (statementSyntax != null)
-                        {
-                            isDeclaration = true;
-                        }
-                        break;
-                    }
-                    else
-                    {
-                        throw new Exception("No variable to assign expression");
-                    }
-                }
-                else if (token is DreamGrammarParser.BinaryOperatorContext ||
-                        token is DreamGrammarParser.AddSubtractOpContext ||
-                        token is DreamGrammarParser.MultiplyDivideOpContext)
-                {
-                    string binaryOp = token.GetChild(0).GetText();
-
-                    SyntaxKind op = syntaxKindLookup[operaterLookup[binaryOp]];
-
-                    var right = unionStack.Pop().syntax;
-                    var left = unionStack.Pop().syntax;
-
-                    unionStack.Push(new ContextExpressionUnion()
-                    {
-                        context = null,
-                        syntax = SyntaxFactory.BinaryExpression(op,
-                        left,
-                        right)
-                    });
-                }
-                else if (token is DreamGrammarParser.VariableContext)
-                {
-                    if (unionStack.Count == 0)
-                    {
-                        continue;
-                    }
-                }
-                else
-                {
-                    CheckContextType(token, unionStack);
-                    continue;
-                }
-            }
-
-            if (postfix.Count >= 2)
-            {
-                //Assume that there is a binary expression but not an assignment.
-                isDeclaration = false;
-            }
-        }
-
-        private void CheckContextType(ParserRuleContext context, Stack<ContextExpressionUnion> stack)
-        {
-            if (context != null)
-            {
-                if (context is DreamGrammarParser.IntValueContext)
-                {
-                    stack.Push(new ContextExpressionUnion()
-                    {
-                        context = null,
-                        syntax = CreateNumericLiteralExpression(context)
-                    });
-                }
-                else if (context is DreamGrammarParser.StringValueContext)
-                {
-                    stack.Push(new ContextExpressionUnion()
-                    {
-                        context = null,
-                        syntax = CreateStringLiteralExpression(context)
-                    });
-                }
-                else if (context is DreamGrammarParser.VariableContext)
-                {
-                    // CreateVariableDeclarator(context, stack.Pop().syntax as BinaryExpressionSyntax);
-                }
-            }
-        }
 
         private LiteralExpressionSyntax CreateNumericLiteralExpression(ParserRuleContext context)
         {
