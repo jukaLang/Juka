@@ -23,7 +23,7 @@ namespace DreamCompiler
         {
             try
             {
-
+		Console.WriteLine("starting the compiler...");
                 CompileRoslyn.CompileSyntaxTree(null, ouputFileName);
                 return null;
 
