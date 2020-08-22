@@ -9,10 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DreamCompiler", "DreamCompi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Juka", "Juka\Juka.csproj", "{AE8A7059-8F21-41B2-BD8F-36D58E1F8330}"
 EndProject
-Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "JukaFabric", "JukaFabric\JukaFabric.sfproj", "{1434D5A1-9BE3-4F30-A536-304A5F0EB844}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JukaStatelessFabric", "JukaStatelessFabric\JukaStatelessFabric.csproj", "{4BF62EFF-4106-42C8-A178-770D935CB53C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,22 +41,6 @@ Global
 		{AE8A7059-8F21-41B2-BD8F-36D58E1F8330}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AE8A7059-8F21-41B2-BD8F-36D58E1F8330}.Release|x64.ActiveCfg = Release|Any CPU
 		{AE8A7059-8F21-41B2-BD8F-36D58E1F8330}.Release|x64.Build.0 = Release|Any CPU
-		{1434D5A1-9BE3-4F30-A536-304A5F0EB844}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{1434D5A1-9BE3-4F30-A536-304A5F0EB844}.Debug|x64.ActiveCfg = Debug|x64
-		{1434D5A1-9BE3-4F30-A536-304A5F0EB844}.Debug|x64.Build.0 = Debug|x64
-		{1434D5A1-9BE3-4F30-A536-304A5F0EB844}.Debug|x64.Deploy.0 = Debug|x64
-		{1434D5A1-9BE3-4F30-A536-304A5F0EB844}.Release|Any CPU.ActiveCfg = Release|x64
-		{1434D5A1-9BE3-4F30-A536-304A5F0EB844}.Release|x64.ActiveCfg = Release|x64
-		{1434D5A1-9BE3-4F30-A536-304A5F0EB844}.Release|x64.Build.0 = Release|x64
-		{1434D5A1-9BE3-4F30-A536-304A5F0EB844}.Release|x64.Deploy.0 = Release|x64
-		{4BF62EFF-4106-42C8-A178-770D935CB53C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4BF62EFF-4106-42C8-A178-770D935CB53C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4BF62EFF-4106-42C8-A178-770D935CB53C}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{4BF62EFF-4106-42C8-A178-770D935CB53C}.Debug|x64.Build.0 = Debug|Any CPU
-		{4BF62EFF-4106-42C8-A178-770D935CB53C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4BF62EFF-4106-42C8-A178-770D935CB53C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4BF62EFF-4106-42C8-A178-770D935CB53C}.Release|x64.ActiveCfg = Release|Any CPU
-		{4BF62EFF-4106-42C8-A178-770D935CB53C}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
