@@ -55,6 +55,7 @@ namespace DreamUnitTest
             //Assert.AreEqual(s.Length, lexemeList.Count, "The numbers of tokens are not accurate");
         }
 
+        [TestMethod]
         public void TestFullFileCompile()
         {
             if (File.Exists(@"..\..\..\..\examples\test.jlr"))

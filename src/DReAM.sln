@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DreamCompiler", "DreamCompi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Juka", "Juka\Juka.csproj", "{AE8A7059-8F21-41B2-BD8F-36D58E1F8330}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DreamAzureFunction", "DreamAzureFunction\DreamAzureFunction.csproj", "{FCFC62B8-1302-4A74-BF69-8707A1991A48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DreamAzureFunction", "DreamAzureFunction\DreamAzureFunction.csproj", "{FCFC62B8-1302-4A74-BF69-8707A1991A48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

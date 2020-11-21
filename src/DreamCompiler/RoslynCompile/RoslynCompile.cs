@@ -37,10 +37,9 @@ namespace DreamCompiler.RoslynCompile
 
         public static void CompileSyntaxTree(SyntaxTree parsedSyntaxTree, String outputFile)
         {
-            var compilation = CSharpCompilation.Create(outputFile, syntaxTrees: new[] {parsedSyntaxTree}, references: DefaultReferences);
-
             try
             {
+                var compilation = CSharpCompilation.Create(outputFile, syntaxTrees: new[] {parsedSyntaxTree}, references: DefaultReferences);
                 var result = compilation.Emit(outputFile + ".exe", outputFile + ".pdb");
 
                 Console.WriteLine(result.Success ? "Sucess!!" : "Failed");

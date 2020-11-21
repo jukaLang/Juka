@@ -23,13 +23,14 @@ namespace DreamCompiler
         {
             try
             {
-		Console.WriteLine("starting the compiler...");
+                Console.WriteLine("starting the compiler...");
                 CompileRoslyn.CompileSyntaxTree(null, ouputFileName);
                 return null;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 throw;
             }
         }
