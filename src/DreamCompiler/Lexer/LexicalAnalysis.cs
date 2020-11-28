@@ -153,7 +153,6 @@ namespace DreamCompiler.Lexer
             var currentSymbol = token.GetTokenData();
             if (currentSymbol == '(' ||
                 currentSymbol == ')' ||
-                currentSymbol == '"' ||
                 currentSymbol == '{' ||
                 currentSymbol == '}' ||
                 currentSymbol == ';'
@@ -162,6 +161,23 @@ namespace DreamCompiler.Lexer
                 symbol.AddToken(token);
                 symbol.PrintLexeme("Symbol");
                 return symbol;
+            }
+
+            if (currentSymbol.Equals('"'))
+            {
+                symbol.AddToken(token);
+                var next = this.scanner.ReadToken();
+                while (!next.GetTokenData().Equals('"'))
+                {
+                    symbol.AddToken(next);
+                    next = this.scanner.ReadToken();
+                }
+
+                if (next.GetTokenData().Equals('"'))
+                {
+                    symbol.AddToken(next);
+                    return symbol;
+                }
             }
 
 
@@ -233,6 +249,10 @@ namespace DreamCompiler.Lexer
                         Trace.Write("_");
                     }
                 });
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(nameof(token),"No type of whitespace");
             }
 
             return whiteSpace;

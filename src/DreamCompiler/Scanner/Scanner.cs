@@ -7,12 +7,13 @@ using System.Diagnostics;
 using DreamCompiler.Lexer;
 using static System.Char;
 using System.Runtime.Remoting.Messaging;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace DreamCompiler.Scanner
 {
     public class Scanner
     {
-        private int position;
+        private int position = 0;
         private byte[] fileData;
 
         public Scanner(string path)
@@ -45,42 +46,53 @@ namespace DreamCompiler.Scanner
         {
             TokenType tokenType = TokenType.NotValid;
 
-            if (IsEOF())
+            if ( position == fileData.Length)
             {
                 tokenType = TokenType.Eof;
                 return new Token(tokenType);
             }
-            else
+
+
+            char t = (char) fileData[position];
+
+            if (IsLetter(t))
             {
-                char t = (char) fileData[position++];
-
-                if (IsLetter(t))
-                {
-                    tokenType = TokenType.Character;
-                }
-                else if (IsDigit(t) || IsNumber(t))
-                {
-                    tokenType = TokenType.NumberDigit;
-                    //NumberDigit numberDigit = null;
-                    //int value;
-                    //if (int.TryParse(t.ToString(), out value))
-                    //{
-                    //    numberDigit = new NumberDigit() { tokenIntValue = value };
-                    //}
-
-                    //return numberDigit;
-                }
-                else if (IsPunctuation(t) || IsSymbol(t))
-                {
-                    tokenType = TokenType.Symbol;
-                }
-                else if (Char.IsWhiteSpace(t))
-                {
-                    tokenType = TokenType.WhiteSpace;
-                }
-
+                tokenType = TokenType.Character;
+                position++;
                 return new Token(tokenType, t);
             }
+
+            if (IsDigit(t) || IsNumber(t))
+            {
+                tokenType = TokenType.NumberDigit;
+                //NumberDigit numberDigit = null;
+                //int value;
+                //if (int.TryParse(t.ToString(), out value))
+                //{
+                //    numberDigit = new NumberDigit() { tokenIntValue = value };
+                //}
+
+                //return numberDigit;
+                position++;
+                return new Token(tokenType, t);
+            }
+
+            if (IsPunctuation(t) || IsSymbol(t))
+            {
+                tokenType = TokenType.Symbol;
+                position++;
+                return new Token(tokenType, t);
+            }
+
+            if (Char.IsWhiteSpace(t))
+            {
+                tokenType = TokenType.WhiteSpace;
+                position++;
+                return new Token(tokenType, t);
+            }
+
+            position++;
+            return new Token(tokenType, t);
         }
 
         internal void PutTokenBack()
@@ -90,7 +102,7 @@ namespace DreamCompiler.Scanner
 
         private bool IsEOF()
         {
-            if (position >= fileData.Length)
+            if (position >= (fileData.Length -1))
             {
                 return true;
             }
@@ -224,18 +236,7 @@ namespace DreamCompiler.Scanner
             this.lexemList = list;
         }
 
-        /*
-        public Lexeme NextNotWhiteSpace(out Lexeme lexeme)
-        {
-            while (lexemList[currentLexem].LexemeType == LexemeType.WhiteSpace)
-            {
-                currentLexem++;
-            }
 
-            lexeme = lexemList[currentLexem];
-            return lexeme;
-        }
-        */
 
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -364,97 +365,4 @@ namespace DreamCompiler.Scanner
         }
     }
 
- /*
-    public abstract class TokenImpl : IToken
-    {
-        public string tokenStringValue { get; set; }
-
-        public int tokenIntValue { get; set; }
-
-        public string tokenIdentifierValue { get; set; }
-
-        public string symbolValue { get; set; }
-
-        public string whiteSpaceValue { get; set; }
-
-        abstract public TokenType TokenType();
-    }
-   
-    public class Identifier : TokenImpl
-    {
-        public override string ToString()
-        {
-            return this.tokenIdentifierValue;
-        }
-
-        public override TokenType TokenType()
-        {
-            return DreamCompiler.Scanner.TokenType.IdentifierType;
-        }
-    }
-
-    public class NumberDigit : TokenImpl
-    {
-        public override string ToString()
-        {
-            return this.tokenIntValue.ToString();
-        }
-
-        public override TokenType TokenType()
-        {
-            return DreamCompiler.Scanner.TokenType.NumberDigitType;
-        }
-    }
-
-
-    public class WhiteSpace : TokenImpl
-    {
-        public override string ToString()
-        {
-            return this.whiteSpaceValue.ToString();
-        }
-
-        public override TokenType TokenType()
-        {
-            return DreamCompiler.Scanner.TokenType.WhiteSpaceType;
-        }
-    }
-
-    public class Punctuation : TokenImpl
-    {
-        public string punctuationValue { get; set; }
-
-        public override string ToString()
-        {
-            return this.punctuationValue;
-        }
-        public override TokenType TokenType()
-        {
-            return DreamCompiler.Scanner.TokenType.PunctuationType;
-        }
-    }
-
-   
-
-    public class Eof : TokenImpl
-    {
-        public override TokenType TokenType()
-        {
-            return DreamCompiler.Scanner.TokenType.EofType;
-        }
-    }
-
-    public class Symbol : TokenImpl
-    {
-        public override TokenType TokenType()
-        {
-            return DreamCompiler.Scanner.TokenType.SymbolType;
-        }
-
-        public override string ToString()
-        {
-            return this.symbolValue;
-        }
-    }
-    */
 }

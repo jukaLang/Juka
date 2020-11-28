@@ -50,6 +50,7 @@ namespace DreamCompiler.Lexer
 
         public enum KeyWordsEnum
         {
+            Notakeyword,
             Break,
             Do,
             Instanceof,
