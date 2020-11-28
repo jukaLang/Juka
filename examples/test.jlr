@@ -1,0 +1,6 @@
+function main() =  {
+    if ( 2<3 ) 
+    {
+        printLine("foo");
+    }
+}
