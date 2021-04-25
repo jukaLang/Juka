@@ -24,7 +24,7 @@ namespace DreamUnitTest
         [TestMethod]
         public void TestScanner()
         {
-            LexicalAnalysis lexicalAnalysis = new LexicalAnalysis(new Scanner(@"..\..\..\..\..\examples\test.jlr"));
+            LexicalAnalysis lexicalAnalysis = new LexicalAnalysis(new Scanner(@"..\..\..\..\examples\test.jlr"));
             var lexemeList = lexicalAnalysis.Analyze();
 
             SyntaxAnalyzer sa = new SyntaxAnalyzer();
