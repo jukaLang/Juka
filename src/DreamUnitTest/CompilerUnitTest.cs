@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics;
-using System.Dynamic;
 using System.IO;
 using DreamCompiler;
 using System.Linq.Expressions;
-using System.ServiceProcess;
 using System.Text;
-using System.Threading;
 using DreamCompiler.Scanner;
 
 namespace DreamUnitTest
@@ -32,7 +28,7 @@ namespace DreamUnitTest
         }
 
 
-        //[TestMethod]
+        [TestMethod]
         public void TestScannerWithMemoryStream()
         {
             string program = "function main() = {{\r\n\tif ( 2<3 ) {{\r\n\t\tprintLine(\"foo\");\r\n\t}}\r\n}}\r\n";
@@ -57,7 +53,7 @@ namespace DreamUnitTest
         }
 
 
-        //[TestMethod]
+        [TestMethod]
         public void TestRoslyn()
         {
 
@@ -79,7 +75,7 @@ namespace DreamUnitTest
 
         }
 
-        //[TestMethod]
+        [TestMethod]
         public void TestEmptyMain()
         {
             string s = 
@@ -109,7 +105,7 @@ namespace DreamUnitTest
             return stream;
         }
 
-        //[TestMethod]
+        [TestMethod]
         public void TestEmpty()
         {
             try
@@ -128,7 +124,7 @@ namespace DreamUnitTest
             }
         }
 
-        //[TestMethod]
+        [TestMethod]
 
         private static CSharpSyntaxNode Compile(FileStream stream)
         {
@@ -139,7 +135,7 @@ namespace DreamUnitTest
             return new Compiler().Go("testcompile", memoryStream);
         }
 
-        //[TestMethod]
+        [TestMethod]
         public void TestAddBinaryExpression()
         {
             String binaryExpression = 
@@ -156,7 +152,7 @@ namespace DreamUnitTest
         }
 
 
-        //[TestMethod]
+        [TestMethod]
         public void TestBooleanExpression()
         {
             String binaryExpression =
@@ -172,7 +168,7 @@ namespace DreamUnitTest
             Assert.IsNotNull(node);
         }
 
-        //[TestMethod]
+        [TestMethod]
         public void TestMultiplyParenthisizedExpression()
         {
             String binaryExpression =
@@ -188,7 +184,7 @@ namespace DreamUnitTest
             Assert.IsNotNull(node);
         }
 
-        //[TestMethod]
+        [TestMethod]
         public void TestMultiplyBinaryExpression()
         {
             String binaryExpression =

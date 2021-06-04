@@ -1,6 +1,4 @@
-using System;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -8,8 +6,8 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using System;
+using DreamCompiler;
 
 namespace DreamAzureFunction
 {
@@ -28,11 +26,39 @@ namespace DreamAzureFunction
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             name = name ?? data?.name;
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+
+            if (string.IsNullOrEmpty(name))
+            {
+                return new OkObjectResult("The compiler is ready. Pass in the script into a name in the query string or in the request body for a response.");
+            }
+            
+
+            string responseMessage = "";
+            var memoryStream = GenerateStreamFromString(name);
+            try
+            {
+                var x = new Compiler().Go("testcompile", memoryStream);
+                //responseMessage = new Compiler().Go("testcompile", memoryStream).ToString();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return new OkObjectResult(responseMessage);
         }
+
+
+        private static MemoryStream GenerateStreamFromString(string s)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(s);
+            writer.Flush();
+            stream.Position = 0;
+            return stream;
+        }
+
+
     }
 }

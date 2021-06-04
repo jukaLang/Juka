@@ -45,7 +45,7 @@ namespace DreamCompiler.RoslynCompile
                 Console.WriteLine(result.Success ? "Sucess!!" : "Failed");
                 if (!result.Success)
                 {
-                    throw new Exception(result.Diagnostics[0].ToString());
+                    throw new Exception("FAILED RoslynCompile" + result.Diagnostics[0].ToString());
                 }
             }
             catch (Exception)
