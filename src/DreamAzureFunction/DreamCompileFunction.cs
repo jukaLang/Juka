@@ -17,9 +17,6 @@ namespace DreamAzureFunction
             logger.LogInformation("C# HTTP trigger function processed a request.");
 
 
-
-            
-
             var response = req.CreateResponse(HttpStatusCode.OK);
             response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
 
