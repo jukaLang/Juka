@@ -1,64 +1,57 @@
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
+using System.Net;
 using DreamCompiler;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Extensions.Logging;
 
 namespace DreamAzureFunction
 {
     public static class DreamCompileFunction
     {
-        [FunctionName("DreamCompileFunction")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
+        [Function("DreamCompileFunction")]
+        public static HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req,
+            FunctionContext executionContext)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
-
-            string name = req.Query["name"];
-
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            var logger = executionContext.GetLogger("DreamCompileFunction");
+            logger.LogInformation("C# HTTP trigger function processed a request.");
 
 
-            if (string.IsNullOrEmpty(name))
-            {
-                return new OkObjectResult("The compiler is ready. Pass in the script into a name in the query string or in the request body for a response.");
-            }
+
             
 
-            string responseMessage = "";
-            var memoryStream = GenerateStreamFromString(name);
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
+
+
+            var x = req.ReadAsString();
+
+            response.WriteString("Welcome to Juka!\n");
+            response.WriteString("Response:\n");
+
+            var script = @"using System;
+  
+            public class MyClass {
+  
+                // Main Method
+                public static void Main()
+                {
+                    " + x + @"
+                }
+            }";
+
+
             try
             {
-                var x = new Compiler().Go("testcompile", memoryStream);
-                //responseMessage = new Compiler().Go("testcompile", memoryStream).ToString();
+                response.WriteString(new Compiler().Go("Jukacompile", script).ToString());
             }
             catch (Exception ex)
             {
-                throw ex;
+                response.WriteString("FAILURE: " +ex);
             }
 
-            return new OkObjectResult(responseMessage);
+
+            return response;
         }
-
-
-        private static MemoryStream GenerateStreamFromString(string s)
-        {
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            writer.Write(s);
-            writer.Flush();
-            stream.Position = 0;
-            return stream;
-        }
-
-
     }
 }

@@ -5,53 +5,52 @@ namespace DreamCompiler.RoslynCompile
 {
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis;
+    using System.IO;
+    using System.Reflection;
 
     public class CompileRoslyn
     {
-        private static readonly IEnumerable<string> DefaultNamespaces =
-            new[]
-            {
-                "System",
-                "System.IO",
-                "System.Net",
-                "System.Linq",
-                "System.Text",
-                "System.Text.RegularExpressions",
-                "System.Collections.Generic"
-            };
-
-
-        private static readonly string rt = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory() + "{0}.dll";
-        private static readonly IEnumerable<MetadataReference> DefaultReferences =
-            new[]
-            {
-                MetadataReference.CreateFromFile(string.Format(rt, "mscorlib")),
-                MetadataReference.CreateFromFile(string.Format(rt, "System")),
-                MetadataReference.CreateFromFile(string.Format(rt, "System.Core"))
-            };
-
-        private static readonly CSharpCompilationOptions DefaultCompilationOptions =
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
-                    .WithOverflowChecks(true).WithOptimizationLevel(OptimizationLevel.Release)
-                    .WithUsings(DefaultNamespaces);
-
-        public static void CompileSyntaxTree(SyntaxTree parsedSyntaxTree, String outputFile)
+        public static string CompileSyntaxTree(SyntaxTree parsedSyntaxTree, String outputFile)
         {
             try
             {
-                var compilation = CSharpCompilation.Create(outputFile, syntaxTrees: new[] {parsedSyntaxTree}, references: DefaultReferences);
-                var result = compilation.Emit(outputFile + ".exe", outputFile + ".pdb");
 
-                Console.WriteLine(result.Success ? "Sucess!!" : "Failed");
-                if (!result.Success)
+                var rt = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory();
+                var references = new List<MetadataReference>() {
+                    MetadataReference.CreateFromFile($@"{rt}System.Private.CoreLib.dll"),
+                    MetadataReference.CreateFromFile($@"{rt}\System.dll"),
+                    MetadataReference.CreateFromFile($@"{rt}\System.Console.dll"),
+                    MetadataReference.CreateFromFile($@"{rt}\System.Runtime.dll"),
+                };
+
+                var compilation = CSharpCompilation.Create("MyCompilation", syntaxTrees: new[] { parsedSyntaxTree}, references: references);
+
+                //Emit to stream
+                var ms = new MemoryStream();
+                var emitResult = compilation.Emit(ms);
+
+                var type = Assembly.Load(ms.GetBuffer()).GetType("MyClass");
+
+                string allConsoleOutput = "";
+
+                using (StringWriter stringWriter = new StringWriter())
                 {
-                    throw new Exception("FAILED RoslynCompile" + result.Diagnostics[0].ToString());
+                    Console.SetOut(stringWriter);
+                    type.InvokeMember("Main", BindingFlags.Default | BindingFlags.InvokeMethod, null, null, null);
+                    allConsoleOutput = stringWriter.ToString();
+
+                    var standardOutput = new StreamWriter(Console.OpenStandardOutput());
+                    standardOutput.AutoFlush = true;
+                    Console.SetOut(standardOutput);
                 }
+
+                return allConsoleOutput;
             }
             catch (Exception)
             {
                 throw;
             }
+            
         }
     }
 }
