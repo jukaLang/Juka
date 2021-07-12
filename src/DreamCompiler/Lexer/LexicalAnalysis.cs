@@ -73,7 +73,7 @@ namespace DreamCompiler.Lexer
                 identifier.AddToken(token);
                 var next = this.scanner.ReadToken();
 
-                while (next.TokenType() == TokenType.Character)
+                while (next.TokenType() == TokenType.Character || next.TokenType() == TokenType.NumberDigit)
                 {
                     identifier.AddToken(next);
                     next = this.scanner.ReadToken();
