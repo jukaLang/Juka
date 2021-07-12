@@ -48,7 +48,7 @@ namespace DreamUnitTest
                 //ILexicalAnalysis lexical = new LexicalAnalysis(mockScanner.Object);
                 //lexical.Analyze();
 
-                var compiler = new Compiler(new string[]{ @"..\..\..\..\examples\test.jlr" });
+                var compiler = new Compiler(new string[]{ @"..\..\..\..\examples\scanner.jlr" });
                 compiler.Go("testcompile", s);
             }
             catch (Exception ex)

@@ -7,9 +7,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DreamUnitTest", "DreamUnitT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DreamCompiler", "DreamCompiler\DreamCompiler.csproj", "{C6C15D26-01CC-4877-9D4F-5EE89E1FE5EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DreamAzureFunction", "DreamAzureFunction\DreamAzureFunction.csproj", "{DAB71815-AEF6-49B9-AC33-C25B998DB7C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DreamAzureFunction", "DreamAzureFunction\DreamAzureFunction.csproj", "{DAB71815-AEF6-49B9-AC33-C25B998DB7C3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{C6C15D26-01CC-4877-9D4F-5EE89E1FE5EC} = {C6C15D26-01CC-4877-9D4F-5EE89E1FE5EC}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4A72583D-50EC-4A72-87E0-3DEA91EAE1FE}"
+	ProjectSection(SolutionItems) = preProject
+		..\examples\scanner.jlr = ..\examples\scanner.jlr
+		..\examples\test.jlr = ..\examples\test.jlr
+		..\examples\test2.jlr = ..\examples\test2.jlr
 	EndProjectSection
 EndProject
 Global

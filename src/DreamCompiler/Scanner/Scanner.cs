@@ -36,7 +36,7 @@ namespace DreamCompiler.Scanner
 
                 if (viewStream.CanRead)
                 {
-                    int bytesRead = viewStream.Read(fileData, 0 ,30);
+                    int bytesRead = viewStream.Read(fileData, 0 ,100);
                 }
             }
         }

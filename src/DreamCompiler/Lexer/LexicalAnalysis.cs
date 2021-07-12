@@ -9,8 +9,9 @@ namespace DreamCompiler.Lexer
     {
         private IScanner scanner;
         public Dictionary<KeyWords.KeyWordsEnum, Action<IToken>> keywordActions = new Dictionary<KeyWords.KeyWordsEnum, Action<IToken>>();
-        
-        public LexicalAnalysis(IScanner scanner)
+        private List<char> symbolList = new List<char>() {'=','/','-',',',';'};
+
+    public LexicalAnalysis(IScanner scanner)
         {
             this.scanner = scanner;
 
@@ -105,19 +106,15 @@ namespace DreamCompiler.Lexer
             Lexeme number = new Lexeme(LexemeType.Number);
             number.AddToken(token);
 
-            while(true)
+            var next = this.scanner.ReadToken();
+
+            while(next.TokenType() == TokenType.NumberDigit)
             {
-                var next = this.scanner.ReadToken();
-                if (next.TokenType() == TokenType.NumberDigit)
-                {
-                    number.AddToken(token);
-                }
-                else
-                {
-                    this.scanner.PutTokenBack();
-                    break;
-                }
+                number.AddToken(next);
+                next = this.scanner.ReadToken();
             }
+
+            this.scanner.PutTokenBack();
 
             number.PrintLexeme("Number");
             return number;
@@ -143,12 +140,8 @@ namespace DreamCompiler.Lexer
             Lexeme symbol = new Lexeme(LexemeType.Number);
 
             var currentSymbol = token.GetTokenData();
-            if (currentSymbol == '(' ||
-                currentSymbol == ')' ||
-                currentSymbol == '{' ||
-                currentSymbol == '}' ||
-                currentSymbol == ';'
-                )
+
+            if(symbolList.Contains(currentSymbol))
             {
                 symbol.AddToken(token);
                 symbol.PrintLexeme("Symbol");
