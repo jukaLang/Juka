@@ -1,6 +1,8 @@
 ﻿using DreamCompiler;
+using DreamCompiler.Lexer;
 using DreamCompiler.Scanner;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -9,8 +11,6 @@ using System.Text;
 
 namespace DreamUnitTest
 {
-    using DreamCompiler.Lexer;
-    using DreamCompiler.SyntaxAnalyzer;
 
     [TestClass]
     public class CompilerUnitTest
@@ -18,6 +18,18 @@ namespace DreamUnitTest
         [TestMethod]
         public void TestEmptyMain()
         {
+            var mockScanner = new Mock<IScanner>();
+            mockScanner.Setup(f => f.LoadBuffer()).Callback(()=>
+            {
+                Console.WriteLine("test");
+            });
+
+            mockScanner.Setup(f => f.ReadToken()).Callback(()=>
+            {
+                Console.WriteLine("");
+            })
+            .Returns(new Token(TokenType.Character));
+
             string s =
             @"using System;
   
@@ -32,7 +44,11 @@ namespace DreamUnitTest
             }";
             try
             {
-                var compiler = new Compiler();
+
+                //ILexicalAnalysis lexical = new LexicalAnalysis(mockScanner.Object);
+                //lexical.Analyze();
+
+                var compiler = new Compiler(new string[]{ @"..\..\..\..\examples\test.jlr" });
                 compiler.Go("testcompile", s);
             }
             catch (Exception ex)
@@ -41,14 +57,14 @@ namespace DreamUnitTest
             }
         }
 
-        //[TestMethod]
+        [TestMethod]
         public void TestScanner()
         {
-            LexicalAnalysis lexicalAnalysis = new LexicalAnalysis(new Scanner(@"..\..\..\..\examples\test.jlr"));
-            var lexemeList = lexicalAnalysis.Analyze();
+            // LexicalAnalysis lexicalAnalysis = new LexicalAnalysis(new Scanner(@"..\..\..\..\examples\test.jlr"));
+            // var lexemeList = lexicalAnalysis.Analyze();
 
-            SyntaxAnalyzer sa = new SyntaxAnalyzer();
-            sa.Analyze(lexemeList);
+            // SyntaxAnalyzer sa = new SyntaxAnalyzer();
+            //sa.Analyze(lexemeList);
         }
 
 
@@ -88,7 +104,7 @@ namespace DreamUnitTest
                 }";
 
 
-            var node = new Compiler().Go("TestAddBinaryExpression", binaryExpression);
+            var node = new Compiler(new string[] { @"..\..\..\..\examples\test.jlr" }).Go("TestAddBinaryExpression", binaryExpression);
             Assert.IsNotNull(node);
         }
 
@@ -102,7 +118,7 @@ namespace DreamUnitTest
                     printLine(x);
                 }";
 
-            var node = new Compiler().Go("TestAddBinaryExpression", binaryExpression);
+            var node = new Compiler(new string[] { @"..\..\..\..\examples\test.jlr" }).Go("TestAddBinaryExpression", binaryExpression);
             Assert.IsNotNull(node);
         }
 
@@ -115,7 +131,7 @@ namespace DreamUnitTest
                     printLine(x);
                 }";
 
-            var node = new Compiler().Go("TestMultiplyParenthisizedExpression", binaryExpression);
+            var node = new Compiler(new string[] { @"..\..\..\..\examples\test.jlr" }).Go("TestMultiplyParenthisizedExpression", binaryExpression);
             Assert.IsNotNull(node);
         }
 
@@ -128,7 +144,7 @@ namespace DreamUnitTest
                     printLine(x);
                 }";
 
-            var node = new Compiler().Go("TestMultiplyBinaryExpression", binaryExpression);
+            var node = new Compiler(new string[] { @"..\..\..\..\examples\test.jlr" }).Go("TestMultiplyBinaryExpression", binaryExpression);
             Assert.IsNotNull(node);
         }
 

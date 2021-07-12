@@ -1,29 +1,43 @@
-﻿using System;
+﻿using DreamCompiler.Lexer;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using System.Diagnostics;
-using DreamCompiler.Lexer;
+using System.IO;
+using System.IO.MemoryMappedFiles;
+using System.Text;
 using static System.Char;
-using System.Runtime.Remoting.Messaging;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace DreamCompiler.Scanner
 {
-    public class Scanner
+    public class Scanner : IScanner
     {
         private int position = 0;
         private byte[] fileData;
+        private long bufferLength = 0;
+        private ICommandLineProvider provider;
+        private string path;
 
-        public Scanner(string path)
+        public Scanner(ICommandLineProvider provider)
         {
-            using (FileStream fileStream = File.Open(path, FileMode.Open))
-            {
-                double fileLength = fileStream.Length;
+            this.provider = provider;
+            this.path = this.provider.Check(0);
+            LoadBuffer();
+        }
 
-                this.fileData = new byte[(int) fileLength];
-                fileStream.Read(this.fileData, 0, (int) fileLength);
+        public void LoadBuffer()
+        {
+            using (var mmf = MemoryMappedFile.CreateFromFile(path, FileMode.Open, "jukabuff"))
+            {
+                var viewStream = mmf.CreateViewStream();
+                this.bufferLength = viewStream.Length;
+
+                fileData = new byte[viewStream.Length];
+
+                if (viewStream.CanRead)
+                {
+                    int bytesRead = viewStream.Read(fileData, 0 ,30);
+                }
             }
         }
 
@@ -41,8 +55,7 @@ namespace DreamCompiler.Scanner
             }
         }
 
-
-        internal IToken ReadToken()
+        public IToken ReadToken()
         {
             TokenType tokenType = TokenType.NotValid;
 
@@ -95,7 +108,7 @@ namespace DreamCompiler.Scanner
             return new Token(tokenType, t);
         }
 
-        internal void PutTokenBack()
+        public void PutTokenBack()
         {
             this.position--;
         }
@@ -121,7 +134,6 @@ namespace DreamCompiler.Scanner
         }
 
     }
-
 
     public enum TokenType
     {
@@ -339,17 +351,17 @@ namespace DreamCompiler.Scanner
         char GetTokenData();
     }
 
-    internal class Token : IToken
+    public class Token : IToken
     {
         internal TokenType tokenType;
         internal char data;
 
-        internal Token(TokenType t)
+        public Token(TokenType t)
         {
             this.tokenType = t;
         }
 
-        internal Token(TokenType t, char tokenData) : this(t)
+        public Token(TokenType t, char tokenData) : this(t)
         {
             this.data = tokenData;
         }

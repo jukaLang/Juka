@@ -1,23 +1,16 @@
 ﻿using DreamCompiler.Scanner;
-using DreamCompiler.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace DreamCompiler.Lexer
 {
-    public class LexicalAnalysis
+    public class LexicalAnalysis : ILexicalAnalysis
     {
-        private Scanner.Scanner scanner;
+        private IScanner scanner;
         public Dictionary<KeyWords.KeyWordsEnum, Action<IToken>> keywordActions = new Dictionary<KeyWords.KeyWordsEnum, Action<IToken>>();
         
-        
-        public LexicalAnalysis(Scanner.Scanner scanner)
+        public LexicalAnalysis(IScanner scanner)
         {
             this.scanner = scanner;
 
@@ -70,10 +63,31 @@ namespace DreamCompiler.Lexer
             return new LexemeListManager(lexemeList);
         }
 
-        //public void 
-
-
         private Lexeme GetIdentifier(IToken token)
+        {
+            token = SkipWhiteSpace(token);
+
+            using (Lexeme identifier = new Lexeme(LexemeType.Identifier))
+            {
+                identifier.AddToken(token);
+                var next = this.scanner.ReadToken();
+
+                while (next.TokenType() == TokenType.Character)
+                {
+                    identifier.AddToken(next);
+                    next = this.scanner.ReadToken();
+                }
+
+                identifier.PrintLexeme("Identifier");
+                this.scanner.PutTokenBack();
+
+                return identifier;
+            }
+
+            throw new Exception();
+        }
+
+        private IToken SkipWhiteSpace(IToken token)
         {
             if (token.TokenType() == TokenType.WhiteSpace)
             {
@@ -83,30 +97,8 @@ namespace DreamCompiler.Lexer
                 }
             }
 
-            using (Lexeme identifier = new Lexeme(LexemeType.Identifier))
-            {
-                identifier.AddToken(token);
-
-                while (true)
-                {
-                    var next = this.scanner.ReadToken();
-                    if (next.TokenType() == TokenType.Symbol || next.TokenType() == TokenType.WhiteSpace)
-                    {
-                        this.scanner.PutTokenBack();
-                        break;
-                    }
-
-                    identifier.AddToken(next);
-                }
-
-                identifier.PrintLexeme("Identifier");
-
-                return identifier;
-            }
-
-            throw new Exception();
+            return token;
         }
-
 
         private Lexeme GetNumber(IToken token)
         {
@@ -307,7 +299,6 @@ namespace DreamCompiler.Lexer
                 }
             }
         }
-    };
-}
+    }}
 
 

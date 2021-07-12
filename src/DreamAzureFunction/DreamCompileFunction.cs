@@ -40,7 +40,7 @@ namespace DreamAzureFunction
 
             try
             {
-                response.WriteString(new Compiler().Go("Jukacompile", script).ToString());
+                //response.WriteString(new Compiler().Go("Jukacompile", script).ToString());
             }
             catch (Exception ex)
             {

@@ -10,6 +10,7 @@
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.2.0" />
     <PackageReference Include="Microsoft.CodeAnalysis" Version="3.9.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.Net.Requests" Version="4.3.0" />
