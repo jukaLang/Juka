@@ -4,6 +4,7 @@
     {
         IToken ReadToken();
         void PutTokenBack();
-        void LoadBuffer();
+        void BufferInitialLoad();
+        bool TryReadBufferBytes();
     }
 }

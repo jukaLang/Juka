@@ -17,28 +17,38 @@ namespace DreamCompiler.Scanner
         private long bufferLength = 0;
         private ICommandLineProvider provider;
         private string path;
+        private int bufferOffset = 0;
+        private int bufferCount = 100;
+        private int bytesRead = 0;
+        private MemoryMappedViewStream viewStream;
 
         public Scanner(ICommandLineProvider provider)
         {
             this.provider = provider;
             this.path = this.provider.Check(0);
-            LoadBuffer();
+            BufferInitialLoad();
+            TryReadBufferBytes();
         }
 
-        public void LoadBuffer()
+        public void BufferInitialLoad()
         {
-            using (var mmf = MemoryMappedFile.CreateFromFile(path, FileMode.Open, "jukabuff"))
+            using (var mmf = MemoryMappedFile.CreateFromFile(path, FileMode.Open))
             {
-                var viewStream = mmf.CreateViewStream();
+                this.viewStream = mmf.CreateViewStream();
                 this.bufferLength = viewStream.Length;
-
                 fileData = new byte[viewStream.Length];
-
-                if (viewStream.CanRead)
-                {
-                    int bytesRead = viewStream.Read(fileData, 0 ,100);
-                }
             }
+        }
+
+        public bool TryReadBufferBytes()
+        { 
+            if (this.viewStream.CanRead)
+            {
+                this.bytesRead= viewStream.Read(fileData, bufferOffset , bufferCount);
+                return true;
+            }
+
+            return false;
         }
 
         public Scanner(MemoryStream memoryStream)
@@ -59,12 +69,16 @@ namespace DreamCompiler.Scanner
         {
             TokenType tokenType = TokenType.NotValid;
 
-            if ( position == fileData.Length)
+            if (position == fileData.Length)
             {
-                tokenType = TokenType.Eof;
-                return new Token(tokenType);
+                return new Token(TokenType.Eof);
             }
 
+            if (position == this.bytesRead)
+            {
+                bufferOffset = position;
+                TryReadBufferBytes();
+            }
 
             char t = (char) fileData[position];
 
@@ -113,16 +127,6 @@ namespace DreamCompiler.Scanner
             this.position--;
         }
 
-        private bool IsEOF()
-        {
-            if (position >= (fileData.Length -1))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
         internal bool IsWhiteSpace()
         {
             if (Char.IsWhiteSpace((char) fileData[position]))
@@ -132,7 +136,6 @@ namespace DreamCompiler.Scanner
 
             return false;
         }
-
     }
 
     public enum TokenType
@@ -248,8 +251,6 @@ namespace DreamCompiler.Scanner
             this.lexemList = list;
         }
 
-
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             return (IEnumerator) GetEnumerator();
@@ -259,9 +260,7 @@ namespace DreamCompiler.Scanner
         {
             return new LexemeEnumerator(this.lexemList);
         }
-
     }
-
 
     public class LexemeEnumerator : IEnumerator
     {

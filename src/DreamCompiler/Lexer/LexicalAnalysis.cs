@@ -28,7 +28,7 @@ namespace DreamCompiler.Lexer
             while (true)
             {
                 IToken token = scanner.ReadToken();
-                if (token.TokenType() == TokenType.Eof)
+                if (token.TokenType() == TokenType.Eof || token.TokenType() == TokenType.NotValid)
                 {
                     break;
                 }
@@ -108,7 +108,8 @@ namespace DreamCompiler.Lexer
 
             var next = this.scanner.ReadToken();
 
-            while(next.TokenType() == TokenType.NumberDigit)
+            while(next.TokenType() == TokenType.Character || 
+                  next.TokenType() == TokenType.NumberDigit)
             {
                 number.AddToken(next);
                 next = this.scanner.ReadToken();
@@ -201,7 +202,7 @@ namespace DreamCompiler.Lexer
                 }
             }
 
-            symbol.PrintLexeme("Symbol");
+            //symbol.PrintLexeme("Symbol");
             return symbol;
         }
 
@@ -215,6 +216,7 @@ namespace DreamCompiler.Lexer
                 token.GetTokenData().Equals(' '))
             {
                 whiteSpace.AddToken(token);
+                /*
                 whiteSpace.PrintLexeme("WhiteSpace", ()=>
                 {
                     if (token.GetTokenData().Equals('\n'))
@@ -234,6 +236,7 @@ namespace DreamCompiler.Lexer
                         Trace.Write("_");
                     }
                 });
+                */
             }
             else
             {

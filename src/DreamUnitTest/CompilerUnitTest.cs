@@ -19,7 +19,7 @@ namespace DreamUnitTest
         public void TestEmptyMain()
         {
             var mockScanner = new Mock<IScanner>();
-            mockScanner.Setup(f => f.LoadBuffer()).Callback(()=>
+            mockScanner.Setup(f => f.BufferInitialLoad()).Callback(()=>
             {
                 Console.WriteLine("test");
             });
