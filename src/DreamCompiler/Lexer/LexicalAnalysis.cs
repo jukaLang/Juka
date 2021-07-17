@@ -142,14 +142,12 @@ namespace DreamCompiler.Lexer
 
             var currentSymbol = token.GetTokenData();
 
-            /*
-            if(symbolList.Contains(currentSymbol))
+            if(currentSymbol.Equals(';'))
             {
                 symbol.AddToken(token);
                 symbol.PrintLexeme("Symbol");
                 return symbol;
             }
-            */
 
             if (currentSymbol.Equals('(') || currentSymbol.Equals(')'))
             {
@@ -175,6 +173,22 @@ namespace DreamCompiler.Lexer
                 }
             }
 
+            if (currentSymbol.Equals('+'))
+            {
+                symbol.AddToken(token);
+                var next = this.scanner.ReadToken();
+                
+                if (next.GetTokenData().Equals('+'))
+                {
+                    symbol.AddToken(next);
+                    symbol.PrintLexeme("Symbol");
+                    return symbol;
+                }
+
+                symbol.PrintLexeme("Symbol");
+                this.scanner.PutTokenBack();
+                return symbol;
+            }
 
             if (currentSymbol == '=')
             {
