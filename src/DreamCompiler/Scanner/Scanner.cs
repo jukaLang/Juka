@@ -153,6 +153,7 @@ namespace DreamCompiler.Scanner
         Identifier,
         Number,
         WhiteSpace,
+        Symbol,
     }
 
     public class Lexeme : IDisposable

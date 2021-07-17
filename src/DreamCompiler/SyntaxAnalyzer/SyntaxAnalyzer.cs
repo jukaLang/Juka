@@ -39,7 +39,6 @@ namespace DreamCompiler.SyntaxAnalyzer
                     break;
                 }
 
-
                 case Lexer.KeyWords.KeyWordsEnum.If:
                 {
                     ParseIfStatement();
