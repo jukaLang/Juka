@@ -19,7 +19,7 @@ namespace DreamCompiler.Scanner
         private string path;
         private int bufferOffset = 0;
         private int bufferCount = 100;
-        private int bytesRead = 0;
+        private int totalBytesRead = 0;
         private MemoryMappedViewStream viewStream;
 
         public Scanner(ICommandLineProvider provider)
@@ -44,7 +44,7 @@ namespace DreamCompiler.Scanner
         { 
             if (this.viewStream.CanRead)
             {
-                this.bytesRead= viewStream.Read(fileData, bufferOffset , bufferCount);
+                this.totalBytesRead += viewStream.Read(fileData, bufferOffset , bufferCount);
                 return true;
             }
 
@@ -74,7 +74,7 @@ namespace DreamCompiler.Scanner
                 return new Token(TokenType.Eof);
             }
 
-            if (position == this.bytesRead)
+            if (position >= this.totalBytesRead)
             {
                 bufferOffset = position;
                 TryReadBufferBytes();
@@ -92,14 +92,6 @@ namespace DreamCompiler.Scanner
             if (IsDigit(t) || IsNumber(t))
             {
                 tokenType = TokenType.NumberDigit;
-                //NumberDigit numberDigit = null;
-                //int value;
-                //if (int.TryParse(t.ToString(), out value))
-                //{
-                //    numberDigit = new NumberDigit() { tokenIntValue = value };
-                //}
-
-                //return numberDigit;
                 position++;
                 return new Token(tokenType, t);
             }

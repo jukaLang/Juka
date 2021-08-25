@@ -30,18 +30,6 @@ namespace DreamUnitTest
             })
             .Returns(new Token(TokenType.Character));
 
-            string s =
-            @"using System;
-  
-            class Testcompile {
-  
-                // Main Method
-                protected static void Main()
-                {
-  
-                    Console.WriteLine(""Main Method"");
-                }
-            }";
             try
             {
 
@@ -49,7 +37,6 @@ namespace DreamUnitTest
                 //lexical.Analyze();
 
                 var compiler = new Compiler(new string[]{ @"..\..\..\..\examples\scanner.jlr" });
-                compiler.Go("testcompile", s);
             }
             catch (Exception ex)
             {

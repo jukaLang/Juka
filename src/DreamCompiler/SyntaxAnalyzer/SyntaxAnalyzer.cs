@@ -13,7 +13,6 @@ namespace DreamCompiler.SyntaxAnalyzer
     public class SyntaxAnalyzer
     {
         private LexemeListManager list;
-        private int currentLocation = 0;
         private LexemeEnumerator lexemeEnumerator;
 
         public void Analyze(LexemeListManager listManager)

@@ -27,7 +27,7 @@ namespace DreamCompiler
                  services.AddHostedService<HostedService>();
              });
 
-            hostBuilder.RunConsoleAsync().Wait();
+            hostBuilder.RunConsoleAsync();
         }
 
         public String Go(String ouputFileName, String path)
