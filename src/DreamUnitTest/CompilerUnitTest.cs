@@ -29,7 +29,6 @@ namespace DreamUnitTest
                 new Token(TokenType.Symbol, ')'),
                 new Token(TokenType.Symbol, '{'),
                 new Token(TokenType.Symbol, '}'),
-                new Token(TokenType.Symbol, ';'),
             };
 
             int bufferCount = -1;
