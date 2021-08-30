@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DreamCompiler.Constants;
-using DreamCompiler.Scanner;
+using DreamCompiler.Scan;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 namespace DreamCompiler.SyntaxAnalyzer

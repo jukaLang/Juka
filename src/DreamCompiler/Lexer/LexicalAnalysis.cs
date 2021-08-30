@@ -1,4 +1,4 @@
-﻿using DreamCompiler.Scanner;
+﻿using DreamCompiler.Scan;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,10 +11,8 @@ namespace DreamCompiler.Lexer
         public Dictionary<KeyWords.KeyWordsEnum, Action<IToken>> keywordActions = new Dictionary<KeyWords.KeyWordsEnum, Action<IToken>>();
         private readonly List<char> symbolList = new List<char>() { '=', '/', '-', ',', ';', '(', ')', '{', '}' };
 
-        public LexicalAnalysis(IScanner scanner)
+        public LexicalAnalysis()
         {
-            this.scanner = scanner;
-
             keywordActions = new Dictionary<KeyWords.KeyWordsEnum, Action<IToken>>()
             {
                 {KeyWords.KeyWordsEnum.Main, MainAction},
@@ -22,15 +20,17 @@ namespace DreamCompiler.Lexer
             };
         }
 
-        public LexemeListManager Analyze()
+        public LexemeListManager Analyze(IScanner scanner)
         {
+            this.scanner = scanner;
+
             List<Lexeme> lexemeList = new List<Lexeme>();
             var errorList = new List<LexicalAnalysisException>();
 
             while (true)
             {
                 IToken token = scanner.ReadToken();
-                if (token.TokenType() == TokenType.Eof || token.TokenType() == TokenType.NotValid)
+                if (token == null || token.TokenType() == TokenType.Eof || token.TokenType() == TokenType.NotValid)
                 {
                     break;
                 }
@@ -82,7 +82,7 @@ namespace DreamCompiler.Lexer
                 identifier.AddToken(token);
                 var next = this.scanner.ReadToken();
 
-                while (next.TokenType() == TokenType.Character || next.TokenType() == TokenType.NumberDigit)
+                while (next != null && (next.TokenType() == TokenType.Character || next.TokenType() == TokenType.NumberDigit))
                 {
                     identifier.AddToken(next);
                     next = this.scanner.ReadToken();

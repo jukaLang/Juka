@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DreamCompiler.Scanner;
+using DreamCompiler.Scan;
 
 namespace DreamCompiler.Lexer
 {
     public interface ILexicalAnalysis
     {
-        LexemeListManager Analyze();
+        LexemeListManager Analyze(IScanner scanner);
     }
 }

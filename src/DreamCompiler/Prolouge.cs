@@ -1,7 +1,7 @@
 ﻿//java org.antlr.v4.Tool -Dlanguage= CSharp DreamGrammar.g4 -no-listener
 
 using DreamCompiler.Lexer;
-using DreamCompiler.Scanner;
+using DreamCompiler.Scan;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -14,17 +14,17 @@ namespace DreamCompiler
         String Go(String ouputFileName, String raw_string);
     }
 
-    public class Compiler
+    public class Prolouge
     {
-        public Compiler(string[] args)
+        public Prolouge(string[] args)
         {
             var hostBuilder = new HostBuilder()
              .ConfigureServices((context, services) =>
              {
-                 services.AddSingleton<IScanner, Scanner.Scanner>();
+                 services.AddSingleton<IScanner, Scanner>();
                  services.AddSingleton<ILexicalAnalysis, LexicalAnalysis>();
                  services.AddSingleton(s => CommandLineProvider.InputArgs(args, s));
-                 services.AddHostedService<HostedService>();
+                 // services.AddHostedService<HostedService>();
              });
 
             hostBuilder.RunConsoleAsync();

@@ -8,7 +8,7 @@ using System.IO.MemoryMappedFiles;
 using System.Text;
 using static System.Char;
 
-namespace DreamCompiler.Scanner
+namespace DreamCompiler.Scan
 {
     public class Scanner : IScanner
     {
@@ -253,6 +253,8 @@ namespace DreamCompiler.Scanner
         {
             return new LexemeEnumerator(this.lexemList);
         }
+
+        public int Count => this.lexemList.Count;
     }
 
     public class LexemeEnumerator : IEnumerator
