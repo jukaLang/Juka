@@ -1,4 +1,4 @@
-﻿namespace DreamCompiler.Scanner
+﻿namespace DreamCompiler.Scan
 {
     public interface IScanner
     {

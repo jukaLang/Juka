@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DreamCompiler.Constants;
-using DreamCompiler.Scanner;
+using DreamCompiler.Scan;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 namespace DreamCompiler.SyntaxAnalyzer
@@ -13,7 +13,6 @@ namespace DreamCompiler.SyntaxAnalyzer
     public class SyntaxAnalyzer
     {
         private LexemeListManager list;
-        private int currentLocation = 0;
         private LexemeEnumerator lexemeEnumerator;
 
         public void Analyze(LexemeListManager listManager)

@@ -1,6 +1,6 @@
 ﻿using DreamCompiler;
 using DreamCompiler.Lexer;
-using DreamCompiler.Scanner;
+using DreamCompiler.Scan;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -11,45 +11,56 @@ using System.Text;
 
 namespace DreamUnitTest
 {
-
     [TestClass]
     public class CompilerUnitTest
     {
         [TestMethod]
-        public void TestEmptyMain()
+        public void TestEmptyFunc()
         {
             var mockScanner = new Mock<IScanner>();
-            mockScanner.Setup(f => f.BufferInitialLoad()).Callback(()=>
+
+            var tokenArray = new Token[]
             {
-                Console.WriteLine("test");
+                new Token(TokenType.Character, 'f'),
+                new Token(TokenType.Character, 'u'),
+                new Token(TokenType.Character, 'n'),
+                new Token(TokenType.Character, 'c'),
+                new Token(TokenType.Symbol, '('),
+                new Token(TokenType.Symbol, ')'),
+                new Token(TokenType.Symbol, '{'),
+                new Token(TokenType.Symbol, '}'),
+                new Token(TokenType.Symbol, ';'),
+            };
+
+            int bufferCount = -1;
+
+            mockScanner.Setup(f => f.ReadToken() )
+                .Returns(()=>
+            {
+                bufferCount++;
+
+                if (bufferCount == tokenArray.Length)
+                {
+                    return new Token(TokenType.Eof);
+                }
+
+                return tokenArray[bufferCount];
             });
 
-            mockScanner.Setup(f => f.ReadToken()).Callback(()=>
+            mockScanner.Setup(f => f.PutTokenBack()).Callback(() => 
             {
-                Console.WriteLine("");
-            })
-            .Returns(new Token(TokenType.Character));
+                bufferCount--;
+            });
 
-            string s =
-            @"using System;
-  
-            class Testcompile {
-  
-                // Main Method
-                protected static void Main()
-                {
-  
-                    Console.WriteLine(""Main Method"");
-                }
-            }";
             try
             {
+                int sequenceCount = 5;
 
-                //ILexicalAnalysis lexical = new LexicalAnalysis(mockScanner.Object);
-                //lexical.Analyze();
+                ILexicalAnalysis lexical = new LexicalAnalysis();
+                var llm = lexical.Analyze(mockScanner.Object);
 
-                var compiler = new Compiler(new string[]{ @"..\..\..\..\examples\scanner.jlr" });
-                compiler.Go("testcompile", s);
+                Assert.IsNotNull(llm);
+                Assert.AreEqual(sequenceCount, llm.Count, $"Lexem count is off. Ensure the Token Array is accurate.");
             }
             catch (Exception ex)
             {
@@ -74,8 +85,8 @@ namespace DreamUnitTest
             string program = "function main() = {{\r\n\tif ( 2<3 ) {{\r\n\t\tprintLine(\"foo\");\r\n\t}}\r\n}}\r\n";
             MemoryStream s = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(program));
 
-            LexicalAnalysis lexicalAnalysis = new LexicalAnalysis(new Scanner(s));
-            var lexemeList = lexicalAnalysis.Analyze();
+            LexicalAnalysis lexicalAnalysis = new LexicalAnalysis();
+            var lexemeList = lexicalAnalysis.Analyze(new Scanner(s));
 
             //Assert.AreEqual(s.Length, lexemeList.Count, "The numbers of tokens are not accurate");
         }
@@ -104,7 +115,7 @@ namespace DreamUnitTest
                 }";
 
 
-            var node = new Compiler(new string[] { @"..\..\..\..\examples\test.jlr" }).Go("TestAddBinaryExpression", binaryExpression);
+            var node = new Prolouge(new string[] { @"..\..\..\..\examples\test.jlr" }).Go("TestAddBinaryExpression", binaryExpression);
             Assert.IsNotNull(node);
         }
 
@@ -118,7 +129,7 @@ namespace DreamUnitTest
                     printLine(x);
                 }";
 
-            var node = new Compiler(new string[] { @"..\..\..\..\examples\test.jlr" }).Go("TestAddBinaryExpression", binaryExpression);
+            var node = new Prolouge(new string[] { @"..\..\..\..\examples\test.jlr" }).Go("TestAddBinaryExpression", binaryExpression);
             Assert.IsNotNull(node);
         }
 
@@ -131,7 +142,7 @@ namespace DreamUnitTest
                     printLine(x);
                 }";
 
-            var node = new Compiler(new string[] { @"..\..\..\..\examples\test.jlr" }).Go("TestMultiplyParenthisizedExpression", binaryExpression);
+            var node = new Prolouge(new string[] { @"..\..\..\..\examples\test.jlr" }).Go("TestMultiplyParenthisizedExpression", binaryExpression);
             Assert.IsNotNull(node);
         }
 
@@ -144,7 +155,7 @@ namespace DreamUnitTest
                     printLine(x);
                 }";
 
-            var node = new Compiler(new string[] { @"..\..\..\..\examples\test.jlr" }).Go("TestMultiplyBinaryExpression", binaryExpression);
+            var node = new Prolouge(new string[] { @"..\..\..\..\examples\test.jlr" }).Go("TestMultiplyBinaryExpression", binaryExpression);
             Assert.IsNotNull(node);
         }
 

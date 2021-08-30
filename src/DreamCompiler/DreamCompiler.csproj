@@ -297,8 +297,9 @@
     <Compile Include="Lexer\ILexicalAnalysis.cs" />
     <Compile Include="Lexer\Keywords.cs" />
     <Compile Include="Lexer\LexicalAnalysis.cs" />
+    <Compile Include="Lexer\LexicalAnalysisException.cs" />
     <Compile Include="RoslynCompile\GenerateBinaryExpression.cs" />
-    <Compile Include="Compiler.cs" />
+    <Compile Include="Prolouge.cs" />
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoslynCompile\GenerateIfStatement.cs" />
