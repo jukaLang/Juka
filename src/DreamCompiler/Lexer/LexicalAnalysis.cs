@@ -1,26 +1,18 @@
-﻿using DreamCompiler.Scanner;
-using DreamCompiler.Tokens;
+﻿using DreamCompiler.Scan;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace DreamCompiler.Lexer
 {
-    public class LexicalAnalysis
+    public class LexicalAnalysis : ILexicalAnalysis
     {
-        private Scanner.Scanner scanner;
+        private IScanner scanner;
         public Dictionary<KeyWords.KeyWordsEnum, Action<IToken>> keywordActions = new Dictionary<KeyWords.KeyWordsEnum, Action<IToken>>();
-        
-        
-        public LexicalAnalysis(Scanner.Scanner scanner)
-        {
-            this.scanner = scanner;
+        private readonly List<char> symbolList = new List<char>() { '=', '/', '-', ',', ';', '(', ')', '{', '}' };
 
+        public LexicalAnalysis()
+        {
             keywordActions = new Dictionary<KeyWords.KeyWordsEnum, Action<IToken>>()
             {
                 {KeyWords.KeyWordsEnum.Main, MainAction},
@@ -28,52 +20,84 @@ namespace DreamCompiler.Lexer
             };
         }
 
-        public LexemeListManager Analyze()
+        public LexemeListManager Analyze(IScanner scanner)
         {
+            this.scanner = scanner;
+
             List<Lexeme> lexemeList = new List<Lexeme>();
+            var errorList = new List<LexicalAnalysisException>();
+
             while (true)
             {
                 IToken token = scanner.ReadToken();
-                if (token.TokenType() == TokenType.Eof)
+                if (token == null || token.TokenType() == TokenType.Eof || token.TokenType() == TokenType.NotValid)
                 {
                     break;
                 }
 
-                switch (token.TokenType())
+                try
                 {
-                    case TokenType.Character:
+                    switch (token.TokenType())
                     {
-                        lexemeList.Add(GetIdentifier(token));
-                        break;
-                    }
+                        case TokenType.Character:
+                        {
+                            lexemeList.Add(GetIdentifier(token));
+                            break;
+                        }
 
-                    case TokenType.NumberDigit:
-                    {
-                        lexemeList.Add(GetNumber(token));
-                        break;
-                    }
+                        case TokenType.NumberDigit:
+                        {
+                            lexemeList.Add(GetNumber(token));
+                            break;
+                        }
 
-                    case TokenType.Symbol:
-                    {
-                        lexemeList.Add(GetSymbol(token));
-                        break;
-                    }
+                        case TokenType.Symbol:
+                        {
+                            lexemeList.Add(GetSymbol(token));
+                            break;
+                        }
 
-                    case TokenType.WhiteSpace:
-                    {
-                        lexemeList.Add(GetWhiteSpace(token));
-                        break;
+                        case TokenType.WhiteSpace:
+                        {
+                            lexemeList.Add(GetWhiteSpace(token));
+                            break;
+                        }
                     }
+                }
+                catch (LexicalAnalysisException lae)
+                {
+                    errorList.Add(lae);
                 }
             }
 
             return new LexemeListManager(lexemeList);
         }
 
-        //public void 
-
-
         private Lexeme GetIdentifier(IToken token)
+        {
+            token = SkipWhiteSpace(token);
+
+            using (Lexeme identifier = new Lexeme(LexemeType.Identifier))
+            {
+                identifier.AddToken(token);
+                var next = this.scanner.ReadToken();
+
+                while (next != null && (next.TokenType() == TokenType.Character || next.TokenType() == TokenType.NumberDigit))
+                {
+                    identifier.AddToken(next);
+                    next = this.scanner.ReadToken();
+                }
+
+                identifier.PrintLexeme("Identifier");
+                this.scanner.PutTokenBack();
+
+                return identifier;
+            }
+
+            throw new Exception();
+        }
+
+        private IToken SkipWhiteSpace(IToken token)
         {
             if (token.TokenType() == TokenType.WhiteSpace)
             {
@@ -83,49 +107,24 @@ namespace DreamCompiler.Lexer
                 }
             }
 
-            using (Lexeme identifier = new Lexeme(LexemeType.Identifier))
-            {
-                identifier.AddToken(token);
-
-                while (true)
-                {
-                    var next = this.scanner.ReadToken();
-                    if (next.TokenType() == TokenType.Symbol || next.TokenType() == TokenType.WhiteSpace)
-                    {
-                        this.scanner.PutTokenBack();
-                        break;
-                    }
-
-                    identifier.AddToken(next);
-                }
-
-                identifier.PrintLexeme("Identifier");
-
-                return identifier;
-            }
-
-            throw new Exception();
+            return token;
         }
-
 
         private Lexeme GetNumber(IToken token)
         {
             Lexeme number = new Lexeme(LexemeType.Number);
             number.AddToken(token);
 
-            while(true)
+            var next = this.scanner.ReadToken();
+
+            while(next.TokenType() == TokenType.Character || 
+                  next.TokenType() == TokenType.NumberDigit)
             {
-                var next = this.scanner.ReadToken();
-                if (next.TokenType() == TokenType.NumberDigit)
-                {
-                    number.AddToken(token);
-                }
-                else
-                {
-                    this.scanner.PutTokenBack();
-                    break;
-                }
+                number.AddToken(next);
+                next = this.scanner.ReadToken();
             }
+
+            this.scanner.PutTokenBack();
 
             number.PrintLexeme("Number");
             return number;
@@ -148,15 +147,18 @@ namespace DreamCompiler.Lexer
 
         private Lexeme GetSymbol(IToken token)
         {
-            Lexeme symbol = new Lexeme(LexemeType.Number);
+            Lexeme symbol = new Lexeme(LexemeType.Symbol);
 
             var currentSymbol = token.GetTokenData();
-            if (currentSymbol == '(' ||
-                currentSymbol == ')' ||
-                currentSymbol == '{' ||
-                currentSymbol == '}' ||
-                currentSymbol == ';'
-                )
+
+            if(currentSymbol.Equals(';'))
+            {
+                symbol.AddToken(token);
+                symbol.PrintLexeme("Symbol");
+                return symbol;
+            }
+
+            if (currentSymbol.Equals('(') || currentSymbol.Equals(')'))
             {
                 symbol.AddToken(token);
                 symbol.PrintLexeme("Symbol");
@@ -165,59 +167,122 @@ namespace DreamCompiler.Lexer
 
             if (currentSymbol.Equals('"'))
             {
-                symbol.AddToken(token);
-                var next = this.scanner.ReadToken();
-                while (!next.GetTokenData().Equals('"'))
-                {
-                    symbol.AddToken(next);
-                    next = this.scanner.ReadToken();
-                }
-
-                if (next.GetTokenData().Equals('"'))
-                {
-                    symbol.AddToken(next);
-                    return symbol;
-                }
+                return GetString(token, symbol, '"');
             }
 
+            if (currentSymbol.Equals('\''))
+            {
+                return GetCharacterLiteral(token, symbol, '\'');
+            }
+
+            if (currentSymbol.Equals('+'))
+            {
+                symbol.AddToken(token);
+                var next = this.scanner.ReadToken();
+                
+                if (next.GetTokenData().Equals('+'))
+                {
+                    symbol.AddToken(next);
+                    symbol.PrintLexeme("Symbol");
+                    return symbol;
+                }
+
+                symbol.PrintLexeme("Symbol");
+                this.scanner.PutTokenBack();
+                return symbol;
+            }
+
+            if (currentSymbol == '{')
+            {
+                TryGetMultiCharSymbol(symbol, token, '{');
+            }
+
+            if (currentSymbol == '}')
+            {
+                TryGetMultiCharSymbol(symbol, token, '}');
+            }
 
             if (currentSymbol == '=')
             {
-                symbol.AddToken(token);
-                while (true)
-                {
-                    var next = this.scanner.ReadToken();
-                    if (next.GetTokenData() == '=')
-                    {
-                        symbol.AddToken(next);
-                    }
-                    else
-                    {
-                        this.scanner.PutTokenBack();
-                        break;
-                    }
-                }
-            }
-            else if (currentSymbol == '<')
-            {
-                symbol.AddToken(token);
-                while (true)
-                {
-                    var next = this.scanner.ReadToken();
-                    if (next.GetTokenData() == '=')
-                    {
-                        symbol.AddToken(next);
-                    }
-                    else
-                    {
-                        this.scanner.PutTokenBack();
-                        break;
-                    }
-                }
+                TryGetMultiCharSymbol(symbol, token, '=');
             }
 
-            symbol.PrintLexeme("Symbol");
+            if (currentSymbol == '<' || currentSymbol == '>')
+            {
+                TryGetMultiCharSymbol(symbol, token, '=');
+            }
+
+
             return symbol;
+        }
+
+        private Lexeme GetString(IToken token, Lexeme symbol, char str)
+        {
+            symbol.AddToken(token);
+            var next = this.scanner.ReadToken();
+            while (!next.GetTokenData().Equals(str))
+            {
+                symbol.AddToken(next);
+                next = this.scanner.ReadToken();
+            }
+
+            if (next.GetTokenData().Equals(str))
+            {
+                symbol.AddToken(next);
+                symbol.PrintLexeme("Symbol");
+                return symbol;
+            }
+
+            throw new LexicalAnalysisException();
+        }
+
+        private Lexeme GetCharacterLiteral(IToken token, Lexeme symbol, char str)
+        {
+            int count = 0;
+            symbol.AddToken(token);
+            var next = this.scanner.ReadToken();
+            while (!next.GetTokenData().Equals(str))
+            {
+                if (count > 1)
+                {
+                    throw new LexicalAnalysisException("Too many characters in character literal");
+                }
+
+                symbol.AddToken(next);
+                next = this.scanner.ReadToken();
+                count++;
+            }
+
+            if (next.GetTokenData().Equals(str))
+            {
+                symbol.AddToken(next);
+                symbol.PrintLexeme("Symbol");
+                return symbol;
+            }
+
+            throw new LexicalAnalysisException();
+
+        }
+
+        private void TryGetMultiCharSymbol(Lexeme symbol, IToken token, char nextSymbol)
+        {
+            symbol.AddToken(token);
+            while (true)
+            {
+                var next = this.scanner.ReadToken();
+                if (next.GetTokenData() == nextSymbol)
+                {
+                    symbol.AddToken(next);
+                    symbol.PrintLexeme("Symbol");
+                    break;
+                }
+                else
+                {
+                    this.scanner.PutTokenBack();
+                    symbol.PrintLexeme("Symbol");
+                    break;
+                }
+            }
         }
 
         private Lexeme GetWhiteSpace(IToken token)
@@ -230,6 +295,7 @@ namespace DreamCompiler.Lexer
                 token.GetTokenData().Equals(' '))
             {
                 whiteSpace.AddToken(token);
+                /*
                 whiteSpace.PrintLexeme("WhiteSpace", ()=>
                 {
                     if (token.GetTokenData().Equals('\n'))
@@ -249,6 +315,7 @@ namespace DreamCompiler.Lexer
                         Trace.Write("_");
                     }
                 });
+                */
             }
             else
             {
@@ -307,7 +374,6 @@ namespace DreamCompiler.Lexer
                 }
             }
         }
-    };
-}
+    }}
 
 

@@ -1,0 +1,36 @@
+'c
+
+function main()={
+    if ( 2<3 ) 
+    {
+        printLine("foo");
+    }
+    else if (true)
+    {
+        print('c');
+    }
+}
+
+function foo() = {
+    int x = 3;
+    while (x<=4)
+    {
+        x++;
+        print(x);
+    }
+}
+
+function three()={
+    3+3
+    x=function(3+3);
+    x=1++==4
+    == (asdfa)
+    (123)
+    == += ++
+    function
+    1 20 300 4000
+    = / - , ;
+    dog cat
+    car 
+    wolf anima343l 34aser
+}

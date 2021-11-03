@@ -1,34 +1,80 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DreamCompiler;
+using DreamCompiler.Lexer;
+using DreamCompiler.Scan;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
 using System.Diagnostics;
-using System.Dynamic;
 using System.IO;
-using DreamCompiler;
 using System.Linq.Expressions;
-using System.ServiceProcess;
 using System.Text;
-using System.Threading;
-using DreamCompiler.Scanner;
 
 namespace DreamUnitTest
 {
-    using Microsoft.CodeAnalysis.CSharp;
-    using Microsoft.CodeAnalysis;
-    using DreamCompiler.Lexer;
-    using DreamCompiler.SyntaxAnalyzer;
-
     [TestClass]
     public class CompilerUnitTest
     {
         [TestMethod]
+        public void TestEmptyFunc()
+        {
+            var mockScanner = new Mock<IScanner>();
+
+            var tokenArray = new Token[]
+            {
+                new Token(TokenType.Character, 'f'),
+                new Token(TokenType.Character, 'u'),
+                new Token(TokenType.Character, 'n'),
+                new Token(TokenType.Character, 'c'),
+                new Token(TokenType.Symbol, '('),
+                new Token(TokenType.Symbol, ')'),
+                new Token(TokenType.Symbol, '{'),
+                new Token(TokenType.Symbol, '}'),
+            };
+
+            int bufferCount = -1;
+
+            mockScanner.Setup(f => f.ReadToken() )
+                .Returns(()=>
+            {
+                bufferCount++;
+
+                if (bufferCount == tokenArray.Length)
+                {
+                    return new Token(TokenType.Eof);
+                }
+
+                return tokenArray[bufferCount];
+            });
+
+            mockScanner.Setup(f => f.PutTokenBack()).Callback(() => 
+            {
+                bufferCount--;
+            });
+
+            try
+            {
+                int sequenceCount = 5;
+
+                ILexicalAnalysis lexical = new LexicalAnalysis();
+                var llm = lexical.Analyze(mockScanner.Object);
+
+                Assert.IsNotNull(llm);
+                Assert.AreEqual(sequenceCount, llm.Count, $"Lexem count is off. Ensure the Token Array is accurate.");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [TestMethod]
         public void TestScanner()
         {
-            LexicalAnalysis lexicalAnalysis = new LexicalAnalysis(new Scanner(@"..\..\..\..\..\examples\test.jlr"));
-            var lexemeList = lexicalAnalysis.Analyze();
+            // LexicalAnalysis lexicalAnalysis = new LexicalAnalysis(new Scanner(@"..\..\..\..\examples\test.jlr"));
+            // var lexemeList = lexicalAnalysis.Analyze();
 
-            SyntaxAnalyzer sa = new SyntaxAnalyzer();
-            sa.Analyze(lexemeList);
+            // SyntaxAnalyzer sa = new SyntaxAnalyzer();
+            //sa.Analyze(lexemeList);
         }
 
 
@@ -38,66 +84,13 @@ namespace DreamUnitTest
             string program = "function main() = {{\r\n\tif ( 2<3 ) {{\r\n\t\tprintLine(\"foo\");\r\n\t}}\r\n}}\r\n";
             MemoryStream s = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(program));
 
-            LexicalAnalysis lexicalAnalysis = new LexicalAnalysis(new Scanner(s));
-            var lexemeList = lexicalAnalysis.Analyze();
+            LexicalAnalysis lexicalAnalysis = new LexicalAnalysis();
+            var lexemeList = lexicalAnalysis.Analyze(new Scanner(s));
 
             //Assert.AreEqual(s.Length, lexemeList.Count, "The numbers of tokens are not accurate");
         }
 
-        [TestMethod]
-        public void TestFullFileCompile()
-        {
-            if (File.Exists(@"..\..\..\..\examples\test.jlr"))
-            {
-                using (var stream = new FileStream(@"..\..\..\..\examples\test.jlr", FileMode.Open))
-                {
-                    CSharpSyntaxNode node = Compile(stream);
-                }
-            }
-        }
 
-
-        //[TestMethod]
-        public void TestRoslyn()
-        {
-
-            SyntaxTree tree = CSharpSyntaxTree.ParseText(
-              @"using System;
- 
-                namespace HelloWorld
-                {
-                    class Program
-                    {
-                        static void Main(string[] args)
-                        {
-                            Console.WriteLine(args[0]);
-                        }
-                    }
-                }");
-
-            CompileRoslyn.Parse(tree);
-
-        }
-
-        //[TestMethod]
-        public void TestEmptyMain()
-        {
-            string s = 
-            @"function main() = 
-            { 
-            }";
-
-            var memoryStream = GenerateStreamFromString(s);
-            try
-            {
-                var compiler = new Compiler();
-                compiler.Go("testcompile", memoryStream);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
 
         private static MemoryStream GenerateStreamFromString(string s)
         {
@@ -109,35 +102,7 @@ namespace DreamUnitTest
             return stream;
         }
 
-        //[TestMethod]
-        public void TestEmpty()
-        {
-            try
-            {
-                if (File.Exists(@"..\..\..\..\examples\empty.jlr"))
-                {
-                    using (var stream = new FileStream(@"..\..\..\..\examples\empty.jlr", FileMode.Open))
-                    {
-                        CSharpSyntaxNode node = Compile(stream);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
 
-        //[TestMethod]
-
-        private static CSharpSyntaxNode Compile(FileStream stream)
-        {
-            MemoryStream memoryStream;
-            var byteArray = new byte[stream.Length];
-            stream.Read(byteArray, 0, (int)stream.Length);
-            memoryStream = new MemoryStream(byteArray);
-            return new Compiler().Go("testcompile", memoryStream);
-        }
 
         //[TestMethod]
         public void TestAddBinaryExpression()
@@ -148,10 +113,8 @@ namespace DreamUnitTest
                     printLine(x);
                 }";
 
-            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(binaryExpression);
-            MemoryStream stream = new MemoryStream(byteArray);
 
-            var node = new Compiler().Go("TestAddBinaryExpression", stream);
+            var node = new Prolouge(new string[] { @"..\..\..\..\examples\test.jlr" }).Go("TestAddBinaryExpression", binaryExpression);
             Assert.IsNotNull(node);
         }
 
@@ -165,10 +128,7 @@ namespace DreamUnitTest
                     printLine(x);
                 }";
 
-            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(binaryExpression);
-            MemoryStream stream = new MemoryStream(byteArray);
-
-            var node = new Compiler().Go("TestAddBinaryExpression", stream);
+            var node = new Prolouge(new string[] { @"..\..\..\..\examples\test.jlr" }).Go("TestAddBinaryExpression", binaryExpression);
             Assert.IsNotNull(node);
         }
 
@@ -181,10 +141,7 @@ namespace DreamUnitTest
                     printLine(x);
                 }";
 
-            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(binaryExpression);
-            MemoryStream stream = new MemoryStream(byteArray);
-
-            var node = new Compiler().Go("TestMultiplyParenthisizedExpression", stream);
+            var node = new Prolouge(new string[] { @"..\..\..\..\examples\test.jlr" }).Go("TestMultiplyParenthisizedExpression", binaryExpression);
             Assert.IsNotNull(node);
         }
 
@@ -197,10 +154,7 @@ namespace DreamUnitTest
                     printLine(x);
                 }";
 
-            byte[] byteArray = System.Text.Encoding.UTF8.GetBytes(binaryExpression);
-            MemoryStream stream = new MemoryStream(byteArray);
-
-            var node = new Compiler().Go("TestMultiplyBinaryExpression", stream);
+            var node = new Prolouge(new string[] { @"..\..\..\..\examples\test.jlr" }).Go("TestMultiplyBinaryExpression", binaryExpression);
             Assert.IsNotNull(node);
         }
 
@@ -368,52 +322,4 @@ namespace DreamUnitTest
         }
     }
 
-    class CompileRoslyn
-    {
-        private static readonly System.Collections.Generic.IEnumerable<string> DefaultNamespaces =
-            new[]
-            {
-                "System",
-                "System.IO",
-                "System.Net",
-                "System.Linq",
-                "System.Text",
-                "System.Text.RegularExpressions",
-                "System.Collections.Generic"
-            };
-
-
-        private static readonly string rt = System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory() + "{0}.dll";
-        //private static string runtimePath = @"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\{0}.dll";
-
-        private static readonly System.Collections.Generic.IEnumerable<MetadataReference> DefaultReferences =
-            new[]
-            {
-                MetadataReference.CreateFromFile(string.Format(rt, "mscorlib")),
-                MetadataReference.CreateFromFile(string.Format(rt, "System")),
-                MetadataReference.CreateFromFile(string.Format(rt, "System.Core"))
-            };
-
-        private static readonly CSharpCompilationOptions DefaultCompilationOptions =
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
-                    .WithOverflowChecks(true).WithOptimizationLevel(OptimizationLevel.Release)
-                    .WithUsings(DefaultNamespaces);
-
-        public static string Rt =>System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory() + "{0}.dll";
-
-        public static void Parse(SyntaxTree parsedSyntaxTree)
-        {
-            var compilation = CSharpCompilation.Create("Test", syntaxTrees: new[] {parsedSyntaxTree},references: DefaultReferences);
-            try
-            {
-                var result = compilation.Emit(@"Test.exe", @"test.pdb");
-
-                Console.WriteLine(result.Success ? "Sucess!!" : "Failed");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-            }
-        }
-    }
 }
