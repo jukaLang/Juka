@@ -4,9 +4,6 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.ServiceProcess" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\DreamCompiler\DreamCompiler.csproj" />
   </ItemGroup>
   <ItemGroup>

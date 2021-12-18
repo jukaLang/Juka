@@ -61,9 +61,9 @@ namespace DreamUnitTest
                 Assert.IsNotNull(llm);
                 Assert.AreEqual(sequenceCount, llm.Count, $"Lexem count is off. Ensure the Token Array is accurate.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
