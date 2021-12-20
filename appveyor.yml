@@ -1,4 +1,13 @@
 image: Visual Studio 2022
+
+branches:
+  # whitelist
+  only:
+    - master
+
+skip_tags: false
+skip_non_tags: false
+
 before_build: 
   - cd src
   - dotnet restore
@@ -7,10 +16,21 @@ before_build:
 build: 
   project: src/Juka.sln
 
-skip_tags: false
+configuration:
+- Release
+
 artifacts:
 - path: 'src\JukaAzureFunction\bin\Release'
   name: Juka_$(APPVEYOR_BUILD_VERSION)
   type: zip
-configuration:
-- Release
+
+
+deploy:
+    # Deploy to GitHub Releases
+  - provider: GitHub
+    artifact: Juka_$(APPVEYOR_BUILD_VERSION)     
+    draft: false
+    prerelease: false
+    on:
+      branch: master                # release from master branch only
+      APPVEYOR_REPO_TAG: false       # deploy on tag push only
