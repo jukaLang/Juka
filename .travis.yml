@@ -3,5 +3,6 @@ mono: none
 dotnet: 6.0
 solution: src/Juka.sln
 script:
+  - cd src
   - dotnet restore
   - dotnet test

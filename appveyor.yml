@@ -1,7 +1,8 @@
 image: Visual Studio 2022
 before_build: 
   - cd src
-  - "nuget restore"
+  - dotnet restore
+  - dotnet test
 
 build: 
   project: src/Juka.sln

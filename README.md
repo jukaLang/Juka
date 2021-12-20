@@ -1,6 +1,6 @@
 # Juka - Programming Language 
 
-[![Build Status](https://travis-ci.com/jukaLang/Juka.svg?branch=master)](https://travis-ci.com/jukaLang/Juka)
+[![Build Status](https://app.travis-ci.com/jukaLang/Juka.svg?branch=master)](https://app.travis-ci.com/jukaLang/Juka)
 
 Juka is currently being built as an isolated worker for Microsoft's Azure Cloud Server. 
 The goal of the project is to leverage the power of cloud servers to quickly compile large programs.
