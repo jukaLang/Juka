@@ -6,6 +6,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System;
 
 namespace JukaAzureFunction
 {
@@ -25,19 +26,25 @@ namespace JukaAzureFunction
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             code = code ?? data?.code;
 
-            var script = @"using System;
-  
-            public class MyClass {
-  
-                // Main Method
-                public static void Main()
-                {
-                    " + code + @"
-                }
-            }";
+            string filePathReceipt = Path.GetTempFileName();
+            File.WriteAllText(filePathReceipt, code.ToString());
+
+            string fileOutput = Path.GetTempFileName();
 
             JukaCompiler.Compiler compiler = new JukaCompiler.Compiler();
-            string responseMessage = compiler.Go(string.Empty, script);
+            string responseMessage = "";
+            /*try
+            {
+                compiler.Go(fileOutput, filePathReceipt);
+                responseMessage = File.ReadAllText(fileOutput);
+            }
+            catch(Exception ex)
+            {
+                responseMessage = ex.ToString();
+            }*/
+
+            compiler.Go(fileOutput, filePathReceipt);
+            responseMessage = File.ReadAllText(fileOutput);
 
             return new OkObjectResult(responseMessage);
         }

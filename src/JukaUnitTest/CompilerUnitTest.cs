@@ -1,21 +1,55 @@
 ﻿using JukaCompiler;
-using JukaCompiler.Lexer;
-using JukaCompiler.Scan;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq.Expressions;
-using System.Text;
 
 namespace JukaUnitTest
 {
     [TestClass]
     public class CompilerUnitTest
     {
-        /*
         [TestMethod]
+        public void TestEmpty()
+        {
+            try
+            {
+                Compiler compiler = new Compiler();
+                compiler.Go("", "");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [TestMethod]
+        public void TestEmptyFunc()
+        {
+            try
+            {
+                Compiler compiler = new Compiler();
+                compiler.Go("", "function main() =  {}");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [TestMethod]
+        public void TestBrokenToken()
+        {
+            try
+            {
+                Compiler compiler = new Compiler();
+                compiler.Go("", "asdfunct main() =  {");
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /*[TestMethod]
         public void TestEmptyFunc()
         {
             var mockScanner = new Mock<IScanner>();
@@ -56,6 +90,24 @@ namespace JukaUnitTest
                 throw;
             }
         }
-        */
+        
+
+        private Token[] StringToToken(String tokenString)
+        {
+            var tokenArray = new Token[tokenString.Length];
+            for (int counter = 0; counter < tokenString.Length; counter++)
+            {
+                if (Char.IsLetter(tokenString[counter]))
+                {
+                    tokenArray[counter] = new Token(TokenType.Character, tokenString[counter]);
+                }
+                else
+                {
+                    tokenArray[counter] = new Token(TokenType.Symbol, tokenString[counter]);
+                }
+            }
+            return tokenArray;
+        }*/
+
     }
 }

@@ -9,7 +9,7 @@ build:
 
 skip_tags: false
 artifacts:
-- path: 'bin\Release'
+- path: 'src\JukaAzureFunction\bin\Release'
   name: Juka_$(APPVEYOR_BUILD_VERSION)
   type: zip
 configuration:

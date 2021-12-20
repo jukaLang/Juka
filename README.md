@@ -31,18 +31,22 @@ Juka can be ran on a Microsoft Azure's cloud or using an emulator on a destop pc
 ### Visual Studio/Development Requirements
 ##### Make sure you have .NET installed in Visual Studio 2022
 
-The following packages that are required:
+The following Visual Studio packages required to run and develop Juka:
 
-- Microsoft.CodeAnalysis
-- MSTest.TestAdapter (latest version downloaded via NuGet)[Unit Test Only]
-- MSTest.TestFramework (latest version downloaded via NuGet)[Unit Test Only]
+- Azure development
+- .NET desktop development
 
 
-### Running Development version
+### Running Development version of Juka's Azure function
 - Open up Juka.sln
 - Right click on solution and click "Restore NuGet Packages"
 - (alternatively you can do this via console in src/ folder)
 - Run DreamUnitTests using Test->Run->All Tests to make sure all tests are passed.
-- Click "Start AzureDreamFunction" button which will run an Azure emulator locally.
-- Use Postman to send functions to the Azure server in "body" as raw request.
+- Click "Start AzureJukaFunction" button which will run an Azure emulator locally.
+- Use Postman to send functions to the Azure server in "body" as raw request in the following format:
+```
+{
+    code: "function main() = {}"
+}
+```
 
