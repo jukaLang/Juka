@@ -28,7 +28,9 @@ artifacts:
 deploy:
     # Deploy to GitHub Releases
   - provider: GitHub
-    artifact: Juka_$(APPVEYOR_BUILD_VERSION)     
+    artifact: Juka_$(APPVEYOR_BUILD_VERSION)    
+    auth_token:
+      secure: XCqLJKrsMnRCCEEcsPL53Emba/2GrP172INtXx86eu5XBbed614ug/2dcx8MZwmr
     draft: false
     prerelease: false
     on:
