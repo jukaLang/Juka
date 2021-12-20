@@ -206,7 +206,7 @@ namespace JukaCompiler.Scan
             }
         }
 
-#if DEBUG
+
         internal void PrintLexeme(string lexemeType, Action action = null)
         {
             Trace.Write($"Lexeme - Type:{lexemeType} {{ '");
@@ -231,7 +231,6 @@ namespace JukaCompiler.Scan
             Trace.WriteLine(string.Empty);
 
         }
-#endif
     }
 
 
