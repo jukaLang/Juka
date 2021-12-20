@@ -18,18 +18,18 @@ Juka can be ran on a Microsoft Azure's cloud or using an emulator on a destop pc
 ### Examples
 - Provides you examples to get you started on using Juka
 
-### src/DreamAzureFunction
+### src/JukaAzureFunction
 - Azure Function runtime code. Set this as a "startup project".
 
-### src/DreamCompiler
+### src/JukaCompiler
 - .NET .dll library that can be used in any C# projects including Xamarin for building iOS/Android Apps, 
 .NET Core for building cross platform apps for Mac/OS, Windows Apps, and Windows desktop applications.
 
-### src/DreamUnitTest
+### src/JukaUnitTest
 - Unit tests
 
 ### Visual Studio/Development Requirements
-##### Make sure you have .NET installed in Visual Studio 2019
+##### Make sure you have .NET installed in Visual Studio 2022
 
 The following packages that are required:
 
