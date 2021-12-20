@@ -94,6 +94,10 @@ namespace JukaCompiler.Tokens
         KeywordWith = 104,
         KeywordAsync = 105,
         KeywordNonlocal = 106,
-        NLToken,
+        NLToken = 107,
+        NotValid = 108,
+        Character = 109,
+        NumberDigit = 110,
+        WhiteSpace = 111
     }
 }

@@ -1,373 +1,223 @@
 ﻿using JukaCompiler.Lexer;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.IO.MemoryMappedFiles;
-using System.Text;
 using static System.Char;
 
 namespace JukaCompiler.Scan
 {
-    public class Scanner : IScanner
+    internal class Scanner
     {
         private int position = 0;
+        private int line = 0;
         private byte[] fileData;
-        private long bufferLength = 0;
-        private ICommandLineProvider provider;
-        private string path;
-        private int bufferOffset = 0;
-        private int bufferCount = 100;
-        private int totalBytesRead = 0;
-        private MemoryMappedViewStream viewStream;
+        private List<Lexeme> lexemes = new List<Lexeme>();
 
-        public Scanner(ICommandLineProvider provider)
+        private static readonly Dictionary<string,LexemeType> keywordsDictionary = new Dictionary<string, LexemeType>
         {
-            this.provider = provider;
-            this.path = this.provider.Check(0);
-            BufferInitialLoad();
-            TryReadBufferBytes();
-        }
+            { "and",    LexemeType.AND },
+            { "class",  LexemeType.CLASS },
+            { "else",   LexemeType.ELSE },
+            { "func",   LexemeType.FUNC },
+            { "for",    LexemeType.FOR },
+            { "if",     LexemeType.IF },
+            { "null",   LexemeType.NULL },
+            { "or",     LexemeType.OR },
+            { "print",  LexemeType.PRINT },
+            { "return", LexemeType.RETURN },
+            { "super",  LexemeType.SUPER },
+            { "this",   LexemeType.THIS },
+            { "true",   LexemeType.TRUE },
+            { "var",    LexemeType.VAR },
+            { "while",  LexemeType.WHILE },
+            { "int",    LexemeType.INT }
+        };
 
-        public void BufferInitialLoad()
+        internal Scanner(string path)
         {
-            using (var mmf = MemoryMappedFile.CreateFromFile(path, FileMode.Open))
+            if (string.IsNullOrEmpty(path))
             {
-                this.viewStream = mmf.CreateViewStream();
-                this.bufferLength = viewStream.Length;
-                fileData = new byte[viewStream.Length];
+                throw new ArgumentNullException("The path is null");
             }
+
+            fileData = File.ReadAllBytes(path);
         }
 
-        public bool TryReadBufferBytes()
-        { 
-            if (this.viewStream.CanRead)
+        internal List<Lexeme> Scan()
+        {
+            while(!IsEof())
             {
-                this.totalBytesRead += viewStream.Read(fileData, bufferOffset , bufferCount);
+                ReadToken();
+            }
+
+            return lexemes;
+        }
+
+        internal bool IsEof()
+        {
+            if (position == fileData.Length)
+            {
                 return true;
             }
 
             return false;
         }
 
-        public Scanner(MemoryStream memoryStream)
+        internal void ReadToken()
         {
-            int memoryStreamLength = (int) memoryStream.Length;
-
-            fileData = new byte[memoryStreamLength];
-
-            int dataRead = memoryStream.Read(fileData, 0, memoryStreamLength);
-
-            if (dataRead != memoryStreamLength)
+            if (IsEof())
             {
-                throw new Exception("bad memory read");
-            }
-        }
-
-        public IToken ReadToken()
-        {
-            TokenType tokenType = TokenType.NotValid;
-
-            if (position == fileData.Length)
-            {
-                return new Token(TokenType.Eof);
-            }
-
-            if (position >= this.totalBytesRead)
-            {
-                bufferOffset = position;
-                TryReadBufferBytes();
+                return;
             }
 
             char t = (char) fileData[position];
 
             if (IsLetter(t))
             {
-                tokenType = TokenType.Character;
-                position++;
-                return new Token(tokenType, t);
+                Identifier(LexemeType.IDENTIFIER);
+                return;
             }
 
             if (IsDigit(t) || IsNumber(t))
             {
-                tokenType = TokenType.NumberDigit;
-                position++;
-                return new Token(tokenType, t);
+                Number(LexemeType.NUMBER);
+                return;
             }
 
             if (IsPunctuation(t) || IsSymbol(t))
             {
-                tokenType = TokenType.Symbol;
+                switch(t)
+                {
+                    case '>': AddSymbol( t, LexemeType.GREATER); break;
+                    case '<': AddSymbol( t, LexemeType.LESS); break;
+                    case '(': AddSymbol( t, LexemeType.LEFT_PAREN); break;
+                    case ')': AddSymbol( t, LexemeType.RIGHT_PAREN); break;
+                    case '{': AddSymbol( t, LexemeType.LEFT_BRACE); break;
+                    case '}': AddSymbol( t, LexemeType.RIGHT_BRACE); break;
+                    case ',': AddSymbol( t, LexemeType.COMMA); break;
+                    case '.': AddSymbol( t, LexemeType.DOT); break;
+                    case '-': AddSymbol( t, LexemeType.EQUAL); break;
+                    case '+': AddSymbol( t, LexemeType.PLUS); break;
+                    case ';': AddSymbol( t, LexemeType.SEMICOLON); break;
+                    case '*': AddSymbol( t, LexemeType.STAR); break;
+                    case '=': AddSymbol( t, LexemeType.EQUAL); break;
+
+                        /*
+                        case '!':
+                            { 
+                                if (Match('='))
+                                { 
+                                    kind = LexemeType.BANG_EQUAL;
+                                    break;
+                                }
+
+                                kind = LexemeType.BANG;
+                                break;
+                            }
+                    position++;
+                    */
+                }
+
                 position++;
-                return new Token(tokenType, t);
             }
 
             if (Char.IsWhiteSpace(t))
             {
-                tokenType = TokenType.WhiteSpace;
                 position++;
-                return new Token(tokenType, t);
             }
-
-            position++;
-            return new Token(tokenType, t);
         }
 
-        public void PutTokenBack()
+        internal void AddSymbol(char symbol, LexemeType type)
         {
-            this.position--;
+            var lex = new Lexeme(type);
+            lex.AddToken(symbol);
+            this.lexemes.Add(lex);
+        }
+
+        internal bool TryGetKeyWord(Lexeme lex)
+        {
+            if (keywordsDictionary.TryGetValue(lex.ToString(), out var lexemeType))
+            {
+                lex.IsKeyWord = true;
+                lex.TypeOfKeyWord = lexemeType;
+                return true;
+            }
+
+            return false;
         }
 
         internal bool IsWhiteSpace()
         {
-            if (Char.IsWhiteSpace((char) fileData[position]))
+            char c = (char)fileData[position];
+            if (Char.IsWhiteSpace((char) c) || c == '\r' || c == '\n')
             {
                 return true;
             }
 
             return false;
         }
-    }
 
-    public enum TokenType
-    {
-        NotValid,
-        Character,
-        NumberDigit,
-        WhiteSpace,
-        Eof,
-        Symbol,
-    }
-
-    public enum LexemeType
-    {
-        Identifier,
-        Number,
-        WhiteSpace,
-        Symbol,
-    }
-
-    public class Lexeme : IDisposable
-    {
-        private List<IToken> tokenList = new List<IToken>();
-        private LexemeType lexemeType;
-        private bool isKeyWord;
-        private string tokenAsString = String.Empty;
-        // ReSharper disable once InconsistentNaming
-        private KeyWords.KeyWordsEnum keyWordType;
-
-        internal Lexeme(LexemeType ltype)
+        internal char CurrentChar()
         {
-            this.lexemeType = ltype;
+            return (char)fileData[position];
         }
 
-        internal void AddToken(IToken token)
+        internal bool Match(char expected)
         {
-            tokenList.Add(token);
-        }
-
-        public bool IsKeyWord()
-        {
-            return isKeyWord;
-        }
-
-        public override string ToString()
-        {
-            if (string.IsNullOrEmpty(tokenAsString))
+            if (IsEof())
             {
-                var s = new StringBuilder();
-                foreach (var t in tokenList)
-                {
-                    s.Append(t.GetTokenData());
-                }
-
-                return s.ToString();
+                return false;
             }
 
-            return tokenAsString;
-        }
-
-        public LexemeType LexemeType => lexemeType;
-
-        internal KeyWords.KeyWordsEnum KeyWordType => keyWordType;
-
-        void IDisposable.Dispose()
-        {
-            this.tokenAsString = ToString();
-
-            if (lexemeType == LexemeType.Identifier)
+            if ((char)fileData[position] != expected)
             {
-                if (KeyWords.keyValuePairs.TryGetValue(this.tokenAsString, out KeyWords.KeyWordsEnum keyWordValue))
-                {
-                    isKeyWord = true;
-                    this.keyWordType = keyWordValue;
-                }
-            }
-        }
-
-
-        internal void PrintLexeme(string lexemeType, Action action = null)
-        {
-            Trace.Write($"Lexeme - Type:{lexemeType} {{ '");
-
-            if (action == null)
-            {
-                foreach (var token in tokenList)
-                {
-                    if (token is Token t)
-                    {
-                        Trace.Write(t.data);
-                    }
-                }
-            }
-            else
-            {
-                action();
+                return false;
             }
 
-            Trace.Write("' }");
-
-            Trace.WriteLine(string.Empty);
-
-        }
-    }
-
-
-    public class LexemeListManager : IEnumerable
-    {
-        private List<Lexeme> lexemList;
-
-        public LexemeListManager(List<Lexeme> list)
-        {
-            this.lexemList = list;
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return (IEnumerator) GetEnumerator();
-        }
-
-        public LexemeEnumerator GetEnumerator()
-        {
-            return new LexemeEnumerator(this.lexemList);
-        }
-
-        public int Count => this.lexemList.Count;
-    }
-
-    public class LexemeEnumerator : IEnumerator
-    {
-        private List<Lexeme> lexemeList;
-        private int position = -1;
-
-        public LexemeEnumerator(List<Lexeme> list)
-        {
-            lexemeList = list;
-        }
-
-        public bool MoveNext()
-        {
-            //position++;
-            //return (position < lexemeList.Count);
-            throw new NotImplementedException();
-        }
-
-        public bool MoveNextEx()
-        {
             position++;
-            if (lexemeList[position].LexemeType == LexemeType.WhiteSpace)
-            {
-                return MoveNextEx();
-            }
-
-            if (position < lexemeList.Count)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
-            throw new InvalidOperationException();
+            return true;
         }
 
-        public bool MoveBackEx()
+        internal void Identifier(LexemeType kind)
         {
-            position--;
-            if (lexemeList[position].LexemeType == LexemeType.WhiteSpace)
+            Lexeme identifier = new Lexeme(LexemeType.IDENTIFIER);
+
+            while (IsLetterOrDigit(CurrentChar()))
             {
-                return MoveNextEx();
+                identifier.AddToken(CurrentChar());
+                Advance();
             }
 
-            if (position < 0)
-            {
-                return false;
-            }
+            TryGetKeyWord(identifier);
 
-            if (position >= 0)
-            {
-                return true;
-            }
-
-            throw new InvalidOperationException();
+            this.lexemes.Add(identifier);
         }
 
-        public void Reset()
+        internal void Number(LexemeType kind)
         {
-            position = -1;
+            Lexeme number = new Lexeme(kind);
+
+            while((IsNumber(CurrentChar())))
+            {
+                number.AddToken(CurrentChar());
+                Advance();
+            }
+
+            this.lexemes.Add(number);
         }
 
-        object IEnumerator.Current => Current;
-
-        public Lexeme Current
+        private void Advance()
         {
-            get
+            if (!IsEof())
             {
-                try
-                {
-                    return lexemeList[position];
-                }
-                catch (IndexOutOfRangeException)
-                {
-                    throw new InvalidOperationException();
-                }
+                position++;
+            }
+        }
+
+        internal void Reverse()
+        {
+            if (position - 1 > 0)
+            {
+                this.position--;
             }
         }
     }
-
-    public interface IToken
-    {
-        TokenType TokenType();
-
-        char GetTokenData();
-    }
-
-    public class Token : IToken
-    {
-        internal TokenType tokenType;
-        internal char data;
-
-        public Token(TokenType t)
-        {
-            this.tokenType = t;
-        }
-
-        public Token(TokenType t, char tokenData) : this(t)
-        {
-            this.data = tokenData;
-        }
-
-        public char GetTokenData()
-        {
-            return this.data;
-        }
-
-        public TokenType TokenType()
-        {
-            return this.tokenType;
-        }
-    }
-
 }
+

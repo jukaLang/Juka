@@ -4,9 +4,47 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JukaCompiler.Lexer
+namespace JukaCompiler.Keywords
 {
-
+    public enum KeyWordsEnum
+    {
+        Notakeyword,
+        Break,
+        Do,
+        Instanceof,
+        Typeof,
+        Case,
+        Else,
+        New,
+        Var,
+        Catch,
+        Finally,
+        Return,
+        Void,
+        Continue,
+        For,
+        Switch,
+        While,
+        Debugger,
+        Func,
+        This,
+        With,
+        Default,
+        If,
+        Throw,
+        Delete,
+        In,
+        Try,
+        Int,
+        Float,
+        Double,
+        Long,
+        Object,
+        Boolean,
+        String,
+        Class,
+        Main,
+    };
     public class KeyWords
     {
         public const string BREAK = "break";
@@ -26,7 +64,7 @@ namespace JukaCompiler.Lexer
         public const string SWITCH = "switch";
         public const string WHILE = "while";
         public const string DEBUGGER = "debugger";
-        public const string FUNCTION = "function";
+        public const string FUNC = "func";
         public const string THIS = "this";
         public const string WITH = "with";
         public const string DEFAULT = "default";
@@ -48,45 +86,7 @@ namespace JukaCompiler.Lexer
         public const string LPAREN = "(";
         public const string RPAREN = ")";
 
-        public enum KeyWordsEnum
-        {
-            Notakeyword,
-            Break,
-            Do,
-            Instanceof,
-            Typeof,
-            Case,
-            Else,
-            New,
-            Var,
-            Catch,
-            Finally,
-            Return,
-            Void,
-            Continue,
-            For,
-            Switch,
-            While,
-            Debugger,
-            Function,
-            This,
-            With,
-            Default,
-            If,
-            Throw,
-            Delete,
-            In,
-            Try,
-            Int,
-            Float,
-            Double,
-            Long,
-            Object,
-            Boolean,
-            String,
-            Class,
-            Main,
-        };
+    
 
         public static List<string> keyWordNames = new List<string>()
         {
@@ -146,7 +146,7 @@ namespace JukaCompiler.Lexer
             { "switch",     KeyWordsEnum.Switch },       
             { "while",      KeyWordsEnum.While },        
             { "debugger",   KeyWordsEnum.Debugger },     
-            { "function",   KeyWordsEnum.Function },     
+            { "func",       KeyWordsEnum.Func },     
             { "this",       KeyWordsEnum.This },         
             { "with",       KeyWordsEnum.With },         
             { "default",    KeyWordsEnum.Default },      

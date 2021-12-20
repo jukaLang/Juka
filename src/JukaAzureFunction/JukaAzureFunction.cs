@@ -6,8 +6,6 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using JukaCompiler.RoslynCompile;
-using Microsoft.CodeAnalysis.CSharp;
 
 namespace JukaAzureFunction
 {
@@ -38,9 +36,8 @@ namespace JukaAzureFunction
                 }
             }";
 
-
-            // string responseMessage = new Compiler().Go("Jukacompile", script).ToString();
-            string responseMessage = CompileRoslyn.CompileSyntaxTree(SyntaxFactory.ParseSyntaxTree(script, null, ""),"Juka").ToString();
+            JukaCompiler.Compiler compiler = new JukaCompiler.Compiler();
+            string responseMessage = compiler.Go(string.Empty, script);
 
             return new OkObjectResult(responseMessage);
         }

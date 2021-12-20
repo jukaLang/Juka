@@ -8,7 +8,7 @@ namespace JukaCompiler.Constants
 {
     class Constants
     {
-        public static String JukaMain = "main";
+        public static String JuiliarMain = "main";
         public static String RoslynMain = "Main";
     }
 
