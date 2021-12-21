@@ -14,11 +14,11 @@ namespace JukaCompiler
         {
             try
             {
-                Parser parser = new Parser(new Scanner(path));
+                Parser parser = new(new Scanner(path));
                 List<Stmt> statements = parser.Parse();
 
-                var interpreter = new Intepreter();
-                interpreter.Interpert(statements);
+                Resolver? resolver = new(new Interpreter.Interpreter());
+                resolver.Resolve(statements);
 
                 return "success";
             }

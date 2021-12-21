@@ -13,7 +13,7 @@ namespace JukaUnitTest
             try
             {
                 Compiler compiler = new Compiler();
-                compiler.Go("", "");
+                compiler.Go("", @"D:\github\Juka\examples\test.jlr");
             }
             catch (Exception)
             {

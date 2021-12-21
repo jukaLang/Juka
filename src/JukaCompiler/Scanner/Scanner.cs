@@ -20,7 +20,6 @@ namespace JukaCompiler.Scan
             { "if",     LexemeType.IF },
             { "null",   LexemeType.NULL },
             { "or",     LexemeType.OR },
-            { "print",  LexemeType.PRINT },
             { "return", LexemeType.RETURN },
             { "super",  LexemeType.SUPER },
             { "this",   LexemeType.THIS },
@@ -28,6 +27,11 @@ namespace JukaCompiler.Scan
             { "var",    LexemeType.VAR },
             { "while",  LexemeType.WHILE },
             { "int",    LexemeType.INT }
+        };
+
+        private static readonly List<string> internalFunctionsList = new List<string>
+        {
+            {"printLine"},
         };
 
         internal Scanner(string path)
@@ -133,14 +137,20 @@ namespace JukaCompiler.Scan
 
         internal bool TryGetKeyWord(Lexeme lex)
         {
+            bool isKeyword = false;
+
             if (keywordsDictionary.TryGetValue(lex.ToString(), out var lexemeType))
             {
-                lex.IsKeyWord = true;
+                isKeyword = lex.IsKeyWord = true;
                 lex.TypeOfKeyWord = lexemeType;
-                return true;
             }
 
-            return false;
+            if (internalFunctionsList.Contains(lex.ToString()))
+            {
+                lex.LexemeType |= LexemeType.INTERNALFUNCTION;
+            }
+
+            return isKeyword;
         }
 
         internal bool IsWhiteSpace()

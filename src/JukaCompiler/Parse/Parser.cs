@@ -41,7 +41,6 @@ namespace JukaCompiler.Parse
 
             return false;
         }
-
         private Lexeme Peek()
         {
             return tokens[current];
@@ -74,8 +73,26 @@ namespace JukaCompiler.Parse
                 return VariableDeclaration(Previous());
             }
 
-            Advance();
-            return new Stmt.Block();
+            //Advance();
+            return Statement();
+        }
+
+        private Stmt Statement()
+        {
+            if (Match(LexemeType.PRINTLINE))
+            {
+                return PrintLine();
+            }
+
+            throw new Exception();
+        }
+
+        private Stmt PrintLine()
+        {
+            Lexeme keyword = Previous();
+            Expression value = null;
+            Consume(LexemeType.SEMICOLON);
+            return new Stmt.Print(value);
         }
 
         private bool MatchKeyWord()

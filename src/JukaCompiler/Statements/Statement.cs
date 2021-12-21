@@ -25,17 +25,12 @@ namespace JukaCompiler.Statements
         internal abstract R Accept<R>(Stmt.Visitor<R> vistor);
         internal class Block : Stmt
         {
-            //Block(List<Stmt> statements)
-            //{
-            //    this.statements = statements;
-            //}
+            internal Block(List<Stmt> statements)
+            {
+                this.statements = statements;
+            }
 
-            ////void accept(Visitor<R> visitor)
-            ////{
-            ////    return visitor.visitBlockStmt(this);
-            ////}
-
-            //private List<Stmt> statements;
+            internal List<Stmt> statements;
             internal override R Accept<R>(Visitor<R> vistor)
             {
                 throw new NotImplementedException();
@@ -66,13 +61,13 @@ namespace JukaCompiler.Statements
                 throw new NotImplementedException();
             }
         }
-        internal class Expression : Stmt
-        {
-            internal override R Accept<R>(Visitor<R> vistor)
-            {
-                throw new NotImplementedException();
-            }
-        }
+        //internal class Expression : Stmt
+        //{
+        //    internal override R Accept<R>(Visitor<R> vistor)
+        //    {
+        //        throw new NotImplementedException();
+        //    }
+        //}
         internal class If : Stmt
         {
             internal override R Accept<R>(Visitor<R> vistor)
@@ -82,6 +77,13 @@ namespace JukaCompiler.Statements
         }
         internal class Print : Stmt
         {
+            private Expression expr;
+
+            internal Print(Expression expr)
+            {
+                this.expr = expr;
+            }
+
             internal override R Accept<R>(Visitor<R> vistor)
             {
                 throw new NotImplementedException();
