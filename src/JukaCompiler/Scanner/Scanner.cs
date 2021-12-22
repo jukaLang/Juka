@@ -10,7 +10,7 @@ namespace JukaCompiler.Scan
         private byte[] fileData;
         private List<Lexeme> lexemes = new List<Lexeme>();
 
-        private static readonly Dictionary<string,LexemeType> keywordsDictionary = new Dictionary<string, LexemeType>
+        private static readonly Dictionary<string, Int64> keywordsDictionary = new Dictionary<string, Int64>
         {
             { "and",    LexemeType.AND },
             { "class",  LexemeType.CLASS },
@@ -128,7 +128,7 @@ namespace JukaCompiler.Scan
             }
         }
 
-        internal void AddSymbol(char symbol, LexemeType type)
+        internal void AddSymbol(char symbol, Int64 type)
         {
             var lex = new Lexeme(type);
             lex.AddToken(symbol);
@@ -185,7 +185,7 @@ namespace JukaCompiler.Scan
             return true;
         }
 
-        internal void Identifier(LexemeType kind)
+        internal void Identifier(Int64 kind)
         {
             Lexeme identifier = new Lexeme(LexemeType.IDENTIFIER);
 
@@ -200,7 +200,7 @@ namespace JukaCompiler.Scan
             this.lexemes.Add(identifier);
         }
 
-        internal void Number(LexemeType kind)
+        internal void Number(Int64 kind)
         {
             Lexeme number = new Lexeme(kind);
 

@@ -108,7 +108,7 @@ namespace JukaCompiler.Parse
             return false;
         }
 
-        private Lexeme Consume(LexemeType type)
+        private Lexeme Consume(Int64 type)
         {
             if (Check(type))
             {
@@ -128,7 +128,7 @@ namespace JukaCompiler.Parse
             throw new Exception();
         }
 
-        private bool Match(LexemeType lexType)
+        private bool Match(Int64 lexType)
         {
             //foreach(LexemeType lex in Enum.GetValues(typeof(LexemeType)))
             //{
@@ -143,7 +143,7 @@ namespace JukaCompiler.Parse
         }
 
 
-        private bool Check(LexemeType type)
+        private bool Check(Int64 type)
         {
             if (IsAtEnd())
             {
