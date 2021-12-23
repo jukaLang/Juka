@@ -5,6 +5,8 @@ using JukaCompiler.Statements;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace JukaCompiler
 {
@@ -26,6 +28,9 @@ namespace JukaCompiler
             {
                 return ex.Message;
             }
+
+
+
         }
     }
 }
