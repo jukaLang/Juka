@@ -29,9 +29,9 @@ namespace JukaCompiler.Scan
             { "int",    LexemeType.INT }
         };
 
-        private static readonly List<string> internalFunctionsList = new List<string>
+        private static readonly Dictionary<string, Int64> internalFunctionsList = new Dictionary<string, Int64>
         {
-            {"printLine"},
+            {"printLine", LexemeType.PRINTLINE},
         };
 
         internal Scanner(string path)
@@ -145,8 +145,9 @@ namespace JukaCompiler.Scan
                 lex.TypeOfKeyWord = lexemeType;
             }
 
-            if (internalFunctionsList.Contains(lex.ToString()))
+            if (internalFunctionsList.ContainsKey(lex.ToString()))
             {
+                lex.LexemeType = internalFunctionsList[lex.ToString()];
                 lex.LexemeType |= LexemeType.INTERNALFUNCTION;
             }
 

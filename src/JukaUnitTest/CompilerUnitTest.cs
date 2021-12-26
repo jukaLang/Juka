@@ -13,7 +13,7 @@ namespace JukaUnitTest
             try
             {
                 Compiler compiler = new Compiler();
-                compiler.Go("", @"D:\github\Juka\examples\test.jlr");
+                Console.WriteLine(compiler.Go("", @"..\..\..\..\..\examples\test.jlr"));
             }
             catch (Exception)
             {
@@ -21,7 +21,7 @@ namespace JukaUnitTest
             }
         }
 
-        [TestMethod]
+        /*[TestMethod]
         public void TestEmptyFunc()
         {
             try
@@ -49,7 +49,7 @@ namespace JukaUnitTest
             }
         }
 
-        /*[TestMethod]
+        [TestMethod]
         public void TestEmptyFunc()
         {
             var mockScanner = new Mock<IScanner>();

@@ -7,6 +7,7 @@ using JukaCompiler.Scan;
 using JukaCompiler.Lexer;
 using JukaCompiler.Statements;
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 
 namespace JukaCompiler.Parse
 {
@@ -79,7 +80,7 @@ namespace JukaCompiler.Parse
 
         private Stmt Statement()
         {
-            if (Match(LexemeType.PRINTLINE))
+            if (Match(LexemeType.INTERNALFUNCTION | LexemeType.PRINTLINE))
             {
                 return PrintLine();
             }
@@ -90,8 +91,13 @@ namespace JukaCompiler.Parse
         private Stmt PrintLine()
         {
             Lexeme keyword = Previous();
-            Expression value = null;
+            Consume(LexemeType.LEFT_PAREN);
+
+            Expression value = Expr();
+
+            Consume(LexemeType.RIGHT_PAREN);
             Consume(LexemeType.SEMICOLON);
+
             return new Stmt.Print(value);
         }
 
@@ -396,7 +402,12 @@ namespace JukaCompiler.Parse
 
         private Expression Primary()
         {
-            return null;
+            if (Match(LexemeType.STRING) || Match(LexemeType.NUMBER))
+            {
+                return new Expression.Literal(Previous().Literal());
+            }
+
+            throw new Exception(Peek() + "Expect expression");
         }
 
         private Expression FinishCall(Expression callee)

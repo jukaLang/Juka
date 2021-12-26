@@ -123,14 +123,21 @@ namespace JukaCompiler.Parse
 
         internal class Literal : Expression
         {
-            internal Literal(Expression expr, Lexeme lex, Expression right)
-            {
+            private string literal;
 
+            internal Literal(string literal)
+            {
+                this.literal = literal;
             }
 
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                throw new NotImplementedException();
+                return vistor.VisitLiteralExpr(this);
+            }
+
+            internal string LiteralValue()
+            {
+                return literal;
             }
         }
 

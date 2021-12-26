@@ -77,7 +77,7 @@ namespace JukaCompiler.Statements
         }
         internal class Print : Stmt
         {
-            private Expression expr;
+            internal Expression expr;
 
             internal Print(Expression expr)
             {
@@ -86,7 +86,7 @@ namespace JukaCompiler.Statements
 
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                throw new NotImplementedException();
+                return vistor.visitPrintStmt(this);
             }
         }
         internal class Var : Stmt

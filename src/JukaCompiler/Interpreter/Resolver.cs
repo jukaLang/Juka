@@ -56,6 +56,11 @@ namespace JukaCompiler.Interpreter
             stmt.Accept(this);
         }
 
+        private void Resolve(Expression expr)
+        {
+            expr.Accept(this);
+        }
+
         public object VisitAssignExpr(Expression.Assign expr)
         {
             throw new NotImplementedException();
@@ -108,7 +113,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitLiteralExpr(Expression.Literal expr)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public object VisitLogicalExpr(Expression.Logical expr)
@@ -118,7 +123,8 @@ namespace JukaCompiler.Interpreter
 
         public object visitPrintStmt(Stmt.Print stmt)
         {
-            throw new NotImplementedException();
+            Resolve(stmt.expr);
+            return null;
         }
 
         public object visitReturnStmt(Stmt.Return stmt)

@@ -92,5 +92,10 @@ namespace JukaCompiler.Lexer
         {
             return tokenBuilder.ToString();
         }
+
+        internal string Literal()
+        {
+            return ToString();
+        }
     }
 }
