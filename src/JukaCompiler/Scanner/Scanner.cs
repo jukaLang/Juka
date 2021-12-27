@@ -142,7 +142,7 @@ namespace JukaCompiler.Scan
             if (keywordsDictionary.TryGetValue(lex.ToString(), out var lexemeType))
             {
                 isKeyword = lex.IsKeyWord = true;
-                lex.TypeOfKeyWord = lexemeType;
+                lex.LexemeType = lexemeType;
             }
 
             if (internalFunctionsList.ContainsKey(lex.ToString()))

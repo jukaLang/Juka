@@ -24,48 +24,48 @@ namespace JukaCompiler.Interpreter
             stmt.Accept(this);
         }
 
-        Stmt Stmt.Visitor<Stmt>.visitBlockStmt(Stmt.Block stmt)
+        Stmt Stmt.Visitor<Stmt>.VisitBlockStmt(Stmt.Block stmt)
         {
             throw new NotImplementedException();
         }
 
-        Stmt Stmt.Visitor<Stmt>.visitFunctionStmt(Stmt.Function stmt)
+        Stmt Stmt.Visitor<Stmt>.VisitFunctionStmt(Stmt.Function stmt)
         {
             throw new NotImplementedException();
         }
 
-        public Stmt visitClassStmt(Stmt.Class stmt)
+        public Stmt VisitClassStmt(Stmt.Class stmt)
         {
             throw new NotImplementedException();
         }
 
-        public Stmt visitExpressionStmt(Parse.Expression stmt)
+        public Stmt VisitExpressionStmt(Parse.Expression stmt)
         {
             throw new NotImplementedException();
         }
 
-        public Stmt visitIfStmt(Stmt.If stmt)
+        public Stmt VisitIfStmt(Stmt.If stmt)
         {
             throw new NotImplementedException();
         }
 
-        public Stmt visitPrintStmt(Stmt.Print stmt)
+        public Stmt VisitPrintStmt(Stmt.Print stmt)
         {
             Console.WriteLine(Evaluate(stmt.expr));
             return null;
         }
 
-        public Stmt visitReturnStmt(Stmt.Return stmt)
+        public Stmt VisitReturnStmt(Stmt.Return stmt)
         {
             throw new NotImplementedException();
         }
 
-        public Stmt visitVarStmt(Stmt.Var stmt)
+        public Stmt VisitVarStmt(Stmt.Var stmt)
         {
             throw new NotImplementedException();
         }
 
-        public Stmt visitWhileStmt(Stmt.While stmt)
+        public Stmt VisitWhileStmt(Stmt.While stmt)
         {
             throw new NotImplementedException();
         }

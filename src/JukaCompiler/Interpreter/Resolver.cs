@@ -1,4 +1,5 @@
-﻿using JukaCompiler.Parse;
+﻿using JukaCompiler.Lexer;
+using JukaCompiler.Parse;
 using JukaCompiler.Statements;
 
 namespace JukaCompiler.Interpreter
@@ -8,6 +9,7 @@ namespace JukaCompiler.Interpreter
 
         private Interpreter interpreter;
         private FunctionType currentFunction = FunctionType.NONE;
+        private  Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
 
         private enum FunctionType
         {
@@ -63,15 +65,17 @@ namespace JukaCompiler.Interpreter
 
         public object VisitAssignExpr(Expression.Assign expr)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException(); 
         }
 
         public object VisitBinaryExpr(Expression.Binary expr)
         {
-            throw new NotImplementedException();
+            Resolve(expr.left);
+            Resolve(expr.right);
+            return null;
         }
 
-        public object visitBlockStmt(Stmt.Block stmt)
+        public object VisitBlockStmt(Stmt.Block stmt)
         {
             throw new NotImplementedException();
         }
@@ -81,17 +85,17 @@ namespace JukaCompiler.Interpreter
             throw new NotImplementedException();
         }
 
-        public object visitClassStmt(Stmt.Class stmt)
+        public object VisitClassStmt(Stmt.Class stmt)
         {
             throw new NotImplementedException();
         }
 
-        public object visitExpressionStmt(Parse.Expression stmt)
+        public object VisitExpressionStmt(Parse.Expression stmt)
         {
             throw new NotImplementedException();
         }
 
-        public object visitFunctionStmt(Stmt.Function stmt)
+        public object VisitFunctionStmt(Stmt.Function stmt)
         {
             throw new NotImplementedException();
         }
@@ -103,10 +107,11 @@ namespace JukaCompiler.Interpreter
 
         public object VisitGroupingExpr(Expression.Grouping expr)
         {
-            throw new NotImplementedException();
+            Resolve(expr.expression);
+            return null;
         }
 
-        public object visitIfStmt(Stmt.If stmt)
+        public object VisitIfStmt(Stmt.If stmt)
         {
             throw new NotImplementedException();
         }
@@ -121,13 +126,13 @@ namespace JukaCompiler.Interpreter
             throw new NotImplementedException();
         }
 
-        public object visitPrintStmt(Stmt.Print stmt)
+        public object VisitPrintStmt(Stmt.Print stmt)
         {
             Resolve(stmt.expr);
             return null;
         }
 
-        public object visitReturnStmt(Stmt.Return stmt)
+        public object VisitReturnStmt(Stmt.Return stmt)
         {
             throw new NotImplementedException();
         }
@@ -157,14 +162,48 @@ namespace JukaCompiler.Interpreter
             throw new NotImplementedException();
         }
 
-        public object visitVarStmt(Stmt.Var stmt)
+        public object VisitVarStmt(Stmt.Var stmt)
+        {
+            Declare(stmt.name);
+            if (stmt.isInitalizedVar && stmt.exprInitializer != null)
+            {
+                Resolve(stmt.exprInitializer);
+            }
+
+            Define(stmt.name);
+            return null;
+        }
+
+        public object VisitWhileStmt(Stmt.While stmt)
         {
             throw new NotImplementedException();
         }
 
-        public object visitWhileStmt(Stmt.While stmt)
+        private void Declare(Lexeme name)
         {
-            throw new NotImplementedException();
+            if (this.scopes.Count() == 0)
+            {
+                return;
+            }
+
+            Dictionary<string,bool> scope = this.scopes.Peek();
+
+            if (scope != null && scope.ContainsKey(name.ToString()))
+            {
+                throw new Exception("variable exist, - need to add to internal error log");
+            }
+
+            scope?.Add(name.ToString(), false);
+        }
+
+        private void Define(Lexeme name)
+        {
+            if (scopes.Count() == 0)
+            {
+                return;
+            }
+
+            scopes.Peek().Add(name.ToString(), true);
         }
     }
 }

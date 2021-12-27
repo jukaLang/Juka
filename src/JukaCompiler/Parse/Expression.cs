@@ -62,13 +62,19 @@ namespace JukaCompiler.Parse
 
         internal class Binary : Expression
         {
-            internal Binary(Expression expr, Lexeme lex, Expression right)
-            {
+            internal Expression left;
+            internal Lexeme op;
+            internal Expression right;
 
+            internal Binary(Expression expr, Lexeme op, Expression right)
+            {
+                this.left = expr;
+                this.op = op;
+                this.right = right;
             }
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                throw new NotImplementedException();
+                return vistor.VisitBinaryExpr(this);
             }
         }
 

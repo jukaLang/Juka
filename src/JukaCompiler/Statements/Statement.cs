@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 
 namespace JukaCompiler.Statements
@@ -12,15 +13,15 @@ namespace JukaCompiler.Statements
     {
         internal interface Visitor<R>
         { 
-            R visitBlockStmt(Block stmt);
-            R visitFunctionStmt(Function stmt);
-            R visitClassStmt(Class stmt);
-            R visitExpressionStmt(Expression stmt);
-            R visitIfStmt(If stmt);
-            R visitPrintStmt(Print stmt);
-            R visitReturnStmt(Return stmt);
-            R visitVarStmt(Var stmt);
-            R visitWhileStmt(While stmt);
+            R VisitBlockStmt(Block stmt);
+            R VisitFunctionStmt(Function stmt);
+            R VisitClassStmt(Class stmt);
+            R VisitExpressionStmt(Expression stmt);
+            R VisitIfStmt(If stmt);
+            R VisitPrintStmt(Print stmt);
+            R VisitReturnStmt(Return stmt);
+            R VisitVarStmt(Var stmt);
+            R VisitWhileStmt(While stmt);
         }
         internal abstract R Accept<R>(Stmt.Visitor<R> vistor);
         internal class Block : Stmt
@@ -86,14 +87,31 @@ namespace JukaCompiler.Statements
 
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                return vistor.visitPrintStmt(this);
+                return vistor.VisitPrintStmt(this);
             }
         }
         internal class Var : Stmt
         {
+            internal Lexeme name;
+            internal Expression? exprInitializer;
+            internal bool isInitalizedVar = false;
+
+            internal Var(Lexeme name, Expression expr)
+            {
+                this.name=name;
+                this.exprInitializer=expr;
+                this.isInitalizedVar = true;
+            }
+
+            internal Var(Lexeme name)
+            {
+                this.name = name;
+                exprInitializer = null;
+            }
+
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                throw new NotImplementedException();
+                return vistor.VisitVarStmt(this);
             }
         }
         internal class While : Stmt

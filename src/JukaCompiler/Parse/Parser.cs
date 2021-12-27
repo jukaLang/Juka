@@ -103,6 +103,11 @@ namespace JukaCompiler.Parse
 
         private bool MatchKeyWord()
         {
+            if (MatchInternalFunction())
+            {
+                return true;
+            }
+
             if(Match(LexemeType.INT) || 
                 Match(LexemeType.STRING) ||
                 Match(LexemeType.FLOAT) ||
@@ -136,14 +141,22 @@ namespace JukaCompiler.Parse
 
         private bool Match(Int64 lexType)
         {
-            //foreach(LexemeType lex in Enum.GetValues(typeof(LexemeType)))
-            //{
-                if (Check(lexType))
-                {
-                    Advance();
-                    return true;
-                }
-            //}
+            if (Check(lexType))
+            {
+                Advance();
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool MatchInternalFunction()
+        {
+            if (Check(LexemeType.INTERNALFUNCTION))
+            {
+                Advance();
+                return true;
+            }
 
             return false;
         }
@@ -158,7 +171,7 @@ namespace JukaCompiler.Parse
 
             if (Peek().IsKeyWord)
             {
-                return Peek().TypeOfKeyWord == type;
+                return Peek().LexemeType == type;
             }
 
             return Peek().LexemeType == type;
@@ -232,13 +245,19 @@ namespace JukaCompiler.Parse
 
         private Stmt VariableDeclaration(Lexeme type)
         {
-            Expression expr;
+            Lexeme name = Consume(LexemeType.IDENTIFIER);
+            Expression? initalizedState = null;
+
             if (Match(LexemeType.EQUAL))
             {
-                expr = Expr();
+                initalizedState = Expr();
+                Consume(LexemeType.SEMICOLON);
+                return new Stmt.Var(name, initalizedState);
             }
 
-            return new Stmt.Var();
+            Consume(LexemeType.SEMICOLON);
+
+            return new Stmt.Var(name);
         }
 
         private Expression Expr()
@@ -405,6 +424,13 @@ namespace JukaCompiler.Parse
             if (Match(LexemeType.STRING) || Match(LexemeType.NUMBER))
             {
                 return new Expression.Literal(Previous().Literal());
+            }
+
+            if (Match(LexemeType.LEFT_PAREN))
+            {
+                Expression expr = Expr();
+                Consume(LexemeType.RIGHT_PAREN);
+                return new Expression.Grouping(expr);
             }
 
             throw new Exception(Peek() + "Expect expression");
