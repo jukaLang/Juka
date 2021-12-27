@@ -85,6 +85,10 @@ namespace JukaCompiler.Statements
                 this.expr = expr;
             }
 
+            internal Print()
+            {
+            }
+
             internal override R Accept<R>(Visitor<R> vistor)
             {
                 return vistor.VisitPrintStmt(this);
@@ -107,6 +111,10 @@ namespace JukaCompiler.Statements
             {
                 this.name = name;
                 exprInitializer = null;
+            }
+
+            internal Var()
+            {
             }
 
             internal override R Accept<R>(Visitor<R> vistor)

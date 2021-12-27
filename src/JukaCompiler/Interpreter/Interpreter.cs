@@ -46,7 +46,7 @@ namespace JukaCompiler.Interpreter
         public Stmt VisitPrintStmt(Stmt.Print stmt)
         {
             Console.WriteLine(Evaluate(stmt.expr));
-            return null;
+            return new Stmt.Print();
         }
 
         public Stmt VisitReturnStmt(Stmt.Return stmt)

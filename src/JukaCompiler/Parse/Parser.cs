@@ -1,6 +1,7 @@
 ﻿using JukaCompiler.Lexer;
 using JukaCompiler.Scan;
 using JukaCompiler.Statements;
+using System.Linq.Expressions;
 
 namespace JukaCompiler.Parse
 {
@@ -451,7 +452,7 @@ namespace JukaCompiler.Parse
             Lexeme paren = Consume(LexemeType.RIGHT_PAREN);
 
             //return new Expr.Call(callee, paren, arguments);
-            return null;
+            return new Expression.DefaultExpression();
         }
     }
 }

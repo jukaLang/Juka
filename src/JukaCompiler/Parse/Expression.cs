@@ -62,9 +62,9 @@ namespace JukaCompiler.Parse
 
         internal class Binary : Expression
         {
-            internal Expression left;
-            internal Lexeme op;
-            internal Expression right;
+            internal Expression? left;
+            internal Lexeme? op;
+            internal Expression? right;
 
             internal Binary(Expression expr, Lexeme op, Expression right)
             {
@@ -72,6 +72,14 @@ namespace JukaCompiler.Parse
                 this.op = op;
                 this.right = right;
             }
+
+            internal Binary()
+            {
+                this.left=null;
+                this.right=null;
+                this.op=null;
+            }
+
             internal override R Accept<R>(Visitor<R> vistor)
             {
                 return vistor.VisitBinaryExpr(this);
@@ -123,6 +131,11 @@ namespace JukaCompiler.Parse
             {
                 this.expression = expr;
             }
+
+            internal Grouping()
+            {
+            }
+
             internal override R Accept<R>(Visitor<R> vistor)
             {
                 return vistor.VisitGroupingExpr(this);
@@ -136,6 +149,9 @@ namespace JukaCompiler.Parse
             internal Literal(string literal)
             {
                 this.literal = literal;
+            }
+            internal Literal()
+            {
             }
 
             internal override R Accept<R>(Visitor<R> vistor)
@@ -153,7 +169,6 @@ namespace JukaCompiler.Parse
         {
             internal Logical(Expression expr, Lexeme lex, Expression right)
             {
-
             }
 
             internal override R Accept<R>(Visitor<R> vistor)
@@ -166,7 +181,6 @@ namespace JukaCompiler.Parse
         {
             internal Set(Expression expr, Lexeme lex, Expression right)
             {
-
             }
 
             internal override R Accept<R>(Visitor<R> vistor)
@@ -174,6 +188,7 @@ namespace JukaCompiler.Parse
                 throw new NotImplementedException();
             }
         }
+
         internal class Super : Expression
         {
             internal Super(Expression expr, Lexeme lex, Expression right)
@@ -191,9 +206,18 @@ namespace JukaCompiler.Parse
         {
             internal This(Expression expr, Lexeme lex, Expression right)
             {
-
             }
 
+            internal override R Accept<R>(Visitor<R> vistor)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        internal class DefaultExpression : Expression
+        {
+            internal DefaultExpression()
+            { }
             internal override R Accept<R>(Visitor<R> vistor)
             {
                 throw new NotImplementedException();

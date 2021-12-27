@@ -71,7 +71,7 @@ namespace JukaCompiler.Interpreter
         {
             Resolve(expr.left);
             Resolve(expr.right);
-            return null;
+            return new Expression.Binary();
         }
 
         public object VisitBlockStmt(Stmt.Block stmt)
@@ -107,7 +107,7 @@ namespace JukaCompiler.Interpreter
         public object VisitGroupingExpr(Expression.Grouping expr)
         {
             Resolve(expr.expression);
-            return null;
+            return new Expression.Grouping();
         }
 
         public object VisitIfStmt(Stmt.If stmt)
@@ -117,7 +117,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitLiteralExpr(Expression.Literal expr)
         {
-            return null;
+            return new Expression.Literal();
         }
 
         public object VisitLogicalExpr(Expression.Logical expr)
@@ -128,7 +128,7 @@ namespace JukaCompiler.Interpreter
         public object VisitPrintStmt(Stmt.Print stmt)
         {
             Resolve(stmt.expr);
-            return null;
+            return new Stmt.Print();
         }
 
         public object VisitReturnStmt(Stmt.Return stmt)
@@ -170,7 +170,7 @@ namespace JukaCompiler.Interpreter
             }
 
             Define(stmt.name);
-            return null;
+            return new Stmt.Var();
         }
 
         public object VisitWhileStmt(Stmt.While stmt)
