@@ -15,7 +15,7 @@ namespace JukaCompiler.Parse
     {
         private List<Lexeme> tokens;
         private int current = 0;
-        private Scanner scanner;
+        private Scanner? scanner;
         internal Parser(Scanner scanner)
         {
             this.scanner = scanner;

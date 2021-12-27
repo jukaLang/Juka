@@ -97,7 +97,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitGroupingExpr(Expression.Grouping expr)
         {
-            throw new NotImplementedException();
+            return Evaluate(expr.expression);
         }
 
         public object VisitLiteralExpr(Expression.Literal expr)

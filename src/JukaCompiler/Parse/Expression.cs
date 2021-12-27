@@ -22,9 +22,9 @@ namespace JukaCompiler.Parse
 
         internal abstract R Accept<R>(Expression.Visitor<R> vistor);
 
-        protected Lexeme name;
+        protected Lexeme? name;
 
-        internal Lexeme Name
+        internal Lexeme? Name
         {
             get
             {
@@ -111,13 +111,15 @@ namespace JukaCompiler.Parse
 
         internal class Grouping : Expression
         {
-            internal Grouping(Expression expr, Lexeme lex, Expression right)
-            {
+            internal Expression expression;
 
+            internal Grouping(Expression expr)
+            {
+                this.expression = expr;
             }
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                throw new NotImplementedException();
+                return vistor.VisitGroupingExpr(this);
             }
         }
 
