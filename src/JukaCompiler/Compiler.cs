@@ -49,6 +49,9 @@ namespace JukaCompiler
             {
                 return ex.Message;
             }
+
+
+
         }
 
         //private void WrapCompilerOutputInMemoryStream(Action<Interpreter.Interpreter, List<Stmt>> wrap)
