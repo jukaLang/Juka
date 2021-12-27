@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using JukaCompiler.Lexer;
 using JukaCompiler.Scan;
-using JukaCompiler.Lexer;
 using JukaCompiler.Statements;
-using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
 
 namespace JukaCompiler.Parse
 {

@@ -1,10 +1,7 @@
-﻿using JukaCompiler.Scan;
+﻿using JukaCompiler.Interpreter;
 using JukaCompiler.Parse;
-using JukaCompiler.Interpreter;
+using JukaCompiler.Scan;
 using JukaCompiler.Statements;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Text;
 
 namespace JukaCompiler

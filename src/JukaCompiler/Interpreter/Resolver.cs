@@ -6,7 +6,6 @@ namespace JukaCompiler.Interpreter
 {
     internal class Resolver : Stmt.Visitor<object>, Expression.Visitor<object>
     {
-
         private Interpreter interpreter;
         private FunctionType currentFunction = FunctionType.NONE;
         private  Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
