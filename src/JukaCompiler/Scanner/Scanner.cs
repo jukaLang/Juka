@@ -6,7 +6,7 @@ namespace JukaCompiler.Scan
     internal class Scanner
     {
         private int position = 0;
-        // private int line = 0;
+        private int line = 0;
         private byte[] fileData;
         private List<Lexeme> lexemes = new List<Lexeme>();
 
@@ -117,6 +117,7 @@ namespace JukaCompiler.Scan
                             }
                     position++;
                     */
+                        case '"' : String(); break;
                 }
 
                 position++;
@@ -214,12 +215,66 @@ namespace JukaCompiler.Scan
             this.lexemes.Add(number);
         }
 
+        private void String()
+        {
+            Advance();
+            int start = position;
+            while( Peek() != '"' && !IsEof())
+            {
+                if (Peek() == '\n')
+                {
+                    this.line++;
+                }
+                
+                Advance();
+            }
+
+            if(IsEof())
+            {
+                // Log exception;
+                return;
+            }
+
+            var mem = Memcopy(fileData, start, position);
+
+            Lexeme s = new Lexeme(LexemeType.STRING);
+            foreach(byte b in mem)
+            {
+                s.AddToken((char)b);
+            }
+
+            this.lexemes.Add(s);
+
+            Advance();
+        }
+
+        private byte[] Memcopy(byte[] from, int start, int size)
+        {
+            byte [] to = new byte[position - start];
+            for(int toIndex = 0, i = start; i < position; i++, toIndex++)
+            {
+                to[toIndex] = from[i];
+            }
+
+            return to;
+        }
+
         private void Advance()
         {
             if (!IsEof())
             {
                 position++;
             }
+        }
+
+        internal char Peek()
+        {
+            if (IsEof())
+            {
+                return '\0';
+            }
+
+            return (char)fileData[position];
         }
 
         internal void Reverse()

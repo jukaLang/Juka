@@ -1,6 +1,7 @@
 ﻿using JukaCompiler.Lexer;
 using JukaCompiler.Scan;
 using JukaCompiler.Statements;
+using System.Collections.Concurrent;
 using System.Linq.Expressions;
 
 namespace JukaCompiler.Parse
@@ -84,7 +85,44 @@ namespace JukaCompiler.Parse
                 return PrintLine();
             }
 
+            ExpressionStatement();
+
             throw new Exception();
+        }
+
+        private Stmt ExpressionStatement()
+        {
+            Lexeme name = Consume(LexemeType.IDENTIFIER);
+
+            Consume(LexemeType.LEFT_PAREN);
+
+            List<TypeParameterMap> parameters = new List<TypeParameterMap>();
+
+            if (!Check(LexemeType.RIGHT_PAREN))
+            {
+                do
+                {
+                    if(parameters.Count >= 255)
+                    {
+                        // Write Error function
+                        throw new Exception("too many parameters");
+                    }
+                    
+                    Lexeme? parmType = ConsumeKeyword();
+                    var varName = Consume(LexemeType.IDENTIFIER);
+
+                    parameters.Add(new TypeParameterMap(parmType, varName));
+
+                } while (Match(LexemeType.COMMA));
+            }
+
+            Consume(LexemeType.RIGHT_PAREN);
+            Consume(LexemeType.EQUAL);
+            Consume(LexemeType.RIGHT_BRACE);
+
+            List<Stmt> statements = Block();
+
+            return new Stmt.Function(name.ToString(), parameters, statements);
         }
 
         private Stmt PrintLine()

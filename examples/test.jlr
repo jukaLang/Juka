@@ -1,1 +1,3 @@
-int x = (3 + 4)*2;
+func x() = {
+	printLine("asdfas");
+}
