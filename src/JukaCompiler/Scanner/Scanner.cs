@@ -6,7 +6,7 @@ namespace JukaCompiler.Scan
     internal class Scanner
     {
         private int position = 0;
-        private int line = 0;
+        // private int line = 0;
         private byte[] fileData;
         private List<Lexeme> lexemes = new List<Lexeme>();
 

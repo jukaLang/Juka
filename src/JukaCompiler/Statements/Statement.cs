@@ -78,7 +78,7 @@ namespace JukaCompiler.Statements
         }
         internal class Print : Stmt
         {
-            internal Expression expr;
+            internal Expression? expr;
 
             internal Print(Expression expr)
             {
@@ -96,7 +96,7 @@ namespace JukaCompiler.Statements
         }
         internal class Var : Stmt
         {
-            internal Lexeme name;
+            internal Lexeme? name;
             internal Expression? exprInitializer;
             internal bool isInitalizedVar = false;
 

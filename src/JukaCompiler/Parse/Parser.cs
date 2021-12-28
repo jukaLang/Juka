@@ -7,7 +7,7 @@ namespace JukaCompiler.Parse
 {
     public class Parser
     {
-        private List<Lexeme> tokens;
+        private List<Lexeme> tokens = new List<Lexeme>();
         private int current = 0;
         private Scanner? scanner;
         internal Parser(Scanner scanner)
@@ -17,7 +17,12 @@ namespace JukaCompiler.Parse
 
         internal List<Stmt> Parse()
         {
-            tokens = this.scanner.Scan();
+            if (scanner == null)
+            {
+                throw new ArgumentNullException("scanner is null");
+            }
+
+            tokens = scanner.Scan();
             List<Stmt> statements = new();
             while(!IsAtEnd())
             {
@@ -268,13 +273,27 @@ namespace JukaCompiler.Parse
                 Lexeme equals = Previous();
                 Expression value = Assignment();
 
-                if (expr is Expression.Variable) {
-                    Lexeme name = ((Expression.Variable)expr).Name;
-                    return new Expression.Assign(name, value);
+                if (expr is Expression.Variable && 
+                    ((Expression.Variable)expr) != null && 
+                    ((Expression.Variable)expr).Name != null)
+                {
+                    Expression.Variable variable = (Expression.Variable)expr;
+                    if (variable != null && variable.Name != null) 
+                    {
+                        return new Expression.Assign(variable.Name, value);
+                    }
                     //> Classes assign-set
-                } else if (expr is Expression.Get) {
+                }
+
+                if (expr is Expression.Get &&
+                    ((Expression.Get)expr) != null &&
+                    ((Expression.Get)expr).Name != null) 
+                {
                     Expression.Get get = (Expression.Get)expr;
-                    return new Expression.Set(get, get.Name, value);
+                    if (get != null && get.Name != null)
+                    {
+                        return new Expression.Set(get, get.Name, value);
+                    }
                     //< Classes assign-set
                 }
 

@@ -7,7 +7,8 @@ namespace JukaCompiler.Interpreter
     internal class Resolver : Stmt.Visitor<object>, Expression.Visitor<object>
     {
         private Interpreter interpreter;
-        private FunctionType currentFunction = FunctionType.NONE;
+        // private FunctionType currentFunction = FunctionType.NONE;
+        // private ClassType currentClass = ClassType.NONE;
         private  Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
 
         private enum FunctionType
@@ -36,8 +37,6 @@ namespace JukaCompiler.Interpreter
             SUBCLASS
             //< Inheritance class-type-subclass
         }
-
-        private ClassType currentClass = ClassType.NONE;
 
         internal Resolver(Interpreter interpreter)
         {
@@ -69,8 +68,11 @@ namespace JukaCompiler.Interpreter
 
         public object VisitBinaryExpr(Expression.Binary expr)
         {
-            Resolve(expr.left);
-            Resolve(expr.right);
+            if (expr != null && expr.left != null && expr.right != null)
+            {
+                Resolve(expr.left);
+                Resolve(expr.right);
+            }
             return new Expression.Binary();
         }
 
@@ -106,6 +108,11 @@ namespace JukaCompiler.Interpreter
 
         public object VisitGroupingExpr(Expression.Grouping expr)
         {
+            if (expr == null || expr.expression == null)
+            {
+                throw new ArgumentNullException("grouping has some null stuff");
+            }
+
             Resolve(expr.expression);
             return new Expression.Grouping();
         }
@@ -127,6 +134,11 @@ namespace JukaCompiler.Interpreter
 
         public object VisitPrintStmt(Stmt.Print stmt)
         {
+            if (stmt == null || stmt.expr == null)
+            {
+                throw new ArgumentNullException("stmt and or expressoin are null");
+            }
+
             Resolve(stmt.expr);
             return new Stmt.Print();
         }
@@ -163,6 +175,11 @@ namespace JukaCompiler.Interpreter
 
         public object VisitVarStmt(Stmt.Var stmt)
         {
+            if (stmt==null || stmt.name == null)
+            {
+                throw new ArgumentNullException("new vist stmt == null");
+            }
+
             Declare(stmt.name);
             if (stmt.isInitalizedVar && stmt.exprInitializer != null)
             {

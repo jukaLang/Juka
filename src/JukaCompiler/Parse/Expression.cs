@@ -125,7 +125,7 @@ namespace JukaCompiler.Parse
 
         internal class Grouping : Expression
         {
-            internal Expression expression;
+            internal Expression? expression;
 
             internal Grouping(Expression expr)
             {
@@ -144,7 +144,7 @@ namespace JukaCompiler.Parse
 
         internal class Literal : Expression
         {
-            private string literal;
+            private string? literal;
 
             internal Literal(string literal)
             {
@@ -161,6 +161,11 @@ namespace JukaCompiler.Parse
 
             internal string LiteralValue()
             {
+                if (literal == null)
+                {
+                    throw new ArgumentNullException("literal");
+                }
+
                 return literal;
             }
         }

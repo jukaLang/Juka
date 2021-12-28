@@ -45,7 +45,10 @@ namespace JukaCompiler.Interpreter
 
         public Stmt VisitPrintStmt(Stmt.Print stmt)
         {
-            Console.WriteLine(Evaluate(stmt.expr));
+            if (stmt.expr != null)
+            {
+                Console.WriteLine(Evaluate(stmt.expr));
+            }
             return new Stmt.Print();
         }
 
@@ -91,6 +94,11 @@ namespace JukaCompiler.Interpreter
 
         public object VisitGroupingExpr(Expression.Grouping expr)
         {
+            if (expr == null || expr.expression == null)
+            {
+                throw new ArgumentNullException("expr or expression == null");
+            }
+
             return Evaluate(expr.expression);
         }
 
