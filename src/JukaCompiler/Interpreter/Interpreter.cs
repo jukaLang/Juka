@@ -1,10 +1,18 @@
 ﻿using JukaCompiler.Parse;
 using JukaCompiler.Statements;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Interpreter
 {
     internal class Interpreter : Stmt.Visitor<Stmt>, Expression.Visitor<object>
     {
+        private ServiceProvider services;
+
+        internal Interpreter(ServiceProvider services)
+        {
+            this.services = services;
+        }
+
         internal void Interpert(List<Stmt> statements)
         {
             foreach(var stmt in statements)

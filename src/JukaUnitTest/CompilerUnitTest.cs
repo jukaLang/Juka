@@ -10,14 +10,11 @@ namespace JukaUnitTest
         [TestMethod]
         public void TestEmpty()
         {
-            try
+            Compiler compiler = new Compiler();
+            Console.WriteLine(compiler.Go("", @"..\..\..\..\..\examples\test.jlr"));
+            if (compiler.HasErrors())
             {
-                Compiler compiler = new Compiler();
-                Console.WriteLine(compiler.Go("", @"..\..\..\..\..\examples\test.jlr"));
-            }
-            catch (Exception)
-            {
-                throw;
+                throw new Exception("parer exceptions");
             }
         }
 
