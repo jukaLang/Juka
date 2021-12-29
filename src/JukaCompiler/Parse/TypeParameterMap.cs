@@ -9,13 +9,13 @@ namespace JukaCompiler.Parse
 {
     internal class TypeParameterMap
     {
-        internal TypeParameterMap(Lexeme parameterType, Lexeme varName)
+        internal TypeParameterMap(Lexeme parameterType, Expression varName)
         {
             this.parameterType = parameterType;
             this.parameterName = varName;
         }
 
         internal Lexeme parameterType;
-        internal Lexeme parameterName;
+        internal Expression parameterName;
     }
 }

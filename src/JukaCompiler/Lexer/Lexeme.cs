@@ -76,6 +76,11 @@ namespace JukaCompiler.Lexer
             tokenBuilder.Append(token);
         }
 
+        internal void AddToken(string token)
+        {
+            this.tokenBuilder.Append(token);
+        }
+
         internal bool IsKeyWord
         {
             set { isKeyWord = true; }

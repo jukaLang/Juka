@@ -109,7 +109,9 @@ namespace JukaCompiler.Parse
                     }
                     
                     Lexeme? parmType = ConsumeKeyword();
-                    var varName = Consume(LexemeType.IDENTIFIER);
+                    //var varName = Consume(LexemeType.IDENTIFIER);
+
+                    var varName = Expr();
 
                     parameters.Add(new TypeParameterMap(parmType, varName));
 
@@ -240,7 +242,7 @@ namespace JukaCompiler.Parse
                 do
                 {
                     var parameterType = ConsumeKeyword();
-                    var varName = Consume(LexemeType.IDENTIFIER);
+                    var varName = Expr();
                     if (parameterType.IsKeyWord)
                     {
                         typeMap.Add(new TypeParameterMap( parameterType,varName ));
@@ -262,7 +264,6 @@ namespace JukaCompiler.Parse
                 }
                 while(Match(LexemeType.RIGHT_BRACE));
             }
-            var rightBrace = Consume(LexemeType.RIGHT_BRACE);
 
             var stmt = new Stmt.Function(name.ToString(), typeMap, statements);
             return stmt;
@@ -472,7 +473,7 @@ namespace JukaCompiler.Parse
 
         private Expression Primary()
         {
-            if (Match(LexemeType.STRING) || Match(LexemeType.NUMBER))
+            if (Match(LexemeType.STRING) || Match(LexemeType.NUMBER) || Match(LexemeType.IDENTIFIER))
             {
                 return new Expression.Literal(Previous().Literal());
             }

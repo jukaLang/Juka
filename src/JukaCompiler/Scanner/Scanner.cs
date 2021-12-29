@@ -5,7 +5,8 @@ namespace JukaCompiler.Scan
 {
     internal class Scanner
     {
-        private int position = 0;
+        private int start = 0;
+        private int current = 0;
         private int line = 0;
         private byte[] fileData;
         private List<Lexeme> lexemes = new List<Lexeme>();
@@ -26,7 +27,8 @@ namespace JukaCompiler.Scan
             { "true",   LexemeType.TRUE },
             { "var",    LexemeType.VAR },
             { "while",  LexemeType.WHILE },
-            { "int",    LexemeType.INT }
+            { "int",    LexemeType.INT },
+            { "char",   LexemeType.CHAR },
         };
 
         private static readonly Dictionary<string, Int64> internalFunctionsList = new Dictionary<string, Int64>
@@ -48,6 +50,7 @@ namespace JukaCompiler.Scan
         {
             while(!IsEof())
             {
+                start = current;
                 ReadToken();
             }
 
@@ -56,7 +59,7 @@ namespace JukaCompiler.Scan
 
         internal bool IsEof()
         {
-            if (position == fileData.Length)
+            if (current == fileData.Length)
             {
                 return true;
             }
@@ -66,22 +69,17 @@ namespace JukaCompiler.Scan
 
         internal void ReadToken()
         {
-            if (IsEof())
-            {
-                return;
-            }
-
-            char t = (char) fileData[position];
+            char t = Advance();
 
             if (IsLetter(t))
             {
-                Identifier(LexemeType.IDENTIFIER);
+                Identifier();
                 return;
             }
 
             if (IsDigit(t) || IsNumber(t))
             {
-                Number(LexemeType.NUMBER);
+                Number();
                 return;
             }
 
@@ -119,14 +117,11 @@ namespace JukaCompiler.Scan
                     */
                         case '"' : String(); break;
                 }
-
-                position++;
             }
-
-            if (Char.IsWhiteSpace(t))
-            {
-                position++;
-            }
+            //if (Char.IsWhiteSpace(t))
+            //{
+            //    current++;
+            //}
         }
 
         internal void AddSymbol(char symbol, Int64 type)
@@ -157,7 +152,7 @@ namespace JukaCompiler.Scan
 
         internal bool IsWhiteSpace()
         {
-            char c = (char)fileData[position];
+            char c = (char)fileData[current];
             if (Char.IsWhiteSpace((char) c) || c == '\r' || c == '\n')
             {
                 return true;
@@ -168,7 +163,7 @@ namespace JukaCompiler.Scan
 
         internal char CurrentChar()
         {
-            return (char)fileData[position];
+            return (char)fileData[current];
         }
 
         internal bool Match(char expected)
@@ -178,47 +173,47 @@ namespace JukaCompiler.Scan
                 return false;
             }
 
-            if ((char)fileData[position] != expected)
+            if ((char)fileData[current] != expected)
             {
                 return false;
             }
 
-            position++;
+            current++;
             return true;
         }
 
-        internal void Identifier(Int64 kind)
+        internal void Identifier()
         {
-            Lexeme identifier = new Lexeme(LexemeType.IDENTIFIER);
-
-            while (IsLetterOrDigit(CurrentChar()))
+            while (IsLetterOrDigit(Peek()))
             {
-                identifier.AddToken(CurrentChar());
                 Advance();
             }
 
-            TryGetKeyWord(identifier);
+            var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start, current));
+            Lexeme identifier = new Lexeme(LexemeType.IDENTIFIER);
+            
+            identifier.AddToken(svalue);
 
+            TryGetKeyWord(identifier);
             this.lexemes.Add(identifier);
         }
 
-        internal void Number(Int64 kind)
+        internal void Number()
         {
-            Lexeme number = new Lexeme(kind);
-
-            while((IsNumber(CurrentChar())))
+            while(IsNumber(Peek()))
             {
-                number.AddToken(CurrentChar());
                 Advance();
             }
 
+            var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start, current));
+            Lexeme number = new Lexeme(LexemeType.NUMBER);
+
+            number.AddToken(svalue);
             this.lexemes.Add(number);
         }
 
         private void String()
         {
-            Advance();
-            int start = position;
             while( Peek() != '"' && !IsEof())
             {
                 if (Peek() == '\n')
@@ -235,14 +230,9 @@ namespace JukaCompiler.Scan
                 return;
             }
 
-            var mem = Memcopy(fileData, start, position);
-
+            var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start + 1, current - 1));
             Lexeme s = new Lexeme(LexemeType.STRING);
-            foreach(byte b in mem)
-            {
-                s.AddToken((char)b);
-            }
-
+            s.AddToken(svalue);
             this.lexemes.Add(s);
 
             Advance();
@@ -250,8 +240,8 @@ namespace JukaCompiler.Scan
 
         private byte[] Memcopy(byte[] from, int start, int size)
         {
-            byte [] to = new byte[position - start];
-            for(int toIndex = 0, i = start; i < position; i++, toIndex++)
+            byte [] to = new byte[current - start];
+            for(int toIndex = 0, i = start; i < current; i++, toIndex++)
             {
                 to[toIndex] = from[i];
             }
@@ -259,12 +249,14 @@ namespace JukaCompiler.Scan
             return to;
         }
 
-        private void Advance()
+        private char Advance()
         {
             if (!IsEof())
             {
-                position++;
+                return (char)fileData[current++];
             }
+
+            return '\0';
         }
 
         internal char Peek()
@@ -274,14 +266,14 @@ namespace JukaCompiler.Scan
                 return '\0';
             }
 
-            return (char)fileData[position];
+            return (char)fileData[current];
         }
 
         internal void Reverse()
         {
-            if (position - 1 > 0)
+            if (current - 1 > 0)
             {
-                this.position--;
+                this.current--;
             }
         }
     }
