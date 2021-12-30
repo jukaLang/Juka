@@ -1,6 +1,8 @@
-﻿using JukaCompiler.Lexer;
+﻿using JukaCompiler.Exceptions;
+using JukaCompiler.Lexer;
 using JukaCompiler.Scan;
 using JukaCompiler.Statements;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Concurrent;
 using System.Linq.Expressions;
 
@@ -11,9 +13,15 @@ namespace JukaCompiler.Parse
         private List<Lexeme> tokens = new List<Lexeme>();
         private int current = 0;
         private Scanner? scanner;
-        internal Parser(Scanner scanner)
+        private ServiceProvider services;
+        private ICompilerError compilerError;
+
+        internal Parser(Scanner scanner, ServiceProvider services)
         {
             this.scanner = scanner;
+            this.services = services;
+
+            this.compilerError = services.GetRequiredService<ICompilerError>();
         }
 
         internal List<Stmt> Parse()
@@ -165,7 +173,9 @@ namespace JukaCompiler.Parse
                 return Advance();
             }
 
-            throw new Exception("");
+            compilerError.AddError("Unable to parser");
+
+            return new Lexeme(LexemeType.UNDEFINED);
         }
 
         private Lexeme ConsumeKeyword()
@@ -175,7 +185,8 @@ namespace JukaCompiler.Parse
                 return Advance();
             }
 
-            throw new Exception();
+            compilerError.AddError("Unable to Keyword");
+            return new Lexeme(LexemeType.UNDEFINED);
         }
 
         private bool Match(Int64 lexType)
