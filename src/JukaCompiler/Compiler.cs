@@ -8,11 +8,11 @@ namespace JukaCompiler
 {
     public class Compiler
     {
-        public string Go(String ouputFileName, String path)
+        public string Go(String ouputFileName, String inputPathName)
         {
             try
             {
-                Parser parser = new(new Scanner(path));
+                Parser parser = new(new Scanner(inputPathName));
                 List<Stmt> statements = parser.Parse();
 
                 var interpreter = new Interpreter.Interpreter();
