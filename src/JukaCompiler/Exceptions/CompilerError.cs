@@ -16,6 +16,7 @@ namespace JukaCompiler.Exceptions
         void ICompilerError.AddError(string errorMessage)
         {
             Errors.Add(errorMessage);
+            System.Diagnostics.Debugger.Break();
         }
 
         bool ICompilerError.HasErrors()

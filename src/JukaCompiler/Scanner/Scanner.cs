@@ -43,6 +43,11 @@ namespace JukaCompiler.Scan
                 throw new ArgumentNullException("The path is null");
             }
 
+            if (!File.Exists(path))
+            {
+                throw new FileLoadException("Unable to find file " + path);
+            }
+
             fileData = File.ReadAllBytes(path);
         }
 

@@ -132,7 +132,7 @@ namespace JukaCompiler.Parse
 
             List<Stmt> statements = Block();
 
-            return new Stmt.Function(name.ToString(), parameters, statements);
+            return new Stmt.Function(name, parameters, statements);
         }
 
         private Stmt PrintLine()
@@ -276,7 +276,7 @@ namespace JukaCompiler.Parse
                 while(Match(LexemeType.RIGHT_BRACE));
             }
 
-            var stmt = new Stmt.Function(name.ToString(), typeMap, statements);
+            var stmt = new Stmt.Function(name, typeMap, statements);
             return stmt;
         }
 
@@ -486,7 +486,7 @@ namespace JukaCompiler.Parse
         {
             if (Match(LexemeType.STRING) || Match(LexemeType.NUMBER) || Match(LexemeType.IDENTIFIER))
             {
-                return new Expression.Literal(Previous().Literal());
+                return new Expression.Literal(Previous());
             }
 
             if (Match(LexemeType.LEFT_PAREN))

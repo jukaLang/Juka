@@ -26,10 +26,8 @@ namespace JukaCompiler.Parse
 
         internal Lexeme? Name
         {
-            get
-            {
-                return name;
-            }
+            get { return name; }
+            set { name = value; }
         }
 
         internal class Assign : Expression
@@ -146,9 +144,10 @@ namespace JukaCompiler.Parse
         {
             private string? literal;
 
-            internal Literal(string literal)
+            internal Literal(Lexeme literal)
             {
-                this.literal = literal;
+                this.Name = literal;
+                this.literal = literal.ToString();
             }
             internal Literal()
             {

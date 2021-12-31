@@ -2,6 +2,6 @@ func x() = {
 	printLine("AsdfA");
 }
 
-func MyFunc(char s = printLine("asdf")) = {
+func MyFunc(char s) = {
 	int x = 3 + 4;
 }

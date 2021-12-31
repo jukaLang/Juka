@@ -1,13 +1,14 @@
 ﻿using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 using JukaCompiler.Statements;
+using System.Net.Mail;
 
 namespace JukaCompiler.Interpreter
 {
     internal class Resolver : Stmt.Visitor<object>, Expression.Visitor<object>
     {
         private Interpreter interpreter;
-        // private FunctionType currentFunction = FunctionType.NONE;
+        private FunctionType currentFunction = FunctionType.NONE;
         // private ClassType currentClass = ClassType.NONE;
         private  Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
 
@@ -98,7 +99,11 @@ namespace JukaCompiler.Interpreter
 
         public object VisitFunctionStmt(Stmt.Function stmt)
         {
-            throw new NotImplementedException();
+            Declare(stmt.name);
+            Define(stmt.name);
+
+            ResolveFunction(stmt, FunctionType.FUNCTION);
+            return null;
         }
 
         public object VisitGetExpr(Expression.Get expr)
@@ -181,6 +186,7 @@ namespace JukaCompiler.Interpreter
             }
 
             Declare(stmt.name);
+
             if (stmt.isInitalizedVar && stmt.exprInitializer != null)
             {
                 Resolve(stmt.exprInitializer);
@@ -197,7 +203,7 @@ namespace JukaCompiler.Interpreter
 
         private void Declare(Lexeme name)
         {
-            if (this.scopes.Count() == 0)
+            if (scopes.Count() == 0)
             {
                 return;
             }
@@ -218,8 +224,50 @@ namespace JukaCompiler.Interpreter
             {
                 return;
             }
+            
+            if (scopes.Peek().ContainsKey(name.ToString()))
+            {
+                scopes.Peek()[name.ToString()] = true;
+            }
+            else
+            {
+                scopes.Peek().Add(name.ToString(), true);
+            }
+        }
 
-            scopes.Peek().Add(name.ToString(), true);
+        private void ResolveFunction(Stmt.Function function, FunctionType type)
+        {
+            FunctionType enclosingFunction = currentFunction;
+            currentFunction = type;
+
+            //< set-current-function
+            BeginScope();
+            foreach (var param in function.typeParameterMaps)
+            {
+                var literalName = param.parameterName as Expression.Literal;
+                if (literalName == null)
+                {
+                    // throw something;
+                }
+                Declare(literalName.Name);
+                Define(param.parameterType);
+            }
+            Resolve(function.body);
+            EndScope();
+            //> restore-current-function
+            currentFunction = enclosingFunction;
+            //< restore-current-function
+        }
+
+        private void BeginScope()
+        {
+            scopes.Push(new Dictionary<string, bool>());
+        }
+        //< begin-scope
+        //> end-scope
+        private void EndScope()
+        {
+            scopes.Pop();
         }
     }
 }

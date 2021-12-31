@@ -1,0 +1,89 @@
+﻿using JukaCompiler.Lexer;
+
+namespace JukaCompiler.Interpreter
+{
+    internal class DreamEnvironment
+    {
+        private DreamEnvironment? enclosing;
+        private Dictionary<string, Object> values = new Dictionary<string, Object>();
+        
+        internal DreamEnvironment()
+        {
+            enclosing = null;
+        }
+
+        internal DreamEnvironment(DreamEnvironment enclosing)
+        {
+            this.enclosing = enclosing;
+        }
+
+        Object Get(Lexeme name)
+        {
+            if (values.ContainsKey(name.ToString()))
+            {
+                return values[name.ToString()];
+            }
+
+            if (enclosing != null)
+            {
+                return enclosing.Get(name);
+            }
+
+            throw new ArgumentException(name.ToString() + "undefined variable");
+        }
+
+        void Assign(Lexeme name, Object value)
+        {
+            if (values.ContainsKey(name.ToString()))
+            {
+                values[name.ToString()] = value;
+                return;
+            }
+
+            if (enclosing !=null)
+            {
+                enclosing.Assign(name, value);
+                return;
+            }
+
+            throw new ArgumentException(name.ToString() + "undefined variable");
+        }
+
+        void Define(string name, Object value)
+        {
+            values.Add(name, value);
+        }
+
+        DreamEnvironment Ancestor(int distance)
+        {
+            DreamEnvironment environment = this;
+            for(int i= 0; i < distance; i++)
+            {
+                environment = environment.enclosing;
+            }
+
+            return environment;
+        }
+
+        Object GetAt(int distance, string name)
+        {
+            return Ancestor(distance);
+        }
+
+        void AssignAt(int distance, Lexeme name, Object value)
+        {
+            Ancestor(distance).values[name.ToString()] = value;
+        }
+
+        internal string ToString()
+        {
+            string result = values.ToString();
+            if (enclosing != null)
+            {
+                result += " -> " + enclosing.ToString();
+            }
+
+            return result;
+        }
+    }
+}

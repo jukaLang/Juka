@@ -33,7 +33,8 @@ namespace JukaCompiler.Interpreter
 
         Stmt Stmt.Visitor<Stmt>.VisitFunctionStmt(Stmt.Function stmt)
         {
-            throw new NotImplementedException();
+           FunctionCallable functionCallable = new FunctionCallable(stmt, null, false);
+           return null;
         }
 
         public Stmt VisitClassStmt(Stmt.Class stmt)

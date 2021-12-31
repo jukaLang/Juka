@@ -40,10 +40,10 @@ namespace JukaCompiler.Statements
         internal class Function : Stmt
         {
             internal List<Stmt> body = new List<Stmt>();
-            internal string name;
+            internal Lexeme name;
             internal List<TypeParameterMap> typeParameterMaps;
 
-            internal Function(string name, List<TypeParameterMap> parametersMap, List<Stmt> body)
+            internal Function(Lexeme name, List<TypeParameterMap> parametersMap, List<Stmt> body)
             {
                 this.name = name;
                 this.typeParameterMaps = parametersMap;
@@ -52,7 +52,7 @@ namespace JukaCompiler.Statements
 
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                throw new NotImplementedException();
+                return vistor.VisitFunctionStmt(this);
             }
         }
         internal class Class : Stmt
