@@ -1,5 +1,6 @@
 ﻿using JukaCompiler.Lexer;
 using static System.Char;
+using System.Text;
 
 namespace JukaCompiler.Scan
 {
@@ -36,19 +37,25 @@ namespace JukaCompiler.Scan
             {"printLine", LexemeType.PRINTLINE},
         };
 
-        internal Scanner(string path)
+        internal Scanner(string data, bool isFile = true)
         {
-            if (string.IsNullOrEmpty(path))
+            if (isFile)
             {
-                throw new ArgumentNullException("The path is null");
+                if (string.IsNullOrEmpty(data))
+                {
+                    throw new ArgumentNullException("The path is null");
+                }
+
+                if (!File.Exists(data))
+                {
+                    throw new FileLoadException("Unable to find file " + data);
+                }
+
+                fileData = File.ReadAllBytes(data);
+                return;
             }
 
-            if (!File.Exists(path))
-            {
-                throw new FileLoadException("Unable to find file " + path);
-            }
-
-            fileData = File.ReadAllBytes(path);
+            fileData = Encoding.ASCII.GetBytes(data);
         }
 
         internal List<Lexeme> Scan()

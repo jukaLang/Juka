@@ -33,48 +33,53 @@ namespace JukaCompiler
             hostBuilder.Build();//.Run();
         }
 
-        public string Go(String ouputFileName, String path)
+        public string Go(String data, bool isFile = true)
         {
             try
             {
-                Parser parser = new(new Scanner(path), this.serviceProvider);
+                Parser parser = new(new Scanner(data, isFile), this.serviceProvider);
                 List<Stmt> statements = parser.Parse();
 
-                if(HasErrors())
+                if (HasErrors())
                 {
                     return "Errors during compiling";
                 }
 
-                var interpreter = new Interpreter.Interpreter(serviceProvider);
-                Resolver? resolver = new(interpreter);
-                resolver.Resolve(statements);
-
-                var currentOut = Console.Out;
-
-
-                // Action<Interpreter.Interpreter, List<Stmt>> wrap;
-
-                using (MemoryStream stream = new MemoryStream())
-                { 
-                    StreamWriter writer = new StreamWriter(stream);
-                    Console.SetOut(writer);
-
-                    interpreter.Interpert(statements);
-
-                    // Console.WriteLine("this is a test");    
-                    
-                    writer.Flush();
-                    writer.Close();
-                    var byteArray = stream.GetBuffer();
-                    Console.SetOut(currentOut);
-                    return Encoding.UTF8.GetString(byteArray);
-                }
+                return Compile(statements);
 
                 throw new Exception("Unhandled error");
             }
             catch (Exception ex)
             {
                 return ex.Message;
+            }
+        }
+
+        private string Compile(List<Stmt> statements)
+        {
+            var interpreter = new Interpreter.Interpreter(serviceProvider);
+            Resolver? resolver = new(interpreter);
+            resolver.Resolve(statements);
+
+            var currentOut = Console.Out;
+
+
+            // Action<Interpreter.Interpreter, List<Stmt>> wrap;
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                StreamWriter writer = new StreamWriter(stream);
+                Console.SetOut(writer);
+
+                interpreter.Interpert(statements);
+
+                // Console.WriteLine("this is a test");    
+
+                writer.Flush();
+                writer.Close();
+                var byteArray = stream.GetBuffer();
+                Console.SetOut(currentOut);
+                return Encoding.UTF8.GetString(byteArray);
             }
         }
 

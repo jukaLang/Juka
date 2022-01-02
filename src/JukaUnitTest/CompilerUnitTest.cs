@@ -8,15 +8,30 @@ namespace JukaUnitTest
     public class CompilerUnitTest
     {
         [TestMethod]
-        public void TestEmpty()
+        public void TestSourceAsFile()
         {
             Compiler compiler = new Compiler();
-            Console.WriteLine(compiler.Go("", @"..\..\..\..\..\examples\test.jlr"));
+            Console.WriteLine(compiler.Go(@"..\..\..\..\..\examples\test.jlr"));
             if (compiler.HasErrors())
             {
                 throw new Exception("parer exceptions");
             }
         }
+
+
+        [TestMethod]
+        public void TestSourceAsString()
+        {
+            Compiler compiler = new Compiler();
+            string sourceAsString = "func x() = { printLine(\"AsdfA\");}";
+
+            Console.WriteLine(compiler.Go(sourceAsString, false));
+            if (compiler.HasErrors())
+            {
+                throw new Exception("parer exceptions");
+            }
+        }
+
 
         /*[TestMethod]
         public void TestEmptyFunc()
