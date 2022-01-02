@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
 using System.Text;
+using System.Runtime.InteropServices;
 
 namespace JukaAzureFunction
 {
@@ -43,7 +44,7 @@ namespace JukaAzureFunction
                 {
                     static void Main(string[] args)
                     {
-                        Console.WriteLine(""Hello world!"");
+                        Console.WriteLine("""+code+@""");
                         //Console.ReadLine();
                     }
                 }
@@ -113,11 +114,7 @@ namespace JukaAzureFunction
                     writer.WriteStartObject("runtimeOptions");
                     writer.WriteStartObject("framework");
                     writer.WriteString("name", "Microsoft.NETCore.App");
-                    /*writer.WriteString(
-                        "version",
-                        RuntimeInformation.FrameworkDescription.Replace(".NET Core ", "")
-                    );*/
-                    writer.WriteString("version", "6.0.1");
+                    writer.WriteString("version",Environment.Version.ToString());
                     writer.WriteEndObject();
                     writer.WriteEndObject();
                     writer.WriteEndObject();
