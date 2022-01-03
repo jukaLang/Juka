@@ -1,16 +1,24 @@
 ﻿using JukaCompiler.Parse;
 using JukaCompiler.Statements;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Interpreter
 {
-    internal class Interpreter : Stmt.Visitor<Stmt>, Expression.Visitor<object>
+    internal class JukaInterpreter : Stmt.Visitor<Stmt>, Expression.Visitor<object>
     {
         private ServiceProvider services;
+        private JukaEnvironment globals;
+        private JukaEnvironment environment;
+        private Dictionary<Expression, int> locals = new Dictionary<Expression, int>();
 
-        internal Interpreter(ServiceProvider services)
+        internal JukaInterpreter(ServiceProvider services)
         {
+            environment = globals = new JukaEnvironment();
             this.services = services;
+
+            // var callable = new Callable();
+            // globals.Define("clock",
         }
 
         internal void Interpert(List<Stmt> statements)
@@ -26,6 +34,24 @@ namespace JukaCompiler.Interpreter
             stmt.Accept(this);
         }
 
+        internal void ExecuteBlock(List<Stmt> statements, JukaEnvironment environment)
+        {
+            JukaEnvironment prevEnvironment = environment;
+
+            try
+            {
+                this.environment = environment;
+                foreach(Stmt statement in statements)
+                {
+                    Execute(statement);
+                }
+            }
+            finally
+            {
+                this.environment = prevEnvironment;
+            }
+        }
+
         Stmt Stmt.Visitor<Stmt>.VisitBlockStmt(Stmt.Block stmt)
         {
             throw new NotImplementedException();
@@ -33,7 +59,7 @@ namespace JukaCompiler.Interpreter
 
         Stmt Stmt.Visitor<Stmt>.VisitFunctionStmt(Stmt.Function stmt)
         {
-           FunctionCallable functionCallable = new FunctionCallable(stmt, null, false);
+           JukaFunction functionCallable = new JukaFunction(stmt, null, false);
            return null;
         }
 

@@ -22,6 +22,7 @@ namespace JukaUnitTest
         [TestMethod]
         public void TestSourceAsString()
         {
+            string t = new string("abc");
             Compiler compiler = new Compiler();
             string sourceAsString = "func x() = { printLine(\"AsdfA\");}";
 

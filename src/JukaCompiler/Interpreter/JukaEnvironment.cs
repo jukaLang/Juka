@@ -2,22 +2,22 @@
 
 namespace JukaCompiler.Interpreter
 {
-    internal class DreamEnvironment
+    internal class JukaEnvironment
     {
-        private DreamEnvironment? enclosing;
+        private JukaEnvironment? enclosing;
         private Dictionary<string, Object> values = new Dictionary<string, Object>();
         
-        internal DreamEnvironment()
+        internal JukaEnvironment()
         {
             enclosing = null;
         }
 
-        internal DreamEnvironment(DreamEnvironment enclosing)
+        internal JukaEnvironment(JukaEnvironment enclosing)
         {
             this.enclosing = enclosing;
         }
 
-        Object Get(Lexeme name)
+        internal Object Get(Lexeme name)
         {
             if (values.ContainsKey(name.ToString()))
             {
@@ -32,7 +32,7 @@ namespace JukaCompiler.Interpreter
             throw new ArgumentException(name.ToString() + "undefined variable");
         }
 
-        void Assign(Lexeme name, Object value)
+        internal void Assign(Lexeme name, Object value)
         {
             if (values.ContainsKey(name.ToString()))
             {
@@ -49,14 +49,14 @@ namespace JukaCompiler.Interpreter
             throw new ArgumentException(name.ToString() + "undefined variable");
         }
 
-        void Define(string name, Object value)
+        internal void Define(string name, Object value)
         {
             values.Add(name, value);
         }
 
-        DreamEnvironment Ancestor(int distance)
+        internal JukaEnvironment Ancestor(int distance)
         {
-            DreamEnvironment environment = this;
+            JukaEnvironment environment = this;
             for(int i= 0; i < distance; i++)
             {
                 environment = environment.enclosing;
@@ -65,17 +65,17 @@ namespace JukaCompiler.Interpreter
             return environment;
         }
 
-        Object GetAt(int distance, string name)
+        internal Object GetAt(int distance, string name)
         {
             return Ancestor(distance);
         }
 
-        void AssignAt(int distance, Lexeme name, Object value)
+        internal void AssignAt(int distance, Lexeme name, Object value)
         {
             Ancestor(distance).values[name.ToString()] = value;
         }
 
-        internal string ToString()
+        override public string ToString()
         {
             string result = values.ToString();
             if (enclosing != null)

@@ -7,7 +7,7 @@ namespace JukaCompiler.Interpreter
 {
     internal class Resolver : Stmt.Visitor<object>, Expression.Visitor<object>
     {
-        private Interpreter interpreter;
+        private JukaInterpreter interpreter;
         private FunctionType currentFunction = FunctionType.NONE;
         // private ClassType currentClass = ClassType.NONE;
         private  Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
@@ -39,7 +39,7 @@ namespace JukaCompiler.Interpreter
             //< Inheritance class-type-subclass
         }
 
-        internal Resolver(Interpreter interpreter)
+        internal Resolver(JukaInterpreter interpreter)
         {
             this.interpreter = interpreter;
         }

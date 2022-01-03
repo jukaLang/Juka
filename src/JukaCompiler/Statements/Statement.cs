@@ -54,6 +54,11 @@ namespace JukaCompiler.Statements
             {
                 return vistor.VisitFunctionStmt(this);
             }
+
+            internal List<TypeParameterMap> Params
+            {
+                get { return this.typeParameterMaps; }
+            }
         }
         internal class Class : Stmt
         {

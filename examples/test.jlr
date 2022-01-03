@@ -5,3 +5,6 @@ func x() = {
 func MyFunc(char s) = {
 	int x = 3 + 4;
 }
+
+
+MyFunc();

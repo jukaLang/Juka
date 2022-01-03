@@ -57,7 +57,7 @@ namespace JukaCompiler
 
         private string Compile(List<Stmt> statements)
         {
-            var interpreter = new Interpreter.Interpreter(serviceProvider);
+            var interpreter = new Interpreter.JukaInterpreter(serviceProvider);
             Resolver? resolver = new(interpreter);
             resolver.Resolve(statements);
 

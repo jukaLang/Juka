@@ -9,6 +9,6 @@ namespace JukaCompiler.Interpreter
     internal interface Callable
     {
         int Arity();
-        Object Call(Interpreter interpreter, List<Object> arguments);
+        Object Call(JukaInterpreter interpreter, List<Object> arguments);
     }
 }
