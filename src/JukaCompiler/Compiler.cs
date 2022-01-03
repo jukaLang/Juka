@@ -88,6 +88,11 @@ namespace JukaCompiler
             return this.serviceProvider.GetRequiredService<ICompilerError>().HasErrors();
         }
 
+        public List<String> ListErrors()
+        {
+            return this.serviceProvider.GetRequiredService<ICompilerError>().ListErrors();
+        }
+
         //private void WrapCompilerOutputInMemoryStream(Action<Interpreter.Interpreter, List<Stmt>> wrap)
         //{
         //    wrap();

@@ -1,7 +1,6 @@
 ﻿using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 using JukaCompiler.Statements;
-using System.Net.Mail;
 
 namespace JukaCompiler.Interpreter
 {

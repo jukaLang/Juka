@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace JukaCompiler.Exceptions
+﻿namespace JukaCompiler.Exceptions
 {
     internal class CompilerError : ICompilerError
     {
-        internal List<string> Errors = new List<string> ();
+        internal List<String> Errors = new List<String> ();
 
         public CompilerError()
         {
@@ -22,6 +16,11 @@ namespace JukaCompiler.Exceptions
         bool ICompilerError.HasErrors()
         {
             return Errors.Count > 0;
+        }
+
+        List<String> ICompilerError.ListErrors()
+        {
+            return Errors;
         }
     }
 }

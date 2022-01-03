@@ -1,6 +1,5 @@
 ﻿using JukaCompiler.Parse;
 using JukaCompiler.Statements;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Interpreter

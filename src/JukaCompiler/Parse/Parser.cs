@@ -3,8 +3,6 @@ using JukaCompiler.Lexer;
 using JukaCompiler.Scan;
 using JukaCompiler.Statements;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Concurrent;
-using System.Linq.Expressions;
 
 namespace JukaCompiler.Parse
 {
@@ -28,7 +26,7 @@ namespace JukaCompiler.Parse
         {
             if (scanner == null)
             {
-                throw new ArgumentNullException("scanner is null");
+                throw new ArgumentNullException("Scanner is null");
             }
 
             tokens = scanner.Scan();
