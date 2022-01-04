@@ -2,11 +2,9 @@
 using JukaCompiler.Parse;
 using JukaCompiler.Scan;
 using JukaCompiler.Statements;
-using System.Text;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using JukaCompiler.Exceptions;
-using System.Net;
 
 namespace JukaCompiler
 {

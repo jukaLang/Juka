@@ -80,7 +80,6 @@ namespace JukaCompiler.Parse
                 return VariableDeclaration(Previous());
             }
 
-            //Advance();
             return Statement();
         }
 
