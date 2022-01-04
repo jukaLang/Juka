@@ -45,6 +45,19 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
+        public void TestOutput()
+        {
+            Compiler compiler = new Compiler();
+            string sourceAsString = "func main() = { printLine(\"AsdfA\");}";
+
+            Console.WriteLine(compiler.Go(sourceAsString, false));
+            if (compiler.HasErrors())
+            {
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+            }
+        }
+
+        [TestMethod]
         public void TestEmptyString()
         {
             Compiler compiler = new Compiler();

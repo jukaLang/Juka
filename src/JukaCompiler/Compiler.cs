@@ -66,20 +66,19 @@ namespace JukaCompiler
 
             // Action<Interpreter.Interpreter, List<Stmt>> wrap;
 
-            using (MemoryStream stream = new MemoryStream())
+            using (StringWriter stringWriter = new StringWriter())
             {
-                StreamWriter writer = new StreamWriter(stream);
-                Console.SetOut(writer);
+
+                Console.SetOut(stringWriter);
 
                 interpreter.Interpert(statements);
 
-                // Console.WriteLine("this is a test");    
+                //Console.WriteLine("this is a test");
 
-                writer.Flush();
-                writer.Close();
-                var byteArray = stream.GetBuffer();
+                String ConsoleOutput = stringWriter.ToString();
                 Console.SetOut(currentOut);
-                return Encoding.UTF8.GetString(byteArray);
+
+                return ConsoleOutput;
             }
         }
 
