@@ -67,13 +67,22 @@ namespace JukaCompiler.Statements
                 throw new NotImplementedException();
             }
         }
-        //internal class Expression : Stmt
-        //{
-        //    internal override R Accept<R>(Visitor<R> vistor)
-        //    {
-        //        throw new NotImplementedException();
-        //    }
-        //}
+
+         internal class Expression : Stmt
+         {
+            internal Parse.Expression expression;
+
+            internal Expression(Parse.Expression expression)
+            {
+                this.expression = expression;
+            }
+
+             internal override R Accept<R>(Visitor<R> vistor)
+             {
+                 return vistor.VisitExpressionStmt(this);
+             }
+         }
+ 
         internal class If : Stmt
         {
             internal override R Accept<R>(Visitor<R> vistor)
@@ -83,9 +92,9 @@ namespace JukaCompiler.Statements
         }
         internal class Print : Stmt
         {
-            internal Expression? expr;
+            internal Parse.Expression? expr;
 
-            internal Print(Expression expr)
+            internal Print(Parse.Expression expr)
             {
                 this.expr = expr;
             }
@@ -102,10 +111,10 @@ namespace JukaCompiler.Statements
         internal class Var : Stmt
         {
             internal Lexeme? name;
-            internal Expression? exprInitializer;
+            internal Parse.Expression? exprInitializer;
             internal bool isInitalizedVar = false;
 
-            internal Var(Lexeme name, Expression expr)
+            internal Var(Lexeme name, Parse.Expression expr)
             {
                 this.name=name;
                 this.exprInitializer=expr;

@@ -1,21 +1,21 @@
-﻿using JukaCompiler.Parse;
+﻿using JukaCompiler.Lexer;
+using JukaCompiler.Parse;
 using JukaCompiler.Statements;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Interpreter
 {
     internal class JukaInterpreter : Stmt.Visitor<Stmt>, Expression.Visitor<object>
     {
-        private ServiceProvider services;
+        private ServiceProvider serviceProvider;
         private JukaEnvironment globals;
         private JukaEnvironment environment;
-        private Dictionary<Expression, int> locals = new Dictionary<Expression, int>();
+        private Dictionary<Expression, int?> locals = new Dictionary<Expression, int?>();
 
         internal JukaInterpreter(ServiceProvider services)
         {
             environment = globals = new JukaEnvironment();
-            this.services = services;
+            this.serviceProvider = services;
 
             // var callable = new Callable();
             // globals.Define("clock",
@@ -59,8 +59,9 @@ namespace JukaCompiler.Interpreter
 
         Stmt Stmt.Visitor<Stmt>.VisitFunctionStmt(Stmt.Function stmt)
         {
-           JukaFunction functionCallable = new JukaFunction(stmt, null, false);
-           return null;
+            JukaFunction functionCallable = new JukaFunction(stmt, null, false);
+            environment.Define(stmt.name.ToString(), functionCallable);
+            return null;
         }
 
         public Stmt VisitClassStmt(Stmt.Class stmt)
@@ -68,9 +69,10 @@ namespace JukaCompiler.Interpreter
             throw new NotImplementedException();
         }
 
-        public Stmt VisitExpressionStmt(Parse.Expression stmt)
+        public Stmt VisitExpressionStmt(Stmt.Expression stmt)
         {
-            throw new NotImplementedException();
+            Evaluate(stmt.expression);
+            return null;
         }
 
         public Stmt VisitIfStmt(Stmt.If stmt)
@@ -94,7 +96,14 @@ namespace JukaCompiler.Interpreter
 
         public Stmt VisitVarStmt(Stmt.Var stmt)
         {
-            throw new NotImplementedException();
+            object value = null;
+            if (stmt.isInitalizedVar != null)
+            {
+                value = Evaluate(stmt.exprInitializer);
+            }
+
+            environment.Define(stmt.name.ToString() , value);
+            return null;
         }
 
         public Stmt VisitWhileStmt(Stmt.While stmt)
@@ -114,12 +123,38 @@ namespace JukaCompiler.Interpreter
 
         public object VisitBinaryExpr(Expression.Binary expr)
         {
-            throw new NotImplementedException();
+            object left = Evaluate(expr.left);
+            object right = Evaluate(expr.right);
+
+            switch (expr.op.LexemeType)
+            {
+                //case LexemeType.BANG_EQUAL : return
+            }
+
+            return null;
         }
 
         public object VisitCallExpr(Expression.Call expr)
         {
-            throw new NotImplementedException();
+            object callee = Evaluate(expr.callee);
+            List<object> arguments = new();
+            foreach(Expression argument in expr.arguments)
+            {
+                arguments.Add(argument);
+            }
+
+            if (!(callee is Callable))
+            {
+                throw new ArgumentException("not a class or function");
+            }
+
+            Callable function = (Callable)callee;
+            if (arguments.Count != function.Arity())
+            {
+                throw new ArgumentException("Wrong number of arguments");
+            }
+
+            return function.Call(this, arguments);
         }
 
         public object VisitGetExpr(Expression.Get expr)
@@ -169,7 +204,32 @@ namespace JukaCompiler.Interpreter
 
         public object VisitVariableExpr(Expression.Variable expr)
         {
-            throw new NotImplementedException();
+            return LookUpVariable(expr.Name, expr);
+        }
+
+        internal object LookUpVariable(Lexeme name, Expression expr)
+        {
+            locals.TryGetValue(expr, out var distance);
+
+            if (distance != null)
+            {
+                return environment.GetAt(distance.Value, name.ToString());
+            }
+            else
+            {
+                return globals.Get(name);
+            }
+
+        }
+
+        internal ServiceProvider ServiceProvider
+        {
+            get { return this.serviceProvider; }
+        }
+
+        internal void Resolve(Expression expr, int depth)
+        {
+            locals.Add(expr,depth);
         }
     }
 }

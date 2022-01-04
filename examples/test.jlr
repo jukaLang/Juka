@@ -2,7 +2,7 @@ func x() = {
 	printLine("AsdfA");
 }
 
-func MyFunc(char s) = {
+func MyFunc() = {
 	int x = 3 + 4;
 }
 

@@ -1,6 +1,8 @@
-﻿using JukaCompiler.Lexer;
+﻿using JukaCompiler.Exceptions;
+using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 using JukaCompiler.Statements;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net.Mail;
 
 namespace JukaCompiler.Interpreter
@@ -10,7 +12,9 @@ namespace JukaCompiler.Interpreter
         private JukaInterpreter interpreter;
         private FunctionType currentFunction = FunctionType.NONE;
         // private ClassType currentClass = ClassType.NONE;
+        private ServiceProvider ServiceProvider;
         private  Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
+        private ICompilerError compilerError;
 
         private enum FunctionType
         {
@@ -42,6 +46,8 @@ namespace JukaCompiler.Interpreter
         internal Resolver(JukaInterpreter interpreter)
         {
             this.interpreter = interpreter;
+            this.ServiceProvider = interpreter.ServiceProvider;
+            this.compilerError = ServiceProvider.GetService<ICompilerError>();
         }
 
         internal void Resolve(List<Stmt> statements)
@@ -84,7 +90,14 @@ namespace JukaCompiler.Interpreter
 
         public object VisitCallExpr(Expression.Call expr)
         {
-            throw new NotImplementedException();
+            Resolve(expr.callee);
+
+            foreach(Expression arg in expr.arguments)
+            {
+                Resolve(arg);
+            }
+
+            return null;
         }
 
         public object VisitClassStmt(Stmt.Class stmt)
@@ -92,9 +105,10 @@ namespace JukaCompiler.Interpreter
             throw new NotImplementedException();
         }
 
-        public object VisitExpressionStmt(Parse.Expression stmt)
+        public object VisitExpressionStmt(Stmt.Expression stmt)
         {
-            throw new NotImplementedException();
+            Resolve(stmt.expression);
+            return null;
         }
 
         public object VisitFunctionStmt(Stmt.Function stmt)
@@ -175,7 +189,26 @@ namespace JukaCompiler.Interpreter
 
         public object VisitVariableExpr(Expression.Variable expr)
         {
-            throw new NotImplementedException();
+            if (scopes.Count() > 0 && scopes.Peek()[expr.Name.ToString()] == false)
+            {
+                this.compilerError.AddError(expr.Name.ToString() + "Can't read local variable");
+            }
+
+            ResolveLocal(expr, expr.Name);
+            return null;
+        }
+
+        private void ResolveLocal(Expression expr, Lexeme name)
+        {
+            for(int i = scopes.Count() -1; i >=0; i--)
+            {
+                Dictionary<string, bool> locals = scopes.ElementAt(i);
+                if (locals.ContainsKey(name.ToString()))
+                {
+                    this.interpreter.Resolve(expr, scopes.Count()-1-i);
+                    return;
+                }
+            }
         }
 
         public object VisitVarStmt(Stmt.Var stmt)
@@ -244,7 +277,7 @@ namespace JukaCompiler.Interpreter
             BeginScope();
             foreach (var param in function.typeParameterMaps)
             {
-                var literalName = param.parameterName as Expression.Literal;
+                var literalName = param.parameterName as Expression.Variable;
                 if (literalName == null)
                 {
                     // throw something;

@@ -52,9 +52,9 @@ namespace JukaCompiler.Parse
             {
                 this.name = name;
             }
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(Visitor<R> visitor)
             {
-                throw new NotImplementedException();
+                return visitor.VisitVariableExpr(this);
             }
         }
 
@@ -86,13 +86,19 @@ namespace JukaCompiler.Parse
 
         internal class Call : Expression
         {
-            internal Call(Expression expr, Lexeme lex, Expression right)
-            {
+            internal Expression callee;
+            internal Lexeme paren;
+            internal List<Expression> arguments;
 
+            internal Call(Expression callee, Lexeme paren, List<Expression> arguments)
+            {
+                this.callee = callee;
+                this.paren = paren;
+                this.arguments = arguments;
             }
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                throw new NotImplementedException();
+                return vistor.VisitCallExpr(this);
             }
         }
 

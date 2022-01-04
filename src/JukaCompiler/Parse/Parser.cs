@@ -93,46 +93,14 @@ namespace JukaCompiler.Parse
                 return PrintLine();
             }
 
-            ExpressionStatement();
-
-            throw new Exception();
+            return ExpressionStatement();
         }
 
         private Stmt ExpressionStatement()
         {
-            Lexeme name = Consume(LexemeType.IDENTIFIER);
-
-            Consume(LexemeType.LEFT_PAREN);
-
-            List<TypeParameterMap> parameters = new List<TypeParameterMap>();
-
-            if (!Check(LexemeType.RIGHT_PAREN))
-            {
-                do
-                {
-                    if(parameters.Count >= 255)
-                    {
-                        // Write Error function
-                        throw new Exception("too many parameters");
-                    }
-                    
-                    Lexeme? parmType = ConsumeKeyword();
-                    //var varName = Consume(LexemeType.IDENTIFIER);
-
-                    var varName = Expr();
-
-                    parameters.Add(new TypeParameterMap(parmType, varName));
-
-                } while (Match(LexemeType.COMMA));
-            }
-
-            Consume(LexemeType.RIGHT_PAREN);
-            Consume(LexemeType.EQUAL);
-            Consume(LexemeType.RIGHT_BRACE);
-
-            List<Stmt> statements = Block();
-
-            return new Stmt.Function(name, parameters, statements);
+            Expression expression = Expr();
+            Consume(LexemeType.SEMICOLON);
+            return new Stmt.Expression(expression);
         }
 
         private Stmt PrintLine()
@@ -245,7 +213,7 @@ namespace JukaCompiler.Parse
         private Stmt Function(string kind)
         {
             Lexeme name = Consume(LexemeType.IDENTIFIER);
-            Lexeme lparen = Consume(LexemeType.LEFT_PAREN);
+            Consume(LexemeType.LEFT_PAREN);
             var typeMap = new List<TypeParameterMap>();
 
             if (!Check(LexemeType.RIGHT_PAREN))
@@ -259,22 +227,15 @@ namespace JukaCompiler.Parse
                         typeMap.Add(new TypeParameterMap( parameterType,varName ));
                     }
                 }
-                while (Match(LexemeType.COMMA));
-            }
-            Lexeme rparen = Consume(LexemeType.RIGHT_PAREN);
-            Lexeme equal = Consume(LexemeType.EQUAL);
-            var leftBrace = Consume(LexemeType.LEFT_BRACE);
+               while (Match(LexemeType.COMMA));
 
-            List<Stmt> statements = new List<Stmt>();
-
-            if (!Check(LexemeType.RIGHT_BRACE))
-            {
-                do
-                {
-                    statements = Block();
-                }
-                while(Match(LexemeType.RIGHT_BRACE));
             }
+
+            Consume(LexemeType.RIGHT_PAREN);
+            Consume(LexemeType.EQUAL);
+            Consume(LexemeType.LEFT_BRACE);
+
+            List<Stmt> statements = Block();
 
             var stmt = new Stmt.Function(name, typeMap, statements);
             return stmt;
@@ -484,9 +445,14 @@ namespace JukaCompiler.Parse
 
         private Expression Primary()
         {
-            if (Match(LexemeType.STRING) || Match(LexemeType.NUMBER) || Match(LexemeType.IDENTIFIER))
+            if (Match(LexemeType.STRING) || Match(LexemeType.NUMBER))
             {
                 return new Expression.Literal(Previous());
+            }
+
+            if ( Match(LexemeType.IDENTIFIER))
+            {
+                return new Expression.Variable(Previous());
             }
 
             if (Match(LexemeType.LEFT_PAREN))
@@ -520,8 +486,7 @@ namespace JukaCompiler.Parse
 
             Lexeme paren = Consume(LexemeType.RIGHT_PAREN);
 
-            //return new Expr.Call(callee, paren, arguments);
-            return new Expression.DefaultExpression();
+            return new Expression.Call(callee, paren, arguments);
         }
     }
 }
