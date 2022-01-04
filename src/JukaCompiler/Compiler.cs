@@ -13,6 +13,7 @@ namespace JukaCompiler
     public class Compiler
     {
         private ServiceProvider serviceProvider;
+        // Creates Compiler Instance (Step: 1)
         public Compiler()
         {
             Initialize();
@@ -22,6 +23,7 @@ namespace JukaCompiler
             }
         }
 
+        // Create DI/Host Builder (Step: 2)
         public void Initialize()
         {
             var hostBuilder = new HostBuilder();
@@ -33,11 +35,14 @@ namespace JukaCompiler
             hostBuilder.Build();//.Run();
         }
 
+        // Run the Compiler (Step: 3)
         public string Go(String data, bool isFile = true)
         {
             try
             {
+                // Create Parser
                 Parser parser = new(new Scanner(data, isFile), this.serviceProvider);
+                // Parse Statements
                 List<Stmt> statements = parser.Parse();
 
                 if (HasErrors())
@@ -45,6 +50,7 @@ namespace JukaCompiler
                     return "Errors during compiling";
                 }
 
+                // Compile the code
                 return Compile(statements);
 
                 throw new Exception("Unhandled error");
