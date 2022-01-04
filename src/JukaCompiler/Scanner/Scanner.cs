@@ -201,7 +201,7 @@ namespace JukaCompiler.Scan
                 Advance();
             }
 
-            var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start, current));
+            var svalue = Encoding.Default.GetString(Memcopy(fileData, start, current));
             Lexeme identifier = new Lexeme(LexemeType.IDENTIFIER);
             
             identifier.AddToken(svalue);

@@ -1,6 +1,4 @@
-'c
-
-function main()={
+func main()={
     if ( 2<3 ) 
     {
         printLine("foo");
@@ -11,7 +9,7 @@ function main()={
     }
 }
 
-function foo() = {
+func foo() = {
     int x = 3;
     while (x<=4)
     {
@@ -20,7 +18,7 @@ function foo() = {
     }
 }
 
-function three()={
+func three()={
     3+3
     x=function(3+3);
     x=1++==4

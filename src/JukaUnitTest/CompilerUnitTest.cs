@@ -14,7 +14,18 @@ namespace JukaUnitTest
             Console.WriteLine(compiler.Go(@"..\..\..\..\..\examples\test.jlr"));
             if (compiler.HasErrors())
             {
-                throw new Exception("parer exceptions");
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+            }
+        }
+
+        [TestMethod]
+        public void TestSourceAsFile2()
+        {
+            Compiler compiler = new Compiler();
+            Console.WriteLine(compiler.Go(@"..\..\..\..\..\examples\test2.jlr"));
+            if (compiler.HasErrors())
+            {
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
         }
 
@@ -29,9 +40,36 @@ namespace JukaUnitTest
             Console.WriteLine(compiler.Go(sourceAsString, false));
             if (compiler.HasErrors())
             {
-                throw new Exception("parer exceptions");
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
         }
+
+        [TestMethod]
+        public void TestOutput()
+        {
+            Compiler compiler = new Compiler();
+            string sourceAsString = "func main() = { printLine(\"AsdfA\");}";
+
+            Console.WriteLine(compiler.Go(sourceAsString, false));
+            if (compiler.HasErrors())
+            {
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+            }
+        }
+
+        [TestMethod]
+        public void TestEmptyString()
+        {
+            Compiler compiler = new Compiler();
+            string sourceAsString = "";
+
+            Console.WriteLine(compiler.Go(sourceAsString, false));
+            if (compiler.HasErrors())
+            {
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+            }
+        }
+
 
 
         /*[TestMethod]

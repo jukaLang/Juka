@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JukaCompiler.Lexer;
+﻿using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 
 namespace JukaCompiler.Statements

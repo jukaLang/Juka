@@ -13,6 +13,7 @@ namespace JukaCompiler
     public class Compiler
     {
         private ServiceProvider serviceProvider;
+        // Creates Compiler Instance (Step: 1)
         public Compiler()
         {
             Initialize();
@@ -22,6 +23,7 @@ namespace JukaCompiler
             }
         }
 
+        // Create DI/Host Builder (Step: 2)
         public void Initialize()
         {
             var hostBuilder = new HostBuilder();
@@ -33,11 +35,14 @@ namespace JukaCompiler
             hostBuilder.Build();//.Run();
         }
 
+        // Run the Compiler (Step: 3)
         public string Go(String data, bool isFile = true)
         {
             try
             {
+                // Create Parser
                 Parser parser = new(new Scanner(data, isFile), this.serviceProvider);
+                // Parse Statements
                 List<Stmt> statements = parser.Parse();
 
                 if (HasErrors())
@@ -45,6 +50,7 @@ namespace JukaCompiler
                     return "Errors during compiling";
                 }
 
+                // Compile the code
                 return Compile(statements);
 
                 throw new Exception("Unhandled error");
@@ -66,26 +72,30 @@ namespace JukaCompiler
 
             // Action<Interpreter.Interpreter, List<Stmt>> wrap;
 
-            using (MemoryStream stream = new MemoryStream())
+            using (StringWriter stringWriter = new StringWriter())
             {
-                StreamWriter writer = new StreamWriter(stream);
-                Console.SetOut(writer);
+
+                Console.SetOut(stringWriter);
 
                 interpreter.Interpert(statements);
 
-                // Console.WriteLine("this is a test");    
+                //Console.WriteLine("this is a test");
 
-                writer.Flush();
-                writer.Close();
-                var byteArray = stream.GetBuffer();
+                String ConsoleOutput = stringWriter.ToString();
                 Console.SetOut(currentOut);
-                return Encoding.UTF8.GetString(byteArray);
+
+                return ConsoleOutput;
             }
         }
 
         public bool HasErrors()
         {
             return this.serviceProvider.GetRequiredService<ICompilerError>().HasErrors();
+        }
+
+        public List<String> ListErrors()
+        {
+            return this.serviceProvider.GetRequiredService<ICompilerError>().ListErrors();
         }
 
         //private void WrapCompilerOutputInMemoryStream(Action<Interpreter.Interpreter, List<Stmt>> wrap)
