@@ -32,7 +32,7 @@ namespace JukaCompiler
                 services.AddSingleton<ICompilerError,CompilerError>();
                 this.serviceProvider = services.BuildServiceProvider();
             });
-            hostBuilder.Build();//.Run();
+            hostBuilder.Build();
         }
 
         // Run the Compiler (Step: 3)
