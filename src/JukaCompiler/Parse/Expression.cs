@@ -148,12 +148,14 @@ namespace JukaCompiler.Parse
 
         internal class Literal : Expression
         {
-            private string? literal;
+            private object? value;
+            private long type;
 
-            internal Literal(Lexeme literal)
+            internal Literal(Lexeme literal, long type)
             {
                 this.Name = literal;
-                this.literal = literal.ToString();
+                this.value = literal;
+                this.type = type;
             }
             internal Literal()
             {
@@ -164,14 +166,24 @@ namespace JukaCompiler.Parse
                 return vistor.VisitLiteralExpr(this);
             }
 
-            internal string LiteralValue()
+            internal object LiteralValue()
             {
-                if (literal == null)
+                if (value == null)
                 {
                     throw new ArgumentNullException("literal");
                 }
 
-                return literal;
+                var v = new LexemeTypeLiteral();
+                v.lexemeType = this.Type;
+                v.literal = this.value.ToString();
+
+                return v;
+                //return literal;
+            }
+
+            internal long Type
+            {
+                get { return type; }
             }
         }
 
@@ -232,6 +244,18 @@ namespace JukaCompiler.Parse
             {
                 throw new NotImplementedException();
             }
+        }
+
+        internal class LexemeTypeLiteral
+        {
+            internal long lexemeType;
+            internal object? literal;
+
+            internal Object Literal
+            { get { return this.literal; } } 
+
+            internal long LexemeType
+            { get { return this.lexemeType;} }
         }
     }
 }
