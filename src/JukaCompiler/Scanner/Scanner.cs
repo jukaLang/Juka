@@ -85,13 +85,13 @@ namespace JukaCompiler.Scan
             char t = Advance();
 
             // Comments
-            if (Peek() == '/')
+            if (t != '\\' && Peek() == '/')
             {
                 Comment();
                 return;
             }
 
-            if (IsLetter(t) || Peek() == '_')
+            if (IsLetter(t) || t == '_')
             {
                 Identifier();
                 return;
@@ -220,11 +220,25 @@ namespace JukaCompiler.Scan
 
         internal void Comment()
         {
-            if (Advance() == '/' && Peek() == '/')
+            Advance();
+            if (Peek() == '/')
             {
                 while(Peek() != '\n')
                 {
                     Advance();
+                }
+            } else if(Peek() == '*')
+            {
+                while (true)
+                {
+                    if (Advance() == '*' && Peek() == '/')
+                    {
+                        break;
+                    }
+                    if (IsEof())
+                    {
+                        throw new Exception("Comment is not closed");
+                    }
                 }
             }
         }

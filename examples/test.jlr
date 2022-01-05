@@ -1,11 +1,18 @@
 func x() = {
-	printLine("AsdfA");
+	printLine("AsdfA"); //TEST
+
+	/* printLine("comment1");
+	   printLine("comment2");
+	*/
+        // Comment 3 printLine("comment3");
+
+	printLine("Done");
 }
 
 func MyFunc() = {
 	int x = 3 + 4;
-	//TEST
 }
 
 
 MyFunc();
+x();
