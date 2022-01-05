@@ -3,10 +3,10 @@ func x() = {
 
 	/* printLine("comment1"); \*/
 	   printLine("comment2");
-	*/ printLine("comment2");
+	 printLine("comment2");*/
         // Comment 3 printLine("comment3");
 
-	printLine("Done");
+	//printLine("Done");
 }
 
 func MyFunc() = {
@@ -16,5 +16,5 @@ func MyFunc() = {
 }
 
 
-MyFunc();
+//MyFunc();
 x();
