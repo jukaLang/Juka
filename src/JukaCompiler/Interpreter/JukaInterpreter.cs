@@ -84,7 +84,8 @@ namespace JukaCompiler.Interpreter
         {
             if (stmt.expr != null)
             {
-                Console.WriteLine(Evaluate(stmt.expr));
+                var lexemeTypeLiteral = Evaluate(stmt.expr) as Expression.LexemeTypeLiteral;
+                Console.WriteLine(lexemeTypeLiteral.Literal);
             }
             return new Stmt.Print();
         }
@@ -123,15 +124,90 @@ namespace JukaCompiler.Interpreter
 
         public object VisitBinaryExpr(Expression.Binary expr)
         {
+            //(Expression.Le ((Expression.Binary)expr).left.
             object left = Evaluate(expr.left);
             object right = Evaluate(expr.right);
 
-            switch (expr.op.LexemeType)
+            var leftLiteralType = left as Expression.LexemeTypeLiteral;
+            var rightLiteralType = right as Expression.LexemeTypeLiteral;
+
+            if (leftLiteralType == null || rightLiteralType == null)
             {
-                //case LexemeType.BANG_EQUAL : return
+                throw new ArgumentNullException("unable to get literal");
+            }
+            
+            long leftValueType = leftLiteralType.lexemeType;
+            long rightValueType = rightLiteralType.lexemeType;
+
+            object leftValue = leftLiteralType.Literal;
+            object rightValue = rightLiteralType.Literal;
+
+            switch (expr.op.ToString())
+            {
+                case "!=" :
+                        return !IsEqual(leftValue, rightValue);
+                case "==":
+                        return IsEqual(leftValue, rightValue);
+                //case ">":
+                //case "<":
+                //case "<=":
+                //case ">=":
+                //case "-":
+                //case "/":
+                //case "*":
+                case "+":
+                    if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+                    {
+                        int lvalue = Convert.ToInt32(leftValue);
+                        int rvalue = Convert.ToInt32(rightValue);
+                        return lvalue + rvalue;
+                    }
+
+                    if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
+                    { 
+                        return (string)left + (string)right; 
+                    }
+
+                    throw new ArgumentNullException("can't add types");
             }
 
             return null;
+        }
+
+        private bool IsEqual(object a, object b)
+        {
+            if (a == null && b == null)
+            {
+                return true;
+            }
+
+            if (a == null)
+            {
+                return false;
+            }
+
+            return a.Equals(b);
+        }
+
+        private void CheckNumberOperand(Lexeme op, object operand)
+        {
+            if (operand is int)
+            {
+                return;
+            }
+
+            throw new ArgumentException(op.ToString() + " Operands must be numbers");
+        }
+
+
+        private void CheckNumberOperands(Lexeme op, object left, object right)
+        {
+            if (left is int && right is int )
+            {
+                return;
+            }
+
+            throw new ArgumentException(op.ToString() + " Operands must be numbers");
         }
 
         public object VisitCallExpr(Expression.Call expr)

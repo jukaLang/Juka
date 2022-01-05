@@ -442,9 +442,14 @@ namespace JukaCompiler.Parse
 
         private Expression Primary()
         {
-            if (Match(LexemeType.STRING) || Match(LexemeType.NUMBER))
+            if (Match(LexemeType.STRING))
             {
-                return new Expression.Literal(Previous());
+                return new Expression.Literal(Previous(), LexemeType.STRING);
+            }
+
+            if (Match(LexemeType.NUMBER))
+            {
+                return new Expression.Literal(Previous(), LexemeType.NUMBER);
             }
 
             if ( Match(LexemeType.IDENTIFIER))
