@@ -36,7 +36,7 @@
             return instance;
         }
 
-        internal JukaFunction FindMethod(string name)
+        internal JukaFunction? FindMethod(string name)
         {
             if (methods.ContainsKey(name))
             {

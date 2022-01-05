@@ -110,13 +110,22 @@ namespace JukaCompiler.Statements
 
             internal Var(Lexeme name, Parse.Expression expr)
             {
-                this.name=name;
-                this.exprInitializer=expr;
+                if (!(name.ToString().All(c => char.IsLetterOrDigit(c) || c == '_')))
+                {
+                    throw new Exception("Variable {name.ToString()} has an invalid name");
+                }
+                this.name = name;
+                this.exprInitializer = expr;
                 this.isInitalizedVar = true;
+
             }
 
             internal Var(Lexeme name)
             {
+                if (!(name.ToString().All(c => char.IsLetterOrDigit(c) || c == '_')))
+                {
+                    throw new Exception("Variable {name.ToString()} has an invalid name");
+                }
                 this.name = name;
                 exprInitializer = null;
             }

@@ -259,6 +259,7 @@ namespace JukaCompiler.Parse
             {
                 initalizedState = Expr();
                 Consume(LexemeType.SEMICOLON);
+                Console.WriteLine("eventually");
                 return new Stmt.Var(name, initalizedState);
             }
 
@@ -275,9 +276,11 @@ namespace JukaCompiler.Parse
         private Expression Assignment()
         {
             Expression expr = Or();
+            Console.WriteLine("THERE");
 
             if (Match(LexemeType.EQUAL))
             {
+                Console.WriteLine("HERE");
                 Lexeme equals = Previous();
                 Expression value = Assignment();
 

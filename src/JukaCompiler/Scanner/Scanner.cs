@@ -4,6 +4,7 @@ using System.Text;
 
 namespace JukaCompiler.Scan
 {
+    // Step 4: Scan the string
     internal class Scanner
     {
         private int start = 0;
@@ -83,7 +84,7 @@ namespace JukaCompiler.Scan
         {
             char t = Advance();
 
-            if (IsLetter(t))
+            if (IsLetter(t) || Peek() == '_')
             {
                 Identifier();
                 return;
@@ -196,7 +197,7 @@ namespace JukaCompiler.Scan
 
         internal void Identifier()
         {
-            while (IsLetterOrDigit(Peek()))
+            while (IsLetterOrDigit(Peek()) || Peek() == '_')
             {
                 Advance();
             }
@@ -273,12 +274,11 @@ namespace JukaCompiler.Scan
 
         internal char Peek()
         {
-            if (IsEof())
+            if (!IsEof())
             {
-                return '\0';
+                return (char)fileData[current]; 
             }
-
-            return (char)fileData[current];
+            return '\0';
         }
 
         internal void Reverse()
