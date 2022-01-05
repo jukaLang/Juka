@@ -1,9 +1,9 @@
 func x() = {
 	printLine("AsdfA"); //TEST
 
-	/* printLine("comment1");
+	/* printLine("comment1"); \*/
 	   printLine("comment2");
-	*/
+	*/ printLine("comment2");
         // Comment 3 printLine("comment3");
 
 	printLine("Done");
@@ -11,6 +11,8 @@ func x() = {
 
 func MyFunc() = {
 	int x = 3 + 4;
+	printLine(21);
+	printLine(x);
 }
 
 

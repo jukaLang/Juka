@@ -84,13 +84,6 @@ namespace JukaCompiler.Scan
         {
             char t = Advance();
 
-            // Comments
-            if (t != '\\' && Peek() == '/')
-            {
-                Comment();
-                return;
-            }
-
             if (IsLetter(t) || t == '_')
             {
                 Identifier();
@@ -138,10 +131,13 @@ namespace JukaCompiler.Scan
                         case '"' : String(); break;
                 }
             }
-            //if (Char.IsWhiteSpace(t))
-            //{
-            //    current++;
-            //}
+
+            // Comments
+            if (t != '\\' && Peek() == '/')
+            {
+                Comment();
+                return;
+            }
         }
 
         internal void AddSymbol(char symbol, Int64 type)
@@ -229,8 +225,14 @@ namespace JukaCompiler.Scan
                 }
             } else if(Peek() == '*')
             {
+                Advance();
                 while (true)
                 {
+                    if (Advance() == '\\' && Peek() == '*'){
+                        Advance();
+                        continue;
+                    }
+                    Reverse();
                     if (Advance() == '*' && Peek() == '/')
                     {
                         break;
