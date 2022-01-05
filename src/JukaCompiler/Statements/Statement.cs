@@ -39,6 +39,10 @@ namespace JukaCompiler.Statements
 
             internal Function(Lexeme name, List<TypeParameterMap> parametersMap, List<Stmt> body)
             {
+                if (!(name.ToString().All(c => char.IsLetterOrDigit(c) || c == '_')))
+                {
+                    throw new Exception("Function {name.ToString()} has an invalid name");
+                }
                 this.name = name;
                 this.typeParameterMaps = parametersMap;
                 this.body = body;

@@ -4,6 +4,7 @@ func x() = {
 
 func MyFunc() = {
 	int x = 3 + 4;
+	//TEST
 }
 
 

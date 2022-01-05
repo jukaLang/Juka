@@ -84,6 +84,13 @@ namespace JukaCompiler.Scan
         {
             char t = Advance();
 
+            // Comments
+            if (Peek() == '/')
+            {
+                Comment();
+                return;
+            }
+
             if (IsLetter(t) || Peek() == '_')
             {
                 Identifier();
@@ -209,6 +216,17 @@ namespace JukaCompiler.Scan
 
             TryGetKeyWord(identifier);
             this.lexemes.Add(identifier);
+        }
+
+        internal void Comment()
+        {
+            if (Advance() == '/' && Peek() == '/')
+            {
+                while(Peek() != '\n')
+                {
+                    Advance();
+                }
+            }
         }
 
         internal void Number()
