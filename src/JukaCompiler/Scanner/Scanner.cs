@@ -80,6 +80,16 @@ namespace JukaCompiler.Scan
             return false;
         }
 
+        internal bool isFirst()
+        {
+            if (current == 1)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         internal void ReadToken()
         {
             char t = Advance();
@@ -132,12 +142,21 @@ namespace JukaCompiler.Scan
                 }
             }
 
+
             // Comments
-            if (t != '\\' && Peek() == '/')
+            if (isFirst() && t == '/')
             {
                 Comment();
                 return;
             }
+            if (t != '\\' && Peek() == '/')
+            {
+                Advance();
+                Comment();
+                return;
+            }
+
+
         }
 
         internal void AddSymbol(char symbol, Int64 type)
@@ -216,10 +235,9 @@ namespace JukaCompiler.Scan
 
         internal void Comment()
         {
-            Advance();
             if (Peek() == '/')
             {
-                while(Peek() != '\n')
+                while(Peek() != '\n' && !IsEof())
                 {
                     Advance();
                 }
@@ -235,6 +253,7 @@ namespace JukaCompiler.Scan
                     Reverse();
                     if (Advance() == '*' && Peek() == '/')
                     {
+                        Advance();
                         break;
                     }
                     if (IsEof())

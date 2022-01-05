@@ -19,12 +19,14 @@ namespace JukaUnitTest
         [TestMethod]
         public void TestSourceAsFile2()
         {
+            // NOT WORKING CURRENTLY
             Compiler compiler = new Compiler();
-            Console.WriteLine(compiler.Go(@"..\..\..\..\..\examples\test2.jlr"));
+            var outputValue = compiler.Go(@"..\..\..\..\..\examples\test2.jlr");
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
+            Assert.AreEqual(outputValue, "foo\r\n");
         }
 
 
@@ -33,13 +35,14 @@ namespace JukaUnitTest
         {
             string t = new string("abc");
             Compiler compiler = new Compiler();
-            string sourceAsString = "func x() = { printLine(\"AsdfA\");}";
+            string sourceAsString = "func x() = { printLine(\"AsdfA\");} x();";
 
-            Console.WriteLine(compiler.Go(sourceAsString, false));
+            var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
+            Assert.AreEqual(outputValue, "AsdfA\r\n");
         }
 
         [TestMethod]
@@ -48,24 +51,40 @@ namespace JukaUnitTest
             Compiler compiler = new Compiler();
             string sourceAsString = "func main() = { printLine(\"AsdfA\");}";
 
-            Console.WriteLine(compiler.Go(sourceAsString, false));
+            var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
+            Assert.AreEqual(outputValue, "AsdfA\r\n");
         }
 
         [TestMethod]
         public void TestEmptyString()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "";
+            string sourceAsString = "   ";
 
-            Console.WriteLine(compiler.Go(sourceAsString, false));
+            var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
+            Assert.AreEqual(outputValue, "");
+        }
+
+        [TestMethod]
+        public void TestEmptyComment()
+        {
+            Compiler compiler = new Compiler();
+            string sourceAsString = "/*saddsadsa*dasdas\\*/asdasd*/ //!sssd";
+
+            var outputValue = compiler.Go(sourceAsString, false);
+            if (compiler.HasErrors())
+            {
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+            }
+            Assert.AreEqual(outputValue, "");
         }
 
 
