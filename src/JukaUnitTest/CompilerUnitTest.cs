@@ -13,7 +13,7 @@ namespace JukaUnitTest
             Compiler compiler = new Compiler();
 
             var outputValue = compiler.Go(@"..\..\..\..\..\examples\test.jlr");
-            Assert.AreEqual(outputValue, "AsdfA\r\n");
+            Assert.AreEqual(outputValue, "Start\r\nDone\r\n");
         }
 
         [TestMethod]

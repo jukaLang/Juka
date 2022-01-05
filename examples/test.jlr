@@ -1,5 +1,5 @@
 func x() = {
-	printLine("AsdfA"); //TEST
+	printLine("Start"); //TEST
 
 	/* printLine("comment1");
 	   printLine("comment2");
@@ -9,10 +9,10 @@ func x() = {
 	printLine("Done");
 }
 
-func MyFunc() = {
+func My_Func() = {
 	int x = 3 + 4;
 }
 
 
-MyFunc();
+My_Func();
 x();
