@@ -11,11 +11,9 @@ namespace JukaUnitTest
         public void TestSourceAsFile()
         {
             Compiler compiler = new Compiler();
-            Console.WriteLine(compiler.Go(@"..\..\..\..\..\examples\test.jlr"));
-            if (compiler.HasErrors())
-            {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-            }
+
+            var outputValue = compiler.Go(@"..\..\..\..\..\examples\test.jlr");
+            Assert.AreEqual(outputValue, "AsdfA\r\n");
         }
 
         [TestMethod]
