@@ -80,15 +80,6 @@ namespace JukaCompiler.Scan
             return false;
         }
 
-        internal bool isFirst()
-        {
-            if (current == 1)
-            {
-                return true;
-            }
-
-            return false;
-        }
 
         internal void ReadToken()
         {
@@ -144,14 +135,8 @@ namespace JukaCompiler.Scan
 
 
             // Comments
-            if (isFirst() && t == '/')
+            if (Prev() != '\\' && t == '/')
             {
-                Comment();
-                return;
-            }
-            if (t != '\\' && Peek() == '/')
-            {
-                Advance();
                 Comment();
                 return;
             }
@@ -324,6 +309,17 @@ namespace JukaCompiler.Scan
 
             return '\0';
         }
+
+        internal char Prev()
+        {
+            if ((current - 1) >= 0)
+            {
+                return (char)fileData[current-1];
+            }
+
+            return '\n';
+        }
+
 
         internal char Peek()
         {

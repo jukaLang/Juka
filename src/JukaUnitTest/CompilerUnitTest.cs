@@ -77,7 +77,8 @@ namespace JukaUnitTest
         public void TestEmptyComment()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "/*saddsadsa*dasdas\\*/asdasd*/ //!sssd";
+            ///*saddsadsa*dasdas\\*/asdasd*/ /*  */ //!sssd
+            string sourceAsString = "/*saddsadsa*dasdas\\*/asdasd*//**///!sssd";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
