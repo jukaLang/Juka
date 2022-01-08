@@ -80,6 +80,7 @@ namespace JukaCompiler.Scan
             return false;
         }
 
+
         internal void ReadToken()
         {
             char t = Advance();
@@ -138,10 +139,16 @@ namespace JukaCompiler.Scan
                         case '"' : String(); break;
                 }
             }
-            //if (Char.IsWhiteSpace(t))
-            //{
-            //    current++;
-            //}
+
+
+            // Comments
+            if (Prev() != '\\' && t == '/')
+            {
+                Comment();
+                return;
+            }
+
+
         }
 
         internal void AddSymbol(char symbol, Int64 type)
@@ -220,10 +227,9 @@ namespace JukaCompiler.Scan
 
         internal void Comment()
         {
-            Advance();
             if (Peek() == '/')
             {
-                while(Peek() != '\n')
+                while(Peek() != '\n' && !IsEof())
                 {
                     Advance();
                 }
@@ -233,6 +239,7 @@ namespace JukaCompiler.Scan
                 {
                     if (Advance() == '*' && Peek() == '/')
                     {
+                        Advance();
                         break;
                     }
                     if (IsEof())
@@ -303,6 +310,17 @@ namespace JukaCompiler.Scan
 
             return '\0';
         }
+
+        internal char Prev()
+        {
+            if ((current - 1) >= 0)
+            {
+                return (char)fileData[current-1];
+            }
+
+            return '\n';
+        }
+
 
         internal char Peek()
         {

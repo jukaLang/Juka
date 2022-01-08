@@ -20,15 +20,29 @@ configuration:
 - Release
 
 artifacts:
-- path: 'src\JukaAzureFunction\bin\Release'
-  name: Juka_$(APPVEYOR_BUILD_VERSION)
+- path: 'src\JukaAzureFunction\bin\Release\net6.0'
+  name: Juka_Azure_Function_$(APPVEYOR_BUILD_VERSION)
+  type: AzureCloudService
+- path: 'src\JukaCompiler\bin\Release\net6.0'
+  name: Juka_Compiler_dll_$(APPVEYOR_BUILD_VERSION)
   type: zip
-
+- path: 'src\JukaNetwork\bin\Release\net6.0'
+  name: Juka_Network_blockchain_$(APPVEYOR_BUILD_VERSION)
+  type: zip
 
 deploy:
     # Deploy to GitHub Releases
   - provider: GitHub
-    artifact: Juka_$(APPVEYOR_BUILD_VERSION)    
+    artifact: /.*\.zip/
+    auth_token:
+      secure: XCqLJKrsMnRCCEEcsPL53Emba/2GrP172INtXx86eu5XBbed614ug/2dcx8MZwmr
+    draft: false
+    prerelease: false
+    on:
+      branch: master                # release from master branch only
+      APPVEYOR_REPO_TAG: false       # deploy on tag push only
+  - provider: GitHub
+    artifact: /.*\.cspkg/
     auth_token:
       secure: XCqLJKrsMnRCCEEcsPL53Emba/2GrP172INtXx86eu5XBbed614ug/2dcx8MZwmr
     draft: false
