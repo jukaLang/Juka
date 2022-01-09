@@ -41,9 +41,7 @@ namespace JukaCompiler
         {
             try
             {
-                // Create Parser
                 Parser parser = new(new Scanner(data, isFile), this.serviceProvider);
-                // Parse Statements
                 List<Stmt> statements = parser.Parse();
 
                 if (HasErrors())
@@ -51,7 +49,6 @@ namespace JukaCompiler
                     return "Errors during compiling";
                 }
 
-                // Compile the code
                 return Compile(statements);
 
                 throw new Exception("Unhandled error");
@@ -75,12 +72,8 @@ namespace JukaCompiler
 
             using (StringWriter stringWriter = new StringWriter())
             {
-
                 Console.SetOut(stringWriter);
-
                 interpreter.Interpert(statements);
-
-                //Console.WriteLine("this is a test");
 
                 String ConsoleOutput = stringWriter.ToString();
                 Console.SetOut(currentOut);
