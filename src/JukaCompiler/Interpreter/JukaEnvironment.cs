@@ -67,7 +67,7 @@ namespace JukaCompiler.Interpreter
 
         internal Object GetAt(int distance, string name)
         {
-            return Ancestor(distance);
+            return Ancestor(distance).values[name];
         }
 
         internal void AssignAt(int distance, Lexeme name, Object value)

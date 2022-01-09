@@ -90,6 +90,11 @@ namespace JukaCompiler.Parse
                 return PrintLine();
             }
 
+            if (Match(LexemeType.INTERNALFUNCTION | LexemeType.PRINT))
+            {
+                return Print();
+            }
+
             return ExpressionStatement();
         }
 
@@ -110,8 +115,22 @@ namespace JukaCompiler.Parse
             Consume(LexemeType.RIGHT_PAREN);
             Consume(LexemeType.SEMICOLON);
 
+            return new Stmt.PrintLine(value);
+        }
+
+        private Stmt Print()
+        {
+            Lexeme keyword = Previous();
+            Consume(LexemeType.LEFT_PAREN);
+
+            Expression value = Expr();
+
+            Consume(LexemeType.RIGHT_PAREN);
+            Consume(LexemeType.SEMICOLON);
+
             return new Stmt.Print(value);
         }
+
 
         private bool MatchKeyWord()
         {

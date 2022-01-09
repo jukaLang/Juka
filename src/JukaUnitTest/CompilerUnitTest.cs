@@ -10,10 +10,12 @@ namespace JukaUnitTest
         [TestMethod]
         public void TestSourceAsFile()
         {
+            const string returnValue = "START\r\nfoobar - 32DONE\r\n";
+
             Compiler compiler = new Compiler();
 
             var outputValue = compiler.Go(@"..\..\..\..\..\examples\test.jlr");
-            Assert.AreEqual(outputValue, "Start\r\nDone\r\n");
+            Assert.AreEqual(outputValue, returnValue);
         }
 
         [TestMethod]

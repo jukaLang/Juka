@@ -80,13 +80,57 @@ namespace JukaCompiler.Interpreter
             throw new NotImplementedException();
         }
 
-        public Stmt VisitPrintStmt(Stmt.Print stmt)
+        public Stmt VisitPrintLine(Stmt.PrintLine stmt)
         {
             if (stmt.expr != null)
             {
-                var lexemeTypeLiteral = Evaluate(stmt.expr) as Expression.LexemeTypeLiteral;
-                Console.WriteLine(lexemeTypeLiteral.Literal);
+                if (stmt.expr is Expression.Literal || stmt.expr is Expression.LexemeTypeLiteral)
+                { 
+                    var lexemeTypeLiteral = Evaluate(stmt.expr) as Expression.LexemeTypeLiteral;
+                    Console.WriteLine(lexemeTypeLiteral.Literal);
+                    return new Stmt.PrintLine();
+                }
+
+                if (stmt.expr is Expression.Variable)
+                {
+                    var variable = LookUpVariable(stmt.expr.Name, stmt.expr);
+                    if (variable != null)
+                    {
+                        if (variable is Expression.LexemeTypeLiteral)
+                        {
+                            Console.WriteLine(((Expression.LexemeTypeLiteral)variable).Literal);
+                        }
+                    }
+                }
             }
+
+            return new Stmt.PrintLine();
+        }
+
+        public Stmt VisitPrint(Stmt.Print stmt)
+        {
+            if (stmt.expr != null)
+            {
+                if (stmt.expr is Expression.LexemeTypeLiteral)
+                {
+                    var lexemeTypeLiteral = Evaluate(stmt.expr) as Expression.LexemeTypeLiteral;
+                    Console.Write(lexemeTypeLiteral.Literal);
+                    return new Stmt.Print();
+                }
+
+                if (stmt.expr is Expression.Variable)
+                {
+                    var variable = LookUpVariable(stmt.expr.Name, stmt.expr);
+                    if (variable != null)
+                    {
+                        if (variable is Expression.LexemeTypeLiteral)
+                        {
+                            Console.Write(((Expression.LexemeTypeLiteral)variable).Literal);
+                        }
+                    }
+                }
+            }
+
             return new Stmt.Print();
         }
 
@@ -124,7 +168,6 @@ namespace JukaCompiler.Interpreter
 
         public object VisitBinaryExpr(Expression.Binary expr)
         {
-            //(Expression.Le ((Expression.Binary)expr).left.
             object left = Evaluate(expr.left);
             object right = Evaluate(expr.right);
 
@@ -148,30 +191,125 @@ namespace JukaCompiler.Interpreter
                         return !IsEqual(leftValue, rightValue);
                 case "==":
                         return IsEqual(leftValue, rightValue);
-                //case ">":
+                case ">":
+                    return IsLessThan(leftValueType, rightValueType, leftValue, rightValue);
+                case "/":
+                    return DivideTypes(leftValueType, rightValueType, leftValue, rightValue);
+                case "*":
+                    return MultiplyTypes(leftValueType, rightValueType, leftValue, rightValue);
+                case "-":
+                    return SubtractTypes(leftValueType, rightValueType, leftValue, rightValue);
+                case "+":
+                    return AddTypes(leftValueType, rightValueType, leftValue, rightValue);
                 //case "<":
                 //case "<=":
                 //case ">=":
-                //case "-":
-                //case "/":
-                //case "*":
-                case "+":
-                    if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
-                    {
-                        int lvalue = Convert.ToInt32(leftValue);
-                        int rvalue = Convert.ToInt32(rightValue);
-                        return lvalue + rvalue;
-                    }
-
-                    if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
-                    { 
-                        return (string)left + (string)right; 
-                    }
-
-                    throw new ArgumentNullException("can't add types");
             }
 
-            return null;
+            return new Expression.LexemeTypeLiteral();
+        }
+
+
+        private static object IsLessThan(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        {
+            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            {
+                var literal = new Expression.LexemeTypeLiteral();
+                literal.literal = Convert.ToInt32(leftValue) < Convert.ToInt32(rightValue);
+                literal.lexemeType = LexemeType.BOOL;
+                return literal;
+            }
+
+            if (leftValueType == LexemeType.STRING || rightValueType == LexemeType.STRING)
+            {
+                throw new ArgumentException("can't apply less than operator to strings");
+            }
+
+            throw new ArgumentException("Can't compare types");
+        }
+
+        private static object AddTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        {
+            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            {
+                var literalSum = new Expression.LexemeTypeLiteral();
+                literalSum.literal = Convert.ToInt32(leftValue) + Convert.ToInt32(rightValue);
+                literalSum.lexemeType = LexemeType.NUMBER;
+                return literalSum;
+            }
+
+            if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
+            {
+                var literalStringSum = new Expression.LexemeTypeLiteral();
+
+                literalStringSum.literal = Convert.ToString(leftValue) + Convert.ToString(rightValue);
+                literalStringSum.lexemeType = LexemeType.STRING;
+                return literalStringSum;
+            }
+
+            throw new ArgumentNullException("can't add types");
+        }
+
+        private static object SubtractTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        {
+            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            {
+                var literalSum = new Expression.LexemeTypeLiteral();
+                literalSum.literal = Convert.ToInt32(leftValue) - Convert.ToInt32(rightValue);
+                literalSum.lexemeType = LexemeType.NUMBER;
+                return literalSum;
+            }
+
+            if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
+            {
+                throw new ArgumentException("can't subtract strings");
+            }
+
+            throw new ArgumentNullException("can't subtract types");
+        }
+
+        private static object MultiplyTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        {
+            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            {
+                var literalProduction = new Expression.LexemeTypeLiteral();
+                literalProduction.literal = Convert.ToInt32(leftValue) * Convert.ToInt32(rightValue);
+                literalProduction.lexemeType = LexemeType.NUMBER;
+                return literalProduction;
+            }
+
+            if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
+            {
+                throw new ArgumentException("can't multiply strings");
+            }
+
+            throw new ArgumentNullException("can't multiply types");
+        }
+
+        private static object DivideTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        {
+            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            {
+                var literalProduction = new Expression.LexemeTypeLiteral();
+                int divisor = Convert.ToInt32(leftValue);
+                int divident = Convert.ToInt32(rightValue);
+
+                if (divisor == 0 || divident == 0)
+                {
+                    throw new ArgumentException("Can't divide by zero");
+
+                }
+                literalProduction.literal = Convert.ToInt32(leftValue) / Convert.ToInt32(rightValue);
+                literalProduction.lexemeType = LexemeType.NUMBER;
+                return literalProduction;
+            }
+
+            if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
+            {
+                throw new ArgumentException("can't divide strings");
+            }
+
+            throw new ArgumentNullException("can't divide types");
         }
 
         private bool IsEqual(object a, object b)

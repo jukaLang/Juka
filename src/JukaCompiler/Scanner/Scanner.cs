@@ -4,7 +4,6 @@ using System.Text;
 
 namespace JukaCompiler.Scan
 {
-    // Step 4: Scan the string
     internal class Scanner
     {
         private int start = 0;
@@ -31,11 +30,13 @@ namespace JukaCompiler.Scan
             { "while",  LexemeType.WHILE },
             { "int",    LexemeType.INT },
             { "char",   LexemeType.CHAR },
+            { "string", LexemeType.STRING },
         };
 
         private static readonly Dictionary<string, Int64> internalFunctionsList = new Dictionary<string, Int64>
         {
             {"printLine", LexemeType.PRINTLINE},
+            {"print", LexemeType.PRINT},
         };
 
         internal Scanner(string data, bool isFile = true)
@@ -116,7 +117,7 @@ namespace JukaCompiler.Scan
                     case '}': AddSymbol( t, LexemeType.RIGHT_BRACE); break;
                     case ',': AddSymbol( t, LexemeType.COMMA); break;
                     case '.': AddSymbol( t, LexemeType.DOT); break;
-                    case '-': AddSymbol( t, LexemeType.EQUAL); break;
+                    case '-': AddSymbol( t, LexemeType.MINUS); break;
                     case '+': AddSymbol( t, LexemeType.PLUS); break;
                     case ';': AddSymbol( t, LexemeType.SEMICOLON); break;
                     case '*': AddSymbol( t, LexemeType.STAR); break;

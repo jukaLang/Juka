@@ -150,7 +150,18 @@ namespace JukaCompiler.Interpreter
             throw new NotImplementedException();
         }
 
-        public object VisitPrintStmt(Stmt.Print stmt)
+        public object VisitPrintLine(Stmt.PrintLine stmt)
+        {
+            if (stmt == null || stmt.expr == null)
+            {
+                throw new ArgumentNullException("stmt and or expressoin are null");
+            }
+
+            Resolve(stmt.expr);
+            return new Stmt.PrintLine();
+        }
+
+        public object VisitPrint(Stmt.Print stmt)
         {
             if (stmt == null || stmt.expr == null)
             {
