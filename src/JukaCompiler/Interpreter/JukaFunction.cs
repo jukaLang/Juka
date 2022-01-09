@@ -2,7 +2,7 @@
 
 namespace JukaCompiler.Interpreter
 {
-    internal class JukaFunction : Callable
+    internal class JukaFunction : IJukaCallable
     {
         private Stmt.Function declaration;
         private JukaEnvironment closure;

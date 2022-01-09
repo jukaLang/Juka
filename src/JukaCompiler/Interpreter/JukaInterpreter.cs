@@ -1,6 +1,8 @@
-﻿using JukaCompiler.Lexer;
+﻿using JukaCompiler.Exceptions;
+using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 using JukaCompiler.Statements;
+using JukaCompiler.SystemCalls;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Interpreter
@@ -17,8 +19,15 @@ namespace JukaCompiler.Interpreter
             environment = globals = new JukaEnvironment();
             this.serviceProvider = services;
 
-            // var callable = new Callable();
-            // globals.Define("clock",
+            if (serviceProvider != null)
+            { 
+                globals.Define("clock",serviceProvider.GetService<ISystemClock>());
+                globals.Define("fileOpen", services.GetService<IFileOpen>());
+            }
+            else
+            {
+                throw new JRuntimeException("Unable to load system calls");
+            }
         }
 
         internal void Interpert(List<Stmt> statements)
@@ -357,12 +366,12 @@ namespace JukaCompiler.Interpreter
                 arguments.Add(argument);
             }
 
-            if (!(callee is Callable))
+            if (!(callee is IJukaCallable))
             {
                 throw new ArgumentException("not a class or function");
             }
 
-            Callable function = (Callable)callee;
+            IJukaCallable function = (IJukaCallable)callee;
             if (arguments.Count != function.Arity())
             {
                 throw new ArgumentException("Wrong number of arguments");

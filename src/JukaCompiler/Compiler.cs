@@ -5,6 +5,7 @@ using JukaCompiler.Statements;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using JukaCompiler.Exceptions;
+using JukaCompiler.SystemCalls;
 
 namespace JukaCompiler
 {
@@ -28,6 +29,8 @@ namespace JukaCompiler
             hostBuilder.ConfigureServices(services =>
             {
                 services.AddSingleton<ICompilerError,CompilerError>();
+                services.AddSingleton<IFileOpen, FileOpen>();
+                services.AddSingleton<ISystemClock, SystemClock>();
                 this.serviceProvider = services.BuildServiceProvider();
             });
             hostBuilder.Build();

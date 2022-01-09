@@ -199,7 +199,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitVariableExpr(Expression.Variable expr)
         {
-            if (scopes.Count() > 0 && scopes.Peek()[expr.Name.ToString()] == false)
+            if (scopes.Count > 1 && scopes.Peek()[expr.Name.ToString()] == false)
             {
                 this.compilerError.AddError(expr.Name.ToString() + "Can't read local variable");
             }

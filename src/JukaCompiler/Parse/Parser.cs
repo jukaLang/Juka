@@ -500,7 +500,7 @@ namespace JukaCompiler.Parse
                     //}
                     ////< check-max-arity
                     
-                    //****** arguments.Add(Expression());
+                    arguments.Add(Expr());
 
                 } while (Match(LexemeType.COMMA));
             }
