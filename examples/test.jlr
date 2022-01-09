@@ -1,18 +1,22 @@
-func x() = {
-	printLine("Start"); //TEST
-
-	/* printLine("comment1");
-	   printLine("comment2");
-	*/
-        // Comment 3 printLine("comment3");
-
-	printLine("Done");
+func Start() = {
+	printLine("START");
 }
 
-func My_Func() = {
-	int x = 3 + 4;
+func Process() = {
+	string s = "foo" + "bar";
+	print(s);
+	// should print "foobar" in the output.
+
+	int x = 8 - 10 * 4;
+	print(x);
+	// should print -32, negative 32 in the output.
+}
+
+func End() = {
+	printLine("END");
 }
 
 
-My_Func();
-x();
+Start();
+Process();
+End();

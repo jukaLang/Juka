@@ -12,7 +12,8 @@ namespace JukaCompiler.Statements
             R VisitClassStmt(Class stmt);
             R VisitExpressionStmt(Expression stmt);
             R VisitIfStmt(If stmt);
-            R VisitPrintStmt(Print stmt);
+            R VisitPrintLine(PrintLine stmt);
+            R VisitPrint(Print stmt);
             R VisitReturnStmt(Return stmt);
             R VisitVarStmt(Var stmt);
             R VisitWhileStmt(While stmt);
@@ -65,8 +66,7 @@ namespace JukaCompiler.Statements
                 throw new NotImplementedException();
             }
         }
-
-         internal class Expression : Stmt
+        internal class Expression : Stmt
          {
             internal Parse.Expression expression;
 
@@ -80,12 +80,29 @@ namespace JukaCompiler.Statements
                  return vistor.VisitExpressionStmt(this);
              }
          }
- 
         internal class If : Stmt
         {
             internal override R Accept<R>(Visitor<R> vistor)
             {
                 throw new NotImplementedException();
+            }
+        }
+        internal class PrintLine : Stmt
+        {
+            internal Parse.Expression? expr;
+
+            internal PrintLine(Parse.Expression expr)
+            {
+                this.expr = expr;
+            }
+
+            internal PrintLine()
+            {
+            }
+
+            internal override R Accept<R>(Visitor<R> vistor)
+            {
+                return vistor.VisitPrintLine(this);
             }
         }
         internal class Print : Stmt
@@ -103,7 +120,7 @@ namespace JukaCompiler.Statements
 
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                return vistor.VisitPrintStmt(this);
+                return vistor.VisitPrint(this);
             }
         }
         internal class Var : Stmt
