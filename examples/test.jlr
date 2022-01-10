@@ -1,4 +1,6 @@
 func Start() = {
+	int x = clock();
+	printLine(x);
 	printLine("START");
 }
 
@@ -14,9 +16,13 @@ func Process() = {
 
 func End() = {
 	printLine("END");
+	int x = clock();
+	printLine(x);
+	return x;
 }
 
 
 Start();
 Process();
+printLine("external");
 End();

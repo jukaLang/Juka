@@ -95,7 +95,28 @@ namespace JukaCompiler.Parse
                 return Print();
             }
 
+            if (Match(LexemeType.RETURN)) return ReturnStatement();
+
             return ExpressionStatement();
+        }
+
+        private Stmt ReturnStatement()
+        {
+            var keyword = Previous();
+            Expression value = null;
+
+            if (!Check(LexemeType.SEMICOLON))
+            {
+                value = Expr();
+            }
+
+            if (value == null)
+            {
+                throw new JRuntimeException("unable to parse return statement");
+            }
+
+            Consume(LexemeType.SEMICOLON);
+            return new Stmt.Return(keyword, value);
         }
 
         private Stmt ExpressionStatement()
@@ -461,6 +482,10 @@ namespace JukaCompiler.Parse
 
         private Expression Primary()
         {
+            if (Match(LexemeType.FALSE)) return new Expression.Literal(Previous(), LexemeType.FALSE);
+            if (Match(LexemeType.TRUE)) return new Expression.Literal(Previous(), LexemeType.TRUE);
+            if (Match(LexemeType.NULL)) return new Expression.Literal(Previous(), LexemeType.NULL);
+
             if (Match(LexemeType.STRING))
             {
                 return new Expression.Literal(Previous(), LexemeType.STRING);
@@ -500,7 +525,7 @@ namespace JukaCompiler.Parse
                     //}
                     ////< check-max-arity
                     
-                    //****** arguments.Add(Expression());
+                    arguments.Add(Expr());
 
                 } while (Match(LexemeType.COMMA));
             }

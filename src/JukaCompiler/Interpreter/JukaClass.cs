@@ -1,6 +1,6 @@
 ﻿namespace JukaCompiler.Interpreter
 {
-    internal class JukaClass : Callable
+    internal class JukaClass : IJukaCallable
     {
         private string name;
         private JukaClass superClass;

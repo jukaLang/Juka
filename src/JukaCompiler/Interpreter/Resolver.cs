@@ -174,7 +174,22 @@ namespace JukaCompiler.Interpreter
 
         public object VisitReturnStmt(Stmt.Return stmt)
         {
-            throw new NotImplementedException();
+            if (currentFunction == FunctionType.NONE)
+            {
+                this.compilerError.AddError("Can't reach return. No function defined");
+            }
+
+            if (stmt.expr != null)
+            {
+                if (currentFunction == FunctionType.INITIALIZER)
+                {
+                    this.compilerError.AddError("can't return from an initializer function");
+                }
+
+                Resolve(stmt.expr);
+            }
+
+            return null;
         }
 
         public object VisitSetExpr(Expression.Set expr)
@@ -199,7 +214,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitVariableExpr(Expression.Variable expr)
         {
-            if (scopes.Count() > 0 && scopes.Peek()[expr.Name.ToString()] == false)
+            if (scopes.Count > 1 && scopes.Peek()[expr.Name.ToString()] == false)
             {
                 this.compilerError.AddError(expr.Name.ToString() + "Can't read local variable");
             }

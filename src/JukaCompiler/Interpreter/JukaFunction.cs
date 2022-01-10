@@ -1,8 +1,9 @@
-﻿using JukaCompiler.Statements;
+﻿using JukaCompiler.Exceptions;
+using JukaCompiler.Statements;
 
 namespace JukaCompiler.Interpreter
 {
-    internal class JukaFunction : Callable
+    internal class JukaFunction : IJukaCallable
     {
         private Stmt.Function declaration;
         private JukaEnvironment closure;
@@ -43,14 +44,14 @@ namespace JukaCompiler.Interpreter
             {
                 interpreter.ExecuteBlock(declaration.body, environment);
             }
-            catch(Exception ex)
+            catch(Return ex)
             {
                 if (isInitializer)
                 {
                     return closure.GetAt(0, "this");
                 }
 
-                return ex;
+                return ex.value;
             }
 
             if (isInitializer)

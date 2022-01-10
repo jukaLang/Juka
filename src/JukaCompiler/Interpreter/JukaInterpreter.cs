@@ -1,6 +1,8 @@
-﻿using JukaCompiler.Lexer;
+﻿using JukaCompiler.Exceptions;
+using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 using JukaCompiler.Statements;
+using JukaCompiler.SystemCalls;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Interpreter
@@ -17,8 +19,15 @@ namespace JukaCompiler.Interpreter
             environment = globals = new JukaEnvironment();
             this.serviceProvider = services;
 
-            // var callable = new Callable();
-            // globals.Define("clock",
+            if (serviceProvider != null)
+            { 
+                globals.Define("clock",serviceProvider.GetService<ISystemClock>());
+                globals.Define("fileOpen", services.GetService<IFileOpen>());
+            }
+            else
+            {
+                throw new JRuntimeException("Unable to load system calls");
+            }
         }
 
         internal void Interpert(List<Stmt> statements)
@@ -28,7 +37,6 @@ namespace JukaCompiler.Interpreter
                 Execute(stmt);
             }
         }
-
         private void Execute(Stmt stmt)
         {
             stmt.Accept(this);
@@ -136,7 +144,13 @@ namespace JukaCompiler.Interpreter
 
         public Stmt VisitReturnStmt(Stmt.Return stmt)
         {
-            throw new NotImplementedException();
+            object value = null;
+            if (stmt.expr != null)
+            {
+                value = Evaluate(stmt.expr);
+            }
+
+            throw new Return(value);
         }
 
         public Stmt VisitVarStmt(Stmt.Var stmt)
@@ -208,7 +222,6 @@ namespace JukaCompiler.Interpreter
 
             return new Expression.LexemeTypeLiteral();
         }
-
 
         private static object IsLessThan(long leftValueType, long rightValueType, object leftValue, object rightValue)
         {
@@ -337,7 +350,6 @@ namespace JukaCompiler.Interpreter
             throw new ArgumentException(op.ToString() + " Operands must be numbers");
         }
 
-
         private void CheckNumberOperands(Lexeme op, object left, object right)
         {
             if (left is int && right is int )
@@ -357,12 +369,12 @@ namespace JukaCompiler.Interpreter
                 arguments.Add(argument);
             }
 
-            if (!(callee is Callable))
+            if (!(callee is IJukaCallable))
             {
                 throw new ArgumentException("not a class or function");
             }
 
-            Callable function = (Callable)callee;
+            IJukaCallable function = (IJukaCallable)callee;
             if (arguments.Count != function.Arity())
             {
                 throw new ArgumentException("Wrong number of arguments");
@@ -433,9 +445,7 @@ namespace JukaCompiler.Interpreter
             {
                 return globals.Get(name);
             }
-
         }
-
         internal ServiceProvider ServiceProvider
         {
             get { return this.serviceProvider; }
