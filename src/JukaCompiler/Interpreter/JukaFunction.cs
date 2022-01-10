@@ -1,4 +1,5 @@
-﻿using JukaCompiler.Statements;
+﻿using JukaCompiler.Exceptions;
+using JukaCompiler.Statements;
 
 namespace JukaCompiler.Interpreter
 {
@@ -43,14 +44,14 @@ namespace JukaCompiler.Interpreter
             {
                 interpreter.ExecuteBlock(declaration.body, environment);
             }
-            catch(Exception ex)
+            catch(Return ex)
             {
                 if (isInitializer)
                 {
                     return closure.GetAt(0, "this");
                 }
 
-                return ex;
+                return ex.value;
             }
 
             if (isInitializer)

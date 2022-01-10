@@ -174,7 +174,22 @@ namespace JukaCompiler.Interpreter
 
         public object VisitReturnStmt(Stmt.Return stmt)
         {
-            throw new NotImplementedException();
+            if (currentFunction == FunctionType.NONE)
+            {
+                this.compilerError.AddError("Can't reach return. No function defined");
+            }
+
+            if (stmt.expr != null)
+            {
+                if (currentFunction == FunctionType.INITIALIZER)
+                {
+                    this.compilerError.AddError("can't return from an initializer function");
+                }
+
+                Resolve(stmt.expr);
+            }
+
+            return null;
         }
 
         public object VisitSetExpr(Expression.Set expr)

@@ -10,7 +10,7 @@ namespace JukaUnitTest
         [TestMethod]
         public void TestSourceAsFile()
         {
-            const string returnValue = "START\r\nfoobar - 32DONE\r\n";
+            const string returnValue = "0.769\r\nSTART\r\nfoobar-32external\r\nEND\r\n0.77\r\n";
 
             Compiler compiler = new Compiler();
 

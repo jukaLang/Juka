@@ -169,9 +169,17 @@ namespace JukaCompiler.Statements
         }
         internal class Return : Stmt
         {
+            internal Lexeme keyword;
+            internal Parse.Expression expr;
+            internal Return(Lexeme keyword, Parse.Expression expression)
+            {
+                this.keyword = keyword;
+                this.expr = expression;
+            }
+
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                throw new NotImplementedException();
+                return vistor.VisitReturnStmt(this);
             }
 
         }
