@@ -97,7 +97,38 @@ namespace JukaCompiler.Parse
 
             if (Match(LexemeType.RETURN)) return ReturnStatement();
 
+            if (Match(LexemeType.IF)) return IfStatement();
+
+            if (Match(LexemeType.LEFT_BRACE))
+            {
+                return new Stmt.Block(Block());
+            }
+
             return ExpressionStatement();
+        }
+
+        private Stmt IfStatement()
+        {
+            Consume(LexemeType.LEFT_PAREN);
+
+            var condition = Expr();
+
+            if (condition == null)
+            {
+               throw new ArgumentException("no condition");
+            }
+
+            Consume(LexemeType.RIGHT_PAREN);
+
+            var thenBlock = Statement();
+            Stmt? elseBlock = null;
+
+            if (Match(LexemeType.ELSE))
+            {
+                elseBlock = Statement();
+            }
+
+            return new Stmt.If(condition, thenBlock, elseBlock);
         }
 
         private Stmt ReturnStatement()
@@ -351,6 +382,26 @@ namespace JukaCompiler.Parse
             return expr;
         }
 
+
+        private Expression Equality()
+        {
+            Expression expr = Comparison();
+
+            while (Match(LexemeType.BANG_EQUAL) || Match(LexemeType.EQUAL_EQUAL))
+            {
+                Lexeme op = Previous();
+
+                // Bug - I need to consume the second operator when doing comparisions.
+                Lexeme secondOp = Advance();
+                // see what it is? maybe update the lexeme?
+
+                Expression right = Comparison();
+                expr = new Expression.Binary(expr, op, right);
+            }
+
+            return expr;
+        }
+
         //< Statements and State parse-assignment
         //> Control Flow or
         private Expression Or()
@@ -381,23 +432,7 @@ namespace JukaCompiler.Parse
 
             return expr;
         }
-        //< Control Flow and
-        //> equality
-        private Expression Equality()
-        {
-            Expression expr = Comparison();
 
-            while (Match(LexemeType.BANG_EQUAL) || Match(LexemeType.EQUAL_EQUAL))
-            {
-                Lexeme op = Previous();
-                Expression right = Comparison();
-                expr = new Expression.Binary(expr, op, right);
-            }
-
-            return expr;
-        }
-        //< equality
-        //> comparison
         private Expression Comparison()
         {
             Expression expr = Term();

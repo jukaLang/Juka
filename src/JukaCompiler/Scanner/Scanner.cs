@@ -109,8 +109,6 @@ namespace JukaCompiler.Scan
             {
                 switch(t)
                 {
-                    case '>': AddSymbol( t, LexemeType.GREATER); break;
-                    case '<': AddSymbol( t, LexemeType.LESS); break;
                     case '(': AddSymbol( t, LexemeType.LEFT_PAREN); break;
                     case ')': AddSymbol( t, LexemeType.RIGHT_PAREN); break;
                     case '{': AddSymbol( t, LexemeType.LEFT_BRACE); break;
@@ -121,23 +119,59 @@ namespace JukaCompiler.Scan
                     case '+': AddSymbol( t, LexemeType.PLUS); break;
                     case ';': AddSymbol( t, LexemeType.SEMICOLON); break;
                     case '*': AddSymbol( t, LexemeType.STAR); break;
-                    case '=': AddSymbol( t, LexemeType.EQUAL); break;
 
-                        /*
-                        case '!':
-                            { 
-                                if (Match('='))
-                                { 
-                                    kind = LexemeType.BANG_EQUAL;
-                                    break;
-                                }
-
-                                kind = LexemeType.BANG;
+                    case '=':
+                        {
+                            if( Peek() == '=') 
+                            {
+                                AddSymbol( t ,LexemeType.EQUAL_EQUAL);
                                 break;
                             }
-                    position++;
-                    */
-                        case '"' : String(); break;
+
+                            AddSymbol(t ,LexemeType.EQUAL);
+                            break;
+                        }
+
+                    case '<':
+                        {
+                            if (Peek() == '=')
+                            {
+                                AddSymbol(t, LexemeType.LESS_EQUAL);
+                                break;
+                            }
+
+                            AddSymbol(t, LexemeType.LESS); 
+                            break;
+                        }
+
+                    case '>':
+                        {
+                            if (Peek() == '=')
+                            {
+                                AddSymbol(t, LexemeType.GREATER_EQUAL);
+                                break;
+                            }
+
+                            AddSymbol(t, LexemeType.GREATER);
+                            break;
+                        }
+
+
+                    /*
+                    case '!':
+                        { 
+                            if (Match('='))
+                            { 
+                                kind = LexemeType.BANG_EQUAL;
+                                break;
+                            }
+
+                            kind = LexemeType.BANG;
+                            break;
+                        }
+                position++;
+                */
+                    case '"' : String(); break;
                 }
             }
 

@@ -20,9 +20,11 @@ namespace JukaCompiler.Interpreter
             this.serviceProvider = services;
 
             if (serviceProvider != null)
-            { 
-                globals.Define("clock",serviceProvider.GetService<ISystemClock>());
+            {
+#pragma warning disable CS8604 // Possible null reference argument.
+                globals.Define("clock", serviceProvider.GetService<ISystemClock>());
                 globals.Define("fileOpen", services.GetService<IFileOpen>());
+#pragma warning restore CS8604 // Possible null reference argument.
             }
             else
             {
@@ -85,7 +87,12 @@ namespace JukaCompiler.Interpreter
 
         public Stmt VisitIfStmt(Stmt.If stmt)
         {
-            throw new NotImplementedException();
+            if (IsTrue(Evaluate(stmt.condition)))
+            {
+                //Execute(stmt.thenBranch);
+            }
+
+            return null;
         }
 
         public Stmt VisitPrintLine(Stmt.PrintLine stmt)
@@ -454,6 +461,21 @@ namespace JukaCompiler.Interpreter
         internal void Resolve(Expression expr, int depth)
         {
             locals.Add(expr,depth);
+        }
+
+        private bool IsTrue(object o)
+        {
+            if (o == null)
+            {
+                return false;
+            }
+
+            if (o is bool)
+            {
+                return (bool)o;
+            }
+
+            return true;
         }
     }
 }

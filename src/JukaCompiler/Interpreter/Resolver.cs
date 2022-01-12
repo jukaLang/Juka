@@ -84,7 +84,10 @@ namespace JukaCompiler.Interpreter
 
         public object VisitBlockStmt(Stmt.Block stmt)
         {
-            throw new NotImplementedException();
+            BeginScope();
+            Resolve(stmt.statements);
+            EndScope();
+            return null;
         }
 
         public object VisitCallExpr(Expression.Call expr)
@@ -137,7 +140,15 @@ namespace JukaCompiler.Interpreter
 
         public object VisitIfStmt(Stmt.If stmt)
         {
-            throw new NotImplementedException();
+            Resolve(stmt.condition);
+            Resolve(stmt.thenBranch);
+
+            if (stmt.elseBranch != null)
+            {
+                Resolve(stmt.elseBranch);
+            }
+
+            return null;
         }
 
         public object VisitLiteralExpr(Expression.Literal expr)

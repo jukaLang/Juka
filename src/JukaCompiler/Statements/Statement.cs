@@ -29,7 +29,7 @@ namespace JukaCompiler.Statements
             internal List<Stmt> statements;
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                throw new NotImplementedException();
+               return vistor.VisitBlockStmt(this);
             }
         }
         internal class Function : Stmt
@@ -82,11 +82,23 @@ namespace JukaCompiler.Statements
          }
         internal class If : Stmt
         {
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal Parse.Expression condition;
+            internal Stmt thenBranch;
+            internal Stmt elseBranch;
+
+            internal If(Parse.Expression condition, Stmt thenBranch, Stmt elseBranch)
             {
-                throw new NotImplementedException();
+                this.condition = condition;
+                this.thenBranch = thenBranch;
+                this.elseBranch = elseBranch;
+            }
+
+            internal override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitIfStmt(this);
             }
         }
+
         internal class PrintLine : Stmt
         {
             internal Parse.Expression? expr;

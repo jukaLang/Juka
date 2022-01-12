@@ -6,6 +6,14 @@ func Start() = {
 
 func Process() = {
 	string s = "foo" + "bar";
+	
+	if (s == "foo")
+	{
+		print(s);
+		print(s);
+		print(s);
+	}
+
 	print(s);
 	// should print "foobar" in the output.
 
