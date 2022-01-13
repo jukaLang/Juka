@@ -5,9 +5,14 @@ namespace JukaCompiler.Interpreter
 {
     internal class JukaFunction : IJukaCallable
     {
-        private Stmt.Function declaration;
-        private JukaEnvironment closure;
+        private Stmt.Function? declaration;
+        private JukaEnvironment? closure;
         private bool isInitializer;
+
+        internal JukaFunction()
+        {
+           this.isInitializer = false;
+        }
 
         internal JukaFunction(Stmt.Function declaration, JukaEnvironment closure, bool isInitializer)
         {
@@ -35,7 +40,11 @@ namespace JukaCompiler.Interpreter
 
             for (int i = 0; i < declaration.Params.Count; i++)
             {
-                string name = declaration.Params[i].parameterName.ToString();
+                string? name = declaration.Params[i].parameterName.ToString();
+                if (string.IsNullOrEmpty(name))
+                {
+                    throw new ArgumentException("unable to call function");
+                }
                 object value = arguments[i];
                 environment.Define(name, value);
             }

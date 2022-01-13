@@ -116,7 +116,7 @@ namespace JukaCompiler.Parse
 
             if (condition == null)
             {
-               throw new ArgumentException("no condition");
+                compilerError.AddError("no if condition statement");
             }
 
             Consume(LexemeType.RIGHT_PAREN);

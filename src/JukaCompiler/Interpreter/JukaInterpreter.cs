@@ -1,4 +1,5 @@
 ﻿using JukaCompiler.Exceptions;
+using JukaCompiler.Extensions;
 using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 using JukaCompiler.Statements;
@@ -12,7 +13,7 @@ namespace JukaCompiler.Interpreter
         private ServiceProvider serviceProvider;
         private JukaEnvironment globals;
         private JukaEnvironment environment;
-        private Dictionary<Expression, int?> locals = new Dictionary<Expression, int?>();
+        private Dictionary<Expression, int> locals = new Dictionary<Expression, int>();
 
         internal JukaInterpreter(ServiceProvider services)
         {
@@ -186,8 +187,26 @@ namespace JukaCompiler.Interpreter
 
         public object VisitAssignExpr(Expression.Assign expr)
         {
-            throw new NotImplementedException();
+            object value = Evaluate(expr);
+            /* Statements and State visit-assign < Resolving and Binding resolved-assign
+                environment.assign(expr.name, value);
+            */
+            //> Resolving and Binding resolved-assign
+
+            int distance = locals.Get(expr);
+            if (distance != null)
+            {
+                environment.assignAt(distance, expr.name, value);
+            }
+            else
+            {
+                globals.assign(expr.name, value);
+            }
+
+            //< Resolving and Binding resolved-assign
+            return value;
         }
+    }
 
         public object VisitBinaryExpr(Expression.Binary expr)
         {
@@ -444,7 +463,8 @@ namespace JukaCompiler.Interpreter
 
         internal object LookUpVariable(Lexeme name, Expression expr)
         {
-            locals.TryGetValue(expr, out var distance);
+            locals.TryGetValueEx(expr, out int? distance);
+            //locals.TryGetValue(expr, out var distance);
 
             if (distance != null)
             {
@@ -462,7 +482,10 @@ namespace JukaCompiler.Interpreter
 
         internal void Resolve(Expression expr, int depth)
         {
-            locals.Add(expr,depth);
+            if (locals.Where( f => f.Key.Name.ToString().Equals(expr.Name.ToString()) ).Count() < 1)
+            {
+                locals.Add(expr,depth);
+            }
         }
 
         private bool IsTrue(object o)

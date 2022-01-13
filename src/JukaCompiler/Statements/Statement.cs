@@ -198,5 +198,14 @@ namespace JukaCompiler.Statements
                 return vistor.VisitReturnStmt(this);
             }
         }
+
+        internal class DefaultStatement : Stmt
+        {
+            // Does nothing used for return values;
+            internal override R Accept<R>(Visitor<R> vistor)
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

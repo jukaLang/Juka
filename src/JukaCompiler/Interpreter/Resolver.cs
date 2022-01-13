@@ -11,9 +11,9 @@ namespace JukaCompiler.Interpreter
         private JukaInterpreter interpreter;
         private FunctionType currentFunction = FunctionType.NONE;
         // private ClassType currentClass = ClassType.NONE;
-        private ServiceProvider ServiceProvider;
+        private ServiceProvider? ServiceProvider;
         private  Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
-        private ICompilerError compilerError;
+        private ICompilerError? compilerError;
 
         private enum FunctionType
         {
@@ -46,7 +46,10 @@ namespace JukaCompiler.Interpreter
         {
             this.interpreter = interpreter;
             this.ServiceProvider = interpreter.ServiceProvider;
-            this.compilerError = ServiceProvider.GetService<ICompilerError>();
+            if(this.ServiceProvider != null)
+            { 
+                this.compilerError = this.ServiceProvider?.GetService<ICompilerError>();
+            }
         }
 
         internal void Resolve(List<Stmt> statements)
@@ -87,7 +90,7 @@ namespace JukaCompiler.Interpreter
             BeginScope();
             Resolve(stmt.statements);
             EndScope();
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         public object VisitCallExpr(Expression.Call expr)
@@ -99,7 +102,7 @@ namespace JukaCompiler.Interpreter
                 Resolve(arg);
             }
 
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         public object VisitClassStmt(Stmt.Class stmt)
@@ -110,7 +113,7 @@ namespace JukaCompiler.Interpreter
         public object VisitExpressionStmt(Stmt.Expression stmt)
         {
             Resolve(stmt.expression);
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         public object VisitFunctionStmt(Stmt.Function stmt)
@@ -119,7 +122,7 @@ namespace JukaCompiler.Interpreter
             Define(stmt.name);
 
             ResolveFunction(stmt, FunctionType.FUNCTION);
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         public object VisitGetExpr(Expression.Get expr)
@@ -148,7 +151,7 @@ namespace JukaCompiler.Interpreter
                 Resolve(stmt.elseBranch);
             }
 
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         public object VisitLiteralExpr(Expression.Literal expr)
@@ -187,20 +190,20 @@ namespace JukaCompiler.Interpreter
         {
             if (currentFunction == FunctionType.NONE)
             {
-                this.compilerError.AddError("Can't reach return. No function defined");
+                this.compilerError?.AddError("Can't reach return. No function defined");
             }
 
             if (stmt.expr != null)
             {
                 if (currentFunction == FunctionType.INITIALIZER)
                 {
-                    this.compilerError.AddError("can't return from an initializer function");
+                    this.compilerError?.AddError("can't return from an initializer function");
                 }
 
                 Resolve(stmt.expr);
             }
 
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         public object VisitSetExpr(Expression.Set expr)
@@ -231,13 +234,13 @@ namespace JukaCompiler.Interpreter
                 {
                     if (scopes.Peek()[expr.Name.ToString()] != false)
                     {
-                        this.compilerError.AddError(expr.Name.ToString() + "Can't read local variable");
+                        this.compilerError?.AddError(expr.Name.ToString() + "Can't read local variable");
                     }
                 }
             }
 
-            ResolveLocal(expr, expr.Name);
-            return null;
+            ResolveLocal(expr, expr?.Name);
+            return new Stmt.DefaultStatement();
         }
 
         private void ResolveLocal(Expression expr, Lexeme name)
