@@ -225,9 +225,15 @@ namespace JukaCompiler.Interpreter
 
         public object VisitVariableExpr(Expression.Variable expr)
         {
-            if (scopes.Count > 1 && scopes.Peek()[expr.Name.ToString()] == false)
+            if (scopes.Count > 1)
             {
-                this.compilerError.AddError(expr.Name.ToString() + "Can't read local variable");
+                if(scopes.Peek() != null && scopes.Peek().ContainsKey(expr.Name.ToString()))
+                {
+                    if (scopes.Peek()[expr.Name.ToString()] != false)
+                    {
+                        this.compilerError.AddError(expr.Name.ToString() + "Can't read local variable");
+                    }
+                }
             }
 
             ResolveLocal(expr, expr.Name);

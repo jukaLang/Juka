@@ -48,6 +48,7 @@ namespace JukaCompiler.Parse
 
             return false;
         }
+
         private Lexeme Peek()
         {
             return tokens[current];
@@ -183,7 +184,6 @@ namespace JukaCompiler.Parse
             return new Stmt.Print(value);
         }
 
-
         private bool MatchKeyWord()
         {
             if (MatchInternalFunction())
@@ -246,7 +246,6 @@ namespace JukaCompiler.Parse
 
             return false;
         }
-
 
         private bool Check(Int64 type)
         {
@@ -417,8 +416,7 @@ namespace JukaCompiler.Parse
 
             return expr;
         }
-        //< Control Flow or
-        //> Control Flow and
+
         private Expression And()
         {
             Expression expr = Equality();
@@ -446,8 +444,7 @@ namespace JukaCompiler.Parse
 
             return expr;
         }
-        //< comparison
-        //> term
+
         private Expression Term()
         {
             Expression expr = Factor();
@@ -461,8 +458,7 @@ namespace JukaCompiler.Parse
 
             return expr;
         }
-        //< term
-        //> factor
+
         private Expression Factor()
         {
             Expression expr = Unary();
@@ -476,8 +472,7 @@ namespace JukaCompiler.Parse
 
             return expr;
         }
-        //< factor
-        //> unary
+
         private Expression Unary()
         {
             if (Match(LexemeType.BANG) || Match(LexemeType.MINUS))

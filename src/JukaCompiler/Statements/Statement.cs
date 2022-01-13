@@ -1,5 +1,6 @@
 ﻿using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
+using JukaCompiler.RoslynEmiter;
 
 namespace JukaCompiler.Statements
 {
@@ -19,6 +20,7 @@ namespace JukaCompiler.Statements
             R VisitWhileStmt(While stmt);
         }
         internal abstract R Accept<R>(Stmt.Visitor<R> vistor);
+
         internal class Block : Stmt
         {
             internal Block(List<Stmt> statements)
@@ -79,7 +81,7 @@ namespace JukaCompiler.Statements
              {
                  return vistor.VisitExpressionStmt(this);
              }
-         }
+        }
         internal class If : Stmt
         {
             internal Parse.Expression condition;
@@ -97,6 +99,7 @@ namespace JukaCompiler.Statements
             {
                 return visitor.VisitIfStmt(this);
             }
+
         }
 
         internal class PrintLine : Stmt
@@ -171,6 +174,7 @@ namespace JukaCompiler.Statements
             {
                 return vistor.VisitVarStmt(this);
             }
+
         }
         internal class While : Stmt
         {
@@ -193,7 +197,6 @@ namespace JukaCompiler.Statements
             {
                 return vistor.VisitReturnStmt(this);
             }
-
         }
     }
 }

@@ -64,7 +64,8 @@ namespace JukaCompiler.Interpreter
 
         Stmt Stmt.Visitor<Stmt>.VisitBlockStmt(Stmt.Block stmt)
         {
-            throw new NotImplementedException();
+            ExecuteBlock(stmt.statements, new JukaEnvironment());
+            return null;
         }
 
         Stmt Stmt.Visitor<Stmt>.VisitFunctionStmt(Stmt.Function stmt)
@@ -89,6 +90,7 @@ namespace JukaCompiler.Interpreter
         {
             if (IsTrue(Evaluate(stmt.condition)))
             {
+                Execute(stmt.thenBranch);
                 //Execute(stmt.thenBranch);
             }
 

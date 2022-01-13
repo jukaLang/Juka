@@ -45,7 +45,7 @@ namespace JukaCompiler.Parse
                 return vistor.VisitAssignExpr(this);
             }
         }
-
+        
         internal class Variable : Expression
         {
             internal Variable(Lexeme name)
@@ -57,7 +57,7 @@ namespace JukaCompiler.Parse
                 return visitor.VisitVariableExpr(this);
             }
         }
-
+        
         internal class Binary : Expression
         {
             internal Expression? left;
@@ -83,7 +83,7 @@ namespace JukaCompiler.Parse
                 return vistor.VisitBinaryExpr(this);
             }
         }
-
+        
         internal class Call : Expression
         {
             internal Expression callee;
