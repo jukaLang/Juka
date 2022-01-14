@@ -13,7 +13,7 @@ namespace JukaCompiler.Interpreter
         private ServiceProvider serviceProvider;
         private JukaEnvironment globals;
         private JukaEnvironment environment;
-        private Dictionary<Expression, int> locals = new Dictionary<Expression, int>();
+        private Dictionary<Expression, int?> locals = new Dictionary<Expression, int?>();
 
         internal JukaInterpreter(ServiceProvider services)
         {
@@ -47,7 +47,7 @@ namespace JukaCompiler.Interpreter
 
         internal void ExecuteBlock(List<Stmt> statements, JukaEnvironment environment)
         {
-            JukaEnvironment prevEnvironment = environment;
+            JukaEnvironment previous = this.environment;
 
             try
             {
@@ -59,13 +59,13 @@ namespace JukaCompiler.Interpreter
             }
             finally
             {
-                this.environment = prevEnvironment;
+                this.environment = previous;
             }
         }
 
         Stmt Stmt.Visitor<Stmt>.VisitBlockStmt(Stmt.Block stmt)
         {
-            ExecuteBlock(stmt.statements, new JukaEnvironment());
+            ExecuteBlock(stmt.statements, new JukaEnvironment(this.environment));
             return null;
         }
 
@@ -193,20 +193,19 @@ namespace JukaCompiler.Interpreter
             */
             //> Resolving and Binding resolved-assign
 
-            int distance = locals.Get(expr);
+            locals.TryGetValueEx(expr, out int? distance);
             if (distance != null)
             {
-                environment.assignAt(distance, expr.name, value);
+                environment.AssignAt(distance.Value, expr.name, value);
             }
             else
             {
-                globals.assign(expr.name, value);
+                globals.Assign(expr.name, value);
             }
 
             //< Resolving and Binding resolved-assign
             return value;
         }
-    }
 
         public object VisitBinaryExpr(Expression.Binary expr)
         {
@@ -463,8 +462,8 @@ namespace JukaCompiler.Interpreter
 
         internal object LookUpVariable(Lexeme name, Expression expr)
         {
-            locals.TryGetValueEx(expr, out int? distance);
-            //locals.TryGetValue(expr, out var distance);
+            //locals.TryGetValueEx(expr, out int? distance);
+            locals.TryGetValue(expr, out int? distance);
 
             if (distance != null)
             {
@@ -482,10 +481,13 @@ namespace JukaCompiler.Interpreter
 
         internal void Resolve(Expression expr, int depth)
         {
+            locals.Add(expr, depth);
+            /*
             if (locals.Where( f => f.Key.Name.ToString().Equals(expr.Name.ToString()) ).Count() < 1)
             {
                 locals.Add(expr,depth);
             }
+            */
         }
 
         private bool IsTrue(object o)

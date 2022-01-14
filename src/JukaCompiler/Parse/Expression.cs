@@ -22,7 +22,7 @@ namespace JukaCompiler.Parse
 
         internal abstract R Accept<R>(Expression.Visitor<R> vistor);
 
-        protected Lexeme? name;
+        internal Lexeme? name;
 
         internal Lexeme? Name
         {

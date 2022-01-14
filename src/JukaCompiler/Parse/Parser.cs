@@ -391,7 +391,13 @@ namespace JukaCompiler.Parse
                 Lexeme op = Previous();
 
                 // Bug - I need to consume the second operator when doing comparisions.
+                // Hack I need to figure out a better way to do this.
                 Lexeme secondOp = Advance();
+                if ( secondOp.LexemeType == LexemeType.EQUAL)
+                {
+                    op.AddToken(secondOp);
+                    op.LexemeType = LexemeType.EQUAL_EQUAL;
+                }
                 // see what it is? maybe update the lexeme?
 
                 Expression right = Comparison();

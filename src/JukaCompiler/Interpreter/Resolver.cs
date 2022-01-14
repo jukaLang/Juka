@@ -245,12 +245,11 @@ namespace JukaCompiler.Interpreter
 
         private void ResolveLocal(Expression expr, Lexeme name)
         {
-            for(int i = scopes.Count() -1; i >=0; i--)
+            for(int i = 0; i < scopes.Count(); i++)
             {
-                Dictionary<string, bool> locals = scopes.ElementAt(i);
-                if (locals.ContainsKey(name.ToString()))
+                if (scopes.ElementAt(i).ContainsKey(name.ToString()))
                 {
-                    this.interpreter.Resolve(expr, scopes.Count()-1-i);
+                    this.interpreter.Resolve(expr, i);
                     return;
                 }
             }

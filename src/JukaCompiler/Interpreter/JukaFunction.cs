@@ -23,7 +23,7 @@ namespace JukaCompiler.Interpreter
 
         internal JukaFunction Bind(JukaInstance instance)
         {
-            JukaEnvironment env = new();
+            JukaEnvironment env = new(closure);
             env.Define("this", instance);
 
             return new JukaFunction(declaration, env, isInitializer);

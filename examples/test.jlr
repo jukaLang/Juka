@@ -1,7 +1,7 @@
 func Process() = {
 	string s = "foo" + "bar";
 	
-	if (s == "foo")
+	if (s == "foobar")
 	{
 		print(s);
 		print(s);
