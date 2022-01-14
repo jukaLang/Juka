@@ -48,6 +48,7 @@ namespace JukaCompiler.Parse
 
             return false;
         }
+
         private Lexeme Peek()
         {
             return tokens[current];
@@ -97,7 +98,38 @@ namespace JukaCompiler.Parse
 
             if (Match(LexemeType.RETURN)) return ReturnStatement();
 
+            if (Match(LexemeType.IF)) return IfStatement();
+
+            if (Match(LexemeType.LEFT_BRACE))
+            {
+                return new Stmt.Block(Block());
+            }
+
             return ExpressionStatement();
+        }
+
+        private Stmt IfStatement()
+        {
+            Consume(LexemeType.LEFT_PAREN);
+
+            var condition = Expr();
+
+            if (condition == null)
+            {
+                compilerError.AddError("no if condition statement");
+            }
+
+            Consume(LexemeType.RIGHT_PAREN);
+
+            var thenBlock = Statement();
+            Stmt? elseBlock = null;
+
+            if (Match(LexemeType.ELSE))
+            {
+                elseBlock = Statement();
+            }
+
+            return new Stmt.If(condition, thenBlock, elseBlock);
         }
 
         private Stmt ReturnStatement()
@@ -151,7 +183,6 @@ namespace JukaCompiler.Parse
 
             return new Stmt.Print(value);
         }
-
 
         private bool MatchKeyWord()
         {
@@ -215,7 +246,6 @@ namespace JukaCompiler.Parse
 
             return false;
         }
-
 
         private bool Check(Int64 type)
         {
@@ -351,6 +381,32 @@ namespace JukaCompiler.Parse
             return expr;
         }
 
+
+        private Expression Equality()
+        {
+            Expression expr = Comparison();
+
+            while (Match(LexemeType.BANG_EQUAL) || Match(LexemeType.EQUAL_EQUAL))
+            {
+                Lexeme op = Previous();
+
+                // Bug - I need to consume the second operator when doing comparisions.
+                // Hack I need to figure out a better way to do this.
+                Lexeme secondOp = Advance();
+                if ( secondOp.LexemeType == LexemeType.EQUAL)
+                {
+                    op.AddToken(secondOp);
+                    op.LexemeType = LexemeType.EQUAL_EQUAL;
+                }
+                // see what it is? maybe update the lexeme?
+
+                Expression right = Comparison();
+                expr = new Expression.Binary(expr, op, right);
+            }
+
+            return expr;
+        }
+
         //< Statements and State parse-assignment
         //> Control Flow or
         private Expression Or()
@@ -366,8 +422,7 @@ namespace JukaCompiler.Parse
 
             return expr;
         }
-        //< Control Flow or
-        //> Control Flow and
+
         private Expression And()
         {
             Expression expr = Equality();
@@ -381,23 +436,7 @@ namespace JukaCompiler.Parse
 
             return expr;
         }
-        //< Control Flow and
-        //> equality
-        private Expression Equality()
-        {
-            Expression expr = Comparison();
 
-            while (Match(LexemeType.BANG_EQUAL) || Match(LexemeType.EQUAL_EQUAL))
-            {
-                Lexeme op = Previous();
-                Expression right = Comparison();
-                expr = new Expression.Binary(expr, op, right);
-            }
-
-            return expr;
-        }
-        //< equality
-        //> comparison
         private Expression Comparison()
         {
             Expression expr = Term();
@@ -411,8 +450,7 @@ namespace JukaCompiler.Parse
 
             return expr;
         }
-        //< comparison
-        //> term
+
         private Expression Term()
         {
             Expression expr = Factor();
@@ -426,8 +464,7 @@ namespace JukaCompiler.Parse
 
             return expr;
         }
-        //< term
-        //> factor
+
         private Expression Factor()
         {
             Expression expr = Unary();
@@ -441,8 +478,7 @@ namespace JukaCompiler.Parse
 
             return expr;
         }
-        //< factor
-        //> unary
+
         private Expression Unary()
         {
             if (Match(LexemeType.BANG) || Match(LexemeType.MINUS))

@@ -1,5 +1,6 @@
 ﻿using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
+using JukaCompiler.RoslynEmiter;
 
 namespace JukaCompiler.Statements
 {
@@ -19,6 +20,7 @@ namespace JukaCompiler.Statements
             R VisitWhileStmt(While stmt);
         }
         internal abstract R Accept<R>(Stmt.Visitor<R> vistor);
+
         internal class Block : Stmt
         {
             internal Block(List<Stmt> statements)
@@ -29,7 +31,7 @@ namespace JukaCompiler.Statements
             internal List<Stmt> statements;
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                throw new NotImplementedException();
+               return vistor.VisitBlockStmt(this);
             }
         }
         internal class Function : Stmt
@@ -79,14 +81,27 @@ namespace JukaCompiler.Statements
              {
                  return vistor.VisitExpressionStmt(this);
              }
-         }
+        }
         internal class If : Stmt
         {
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal Parse.Expression condition;
+            internal Stmt thenBranch;
+            internal Stmt elseBranch;
+
+            internal If(Parse.Expression condition, Stmt thenBranch, Stmt elseBranch)
             {
-                throw new NotImplementedException();
+                this.condition = condition;
+                this.thenBranch = thenBranch;
+                this.elseBranch = elseBranch;
             }
+
+            internal override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitIfStmt(this);
+            }
+
         }
+
         internal class PrintLine : Stmt
         {
             internal Parse.Expression? expr;
@@ -159,6 +174,7 @@ namespace JukaCompiler.Statements
             {
                 return vistor.VisitVarStmt(this);
             }
+
         }
         internal class While : Stmt
         {
@@ -181,7 +197,15 @@ namespace JukaCompiler.Statements
             {
                 return vistor.VisitReturnStmt(this);
             }
+        }
 
+        internal class DefaultStatement : Stmt
+        {
+            // Does nothing used for return values;
+            internal override R Accept<R>(Visitor<R> vistor)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

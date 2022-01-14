@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using JukaCompiler.Exceptions;
 using JukaCompiler.SystemCalls;
+using JukaCompiler.RoslynEmiter;
 
 namespace JukaCompiler
 {
@@ -61,6 +62,11 @@ namespace JukaCompiler
 
         private string Compile(List<Stmt> statements)
         {
+            RoslynGenerate roslynGenerate = new();
+            
+            // Don't turn on until ready to emit Roslyn.
+            // roslynGenerate.Generate(statements);
+
             var interpreter = new Interpreter.JukaInterpreter(serviceProvider);
             Resolver? resolver = new(interpreter);
             resolver.Resolve(statements);

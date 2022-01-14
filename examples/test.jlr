@@ -1,28 +1,16 @@
-func Start() = {
-	int x = clock();
-	printLine(x);
-	printLine("START");
-}
-
 func Process() = {
 	string s = "foo" + "bar";
-	print(s);
-	// should print "foobar" in the output.
-
-	int x = 8 - 10 * 4;
-	print(x);
-	// should print -32, negative 32 in the output.
-}
-
-func End() = {
-	printLine("END");
-	int x = clock();
-	printLine(x);
-	return x;
+	
+	if (s == "foobar")
+	{
+		print(s);
+		print(s);
+		print(s);
+	}
 }
 
 
-Start();
+// Start();
 Process();
-printLine("external");
-End();
+// printLine("external");
+// End();

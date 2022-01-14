@@ -1,4 +1,5 @@
 ﻿using JukaCompiler.Exceptions;
+using JukaCompiler.Extensions;
 using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 using JukaCompiler.Statements;
@@ -20,9 +21,11 @@ namespace JukaCompiler.Interpreter
             this.serviceProvider = services;
 
             if (serviceProvider != null)
-            { 
-                globals.Define("clock",serviceProvider.GetService<ISystemClock>());
+            {
+#pragma warning disable CS8604 // Possible null reference argument.
+                globals.Define("clock", serviceProvider.GetService<ISystemClock>());
                 globals.Define("fileOpen", services.GetService<IFileOpen>());
+#pragma warning restore CS8604 // Possible null reference argument.
             }
             else
             {
@@ -44,7 +47,7 @@ namespace JukaCompiler.Interpreter
 
         internal void ExecuteBlock(List<Stmt> statements, JukaEnvironment environment)
         {
-            JukaEnvironment prevEnvironment = environment;
+            JukaEnvironment previous = this.environment;
 
             try
             {
@@ -56,13 +59,14 @@ namespace JukaCompiler.Interpreter
             }
             finally
             {
-                this.environment = prevEnvironment;
+                this.environment = previous;
             }
         }
 
         Stmt Stmt.Visitor<Stmt>.VisitBlockStmt(Stmt.Block stmt)
         {
-            throw new NotImplementedException();
+            ExecuteBlock(stmt.statements, new JukaEnvironment(this.environment));
+            return null;
         }
 
         Stmt Stmt.Visitor<Stmt>.VisitFunctionStmt(Stmt.Function stmt)
@@ -85,7 +89,13 @@ namespace JukaCompiler.Interpreter
 
         public Stmt VisitIfStmt(Stmt.If stmt)
         {
-            throw new NotImplementedException();
+            if (IsTrue(Evaluate(stmt.condition)))
+            {
+                Execute(stmt.thenBranch);
+                //Execute(stmt.thenBranch);
+            }
+
+            return null;
         }
 
         public Stmt VisitPrintLine(Stmt.PrintLine stmt)
@@ -177,7 +187,24 @@ namespace JukaCompiler.Interpreter
 
         public object VisitAssignExpr(Expression.Assign expr)
         {
-            throw new NotImplementedException();
+            object value = Evaluate(expr);
+            /* Statements and State visit-assign < Resolving and Binding resolved-assign
+                environment.assign(expr.name, value);
+            */
+            //> Resolving and Binding resolved-assign
+
+            locals.TryGetValueEx(expr, out int? distance);
+            if (distance != null)
+            {
+                environment.AssignAt(distance.Value, expr.name, value);
+            }
+            else
+            {
+                globals.Assign(expr.name, value);
+            }
+
+            //< Resolving and Binding resolved-assign
+            return value;
         }
 
         public object VisitBinaryExpr(Expression.Binary expr)
@@ -435,7 +462,8 @@ namespace JukaCompiler.Interpreter
 
         internal object LookUpVariable(Lexeme name, Expression expr)
         {
-            locals.TryGetValue(expr, out var distance);
+            //locals.TryGetValueEx(expr, out int? distance);
+            locals.TryGetValue(expr, out int? distance);
 
             if (distance != null)
             {
@@ -453,7 +481,28 @@ namespace JukaCompiler.Interpreter
 
         internal void Resolve(Expression expr, int depth)
         {
-            locals.Add(expr,depth);
+            locals.Add(expr, depth);
+            /*
+            if (locals.Where( f => f.Key.Name.ToString().Equals(expr.Name.ToString()) ).Count() < 1)
+            {
+                locals.Add(expr,depth);
+            }
+            */
+        }
+
+        private bool IsTrue(object o)
+        {
+            if (o == null)
+            {
+                return false;
+            }
+
+            if (o is bool)
+            {
+                return (bool)o;
+            }
+
+            return true;
         }
     }
 }
