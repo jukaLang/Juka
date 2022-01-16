@@ -1,14 +1,19 @@
 func Process() = {
 	string s = "foo" + "bar";
 	
-	if (s == "fobar")
+
+	while(s == "foobar")
 	{
-		print(s);
-	}
-	else
-	{
-		int i = 3;
-		print(i);
+		if (false)
+		{
+			print(s);
+			s = "x";
+		}
+		else
+		{
+			int i = 3;
+			print(i);
+		}
 	}
 }
 

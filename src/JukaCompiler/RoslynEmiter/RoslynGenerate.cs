@@ -99,6 +99,11 @@ namespace JukaCompiler.RoslynEmiter
             throw new NotImplementedException();
         }
 
+        public Stmt VisitBreakStmt(Stmt.Break stmt)
+        {
+            throw new NotImplementedException();
+        }
+
         public Stmt VisitClassStmt(Stmt.Class stmt)
         {
             throw new NotImplementedException();

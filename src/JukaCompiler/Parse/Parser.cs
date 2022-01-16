@@ -2,7 +2,9 @@
 using JukaCompiler.Lexer;
 using JukaCompiler.Scan;
 using JukaCompiler.Statements;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection.Metadata.Ecma335;
 
 namespace JukaCompiler.Parse
 {
@@ -96,13 +98,29 @@ namespace JukaCompiler.Parse
                 return Print();
             }
 
-            if (Match(LexemeType.RETURN)) return ReturnStatement();
+            if (Match(LexemeType.RETURN))
+            {
+                return ReturnStatement();
+            }
 
-            if (Match(LexemeType.IF)) return IfStatement();
+            if (Match(LexemeType.IF)) 
+            {
+                return IfStatement();
+            }
 
             if (Match(LexemeType.LEFT_BRACE))
             {
                 return new Stmt.Block(Block());
+            }
+
+            if (Match(LexemeType.WHILE))
+            {
+                return WhileStatement();
+            }
+
+            if (Match(LexemeType.BREAK))
+            {
+                return BreakStatement();
             }
 
             return ExpressionStatement();
@@ -131,6 +149,32 @@ namespace JukaCompiler.Parse
 
             return new Stmt.If(condition, thenBlock, elseBlock);
         }
+
+
+        private Stmt WhileStatement()
+        {
+            Consume(LexemeType.LEFT_PAREN);
+
+            var condition = Expr();
+
+            if (condition == null)
+            {
+                compilerError.AddError("no while condition statement");
+            }
+
+            Consume(LexemeType.RIGHT_PAREN);
+
+            var whileBlock = Statement();
+
+            return new Stmt.While(condition, whileBlock);
+        }
+
+        private Stmt BreakStatement()
+        {
+            Consume(LexemeType.SEMICOLON);
+            return new Stmt.Break();
+        }
+
 
         private Stmt ReturnStatement()
         {
