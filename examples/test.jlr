@@ -1,16 +1,16 @@
 func Process() = {
 	string s = "foo" + "bar";
 	
-	if (s == "foobar")
+	if (s == "fobar")
 	{
 		print(s);
-		print(s);
-		print(s);
+	}
+	else
+	{
+		int i = 3;
+		print(i);
 	}
 }
 
 
-// Start();
 Process();
-// printLine("external");
-// End();

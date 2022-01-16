@@ -45,6 +45,7 @@ namespace JukaCompiler.Interpreter
         internal Resolver(JukaInterpreter interpreter)
         {
             this.interpreter = interpreter;
+
             this.ServiceProvider = interpreter.ServiceProvider;
             if(this.ServiceProvider != null)
             { 
@@ -228,18 +229,15 @@ namespace JukaCompiler.Interpreter
 
         public object VisitVariableExpr(Expression.Variable expr)
         {
-            if (scopes.Count > 1)
+            if(( scopes.Any() && scopes.Peek().Count == 1 && scopes.Peek()[expr.Name.ToString()] == true) ||
+                scopes.Any() && scopes.Peek().Count == 0 ||
+                !scopes.Any())
             {
-                if(scopes.Peek() != null && scopes.Peek().ContainsKey(expr.Name.ToString()))
-                {
-                    if (scopes.Peek()[expr.Name.ToString()] != false)
-                    {
-                        this.compilerError?.AddError(expr.Name.ToString() + "Can't read local variable");
-                    }
-                }
+                ResolveLocal(expr, expr?.Name);
+                return new Stmt.DefaultStatement();
             }
 
-            ResolveLocal(expr, expr?.Name);
+            this.compilerError?.AddError(expr.Name.ToString() + "Can't read local variable");
             return new Stmt.DefaultStatement();
         }
 
@@ -297,7 +295,7 @@ namespace JukaCompiler.Interpreter
 
         private void Define(Lexeme name)
         {
-            if (scopes.Count() == 0)
+            if (!scopes.Any())
             {
                 return;
             }
@@ -308,7 +306,7 @@ namespace JukaCompiler.Interpreter
             }
             else
             {
-                scopes.Peek().Add(name.ToString(), true);
+                scopes.Peek().Add(name.ToString(), false);
             }
         }
 

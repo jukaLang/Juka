@@ -89,13 +89,18 @@ namespace JukaCompiler.Interpreter
 
         public Stmt VisitIfStmt(Stmt.If stmt)
         {
+            Stmt.DefaultStatement defaultStatement = new Stmt.DefaultStatement();
+
             if (IsTrue(Evaluate(stmt.condition)))
             {
                 Execute(stmt.thenBranch);
-                //Execute(stmt.thenBranch);
+            }
+            else
+            { 
+                Execute(stmt.elseBranch);
             }
 
-            return null;
+            return defaultStatement;
         }
 
         public Stmt VisitPrintLine(Stmt.PrintLine stmt)
@@ -481,13 +486,10 @@ namespace JukaCompiler.Interpreter
 
         internal void Resolve(Expression expr, int depth)
         {
-            locals.Add(expr, depth);
-            /*
-            if (locals.Where( f => f.Key.Name.ToString().Equals(expr.Name.ToString()) ).Count() < 1)
+            if (locals.Where( f => f.Key.Name.ToString().Equals(expr.Name.ToString()) ).Count() <= 1)
             {
                 locals.Add(expr,depth);
             }
-            */
         }
 
         private bool IsTrue(object o)
