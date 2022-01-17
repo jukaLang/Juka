@@ -18,6 +18,7 @@ namespace JukaCompiler.Statements
             R VisitReturnStmt(Return stmt);
             R VisitVarStmt(Var stmt);
             R VisitWhileStmt(While stmt);
+            R VisitBreakStmt(Break stmt);
         }
         internal abstract R Accept<R>(Stmt.Visitor<R> vistor);
 
@@ -178,9 +179,18 @@ namespace JukaCompiler.Statements
         }
         internal class While : Stmt
         {
+            internal Parse.Expression condition;
+            internal Stmt whileBlock;
+
+            internal While(Parse.Expression condition, Stmt whileBlock)
+            {
+                this.condition = condition;
+                this.whileBlock = whileBlock;
+            }
+
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                throw new NotImplementedException();
+                return vistor.VisitWhileStmt(this);
             }
         }
         internal class Return : Stmt
@@ -196,6 +206,15 @@ namespace JukaCompiler.Statements
             internal override R Accept<R>(Visitor<R> vistor)
             {
                 return vistor.VisitReturnStmt(this);
+            }
+        }
+
+        internal class Break : Stmt
+        {
+            internal Parse.Expression expr;
+            internal override R Accept<R>(Visitor<R> vistor)
+            {
+                return vistor.VisitBreakStmt(this);
             }
         }
 

@@ -168,6 +168,13 @@ namespace JukaCompiler.Interpreter
             throw new Return(value);
         }
 
+        public Stmt VisitBreakStmt(Stmt.Break stmt)
+        {
+            Stmt.Return returnStatement = new Stmt.Return(null, null);
+            return VisitReturnStmt(returnStatement);
+        }
+
+
         public Stmt VisitVarStmt(Stmt.Var stmt)
         {
             object value = null;
@@ -182,7 +189,12 @@ namespace JukaCompiler.Interpreter
 
         public Stmt VisitWhileStmt(Stmt.While stmt)
         {
-            throw new NotImplementedException();
+            while (IsTrue(Evaluate(stmt.condition)))
+            {
+                Execute(stmt.whileBlock);
+            }
+
+            return new Stmt.DefaultStatement();
         }
 
         private object Evaluate(Expression expr)

@@ -25,12 +25,14 @@ namespace JukaCompiler.Scan
             { "return", LexemeType.RETURN },
             { "super",  LexemeType.SUPER },
             { "this",   LexemeType.THIS },
+            { "false",  LexemeType.FALSE },
             { "true",   LexemeType.TRUE },
             { "var",    LexemeType.VAR },
             { "while",  LexemeType.WHILE },
             { "int",    LexemeType.INT },
             { "char",   LexemeType.CHAR },
             { "string", LexemeType.STRING },
+            { "break",  LexemeType.BREAK },
         };
 
         private static readonly Dictionary<string, Int64> internalFunctionsList = new Dictionary<string, Int64>

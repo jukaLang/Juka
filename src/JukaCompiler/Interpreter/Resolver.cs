@@ -73,7 +73,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitAssignExpr(Expression.Assign expr)
         {
-            throw new NotImplementedException(); 
+            throw new NotImplementedException("Resolver assign is not implemented"); 
         }
 
         public object VisitBinaryExpr(Expression.Binary expr)
@@ -108,7 +108,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitClassStmt(Stmt.Class stmt)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Resolver VisitClassStmt is not implemented");
         }
 
         public object VisitExpressionStmt(Stmt.Expression stmt)
@@ -128,7 +128,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitGetExpr(Expression.Get expr)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Resolver VisitGetExpr is not implemented");
         }
 
         public object VisitGroupingExpr(Expression.Grouping expr)
@@ -162,7 +162,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitLogicalExpr(Expression.Logical expr)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Resolver VisitLogicalExpr is not implemented");
         }
 
         public object VisitPrintLine(Stmt.PrintLine stmt)
@@ -207,24 +207,30 @@ namespace JukaCompiler.Interpreter
             return new Stmt.DefaultStatement();
         }
 
+        public object VisitBreakStmt(Stmt.Break stmt)
+        {
+            Stmt.Return returnStatement = new Stmt.Return(null,null);
+            return VisitReturnStmt(returnStatement);
+        }
+
         public object VisitSetExpr(Expression.Set expr)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Resolver VisitSetExpr is not implemented");
         }
 
         public object VisitSuperExpr(Expression.Super expr)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Resolver VisitSuperExpr is not implemented");
         }
 
         public object VisitThisExpr(Expression.This expr)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Resolver VisitThisExpr is not implemented");
         }
 
         public object VisitUnaryExpr(Expression.Unary expr)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Resolver VisitUnaryExpr is not implemented");
         }
 
         public object VisitVariableExpr(Expression.Variable expr)
@@ -273,7 +279,10 @@ namespace JukaCompiler.Interpreter
 
         public object VisitWhileStmt(Stmt.While stmt)
         {
-            throw new NotImplementedException();
+            Resolve(stmt.condition);
+            Resolve(stmt.whileBlock);
+
+            return new Stmt.DefaultStatement();
         }
 
         private void Declare(Lexeme name)
