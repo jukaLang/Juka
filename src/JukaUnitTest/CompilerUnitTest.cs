@@ -1,6 +1,7 @@
 ﻿using JukaCompiler;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Diagnostics;
 
 namespace JukaUnitTest
 {
@@ -15,6 +16,15 @@ namespace JukaUnitTest
             Compiler compiler = new Compiler();
 
             var outputValue = compiler.Go(@"..\..\..\..\..\examples\test.jlr");
+            if (compiler.HasErrors())
+            {
+                var errors = compiler.ListErrors();
+                foreach(var error in errors)
+                {
+                    Assert.IsTrue(false, error);
+                }
+            }
+
             Assert.AreEqual(outputValue, returnValue);
         }
 

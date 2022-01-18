@@ -38,25 +38,27 @@ namespace JukaCompiler
         }
 
         // Run the Compiler (Step: 3)
-        public string Go(String data, bool isFile = true)
+        public bool Go(String data, bool isFile = true)
         {
             try
             {
-                Parser parser = new(new Scanner(data, isFile), this.serviceProvider);
+                this.serviceProvider.GetRequiredService<ICompilerError>().SourceFileName(data);
+
+                Parser parser = new(new Scanner(data, this.serviceProvider, isFile), this.serviceProvider);
                 List<Stmt> statements = parser.Parse();
 
                 if (HasErrors())
                 {
-                    return "Errors during compiling";
+                    return true;
                 }
 
-                return Compile(statements);
+                Compile(statements);
 
-                throw new Exception("Unhandled error");
+                return true;
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return false;
             }
         }
 

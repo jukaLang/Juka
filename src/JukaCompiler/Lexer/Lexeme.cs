@@ -62,15 +62,20 @@ namespace JukaCompiler.Lexer
         private StringBuilder tokenBuilder = new StringBuilder();
         private bool isKeyWord = false;
         private Int64 typeOfKeyWord;
+        private int lineNumber;
+        private int columnNumber;
+
         internal Int64 LexemeType { get; set; }
 
         internal Lexeme()
         {
         }
 
-        internal Lexeme(Int64 ltype) : this()
+        internal Lexeme(Int64 ltype, int lineNumber, int columnNumber) : this()
         {
             this.LexemeType = ltype;
+            this.lineNumber = lineNumber;
+            this.columnNumber = columnNumber;
         }
 
         internal void AddToken(char token)
@@ -98,6 +103,16 @@ namespace JukaCompiler.Lexer
         {
             get { return this.typeOfKeyWord; } 
             set { this.typeOfKeyWord = value;}
+        }
+
+        internal int LineNumber
+        {
+            get { return lineNumber; }
+        }
+
+        internal int ColumnNumber
+        {
+            get { return columnNumber; }
         }
 
         public override string ToString()
