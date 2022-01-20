@@ -1,6 +1,8 @@
 ﻿using JukaCompiler.Lexer;
 using static System.Char;
 using System.Text;
+using JukaCompiler.Exceptions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Scan
 {
@@ -8,9 +10,11 @@ namespace JukaCompiler.Scan
     {
         private int start = 0;
         private int current = 0;
-        private int line = 0;
+        private int line = 1;
+        private int column = 0;
         private byte[] fileData;
         private List<Lexeme> lexemes = new List<Lexeme>();
+        private ICompilerError compilerError = null;
 
         private static readonly Dictionary<string, Int64> keywordsDictionary = new Dictionary<string, Int64>
         {
@@ -41,8 +45,9 @@ namespace JukaCompiler.Scan
             {"print", LexemeType.PRINT},
         };
 
-        internal Scanner(string data, bool isFile = true)
+        internal Scanner(string data, IServiceProvider serviceProvider, bool isFile = true)
         {
+            this.compilerError = serviceProvider.GetRequiredService<ICompilerError>();
             if (isFile)
             {
                 if (string.IsNullOrEmpty(data))
@@ -86,6 +91,7 @@ namespace JukaCompiler.Scan
 
         internal void ReadToken()
         {
+            this.column++;
             char t = Advance();
 
             // Comments
@@ -177,7 +183,6 @@ namespace JukaCompiler.Scan
                 }
             }
 
-
             // Comments
             if (Prev() != '\\' && t == '/')
             {
@@ -185,12 +190,12 @@ namespace JukaCompiler.Scan
                 return;
             }
 
-
+            IsWhiteSpace();
         }
 
         internal void AddSymbol(char symbol, Int64 type)
         {
-            var lex = new Lexeme(type);
+            var lex = new Lexeme(type, this.line, this.column);
             lex.AddToken(symbol);
             this.lexemes.Add(lex);
         }
@@ -216,9 +221,20 @@ namespace JukaCompiler.Scan
 
         internal bool IsWhiteSpace()
         {
+            if (IsEof())
+            {
+                return false;
+            }
+
             char c = (char)fileData[current];
             if (Char.IsWhiteSpace((char) c) || c == '\r' || c == '\n')
             {
+                if (c == '\n')
+                {
+                    this.line++;
+                    this.column = 0;
+                }
+
                 return true;
             }
 
@@ -254,7 +270,7 @@ namespace JukaCompiler.Scan
             }
 
             var svalue = Encoding.Default.GetString(Memcopy(fileData, start, current));
-            Lexeme identifier = new Lexeme(LexemeType.IDENTIFIER);
+            Lexeme identifier = new Lexeme(LexemeType.IDENTIFIER, this.line, this.column);
             
             identifier.AddToken(svalue);
 
@@ -295,7 +311,7 @@ namespace JukaCompiler.Scan
             }
 
             var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start, current));
-            Lexeme number = new Lexeme(LexemeType.NUMBER);
+            Lexeme number = new Lexeme(LexemeType.NUMBER, this.line, this.column);
 
             number.AddToken(svalue);
             this.lexemes.Add(number);
@@ -320,7 +336,7 @@ namespace JukaCompiler.Scan
             }
 
             var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start + 1, current - 1));
-            Lexeme s = new Lexeme(LexemeType.STRING);
+            Lexeme s = new Lexeme(LexemeType.STRING, this.line, this.column);
             s.AddToken(svalue);
             this.lexemes.Add(s);
 

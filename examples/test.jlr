@@ -18,4 +18,9 @@ func Process() = {
 }
 
 
+func test() 
+{
+}
+
+
 Process();
