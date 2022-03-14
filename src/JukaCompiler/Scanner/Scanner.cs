@@ -36,6 +36,7 @@ namespace JukaCompiler.Scan
         private static readonly Dictionary<string, Int64> internalFunctionsList = new Dictionary<string, Int64>
         {
             {"printLine", LexemeType.PRINTLINE},
+            {"print", LexemeType.PRINT}
         };
 
         internal Scanner(string data, bool isFile = true)

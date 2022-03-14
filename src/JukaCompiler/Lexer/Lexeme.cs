@@ -54,6 +54,7 @@ namespace JukaCompiler.Lexer
         internal static Int64 DOUBLE                = 0x800000000000;
         internal static Int64 FLOAT                 = 0x1000000000000;
         internal static Int64 BOOL                  = 0x2000000000000;
+        internal static Int64 PRINT                 = 0x4000000000000;
     }
     internal class Lexeme
     {
