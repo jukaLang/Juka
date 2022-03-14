@@ -1,17 +1,20 @@
 ﻿using JukaCompiler.Lexer;
 using static System.Char;
 using System.Text;
+using JukaCompiler.Exceptions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Scan
 {
-    // Step 4: Scan the string
     internal class Scanner
     {
         private int start = 0;
         private int current = 0;
-        private int line = 0;
+        private int line = 1;
+        private int column = 0;
         private byte[] fileData;
         private List<Lexeme> lexemes = new List<Lexeme>();
+        private ICompilerError compilerError = null;
 
         private static readonly Dictionary<string, Int64> keywordsDictionary = new Dictionary<string, Int64>
         {
@@ -26,11 +29,14 @@ namespace JukaCompiler.Scan
             { "return", LexemeType.RETURN },
             { "super",  LexemeType.SUPER },
             { "this",   LexemeType.THIS },
+            { "false",  LexemeType.FALSE },
             { "true",   LexemeType.TRUE },
             { "var",    LexemeType.VAR },
             { "while",  LexemeType.WHILE },
             { "int",    LexemeType.INT },
             { "char",   LexemeType.CHAR },
+            { "string", LexemeType.STRING },
+            { "break",  LexemeType.BREAK },
         };
 
         private static readonly Dictionary<string, Int64> internalFunctionsList = new Dictionary<string, Int64>
@@ -39,8 +45,9 @@ namespace JukaCompiler.Scan
             {"print", LexemeType.PRINT}
         };
 
-        internal Scanner(string data, bool isFile = true)
+        internal Scanner(string data, IServiceProvider serviceProvider, bool isFile = true)
         {
+            this.compilerError = serviceProvider.GetRequiredService<ICompilerError>();
             if (isFile)
             {
                 if (string.IsNullOrEmpty(data))
@@ -84,7 +91,15 @@ namespace JukaCompiler.Scan
 
         internal void ReadToken()
         {
+            this.column++;
             char t = Advance();
+
+            // Comments
+            if (t != '\\' && Peek() == '/')
+            {
+                Comment();
+                return;
+            }
 
             if (IsLetter(t) || t == '_')
             {
@@ -102,38 +117,71 @@ namespace JukaCompiler.Scan
             {
                 switch(t)
                 {
-                    case '>': AddSymbol( t, LexemeType.GREATER); break;
-                    case '<': AddSymbol( t, LexemeType.LESS); break;
                     case '(': AddSymbol( t, LexemeType.LEFT_PAREN); break;
                     case ')': AddSymbol( t, LexemeType.RIGHT_PAREN); break;
                     case '{': AddSymbol( t, LexemeType.LEFT_BRACE); break;
                     case '}': AddSymbol( t, LexemeType.RIGHT_BRACE); break;
                     case ',': AddSymbol( t, LexemeType.COMMA); break;
                     case '.': AddSymbol( t, LexemeType.DOT); break;
-                    case '-': AddSymbol( t, LexemeType.EQUAL); break;
+                    case '-': AddSymbol( t, LexemeType.MINUS); break;
                     case '+': AddSymbol( t, LexemeType.PLUS); break;
                     case ';': AddSymbol( t, LexemeType.SEMICOLON); break;
                     case '*': AddSymbol( t, LexemeType.STAR); break;
-                    case '=': AddSymbol( t, LexemeType.EQUAL); break;
 
-                        /*
-                        case '!':
-                            { 
-                                if (Match('='))
-                                { 
-                                    kind = LexemeType.BANG_EQUAL;
-                                    break;
-                                }
-
-                                kind = LexemeType.BANG;
+                    case '=':
+                        {
+                            if( Peek() == '=') 
+                            {
+                                AddSymbol( t ,LexemeType.EQUAL_EQUAL);
                                 break;
                             }
-                    position++;
-                    */
-                        case '"' : String(); break;
+
+                            AddSymbol(t ,LexemeType.EQUAL);
+                            break;
+                        }
+
+                    case '<':
+                        {
+                            if (Peek() == '=')
+                            {
+                                AddSymbol(t, LexemeType.LESS_EQUAL);
+                                break;
+                            }
+
+                            AddSymbol(t, LexemeType.LESS); 
+                            break;
+                        }
+
+                    case '>':
+                        {
+                            if (Peek() == '=')
+                            {
+                                AddSymbol(t, LexemeType.GREATER_EQUAL);
+                                break;
+                            }
+
+                            AddSymbol(t, LexemeType.GREATER);
+                            break;
+                        }
+
+
+                    /*
+                    case '!':
+                        { 
+                            if (Match('='))
+                            { 
+                                kind = LexemeType.BANG_EQUAL;
+                                break;
+                            }
+
+                            kind = LexemeType.BANG;
+                            break;
+                        }
+                position++;
+                */
+                    case '"' : String(); break;
                 }
             }
-
 
             // Comments
             if (Prev() != '\\' && t == '/')
@@ -142,12 +190,12 @@ namespace JukaCompiler.Scan
                 return;
             }
 
-
+            IsWhiteSpace();
         }
 
         internal void AddSymbol(char symbol, Int64 type)
         {
-            var lex = new Lexeme(type);
+            var lex = new Lexeme(type, this.line, this.column);
             lex.AddToken(symbol);
             this.lexemes.Add(lex);
         }
@@ -173,9 +221,20 @@ namespace JukaCompiler.Scan
 
         internal bool IsWhiteSpace()
         {
+            if (IsEof())
+            {
+                return false;
+            }
+
             char c = (char)fileData[current];
             if (Char.IsWhiteSpace((char) c) || c == '\r' || c == '\n')
             {
+                if (c == '\n')
+                {
+                    this.line++;
+                    this.column = 0;
+                }
+
                 return true;
             }
 
@@ -211,7 +270,7 @@ namespace JukaCompiler.Scan
             }
 
             var svalue = Encoding.Default.GetString(Memcopy(fileData, start, current));
-            Lexeme identifier = new Lexeme(LexemeType.IDENTIFIER);
+            Lexeme identifier = new Lexeme(LexemeType.IDENTIFIER, this.line, this.column);
             
             identifier.AddToken(svalue);
 
@@ -229,14 +288,8 @@ namespace JukaCompiler.Scan
                 }
             } else if(Peek() == '*')
             {
-                Advance();
                 while (true)
                 {
-                    if (Advance() == '\\' && Peek() == '*'){
-                        Advance();
-                        continue;
-                    }
-                    Reverse();
                     if (Advance() == '*' && Peek() == '/')
                     {
                         Advance();
@@ -258,7 +311,7 @@ namespace JukaCompiler.Scan
             }
 
             var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start, current));
-            Lexeme number = new Lexeme(LexemeType.NUMBER);
+            Lexeme number = new Lexeme(LexemeType.NUMBER, this.line, this.column);
 
             number.AddToken(svalue);
             this.lexemes.Add(number);
@@ -283,7 +336,7 @@ namespace JukaCompiler.Scan
             }
 
             var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start + 1, current - 1));
-            Lexeme s = new Lexeme(LexemeType.STRING);
+            Lexeme s = new Lexeme(LexemeType.STRING, this.line, this.column);
             s.AddToken(svalue);
             this.lexemes.Add(s);
 

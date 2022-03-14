@@ -1,6 +1,6 @@
 ﻿namespace JukaCompiler.Interpreter
 {
-    internal class JukaClass : Callable
+    internal class JukaClass : IJukaCallable
     {
         private string name;
         private JukaClass superClass;
@@ -15,7 +15,7 @@
 
         public int Arity()
         {
-            JukaFunction initializer = FindMethod("main");
+            JukaFunction? initializer = FindMethod("main");
             if (initializer == null)
             {
                 return 0;
@@ -27,7 +27,7 @@
         public object Call(JukaInterpreter interpreter, List<object> arguments)
         {
             JukaInstance instance = new JukaInstance(this);
-            JukaFunction initializer = FindMethod("main");
+            JukaFunction? initializer = FindMethod("main");
             if (initializer != null)
             {
                 initializer.Bind(instance).Call(interpreter, arguments);
@@ -48,9 +48,7 @@
                 return superClass.FindMethod(name);
             }
 
-            return null;
+            return new JukaFunction();
         }
-
-
     }
 }

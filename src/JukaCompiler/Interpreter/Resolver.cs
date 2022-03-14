@@ -11,9 +11,9 @@ namespace JukaCompiler.Interpreter
         private JukaInterpreter interpreter;
         private FunctionType currentFunction = FunctionType.NONE;
         // private ClassType currentClass = ClassType.NONE;
-        private ServiceProvider ServiceProvider;
+        private ServiceProvider? ServiceProvider;
         private  Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
-        private ICompilerError compilerError;
+        private ICompilerError? compilerError;
 
         private enum FunctionType
         {
@@ -45,8 +45,12 @@ namespace JukaCompiler.Interpreter
         internal Resolver(JukaInterpreter interpreter)
         {
             this.interpreter = interpreter;
+
             this.ServiceProvider = interpreter.ServiceProvider;
-            this.compilerError = ServiceProvider.GetService<ICompilerError>();
+            if(this.ServiceProvider != null)
+            { 
+                this.compilerError = this.ServiceProvider?.GetService<ICompilerError>();
+            }
         }
 
         internal void Resolve(List<Stmt> statements)
@@ -69,7 +73,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitAssignExpr(Expression.Assign expr)
         {
-            throw new NotImplementedException(); 
+            throw new NotImplementedException("Resolver assign is not implemented"); 
         }
 
         public object VisitBinaryExpr(Expression.Binary expr)
@@ -84,7 +88,10 @@ namespace JukaCompiler.Interpreter
 
         public object VisitBlockStmt(Stmt.Block stmt)
         {
-            throw new NotImplementedException();
+            BeginScope();
+            Resolve(stmt.statements);
+            EndScope();
+            return new Stmt.DefaultStatement();
         }
 
         public object VisitCallExpr(Expression.Call expr)
@@ -96,18 +103,18 @@ namespace JukaCompiler.Interpreter
                 Resolve(arg);
             }
 
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         public object VisitClassStmt(Stmt.Class stmt)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Resolver VisitClassStmt is not implemented");
         }
 
         public object VisitExpressionStmt(Stmt.Expression stmt)
         {
             Resolve(stmt.expression);
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         public object VisitFunctionStmt(Stmt.Function stmt)
@@ -116,12 +123,12 @@ namespace JukaCompiler.Interpreter
             Define(stmt.name);
 
             ResolveFunction(stmt, FunctionType.FUNCTION);
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         public object VisitGetExpr(Expression.Get expr)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Resolver VisitGetExpr is not implemented");
         }
 
         public object VisitGroupingExpr(Expression.Grouping expr)
@@ -137,7 +144,15 @@ namespace JukaCompiler.Interpreter
 
         public object VisitIfStmt(Stmt.If stmt)
         {
-            throw new NotImplementedException();
+            Resolve(stmt.condition);
+            Resolve(stmt.thenBranch);
+
+            if (stmt.elseBranch != null)
+            {
+                Resolve(stmt.elseBranch);
+            }
+
+            return new Stmt.DefaultStatement();
         }
 
         public object VisitLiteralExpr(Expression.Literal expr)
@@ -147,10 +162,21 @@ namespace JukaCompiler.Interpreter
 
         public object VisitLogicalExpr(Expression.Logical expr)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Resolver VisitLogicalExpr is not implemented");
         }
 
-        public object VisitPrintStmt(Stmt.Print stmt)
+        public object VisitPrintLine(Stmt.PrintLine stmt)
+        {
+            if (stmt == null || stmt.expr == null)
+            {
+                throw new ArgumentNullException("stmt and or expressoin are null");
+            }
+
+            Resolve(stmt.expr);
+            return new Stmt.PrintLine();
+        }
+
+        public object VisitPrint(Stmt.Print stmt)
         {
             if (stmt == null || stmt.expr == null)
             {
@@ -163,48 +189,71 @@ namespace JukaCompiler.Interpreter
 
         public object VisitReturnStmt(Stmt.Return stmt)
         {
-            throw new NotImplementedException();
+            if (currentFunction == FunctionType.NONE)
+            {
+                this.compilerError?.AddError("Can't reach return. No function defined");
+            }
+
+            if (stmt.expr != null)
+            {
+                if (currentFunction == FunctionType.INITIALIZER)
+                {
+                    this.compilerError?.AddError("can't return from an initializer function");
+                }
+
+                Resolve(stmt.expr);
+            }
+
+            return new Stmt.DefaultStatement();
+        }
+
+        public object VisitBreakStmt(Stmt.Break stmt)
+        {
+            Stmt.Return returnStatement = new Stmt.Return(null,null);
+            return VisitReturnStmt(returnStatement);
         }
 
         public object VisitSetExpr(Expression.Set expr)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Resolver VisitSetExpr is not implemented");
         }
 
         public object VisitSuperExpr(Expression.Super expr)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Resolver VisitSuperExpr is not implemented");
         }
 
         public object VisitThisExpr(Expression.This expr)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Resolver VisitThisExpr is not implemented");
         }
 
         public object VisitUnaryExpr(Expression.Unary expr)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Resolver VisitUnaryExpr is not implemented");
         }
 
         public object VisitVariableExpr(Expression.Variable expr)
         {
-            if (scopes.Count() > 0 && scopes.Peek()[expr.Name.ToString()] == false)
+            if(( scopes.Any() && scopes.Peek().Count == 1 && scopes.Peek()[expr.Name.ToString()] == true) ||
+                scopes.Any() && scopes.Peek().Count == 0 ||
+                !scopes.Any())
             {
-                this.compilerError.AddError(expr.Name.ToString() + "Can't read local variable");
+                ResolveLocal(expr, expr?.Name);
+                return new Stmt.DefaultStatement();
             }
 
-            ResolveLocal(expr, expr.Name);
-            return null;
+            this.compilerError?.AddError(expr.Name.ToString() + "Can't read local variable");
+            return new Stmt.DefaultStatement();
         }
 
         private void ResolveLocal(Expression expr, Lexeme name)
         {
-            for(int i = scopes.Count() -1; i >=0; i--)
+            for(int i = 0; i < scopes.Count(); i++)
             {
-                Dictionary<string, bool> locals = scopes.ElementAt(i);
-                if (locals.ContainsKey(name.ToString()))
+                if (scopes.ElementAt(i).ContainsKey(name.ToString()))
                 {
-                    this.interpreter.Resolve(expr, scopes.Count()-1-i);
+                    this.interpreter.Resolve(expr, i);
                     return;
                 }
             }
@@ -230,7 +279,10 @@ namespace JukaCompiler.Interpreter
 
         public object VisitWhileStmt(Stmt.While stmt)
         {
-            throw new NotImplementedException();
+            Resolve(stmt.condition);
+            Resolve(stmt.whileBlock);
+
+            return new Stmt.DefaultStatement();
         }
 
         private void Declare(Lexeme name)
@@ -252,7 +304,7 @@ namespace JukaCompiler.Interpreter
 
         private void Define(Lexeme name)
         {
-            if (scopes.Count() == 0)
+            if (!scopes.Any())
             {
                 return;
             }
@@ -263,7 +315,7 @@ namespace JukaCompiler.Interpreter
             }
             else
             {
-                scopes.Peek().Add(name.ToString(), true);
+                scopes.Peek().Add(name.ToString(), false);
             }
         }
 

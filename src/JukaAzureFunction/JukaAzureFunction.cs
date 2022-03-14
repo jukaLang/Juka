@@ -21,8 +21,7 @@ namespace JukaAzureFunction
     {
         [FunctionName("JukaAzureFunction")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req, ILogger log)
         {
             log.LogInformation("Running code");
 
@@ -33,7 +32,16 @@ namespace JukaAzureFunction
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             code = code ?? data?.code;
 
+            JukaCompiler.Compiler compiler = new JukaCompiler.Compiler();
+            string sourceAsString = "func x() = { printLine(\"AsdfA\");} x();";
+            compiler.Go(sourceAsString, false);
 
+            return new OkObjectResult(compiler.HasErrors());
+            //return Roslyn(code, responseMessage);
+        }
+
+        private static IActionResult Roslyn(string code, string responseMessage)
+        {
             //Based on Josh Varty and Damir code
             var tree = CSharpSyntaxTree.ParseText(@"
             using System;
@@ -44,17 +52,14 @@ namespace JukaAzureFunction
                 {
                     static void Main(string[] args)
                     {
-                        Console.WriteLine("""+code+@""");
+                        Console.WriteLine(""" + code + @""");
                         //Console.ReadLine();
                     }
                 }
             }
             ");
 
-
             var assemblyPath = Path.ChangeExtension("output", "exe");
-
-
 
             File.WriteAllText(
                 Path.ChangeExtension(assemblyPath, "runtimeconfig.json"),
@@ -80,8 +85,6 @@ namespace JukaAzureFunction
             //Emitting to file is available through an extension method in the Microsoft.CodeAnalysis namespace
             var emitResult = compilation.Emit(assemblyPath);
 
-
-
             Process process = new Process();
             process.StartInfo.FileName = "dotnet";
             process.StartInfo.Arguments = assemblyPath; // Note the /c command (*)
@@ -96,11 +99,9 @@ namespace JukaAzureFunction
             //Console.WriteLine(err);
             process.WaitForExit();
 
-            var responseMessage = output + err;
-            return new OkObjectResult(responseMessage);
-
-
+            return new OkObjectResult(output + err);
         }
+
         private static string GenerateRuntimeConfig()
         {
             using (var stream = new MemoryStream())
@@ -123,9 +124,5 @@ namespace JukaAzureFunction
                 return Encoding.UTF8.GetString(stream.ToArray());
             }
         }
-
-
     }
-
-    
 }

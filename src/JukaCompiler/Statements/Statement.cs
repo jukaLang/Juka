@@ -1,5 +1,6 @@
 ﻿using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
+using JukaCompiler.RoslynEmiter;
 
 namespace JukaCompiler.Statements
 {
@@ -12,12 +13,15 @@ namespace JukaCompiler.Statements
             R VisitClassStmt(Class stmt);
             R VisitExpressionStmt(Expression stmt);
             R VisitIfStmt(If stmt);
-            R VisitPrintStmt(Print stmt);
+            R VisitPrintLine(PrintLine stmt);
+            R VisitPrint(Print stmt);
             R VisitReturnStmt(Return stmt);
             R VisitVarStmt(Var stmt);
             R VisitWhileStmt(While stmt);
+            R VisitBreakStmt(Break stmt);
         }
         internal abstract R Accept<R>(Stmt.Visitor<R> vistor);
+
         internal class Block : Stmt
         {
             internal Block(List<Stmt> statements)
@@ -28,7 +32,7 @@ namespace JukaCompiler.Statements
             internal List<Stmt> statements;
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                throw new NotImplementedException();
+               return vistor.VisitBlockStmt(this);
             }
         }
         internal class Function : Stmt
@@ -65,8 +69,7 @@ namespace JukaCompiler.Statements
                 throw new NotImplementedException();
             }
         }
-
-         internal class Expression : Stmt
+        internal class Expression : Stmt
          {
             internal Parse.Expression expression;
 
@@ -79,13 +82,43 @@ namespace JukaCompiler.Statements
              {
                  return vistor.VisitExpressionStmt(this);
              }
-         }
- 
+        }
         internal class If : Stmt
         {
+            internal Parse.Expression condition;
+            internal Stmt thenBranch;
+            internal Stmt elseBranch;
+
+            internal If(Parse.Expression condition, Stmt thenBranch, Stmt elseBranch)
+            {
+                this.condition = condition;
+                this.thenBranch = thenBranch;
+                this.elseBranch = elseBranch;
+            }
+
+            internal override R Accept<R>(Visitor<R> visitor)
+            {
+                return visitor.VisitIfStmt(this);
+            }
+
+        }
+
+        internal class PrintLine : Stmt
+        {
+            internal Parse.Expression? expr;
+
+            internal PrintLine(Parse.Expression expr)
+            {
+                this.expr = expr;
+            }
+
+            internal PrintLine()
+            {
+            }
+
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                throw new NotImplementedException();
+                return vistor.VisitPrintLine(this);
             }
         }
         internal class Print : Stmt
@@ -103,7 +136,7 @@ namespace JukaCompiler.Statements
 
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                return vistor.VisitPrintStmt(this);
+                return vistor.VisitPrint(this);
             }
         }
         internal class Var : Stmt
@@ -142,21 +175,56 @@ namespace JukaCompiler.Statements
             {
                 return vistor.VisitVarStmt(this);
             }
+
         }
         internal class While : Stmt
         {
+            internal Parse.Expression condition;
+            internal Stmt whileBlock;
+
+            internal While(Parse.Expression condition, Stmt whileBlock)
+            {
+                this.condition = condition;
+                this.whileBlock = whileBlock;
+            }
+
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                throw new NotImplementedException();
+                return vistor.VisitWhileStmt(this);
             }
         }
         internal class Return : Stmt
         {
+            internal Lexeme keyword;
+            internal Parse.Expression expr;
+            internal Return(Lexeme keyword, Parse.Expression expression)
+            {
+                this.keyword = keyword;
+                this.expr = expression;
+            }
+
+            internal override R Accept<R>(Visitor<R> vistor)
+            {
+                return vistor.VisitReturnStmt(this);
+            }
+        }
+
+        internal class Break : Stmt
+        {
+            internal Parse.Expression expr;
+            internal override R Accept<R>(Visitor<R> vistor)
+            {
+                return vistor.VisitBreakStmt(this);
+            }
+        }
+
+        internal class DefaultStatement : Stmt
+        {
+            // Does nothing used for return values;
             internal override R Accept<R>(Visitor<R> vistor)
             {
                 throw new NotImplementedException();
             }
-
         }
     }
 }
