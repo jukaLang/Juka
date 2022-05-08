@@ -15,6 +15,15 @@ func MyFunc() = {
 	printLine(x);
 }
 
+func testC_sharp() = {
+   {#{
+	System.Console.WriteLine(-1+55);
+   }#}
+
+}
+
 
 //MyFunc();
-x();
+//x();
+
+testC_sharp();
