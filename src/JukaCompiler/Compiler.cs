@@ -5,6 +5,8 @@ using JukaCompiler.Statements;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using JukaCompiler.Exceptions;
+using JukaCompiler.SystemCalls;
+using JukaCompiler.RoslynEmiter;
 
 namespace JukaCompiler
 {
@@ -28,39 +30,45 @@ namespace JukaCompiler
             hostBuilder.ConfigureServices(services =>
             {
                 services.AddSingleton<ICompilerError,CompilerError>();
+                services.AddSingleton<IFileOpen, FileOpen>();
+                services.AddSingleton<ISystemClock, SystemClock>();
                 this.serviceProvider = services.BuildServiceProvider();
             });
             hostBuilder.Build();
         }
 
         // Run the Compiler (Step: 3)
-        public string Go(String data, bool isFile = true)
+        public bool Go(String data, bool isFile = true)
         {
             try
             {
-                // Create Parser
-                Parser parser = new(new Scanner(data, isFile), this.serviceProvider);
-                // Parse Statements
+                this.serviceProvider.GetRequiredService<ICompilerError>().SourceFileName(data);
+
+                Parser parser = new(new Scanner(data, this.serviceProvider, isFile), this.serviceProvider);
                 List<Stmt> statements = parser.Parse();
 
                 if (HasErrors())
                 {
-                    return "Errors during compiling";
+                    return true;
                 }
 
-                // Compile the code
-                return Compile(statements);
+                Compile(statements);
 
-                throw new Exception("Unhandled error");
+                return true;
             }
             catch (Exception ex)
             {
-                return ex.Message;
+                return false;
             }
         }
 
         private string Compile(List<Stmt> statements)
         {
+            RoslynGenerate roslynGenerate = new();
+            
+            // Don't turn on until ready to emit Roslyn.
+            // roslynGenerate.Generate(statements);
+
             var interpreter = new Interpreter.JukaInterpreter(serviceProvider);
             Resolver? resolver = new(interpreter);
             resolver.Resolve(statements);
@@ -72,12 +80,8 @@ namespace JukaCompiler
 
             using (StringWriter stringWriter = new StringWriter())
             {
-
                 Console.SetOut(stringWriter);
-
                 interpreter.Interpert(statements);
-
-                //Console.WriteLine("this is a test");
 
                 String ConsoleOutput = stringWriter.ToString();
                 Console.SetOut(currentOut);

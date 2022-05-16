@@ -1,6 +1,7 @@
 ﻿using JukaCompiler;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Diagnostics;
 
 namespace JukaUnitTest
 {
@@ -10,10 +11,21 @@ namespace JukaUnitTest
         [TestMethod]
         public void TestSourceAsFile()
         {
+            const string returnValue = "0.769\r\nSTART\r\nfoobar-32external\r\nEND\r\n0.77\r\n";
+
             Compiler compiler = new Compiler();
 
             var outputValue = compiler.Go(@"..\..\..\..\..\examples\test.jlr");
-            Assert.AreEqual(outputValue, "AsdfA\r\n");
+            if (compiler.HasErrors())
+            {
+                var errors = compiler.ListErrors();
+                foreach(var error in errors)
+                {
+                    Assert.IsTrue(false, error);
+                }
+            }
+
+            Assert.AreEqual(outputValue, returnValue);
         }
 
         [TestMethod]

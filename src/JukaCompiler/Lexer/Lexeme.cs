@@ -55,21 +55,27 @@ namespace JukaCompiler.Lexer
         internal static Int64 FLOAT                 = 0x1000000000000;
         internal static Int64 BOOL                  = 0x2000000000000;
         internal static Int64 PRINT                 = 0x4000000000000;
+        internal static Int64 BREAK                 = 0x8000000000000;
     }
     internal class Lexeme
     {
         private StringBuilder tokenBuilder = new StringBuilder();
         private bool isKeyWord = false;
         private Int64 typeOfKeyWord;
+        private int lineNumber;
+        private int columnNumber;
+
         internal Int64 LexemeType { get; set; }
 
         internal Lexeme()
         {
         }
 
-        internal Lexeme(Int64 ltype) : this()
+        internal Lexeme(Int64 ltype, int lineNumber, int columnNumber) : this()
         {
             this.LexemeType = ltype;
+            this.lineNumber = lineNumber;
+            this.columnNumber = columnNumber;
         }
 
         internal void AddToken(char token)
@@ -82,6 +88,11 @@ namespace JukaCompiler.Lexer
             this.tokenBuilder.Append(token);
         }
 
+        internal void AddToken(Lexeme token)
+        {
+            this.tokenBuilder.Append(token.ToString());
+        }
+
         internal bool IsKeyWord
         {
             set { isKeyWord = true; }
@@ -92,6 +103,16 @@ namespace JukaCompiler.Lexer
         {
             get { return this.typeOfKeyWord; } 
             set { this.typeOfKeyWord = value;}
+        }
+
+        internal int LineNumber
+        {
+            get { return lineNumber; }
+        }
+
+        internal int ColumnNumber
+        {
+            get { return columnNumber; }
         }
 
         public override string ToString()

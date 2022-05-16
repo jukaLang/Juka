@@ -1,18 +1,25 @@
-func x() = {
-	printLine("AsdfA"); //TEST
+func Process() = {
+	string s = "foo" + "bar";
+	
 
-	/* printLine("comment1"); \*/
-	   printLine("comment2");
-	 printLine("comment2");*/
-        // Comment 3 printLine("comment3");
-
-	//printLine("Done");
+	while(s == "foobar")
+	{
+		if (false)
+		{
+			print(s);
+			s = "x";
+		}
+		else
+		{
+			int i = 3;
+			print(i);
+		}
+	}
 }
 
-func MyFunc() = {
-	int x = 3 + 4;
-	printLine(21);
-	printLine(x);
+
+func test() 
+{
 }
 
 func testC_sharp() = {
@@ -24,8 +31,5 @@ func testC_sharp() = {
 	} 
 );
 
-}
-//MyFunc();
-//x();
 
 testC_sharp();

@@ -1,6 +1,9 @@
-﻿using JukaCompiler.Lexer;
+﻿using JukaCompiler.Exceptions;
+using JukaCompiler.Extensions;
+using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 using JukaCompiler.Statements;
+using JukaCompiler.SystemCalls;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Interpreter
@@ -17,8 +20,17 @@ namespace JukaCompiler.Interpreter
             environment = globals = new JukaEnvironment();
             this.serviceProvider = services;
 
-            // var callable = new Callable();
-            // globals.Define("clock",
+            if (serviceProvider != null)
+            {
+#pragma warning disable CS8604 // Possible null reference argument.
+                globals.Define("clock", serviceProvider.GetService<ISystemClock>());
+                globals.Define("fileOpen", services.GetService<IFileOpen>());
+#pragma warning restore CS8604 // Possible null reference argument.
+            }
+            else
+            {
+                throw new JRuntimeException("Unable to load system calls");
+            }
         }
 
         internal void Interpert(List<Stmt> statements)
@@ -28,7 +40,6 @@ namespace JukaCompiler.Interpreter
                 Execute(stmt);
             }
         }
-
         private void Execute(Stmt stmt)
         {
             stmt.Accept(this);
@@ -36,7 +47,7 @@ namespace JukaCompiler.Interpreter
 
         internal void ExecuteBlock(List<Stmt> statements, JukaEnvironment environment)
         {
-            JukaEnvironment prevEnvironment = environment;
+            JukaEnvironment previous = this.environment;
 
             try
             {
@@ -48,13 +59,14 @@ namespace JukaCompiler.Interpreter
             }
             finally
             {
-                this.environment = prevEnvironment;
+                this.environment = previous;
             }
         }
 
         Stmt Stmt.Visitor<Stmt>.VisitBlockStmt(Stmt.Block stmt)
         {
-            throw new NotImplementedException();
+            ExecuteBlock(stmt.statements, new JukaEnvironment(this.environment));
+            return null;
         }
 
         Stmt Stmt.Visitor<Stmt>.VisitFunctionStmt(Stmt.Function stmt)
@@ -77,23 +89,91 @@ namespace JukaCompiler.Interpreter
 
         public Stmt VisitIfStmt(Stmt.If stmt)
         {
-            throw new NotImplementedException();
+            Stmt.DefaultStatement defaultStatement = new Stmt.DefaultStatement();
+
+            if (IsTrue(Evaluate(stmt.condition)))
+            {
+                Execute(stmt.thenBranch);
+            }
+            else
+            { 
+                Execute(stmt.elseBranch);
+            }
+
+            return defaultStatement;
         }
 
-        public Stmt VisitPrintStmt(Stmt.Print stmt)
+        public Stmt VisitPrintLine(Stmt.PrintLine stmt)
         {
             if (stmt.expr != null)
             {
-                var lexemeTypeLiteral = Evaluate(stmt.expr) as Expression.LexemeTypeLiteral;
-                Console.WriteLine(lexemeTypeLiteral.Literal);
+                if (stmt.expr is Expression.Literal || stmt.expr is Expression.LexemeTypeLiteral)
+                { 
+                    var lexemeTypeLiteral = Evaluate(stmt.expr) as Expression.LexemeTypeLiteral;
+                    Console.WriteLine(lexemeTypeLiteral.Literal);
+                    return new Stmt.PrintLine();
+                }
+
+                if (stmt.expr is Expression.Variable)
+                {
+                    var variable = LookUpVariable(stmt.expr.Name, stmt.expr);
+                    if (variable != null)
+                    {
+                        if (variable is Expression.LexemeTypeLiteral)
+                        {
+                            Console.WriteLine(((Expression.LexemeTypeLiteral)variable).Literal);
+                        }
+                    }
+                }
             }
+
+            return new Stmt.PrintLine();
+        }
+
+        public Stmt VisitPrint(Stmt.Print stmt)
+        {
+            if (stmt.expr != null)
+            {
+                if (stmt.expr is Expression.LexemeTypeLiteral)
+                {
+                    var lexemeTypeLiteral = Evaluate(stmt.expr) as Expression.LexemeTypeLiteral;
+                    Console.Write(lexemeTypeLiteral.Literal);
+                    return new Stmt.Print();
+                }
+
+                if (stmt.expr is Expression.Variable)
+                {
+                    var variable = LookUpVariable(stmt.expr.Name, stmt.expr);
+                    if (variable != null)
+                    {
+                        if (variable is Expression.LexemeTypeLiteral)
+                        {
+                            Console.Write(((Expression.LexemeTypeLiteral)variable).Literal);
+                        }
+                    }
+                }
+            }
+
             return new Stmt.Print();
         }
 
         public Stmt VisitReturnStmt(Stmt.Return stmt)
         {
-            throw new NotImplementedException();
+            object value = null;
+            if (stmt.expr != null)
+            {
+                value = Evaluate(stmt.expr);
+            }
+
+            throw new Return(value);
         }
+
+        public Stmt VisitBreakStmt(Stmt.Break stmt)
+        {
+            Stmt.Return returnStatement = new Stmt.Return(null, null);
+            return VisitReturnStmt(returnStatement);
+        }
+
 
         public Stmt VisitVarStmt(Stmt.Var stmt)
         {
@@ -109,7 +189,12 @@ namespace JukaCompiler.Interpreter
 
         public Stmt VisitWhileStmt(Stmt.While stmt)
         {
-            throw new NotImplementedException();
+            while (IsTrue(Evaluate(stmt.condition)))
+            {
+                Execute(stmt.whileBlock);
+            }
+
+            return new Stmt.DefaultStatement();
         }
 
         private object Evaluate(Expression expr)
@@ -119,12 +204,28 @@ namespace JukaCompiler.Interpreter
 
         public object VisitAssignExpr(Expression.Assign expr)
         {
-            throw new NotImplementedException();
+            object value = Evaluate(expr);
+            /* Statements and State visit-assign < Resolving and Binding resolved-assign
+                environment.assign(expr.name, value);
+            */
+            //> Resolving and Binding resolved-assign
+
+            locals.TryGetValueEx(expr, out int? distance);
+            if (distance != null)
+            {
+                environment.AssignAt(distance.Value, expr.name, value);
+            }
+            else
+            {
+                globals.Assign(expr.name, value);
+            }
+
+            //< Resolving and Binding resolved-assign
+            return value;
         }
 
         public object VisitBinaryExpr(Expression.Binary expr)
         {
-            //(Expression.Le ((Expression.Binary)expr).left.
             object left = Evaluate(expr.left);
             object right = Evaluate(expr.right);
 
@@ -148,30 +249,124 @@ namespace JukaCompiler.Interpreter
                         return !IsEqual(leftValue, rightValue);
                 case "==":
                         return IsEqual(leftValue, rightValue);
-                //case ">":
+                case ">":
+                    return IsLessThan(leftValueType, rightValueType, leftValue, rightValue);
+                case "/":
+                    return DivideTypes(leftValueType, rightValueType, leftValue, rightValue);
+                case "*":
+                    return MultiplyTypes(leftValueType, rightValueType, leftValue, rightValue);
+                case "-":
+                    return SubtractTypes(leftValueType, rightValueType, leftValue, rightValue);
+                case "+":
+                    return AddTypes(leftValueType, rightValueType, leftValue, rightValue);
                 //case "<":
                 //case "<=":
                 //case ">=":
-                //case "-":
-                //case "/":
-                //case "*":
-                case "+":
-                    if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
-                    {
-                        int lvalue = Convert.ToInt32(leftValue);
-                        int rvalue = Convert.ToInt32(rightValue);
-                        return lvalue + rvalue;
-                    }
-
-                    if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
-                    { 
-                        return (string)left + (string)right; 
-                    }
-
-                    throw new ArgumentNullException("can't add types");
             }
 
-            return null;
+            return new Expression.LexemeTypeLiteral();
+        }
+
+        private static object IsLessThan(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        {
+            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            {
+                var literal = new Expression.LexemeTypeLiteral();
+                literal.literal = Convert.ToInt32(leftValue) < Convert.ToInt32(rightValue);
+                literal.lexemeType = LexemeType.BOOL;
+                return literal;
+            }
+
+            if (leftValueType == LexemeType.STRING || rightValueType == LexemeType.STRING)
+            {
+                throw new ArgumentException("can't apply less than operator to strings");
+            }
+
+            throw new ArgumentException("Can't compare types");
+        }
+
+        private static object AddTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        {
+            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            {
+                var literalSum = new Expression.LexemeTypeLiteral();
+                literalSum.literal = Convert.ToInt32(leftValue) + Convert.ToInt32(rightValue);
+                literalSum.lexemeType = LexemeType.NUMBER;
+                return literalSum;
+            }
+
+            if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
+            {
+                var literalStringSum = new Expression.LexemeTypeLiteral();
+
+                literalStringSum.literal = Convert.ToString(leftValue) + Convert.ToString(rightValue);
+                literalStringSum.lexemeType = LexemeType.STRING;
+                return literalStringSum;
+            }
+
+            throw new ArgumentNullException("can't add types");
+        }
+
+        private static object SubtractTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        {
+            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            {
+                var literalSum = new Expression.LexemeTypeLiteral();
+                literalSum.literal = Convert.ToInt32(leftValue) - Convert.ToInt32(rightValue);
+                literalSum.lexemeType = LexemeType.NUMBER;
+                return literalSum;
+            }
+
+            if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
+            {
+                throw new ArgumentException("can't subtract strings");
+            }
+
+            throw new ArgumentNullException("can't subtract types");
+        }
+
+        private static object MultiplyTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        {
+            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            {
+                var literalProduction = new Expression.LexemeTypeLiteral();
+                literalProduction.literal = Convert.ToInt32(leftValue) * Convert.ToInt32(rightValue);
+                literalProduction.lexemeType = LexemeType.NUMBER;
+                return literalProduction;
+            }
+
+            if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
+            {
+                throw new ArgumentException("can't multiply strings");
+            }
+
+            throw new ArgumentNullException("can't multiply types");
+        }
+
+        private static object DivideTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        {
+            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            {
+                var literalProduction = new Expression.LexemeTypeLiteral();
+                int divisor = Convert.ToInt32(leftValue);
+                int divident = Convert.ToInt32(rightValue);
+
+                if (divisor == 0 || divident == 0)
+                {
+                    throw new ArgumentException("Can't divide by zero");
+
+                }
+                literalProduction.literal = Convert.ToInt32(leftValue) / Convert.ToInt32(rightValue);
+                literalProduction.lexemeType = LexemeType.NUMBER;
+                return literalProduction;
+            }
+
+            if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
+            {
+                throw new ArgumentException("can't divide strings");
+            }
+
+            throw new ArgumentNullException("can't divide types");
         }
 
         private bool IsEqual(object a, object b)
@@ -199,7 +394,6 @@ namespace JukaCompiler.Interpreter
             throw new ArgumentException(op.ToString() + " Operands must be numbers");
         }
 
-
         private void CheckNumberOperands(Lexeme op, object left, object right)
         {
             if (left is int && right is int )
@@ -219,12 +413,12 @@ namespace JukaCompiler.Interpreter
                 arguments.Add(argument);
             }
 
-            if (!(callee is Callable))
+            if (!(callee is IJukaCallable))
             {
                 throw new ArgumentException("not a class or function");
             }
 
-            Callable function = (Callable)callee;
+            IJukaCallable function = (IJukaCallable)callee;
             if (arguments.Count != function.Arity())
             {
                 throw new ArgumentException("Wrong number of arguments");
@@ -285,7 +479,8 @@ namespace JukaCompiler.Interpreter
 
         internal object LookUpVariable(Lexeme name, Expression expr)
         {
-            locals.TryGetValue(expr, out var distance);
+            //locals.TryGetValueEx(expr, out int? distance);
+            locals.TryGetValue(expr, out int? distance);
 
             if (distance != null)
             {
@@ -295,9 +490,7 @@ namespace JukaCompiler.Interpreter
             {
                 return globals.Get(name);
             }
-
         }
-
         internal ServiceProvider ServiceProvider
         {
             get { return this.serviceProvider; }
@@ -305,7 +498,25 @@ namespace JukaCompiler.Interpreter
 
         internal void Resolve(Expression expr, int depth)
         {
-            locals.Add(expr,depth);
+            if (locals.Where( f => f.Key.Name.ToString().Equals(expr.Name.ToString()) ).Count() <= 1)
+            {
+                locals.Add(expr,depth);
+            }
+        }
+
+        private bool IsTrue(object o)
+        {
+            if (o == null)
+            {
+                return false;
+            }
+
+            if (o is bool)
+            {
+                return (bool)o;
+            }
+
+            return true;
         }
     }
 }

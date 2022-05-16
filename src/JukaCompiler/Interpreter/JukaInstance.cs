@@ -19,7 +19,7 @@ namespace JukaCompiler.Interpreter
                 return fields[name.ToString()];
             }
 
-            JukaFunction method = this.Class.FindMethod(name.ToString());
+            JukaFunction? method = this.Class.FindMethod(name.ToString());
 
             if (method != null)
             {
