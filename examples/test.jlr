@@ -16,13 +16,15 @@ func MyFunc() = {
 }
 
 func testC_sharp() = {
-   {#{
-	System.Console.WriteLine(-1+55);
-   }#}
+   printLine( 
+	#{
+	   string x = "Asd";
+	   string y = "fA";
+	   return x+y;
+	} 
+);
 
 }
-
-
 //MyFunc();
 //x();
 
