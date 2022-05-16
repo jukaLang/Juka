@@ -22,5 +22,14 @@ func test()
 {
 }
 
+func testC_sharp() = {
+   printLine( 
+	#{
+	   string x = "Asd";
+	   string y = "fA";
+	   return x+y;
+	} 
+);
 
-Process();
+
+testC_sharp();

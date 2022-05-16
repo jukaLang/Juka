@@ -1,6 +1,10 @@
 ﻿using JukaCompiler.Lexer;
 using static System.Char;
 using System.Text;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Emit;
+using System.Reflection;
 using JukaCompiler.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -119,7 +123,7 @@ namespace JukaCompiler.Scan
                 {
                     case '(': AddSymbol( t, LexemeType.LEFT_PAREN); break;
                     case ')': AddSymbol( t, LexemeType.RIGHT_PAREN); break;
-                    case '{': AddSymbol( t, LexemeType.LEFT_BRACE); break;
+                    case '{': AddSymbol(t, LexemeType.LEFT_BRACE); break;
                     case '}': AddSymbol( t, LexemeType.RIGHT_BRACE); break;
                     case ',': AddSymbol( t, LexemeType.COMMA); break;
                     case '.': AddSymbol( t, LexemeType.DOT); break;
@@ -182,6 +186,15 @@ namespace JukaCompiler.Scan
                     case '"' : String(); break;
                 }
             }
+
+
+            // C# Execution
+            if (Prev() != '\\' && t == '#' && Peek() == '{')
+            {
+                CSharpExec();
+                return;
+            }
+
 
             // Comments
             if (Prev() != '\\' && t == '/')
@@ -276,6 +289,87 @@ namespace JukaCompiler.Scan
 
             TryGetKeyWord(identifier);
             this.lexemes.Add(identifier);
+        }
+
+        internal void CSharpExec()
+        {
+            while (Peek() != '}' && !IsEof())
+            {
+                Advance();
+            }
+            var svalue = Encoding.Default.GetString(Memcopy(fileData, start+2, current));
+
+            var execText = @"
+            using System;
+            using System.Diagnostics;
+            namespace JukaCSharp
+            {
+                public class MyClass {
+  
+                    // Main Method
+                    public static string Main()
+                    {
+                        " + svalue + @"
+                    }
+               } 
+            }";
+           
+           var syntaxTree = CSharpSyntaxTree.ParseText(execText);
+      
+
+            string assemblyName = Path.GetRandomFileName();
+            MetadataReference[] references = new MetadataReference[]
+            {
+                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location)
+            };
+
+            CSharpCompilation compilation = CSharpCompilation.Create(
+                assemblyName,
+                syntaxTrees: new[] { syntaxTree },
+                references: references,
+                options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+
+            using (var ms = new MemoryStream())
+            {
+                EmitResult result = compilation.Emit(ms);
+
+                if (!result.Success)
+                {
+                    IEnumerable<Diagnostic> failures = result.Diagnostics.Where(diagnostic =>
+                        diagnostic.IsWarningAsError ||
+                        diagnostic.Severity == DiagnosticSeverity.Error);
+
+                    foreach (Diagnostic diagnostic in failures)
+                    {
+                        Console.Error.WriteLine("{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
+                    }
+                }
+                else
+                {
+                    
+                    ms.Seek(0, SeekOrigin.Begin);
+                    Assembly assembly = Assembly.Load(ms.ToArray());
+
+                    Type type = assembly.GetType("JukaCSharp.MyClass");
+                    object obj = Activator.CreateInstance(type);
+                    Object Csharpres = type.InvokeMember("Main",
+                        BindingFlags.Default | BindingFlags.InvokeMethod,
+                        null,
+                        obj,
+                        new object[] { });
+
+
+                    Lexeme s = new Lexeme(LexemeType.STRING);
+                    s.AddToken(Csharpres.ToString());
+                    this.lexemes.Add(s);
+
+                }
+            }
+
+
+
+            Advance();
         }
 
         internal void Comment()
