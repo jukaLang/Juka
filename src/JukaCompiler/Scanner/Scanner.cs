@@ -360,7 +360,7 @@ namespace JukaCompiler.Scan
                         new object[] { });
 
 
-                    Lexeme s = new Lexeme(LexemeType.STRING);
+                    Lexeme s = new Lexeme(LexemeType.STRING, this.line, this.column);
                     s.AddToken(Csharpres.ToString());
                     this.lexemes.Add(s);
 

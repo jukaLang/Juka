@@ -29,7 +29,8 @@ func testC_sharp() = {
 	   string y = "fA";
 	   return x+y;
 	} 
-);
+   );
+}
 
 
 testC_sharp();
