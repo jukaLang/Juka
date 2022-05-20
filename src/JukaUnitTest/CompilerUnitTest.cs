@@ -11,7 +11,7 @@ namespace JukaUnitTest
         [TestMethod]
         public void TestSourceAsFile()
         {
-            const string returnValue = "AsdfA";
+            const string returnValue = "AsdfA\r\n";
 
             Compiler compiler = new Compiler();
 
@@ -37,7 +37,7 @@ namespace JukaUnitTest
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
-            Assert.AreEqual("foo", outputValue);
+            Assert.AreEqual("AsdfA\r\n", outputValue);
         }
 
 
@@ -45,14 +45,15 @@ namespace JukaUnitTest
         public void TestOutput()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "func main() = { printLine(\"AsdfA\");}";
+            string sourceAsString = "func testC_sharp() = { printLine( \"AsdfA\" );} testC_sharp();";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+                Assert.AreEqual("AfasfsaddasA", outputValue);
             }
-            Assert.AreEqual("AsdfA", outputValue);
+            Assert.AreEqual("AsdfA\r\n", outputValue);
         }
 
         [TestMethod]
@@ -73,7 +74,7 @@ namespace JukaUnitTest
         public void TestEmptyComment()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "/*saddsadsa*dasdas\\*/asdasd*//**///!sssd";
+            string sourceAsString = "/*saddsadsa*dasdas/asdasd*//**///!sssd";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())

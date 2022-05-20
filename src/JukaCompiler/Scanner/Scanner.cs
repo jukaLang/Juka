@@ -431,9 +431,8 @@ namespace JukaCompiler.Scan
 
             var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start + 1, current - 1));
             Lexeme s = new Lexeme(LexemeType.STRING, this.line, this.column);
-            s.AddToken(svalue);
+            s.AddToken(svalue.ToString());
             this.lexemes.Add(s);
-
             Advance();
         }
 

@@ -239,10 +239,10 @@ namespace JukaCompiler.Interpreter
                 scopes.Any() && scopes.Peek().Count == 0 ||
                 !scopes.Any())
             {
-                ResolveLocal(expr, expr?.Name);
+                ResolveLocal(expr, expr.Name);
                 return new Stmt.DefaultStatement();
             }
-
+            throw new NotImplementedException("Something went wrong visitng");
             this.compilerError?.AddError(expr.Name.ToString() + "Can't read local variable");
             return new Stmt.DefaultStatement();
         }

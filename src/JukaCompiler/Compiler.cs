@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using JukaCompiler.Exceptions;
 using JukaCompiler.SystemCalls;
-using JukaCompiler.RoslynEmiter;
+//using JukaCompiler.RoslynEmiter;
 
 namespace JukaCompiler
 {
@@ -38,7 +38,7 @@ namespace JukaCompiler
         }
 
         // Run the Compiler (Step: 3)
-        public bool Go(String data, bool isFile = true)
+        public string Go(String data, bool isFile = true)
         {
             try
             {
@@ -49,22 +49,20 @@ namespace JukaCompiler
 
                 if (HasErrors())
                 {
-                    return true;
+                    return "ParserError";
                 }
 
-                Compile(statements);
-
-                return true;
+                return Compile(statements);
             }
             catch (Exception ex)
             {
-                return false;
+                return ex.ToString();
             }
         }
 
         private string Compile(List<Stmt> statements)
         {
-            RoslynGenerate roslynGenerate = new();
+            //RoslynGenerate roslynGenerate = new();
             
             // Don't turn on until ready to emit Roslyn.
             // roslynGenerate.Generate(statements);

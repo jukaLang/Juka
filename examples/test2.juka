@@ -1,6 +1,8 @@
-func main() =  {
-    if ( 2<3 ) 
-    {
-        printLine("foo");
-    }
+func testC_sharp() = {
+   printLine( 
+	"AsdfA"
+   );
 }
+
+
+testC_sharp();

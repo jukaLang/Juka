@@ -1,27 +1,3 @@
-func Process() = {
-	string s = "foo" + "bar";
-	
-
-	while(s == "foobar")
-	{
-		if (false)
-		{
-			print(s);
-			s = "x";
-		}
-		else
-		{
-			int i = 3;
-			print(i);
-		}
-	}
-}
-
-
-func test() 
-{
-}
-
 func testC_sharp() = {
    printLine( 
 	#{
