@@ -11,8 +11,6 @@ namespace JukaUnitTest
         [TestMethod]
         public void TestSourceAsFile()
         {
-            const string returnValue = "AsdfA\r\n";
-
             Compiler compiler = new Compiler();
 
             var outputValue = compiler.Go(@"../../../../../examples/test.juk");
@@ -25,7 +23,7 @@ namespace JukaUnitTest
                 }
             }
 
-            Assert.AreEqual(returnValue, outputValue);
+            Assert.AreEqual("AsdfA" + Environment.NewLine, outputValue);
         }
 
         [TestMethod]
@@ -37,7 +35,7 @@ namespace JukaUnitTest
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
-            Assert.AreEqual("AsdfA\r\n", outputValue);
+            Assert.AreEqual("AsdfA" + Environment.NewLine, outputValue);
         }
 
 
@@ -53,7 +51,7 @@ namespace JukaUnitTest
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
                 Assert.AreEqual("AfasfsaddasA", outputValue);
             }
-            Assert.AreEqual("AsdfA\r\n", outputValue);
+            Assert.AreEqual("AsdfA"+ Environment.NewLine, outputValue);
         }
 
         [TestMethod]
