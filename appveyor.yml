@@ -20,6 +20,9 @@ configuration:
 - Release
 
 artifacts:
+- path: 'src\JukaC\bin\Release\net6.0'
+  name: Juka_Exe_Windows_$(APPVEYOR_BUILD_VERSION)
+  type: zip
 - path: 'src\JukaAzureFunction\bin\Release\net6.0'
   name: Juka_Azure_Function_$(APPVEYOR_BUILD_VERSION)
   type: AzureCloudService
@@ -29,6 +32,7 @@ artifacts:
 - path: 'src\JukaNetwork\bin\Release\net6.0'
   name: Juka_Network_blockchain_$(APPVEYOR_BUILD_VERSION)
   type: zip
+
 
 deploy:
     # Deploy to GitHub Releases

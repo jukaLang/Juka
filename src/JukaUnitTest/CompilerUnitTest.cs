@@ -15,7 +15,7 @@ namespace JukaUnitTest
 
             Compiler compiler = new Compiler();
 
-            var outputValue = compiler.Go(@"..\..\..\..\..\examples\test.juka");
+            var outputValue = compiler.Go(@"..\..\..\..\..\examples\test.juk");
             if (compiler.HasErrors())
             {
                 var errors = compiler.ListErrors();
@@ -32,7 +32,7 @@ namespace JukaUnitTest
         public void TestSourceAsFile2()
         {
             Compiler compiler = new Compiler();
-            var outputValue = compiler.Go(@"..\..\..\..\..\examples\test2.juka");
+            var outputValue = compiler.Go(@"..\..\..\..\..\examples\test2.juk");
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));

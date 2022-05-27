@@ -12,14 +12,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JukaAzureFunction", "JukaAz
 		{C6C15D26-01CC-4877-9D4F-5EE89E1FE5EC} = {C6C15D26-01CC-4877-9D4F-5EE89E1FE5EC}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4A72583D-50EC-4A72-87E0-3DEA91EAE1FE}"
-	ProjectSection(SolutionItems) = preProject
-		..\examples\scanner.jlr = ..\examples\scanner.jlr
-		..\examples\test.jlr = ..\examples\test.jlr
-		..\examples\test2.jlr = ..\examples\test2.jlr
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JukaNetwork", "JukaNetwork\JukaNetwork.csproj", "{CBBD3FEC-E185-4141-8E77-B3B5AB71142C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JukaNetwork", "JukaNetwork\JukaNetwork.csproj", "{CBBD3FEC-E185-4141-8E77-B3B5AB71142C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JukaC", "JukaC\JukaC.csproj", "{03EB3050-19FF-4023-803B-3BC1F98D0D07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +56,14 @@ Global
 		{CBBD3FEC-E185-4141-8E77-B3B5AB71142C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CBBD3FEC-E185-4141-8E77-B3B5AB71142C}.Release|x64.ActiveCfg = Release|Any CPU
 		{CBBD3FEC-E185-4141-8E77-B3B5AB71142C}.Release|x64.Build.0 = Release|Any CPU
+		{03EB3050-19FF-4023-803B-3BC1F98D0D07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03EB3050-19FF-4023-803B-3BC1F98D0D07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03EB3050-19FF-4023-803B-3BC1F98D0D07}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{03EB3050-19FF-4023-803B-3BC1F98D0D07}.Debug|x64.Build.0 = Debug|Any CPU
+		{03EB3050-19FF-4023-803B-3BC1F98D0D07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03EB3050-19FF-4023-803B-3BC1F98D0D07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03EB3050-19FF-4023-803B-3BC1F98D0D07}.Release|x64.ActiveCfg = Release|Any CPU
+		{03EB3050-19FF-4023-803B-3BC1F98D0D07}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
