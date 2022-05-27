@@ -1,7 +1,5 @@
 func testC_sharp() = {
-   printLine( 
-	"AsdfA"
-   );
+   printLine("AsdfA");
 }
 
 
