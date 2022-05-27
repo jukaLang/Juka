@@ -11,11 +11,9 @@ namespace JukaUnitTest
         [TestMethod]
         public void TestSourceAsFile()
         {
-            const string returnValue = "AsdfA\r\n";
-
             Compiler compiler = new Compiler();
 
-            var outputValue = compiler.Go(@"..\..\..\..\..\examples\test.juk");
+            var outputValue = compiler.Go(@"../../../../../examples/test.juk");
             if (compiler.HasErrors())
             {
                 var errors = compiler.ListErrors();
@@ -25,19 +23,19 @@ namespace JukaUnitTest
                 }
             }
 
-            Assert.AreEqual(returnValue, outputValue);
+            Assert.AreEqual("AsdfA" + Environment.NewLine, outputValue);
         }
 
         [TestMethod]
         public void TestSourceAsFile2()
         {
             Compiler compiler = new Compiler();
-            var outputValue = compiler.Go(@"..\..\..\..\..\examples\test2.juk");
+            var outputValue = compiler.Go(@"../../../../../examples/test2.juk");
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
-            Assert.AreEqual("AsdfA\r\n", outputValue);
+            Assert.AreEqual("AsdfA" + Environment.NewLine, outputValue);
         }
 
 
@@ -45,7 +43,7 @@ namespace JukaUnitTest
         public void TestOutput()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "func testC_sharp() = { printLine( \"AsdfA\" );} testC_sharp();";
+            string sourceAsString = "func testC_sharp() = { printLine(\"AsdfA\");} testC_sharp();";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
@@ -53,7 +51,7 @@ namespace JukaUnitTest
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
                 Assert.AreEqual("AfasfsaddasA", outputValue);
             }
-            Assert.AreEqual("AsdfA\r\n", outputValue);
+            Assert.AreEqual("AsdfA"+ Environment.NewLine, outputValue);
         }
 
         [TestMethod]
