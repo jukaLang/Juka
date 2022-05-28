@@ -16,12 +16,25 @@ before_build:
 build: 
   project: src/Juka.sln
 
+
+after_build:
+ - cd src
+ - dotnet publish -c release -r osx-x64 --self-contained
+ - dotnet publish -c release -r linux-x64 --self-contained
+ - dotnet publish -c release -r win-x64 --self-contained
+
 configuration:
 - Release
 
 artifacts:
-- path: 'src\JukaC\bin\Release\net6.0'
-  name: Juka_Exe_Windows_$(APPVEYOR_BUILD_VERSION)
+- path: 'src\JukaC\bin\Release\net6.0\win-x64'
+  name: Juka_Windows_$(APPVEYOR_BUILD_VERSION)
+  type: zip
+- path: 'src\JukaC\bin\Release\net6.0\osx-x64'
+  name: Juka_MacOS_$(APPVEYOR_BUILD_VERSION)
+  type: zip
+- path: 'src\JukaC\bin\Release\net6.0\linux-x64'
+  name: Juka_Linux_$(APPVEYOR_BUILD_VERSION)
   type: zip
 - path: 'src\JukaAzureFunction\bin\Release\net6.0'
   name: Juka_Azure_Function_$(APPVEYOR_BUILD_VERSION)
