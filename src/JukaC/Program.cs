@@ -1,6 +1,5 @@
 ﻿using JukaC;
 
-JukaCompiler.Compiler compiler = new JukaCompiler.Compiler();
 string? sourceAsString;
 string? readline;
 
@@ -22,11 +21,11 @@ if (args == null || args.Length == 0)
                 break;
             }
         }
-        Console.WriteLine(compiler.Go(sourceAsString, false));
+        Console.WriteLine(new JukaCompiler.Compiler().Go(sourceAsString, false));
     }
 }
 else
 {
     sourceAsString = args[0];
-    Console.WriteLine(compiler.Go(sourceAsString, true));
+    Console.WriteLine(new JukaCompiler.Compiler().Go(sourceAsString, true));
 }
