@@ -18,7 +18,6 @@ build:
 
 
 after_build:
- - cd src
  - dotnet publish -c release -r osx-x64 --self-contained
  - dotnet publish -c release -r linux-x64 --self-contained
  - dotnet publish -c release -r win-x64 --self-contained
