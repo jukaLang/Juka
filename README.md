@@ -4,63 +4,73 @@ Travis: [![Build Status](https://app.travis-ci.com/jukaLang/Juka.svg?branch=mast
 
 Appveyor: [![Build status](https://ci.appveyor.com/api/projects/status/nmjmm04xhryx8p54?svg=true)](https://ci.appveyor.com/project/TheAndreiM/juka)
 
-Juka's goal is to be a universal programming language that can run on any platform.
-Juka is being built on top of .NET network and runs on any platform that supports .NET.
 
-Juka can be run as a function for Microsoft's Azure Cloud Server.
-Juka can also compile programs into executables.
+![JukaRun](https://user-images.githubusercontent.com/11934545/171317993-66a4e3d9-8a1f-4f76-8076-48a87985e0e7.gif)
+
+## Introduction
+
+Juka's main goal is to be a universal programming language that can run on any platform including mobile devices.
+
+Juka's philosophy is code once, run everywhere.
+
+__Current Supported Device:__
+- Windows
+- Linux/Unix
+- MacOS
+- Microsoft Azure Function
+
+__Coming Soon:__
+- Android
+- iOS (iPhone/iPad)
+- Universal Windows App (Windows 10+)
+- Docker Image
+
+__Potential Future Support:__
+- AWS (Amazon Web Service)
+- Xbox Series S/X
+- AndroidTV
+- Google Cloud
+
 
 ### Downloading Juka
 Latest Juka version can be found at https://github.com/jukaLang/juka/releases
 
-Juka's source can be downloaded at https://github.com/jukaLang/juka
+Find the version that you want and download it to your device. 
+The files should be self-contained (you are not required to download any other files)
 
 ## Running Juka
-Juka can be run on a Microsoft Azure's cloud, 
-or it can be run as a standalone application
 
-## Contributing
-- Create a new branch, work on it, and create a pull request once you are done working on the feature.
+### Windows
 
+Run the following command to start the Juka editor:
 
-## Folder Structure:
-
-### ./examples
-- Provides you examples to get you started on using Juka
-
-### ./src/JukaCompiler
-- The core of the language. The code compiles into .NET .dll library that can be used in any C# projects including Xamarin/MAUI for building iOS/Android Apps,
-  It is mainly used to build cross-platform apps for Mac/OS, Windows Apps, and Windows desktop applications.
-
-### ./src/JukaAzureFunction
-- Azure Function runtime code. Used to run Juka Azure function on Microsoft's Azure Cloud Server
-
-### ./src/JukaNetwork
-- Implemented as a blockchain network for storing and managing packages. Used as a decentralized package manager.
-
-### ./src/JukaUnitTest
-- Unit tests to test JukaCompiler
-
-### ./src/Juka
-- Contains GUI (coming soon)
-
-### Visual Studio/Development Requirements
-##### Make sure you have the latest Visual Studio installed
-
-The following Visual Studio packages required to run and develop Juka:
-
-- Azure development
-- .NET desktop development
-
-
-### Running Development version of Juka's Azure function
-- Open up Juka.sln
-- Run DreamUnitTests using Test->Run->All Tests to make sure all tests are passed.
-- Click "Start AzureJukaFunction" button which will run an Azure emulator locally.
-- Use Postman to send functions to the Azure server in "body" as raw request in the following format:
-```json
-{
-    "code": "func main() = {}"
-}
+```jsx
+./juka.exe
 ```
+
+If you want to run Juka code from a file, run the following command (substitute HelloWorld.juk with your filename)
+
+```jsx
+./juka.exe HelloWorld.juk
+```
+
+### Linux/MacOS
+
+Run the following command to start the Juka editor:
+```jsx
+./juka
+```
+
+If you want to run Juka code from a file, run the following command (substitute HelloWorld.juk with your filename)
+
+```jsx
+./juka HelloWorld.juk
+```
+
+
+### Microsoft Azure Function
+
+Upload the package to Azure Web Server
+Use web deploy to publish Juka (Azure Function) on the cloud
+
 
