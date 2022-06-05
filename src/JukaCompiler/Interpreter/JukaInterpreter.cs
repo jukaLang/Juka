@@ -25,6 +25,7 @@ namespace JukaCompiler.Interpreter
 #pragma warning disable CS8604 // Possible null reference argument.
                 globals.Define("clock", serviceProvider.GetService<ISystemClock>());
                 globals.Define("fileOpen", services.GetService<IFileOpen>());
+                globals.Define("getAvailableMemory", services.GetService<IGetAvailableMemory>());
 #pragma warning restore CS8604 // Possible null reference argument.
             }
             else

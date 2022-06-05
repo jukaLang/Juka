@@ -16,7 +16,12 @@ namespace JukaCompiler.SystemCalls
 
         public object Call(JukaInterpreter interpreter, List<object> arguments)
         {
-            throw new NotImplementedException();
+            foreach(var argument in arguments)
+            {
+                Console.Out.WriteLine(argument.ToString());
+            }
+
+            return null;
         }
     }
 }

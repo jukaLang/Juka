@@ -10,10 +10,14 @@ using JukaCompiler.SystemCalls;
 
 namespace JukaCompiler
 {
+    /*
+     * Maing entry point into the compiler responsible for setting up DI container 
+     * Calling parser and compiler (currently interpreter.
+     */
     public class Compiler
     {
         private ServiceProvider serviceProvider;
-        // Creates Compiler Instance (Step: 1)
+
         public Compiler()
         {
             Initialize();
@@ -23,8 +27,7 @@ namespace JukaCompiler
             }
         }
 
-        // Create DI/Host Builder (Step: 2)
-        public void Initialize()
+        internal void Initialize()
         {
             var hostBuilder = new HostBuilder();
             hostBuilder.ConfigureServices(services =>
@@ -32,6 +35,7 @@ namespace JukaCompiler
                 services.AddSingleton<ICompilerError,CompilerError>();
                 services.AddSingleton<IFileOpen, FileOpen>();
                 services.AddSingleton<ISystemClock, SystemClock>();
+                services.AddSingleton<IGetAvailableMemory, GetAvailableMemory>();
                 this.serviceProvider = services.BuildServiceProvider();
             });
             hostBuilder.Build();
@@ -49,23 +53,21 @@ namespace JukaCompiler
 
                 if (HasErrors())
                 {
-                    return "ParserError";
+                    return String.Empty;
                 }
 
                 return Compile(statements);
             }
             catch (Exception ex)
             {
-                return ex.ToString();
+                return $"Error compiling {ex.Message}";
             }
+
+            throw new Exception("unhandled errors");
         }
 
         private string Compile(List<Stmt> statements)
         {
-            //RoslynGenerate roslynGenerate = new();
-            
-            // Don't turn on until ready to emit Roslyn.
-            // roslynGenerate.Generate(statements);
 
             var interpreter = new Interpreter.JukaInterpreter(serviceProvider);
             Resolver? resolver = new(interpreter);
@@ -73,8 +75,6 @@ namespace JukaCompiler
 
             var currentOut = Console.Out;
 
-
-            // Action<Interpreter.Interpreter, List<Stmt>> wrap;
 
             using (StringWriter stringWriter = new StringWriter())
             {
@@ -98,26 +98,6 @@ namespace JukaCompiler
             return this.serviceProvider.GetRequiredService<ICompilerError>().ListErrors();
         }
 
-        //private void WrapCompilerOutputInMemoryStream(Action<Interpreter.Interpreter, List<Stmt>> wrap)
-        //{
-        //    wrap();
-
-        //    using (MemoryStream stream = new MemoryStream())
-        //    {
-        //        StreamWriter writer = new StreamWriter(stream);
-        //        Console.SetOut(writer);
-
-        //        interpreter.Interpert(statements);
-
-        //        // Console.WriteLine("this is a test");    
-
-        //        writer.Flush();
-        //        writer.Close();
-        //        var byteArray = stream.GetBuffer();
-        //        Console.SetOut(currentOut);
-        //        return Encoding.UTF8.GetString(byteArray);
-        //    }
-        //}
     }
 }
 

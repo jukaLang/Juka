@@ -80,7 +80,7 @@ namespace JukaCompiler.Parse
 
             if (MatchKeyWord())
             {
-                return VariableDeclaration(Previous());
+                return VariableDeclaration();
             }
 
             return Statement();
@@ -364,7 +364,7 @@ namespace JukaCompiler.Parse
             return stmts;
         }
 
-        private Stmt VariableDeclaration(Lexeme type)
+        private Stmt VariableDeclaration()
         {
             Lexeme name = Consume(LexemeType.IDENTIFIER, Peek());
             Expression? initalizedState = null;

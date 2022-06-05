@@ -12,34 +12,24 @@ namespace JukaCompiler.Interpreter
         private FunctionType currentFunction = FunctionType.NONE;
         // private ClassType currentClass = ClassType.NONE;
         private ServiceProvider? ServiceProvider;
-        private  Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
+        private Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
+        private Stack<StackFrame> frames = new Stack<StackFrame>();
+        //Dictionary<string,bool>> processScope = new Stack<string, Dictionary<string, bool>>();
         private ICompilerError? compilerError;
 
         private enum FunctionType
         {
             NONE,
-            /* Resolving and Binding function-type < Classes function-type-method
-                FUNCTION
-            */
-            //> Classes function-type-method
             FUNCTION,
-            //> function-type-initializer
             INITIALIZER,
-            //< function-type-initializer
             METHOD
-            //< Classes function-type-method
         }
 
         private enum ClassType
         {
             NONE,
-            /* Classes class-type < Inheritance class-type-subclass
-                CLASS
-             */
-            //> Inheritance class-type-subclass
             CLASS,
             SUBCLASS
-            //< Inheritance class-type-subclass
         }
 
         internal Resolver(JukaInterpreter interpreter)
@@ -96,7 +86,16 @@ namespace JukaCompiler.Interpreter
 
         public object VisitCallExpr(Expression.Call expr)
         {
-            Resolve(expr.callee);
+            if (expr is Expression.Call)
+            {
+                frames.Push(new StackFrame(expr.callee.Name.ToString()));
+                Declare(expr.callee.Name);
+                Resolve(expr.callee);
+                Define(expr.callee.Name);
+                frames.Pop();
+            }
+
+
 
             foreach(Expression arg in expr.arguments)
             {
@@ -287,6 +286,7 @@ namespace JukaCompiler.Interpreter
 
         private void Declare(Lexeme name)
         {
+
             if (scopes.Count() == 0)
             {
                 return;
