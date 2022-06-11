@@ -4,5 +4,5 @@ services:
   jukaapi:
     image: ${DOCKER_REGISTRY-}jukaapi
     build:
-      context: .
-      dockerfile: src/JukaApi/Dockerfile
+      context: ./src
+      dockerfile: JukaApi/Dockerfile

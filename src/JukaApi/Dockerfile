@@ -8,6 +8,7 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["JukaApi/JukaApi.csproj", "JukaApi/"]
+COPY ["JukaCompiler/JukaCompiler.csproj", "JukaCompiler/"]
 RUN dotnet restore "JukaApi/JukaApi.csproj"
 COPY . .
 WORKDIR "/src/JukaApi"

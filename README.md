@@ -38,8 +38,11 @@ Latest Juka version can be found at https://github.com/jukaLang/juka/releases
 Find the version that you want and download it to your device. 
 The files should be self-contained (you are not required to download any other files)
 
-### Juka API
+## Juka API
 
+Juka comes with an API
+
+Deploy a container:
 [![Develop on Okteto](https://okteto.com/develop-okteto.svg)](https://cloud.okteto.com/deploy?repository=https://github.com/jukalang/juka&branch=master)
 
 ## Running Juka
