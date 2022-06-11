@@ -14,7 +14,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JukaAzureFunction", "JukaAz
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JukaNetwork", "JukaNetwork\JukaNetwork.csproj", "{CBBD3FEC-E185-4141-8E77-B3B5AB71142C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JukaC", "JukaC\JukaC.csproj", "{03EB3050-19FF-4023-803B-3BC1F98D0D07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JukaC", "JukaC\JukaC.csproj", "{03EB3050-19FF-4023-803B-3BC1F98D0D07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JukaApi", "JukaApi\JukaApi.csproj", "{72B9F710-9EFB-4218-B8F4-EAE9834942DD}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{00A5AD01-C1F7-4EB4-97B4-B3EF8DBCC39C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,6 +68,22 @@ Global
 		{03EB3050-19FF-4023-803B-3BC1F98D0D07}.Release|Any CPU.Build.0 = Release|Any CPU
 		{03EB3050-19FF-4023-803B-3BC1F98D0D07}.Release|x64.ActiveCfg = Release|Any CPU
 		{03EB3050-19FF-4023-803B-3BC1F98D0D07}.Release|x64.Build.0 = Release|Any CPU
+		{72B9F710-9EFB-4218-B8F4-EAE9834942DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72B9F710-9EFB-4218-B8F4-EAE9834942DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72B9F710-9EFB-4218-B8F4-EAE9834942DD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{72B9F710-9EFB-4218-B8F4-EAE9834942DD}.Debug|x64.Build.0 = Debug|Any CPU
+		{72B9F710-9EFB-4218-B8F4-EAE9834942DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72B9F710-9EFB-4218-B8F4-EAE9834942DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72B9F710-9EFB-4218-B8F4-EAE9834942DD}.Release|x64.ActiveCfg = Release|Any CPU
+		{72B9F710-9EFB-4218-B8F4-EAE9834942DD}.Release|x64.Build.0 = Release|Any CPU
+		{00A5AD01-C1F7-4EB4-97B4-B3EF8DBCC39C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00A5AD01-C1F7-4EB4-97B4-B3EF8DBCC39C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00A5AD01-C1F7-4EB4-97B4-B3EF8DBCC39C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{00A5AD01-C1F7-4EB4-97B4-B3EF8DBCC39C}.Debug|x64.Build.0 = Debug|Any CPU
+		{00A5AD01-C1F7-4EB4-97B4-B3EF8DBCC39C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00A5AD01-C1F7-4EB4-97B4-B3EF8DBCC39C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00A5AD01-C1F7-4EB4-97B4-B3EF8DBCC39C}.Release|x64.ActiveCfg = Release|Any CPU
+		{00A5AD01-C1F7-4EB4-97B4-B3EF8DBCC39C}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

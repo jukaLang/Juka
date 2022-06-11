@@ -4,8 +4,7 @@ Travis: [![Build Status](https://app.travis-ci.com/jukaLang/Juka.svg?branch=mast
 
 Appveyor: [![Build status](https://ci.appveyor.com/api/projects/status/nmjmm04xhryx8p54?svg=true)](https://ci.appveyor.com/project/TheAndreiM/juka)
 
-
-![JukaRun](https://user-images.githubusercontent.com/11934545/171317993-66a4e3d9-8a1f-4f76-8076-48a87985e0e7.gif)
+![jukaRun](https://user-images.githubusercontent.com/11934545/171545920-02493491-fa44-40d6-9a5b-46b2f90f8301.gif)
 
 ## Introduction
 
@@ -18,12 +17,13 @@ __Current Supported Device:__
 - Linux/Unix
 - MacOS
 - Microsoft Azure Function
+- API/Web
+- Docker Image
 
 __Coming Soon:__
 - Android
 - iOS (iPhone/iPad)
 - Universal Windows App (Windows 10+)
-- Docker Image
 
 __Potential Future Support:__
 - AWS (Amazon Web Service)
@@ -37,6 +37,10 @@ Latest Juka version can be found at https://github.com/jukaLang/juka/releases
 
 Find the version that you want and download it to your device. 
 The files should be self-contained (you are not required to download any other files)
+
+### Juka API
+
+[![Develop on Okteto](https://okteto.com/develop-okteto.svg)](https://cloud.okteto.com/deploy?repository=https://github.com/jukalang/juka&branch=master)
 
 ## Running Juka
 

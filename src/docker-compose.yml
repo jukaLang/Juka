@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  jukaapi:
+    image: ${DOCKER_REGISTRY-}jukaapi
+    build:
+      context: .
+      dockerfile: JukaApi/Dockerfile
