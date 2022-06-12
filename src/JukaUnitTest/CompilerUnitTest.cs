@@ -49,7 +49,6 @@ namespace JukaUnitTest
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-                Assert.AreEqual("AfasfsaddasA", outputValue);
             }
             Assert.AreEqual("AsdfA"+ Environment.NewLine, outputValue);
         }

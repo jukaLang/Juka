@@ -2,9 +2,7 @@
 using JukaCompiler.Lexer;
 using JukaCompiler.Scan;
 using JukaCompiler.Statements;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection.Metadata.Ecma335;
 
 namespace JukaCompiler.Parse
 {
@@ -593,7 +591,7 @@ namespace JukaCompiler.Parse
 
         private Expression FinishCall(Expression callee)
         {
-            List<Expression> arguments = new List<Expression>();
+            List<Expression> arguments = new();
             if (!Check(LexemeType.RIGHT_PAREN))
             {
                 do
