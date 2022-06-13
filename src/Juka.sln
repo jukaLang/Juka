@@ -16,6 +16,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JukaC", "JukaC\JukaC.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JukaApi", "JukaApi\JukaApi.csproj", "{72B9F710-9EFB-4218-B8F4-EAE9834942DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Juka App", "Juka App\Juka App.csproj", "{BF958473-276B-4F90-8D25-EBB1C8EE5DF9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,18 @@ Global
 		{72B9F710-9EFB-4218-B8F4-EAE9834942DD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{72B9F710-9EFB-4218-B8F4-EAE9834942DD}.Release|x64.ActiveCfg = Release|Any CPU
 		{72B9F710-9EFB-4218-B8F4-EAE9834942DD}.Release|x64.Build.0 = Release|Any CPU
+		{BF958473-276B-4F90-8D25-EBB1C8EE5DF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF958473-276B-4F90-8D25-EBB1C8EE5DF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF958473-276B-4F90-8D25-EBB1C8EE5DF9}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{BF958473-276B-4F90-8D25-EBB1C8EE5DF9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BF958473-276B-4F90-8D25-EBB1C8EE5DF9}.Debug|x64.Build.0 = Debug|Any CPU
+		{BF958473-276B-4F90-8D25-EBB1C8EE5DF9}.Debug|x64.Deploy.0 = Debug|Any CPU
+		{BF958473-276B-4F90-8D25-EBB1C8EE5DF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF958473-276B-4F90-8D25-EBB1C8EE5DF9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF958473-276B-4F90-8D25-EBB1C8EE5DF9}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{BF958473-276B-4F90-8D25-EBB1C8EE5DF9}.Release|x64.ActiveCfg = Release|Any CPU
+		{BF958473-276B-4F90-8D25-EBB1C8EE5DF9}.Release|x64.Build.0 = Release|Any CPU
+		{BF958473-276B-4F90-8D25-EBB1C8EE5DF9}.Release|x64.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

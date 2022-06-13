@@ -41,9 +41,6 @@ artifacts:
 - path: 'src\JukaCompiler\bin\Release\net6.0'
   name: Juka_Compiler_dll_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\JukaNetwork\bin\Release\net6.0'
-  name: Juka_Network_blockchain_$(APPVEYOR_BUILD_VERSION)
-  type: zip
 
 
 deploy:

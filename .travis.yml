@@ -6,3 +6,31 @@ script:
   - cd src
   - dotnet restore
   - dotnet test
+
+
+
+#before_install:
+#  - export JUKTEMP=$(curl "https://api.github.com/repos/JukaLang/juka/releases/latest" | jq -r ".tag_name")
+#
+#script:
+#  - cd src
+#  - dotnet restore
+#  - dotnet test
+#  - dotnet build
+#  - dotnet publish -c release -r ubuntu.16.04-x64 --self-contained
+#
+#before_deploy:
+#  - export TRAVIS_TAG=${JUKTEMP}
+#  - tar -zcf Juka_Ubuntu_${TRAVIS_TAG}.tar.gz -C JukaC/bin/Release/net6.0/ ubuntu.16.04-x64
+#  - git tag $TRAVIS_TAG_ubuntu
+#
+#deploy:
+#  provider: releases
+#  api_key:
+#    secure: "qfkKxi/yYs7dMuRm+GMMX3V9rTPednSVlB20+KJz8m4Clwkluk2ELcFlQ7697TWO32HksUBWc+HBeDaNoaCrywf0ouuJtIPXCqDWtlEqCsvxiGvrc9OgQKDcTj430IYodLQxSvDiHgMiAWzwWeQzk4tVkxV7xhCj0+JCjNk+GqpwcF6hze/64dNv95/zyS8eFLJticiE8m/lB83G0QCsNk/YXEN0Q2qHfE3xwUWuZ+C2cov5pZIBFmeAoAJhqqkJVJNXTur2l8E27WUnz+g0YYSSqvL2+GbS+JAP5XgI40o19QjmnJlUfmO0imsAnQXxAQxMUVmogfTT6DjPqJw7tSPD8ESyrWWMnkovIzeK5yqhEWzokXQGVCt2HVGAaiOGkecVDFFvQemarZojE/qRSbFkdkN4y0niX820aftdm7ZwbCxr+bKZ5tozPbzMVTYRb8wOTwVg+bklmQ76/6k0k9oYxEenHxHzkmGHkxmv3Fofn2cOrtnU7AVKd/WxAdy6eoeAUilZEq1ULgWLNTtKtcVEQv8MUCrX6RO+H/piRogFm2003FPLZLKd1vJ8a5pMOR7XRwH0/m3tXaQrpGhsnFp/Gei4DeLEGozwISJQ+ga4RiSIPSyIC6P/ASqAs751d0a++OX8mWPIDavY3ppmcXZ0RbFAM5l8L7BVOAL7fZs="
+#  file_glob: true
+#  file: Juka_Ubuntu_${TRAVIS_TAG}.tar.gz
+#  skip_cleanup: true
+#  on:
+#    all_branches: true
+#    tags: false
