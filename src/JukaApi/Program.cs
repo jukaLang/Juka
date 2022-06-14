@@ -1,6 +1,20 @@
 using System.Text.Json;
+using System.Web;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:3000",
+                                              "https://localhost:3000",
+                                              "https://jukalang.com/");
+                      });
+});
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -17,6 +31,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors(MyAllowSpecificOrigins);
+
+
+
 
 
 app.MapGet("/", () =>
@@ -25,10 +43,10 @@ app.MapGet("/", () =>
 });
 
 
-app.MapGet("/{src}", (string src) =>
+app.MapGet("/{*src}", (string src) =>
 {
     JukaCompiler.Compiler compiler = new JukaCompiler.Compiler();
-    string sourceAsString = src;
+    string sourceAsString = HttpUtility.UrlDecode(src);
     var outputValue = compiler.Go(sourceAsString, false);
 
     if (compiler.HasErrors())
