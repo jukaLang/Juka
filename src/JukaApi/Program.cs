@@ -34,9 +34,9 @@ app.MapGet("/{src}", (string src) =>
     if (compiler.HasErrors())
     {
         var errors = compiler.ListErrors().ToString();
-        return JsonSerializer.Serialize(new { errors = errors });
+        return Results.Json(new { errors = errors });
     }
-    return JsonSerializer.Serialize(new { output = outputValue });
+    return Results.Json(new { output = outputValue });
 });
 
 app.Run();
