@@ -1,5 +1,9 @@
 # Juka - Programming Language 
 
+[![Twitter](https://img.shields.io/twitter/follow/jukaLang.svg?style=social)](https://twitter.com/jukaLang)
+[![Discord](https://img.shields.io/discord/975787212954275910)](https://discord.com/invite/7BNpwKH8JC/)
+
+
 Travis: [![Build Status](https://app.travis-ci.com/jukaLang/Juka.svg?branch=master)](https://app.travis-ci.com/jukaLang/Juka)
 
 Appveyor: [![Build status](https://ci.appveyor.com/api/projects/status/nmjmm04xhryx8p54?svg=true)](https://ci.appveyor.com/project/TheAndreiM/juka)
@@ -44,6 +48,10 @@ Juka comes with an API
 
 Deploy a container:
 [![Develop on Okteto](https://okteto.com/develop-okteto.svg)](https://cloud.okteto.com/deploy?repository=https://github.com/jukalang/juka&branch=master)
+
+Special thanks to mogenius for hosting our API:
+https://jukaapi-prod-juka-5ufe4u.mo1.mogenius.io/
+
 
 ## Running Juka
 

@@ -11,11 +11,10 @@ COPY ["JukaApi/JukaApi.csproj", "JukaApi/"]
 COPY ["JukaCompiler/JukaCompiler.csproj", "JukaCompiler/"]
 RUN dotnet restore "JukaApi/JukaApi.csproj"
 COPY . .
-WORKDIR "/src/JukaApi"
-RUN dotnet build "JukaApi.csproj" -c Release -o /app/build
+RUN dotnet build "JukaApi/JukaApi.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "JukaApi.csproj" -c Release -o /app/publish
+RUN dotnet publish "JukaApi/JukaApi.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
