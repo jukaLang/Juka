@@ -19,7 +19,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-
+app.MapGet("/", () =>
+{
+    return "Welcome to JukaAPI! To execute a program, send a GET request to \"/code_you_want_to_execute\".";
+});
 
 
 app.MapGet("/{src}", (string src) =>
@@ -31,10 +34,9 @@ app.MapGet("/{src}", (string src) =>
     if (compiler.HasErrors())
     {
         var errors = compiler.ListErrors().ToString();
-        return JsonSerializer.Serialize("{errors: " + errors + "}");
+        return JsonSerializer.Serialize(new { errors = errors });
     }
-    return JsonSerializer.Serialize("{output: " + outputValue + "}");
-})
-.WithName("Juka");
+    return JsonSerializer.Serialize(new { output = outputValue });
+});
 
 app.Run();
