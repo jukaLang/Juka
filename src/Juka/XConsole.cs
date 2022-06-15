@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JukaC
+namespace Juka
 {
     public static class XConsole
     {
         public static string CancelableReadLine(out bool isCancelled)
         {
+
             var cancelKey = ConsoleKey.F10;
             var builder = new StringBuilder();
             var cki = Console.ReadKey(true);
@@ -157,17 +158,20 @@ namespace JukaC
             index--;
 
             var startPosition = GetStartPosition(previousIndex);
+            Console.CursorVisible = false;
             ErasePrint(builder, startPosition);
 
             builder.Remove(index, 1);
             Console.Write(builder.ToString());
 
             GoBackToCurrentPosition(index, startPosition);
+            Console.CursorVisible = true;
         }
 
         private static void Delete(ref int index, ConsoleKeyInfo cki, StringBuilder builder)
         {
             var startPosition = GetStartPosition(index);
+            Console.CursorVisible = false;
             ErasePrint(builder, startPosition);
 
             if (cki.Modifiers == ConsoleModifiers.Control)
@@ -176,6 +180,7 @@ namespace JukaC
                 Console.Write(builder.ToString());
 
                 GoBackToCurrentPosition(index, startPosition);
+                Console.CursorVisible = true;
                 return;
             }
 
@@ -183,6 +188,7 @@ namespace JukaC
             Console.Write(builder.ToString());
 
             GoBackToCurrentPosition(index, startPosition);
+            Console.CursorVisible = true;
         }
 
         private static void Default(ref int index, ConsoleKeyInfo cki, StringBuilder builder)
@@ -192,11 +198,13 @@ namespace JukaC
 
             builder.Insert(previousIndex, cki.KeyChar);
 
+            
             var startPosition = GetStartPosition(previousIndex);
+            Console.CursorVisible = false;
             Console.SetCursorPosition(startPosition.left, startPosition.top);
             Console.Write(builder.ToString());
-
             GoBackToCurrentPosition(index, startPosition);
+            Console.CursorVisible = true;
         }
 
         private static (int left, int top) GetStartPosition(int previousIndex)

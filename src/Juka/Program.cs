@@ -1,10 +1,11 @@
-﻿using JukaC;
+﻿using Juka;
 
 string? sourceAsString;
 string? readline;
 
 if (args == null || args.Length == 0)
 {
+    Console.Title = "Juka Compiler";
     Console.WriteLine("♥ Welcome to Juka Compiler (Press F10 to run the code). If you need to run a file, pass it as an argument ♥");
     while (true)
     {
@@ -21,6 +22,7 @@ if (args == null || args.Length == 0)
                 break;
             }
         }
+        Console.WriteLine("=====OUTPUT:=======");
         Console.WriteLine(new JukaCompiler.Compiler().Go(sourceAsString, false));
     }
 }

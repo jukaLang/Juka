@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Interpreter
 {
-    internal class JukaInterpreter : Stmt.Visitor<Stmt>, Expression.Visitor<object>
+    internal class JukaInterpreter : Stmt.Visitor<Stmt>, Expression.IVisitor<object>
     {
         private ServiceProvider serviceProvider;
         private JukaEnvironment globals;

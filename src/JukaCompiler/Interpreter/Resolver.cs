@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Interpreter
 {
-    internal class Resolver : Stmt.Visitor<object>, Expression.Visitor<object>
+    internal class Resolver : Stmt.Visitor<object>, Expression.IVisitor<object>
     {
         private JukaInterpreter interpreter;
         private FunctionType currentFunction = FunctionType.NONE;

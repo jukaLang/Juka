@@ -8,7 +8,7 @@ namespace JukaCompiler.Parse
 {
     public class Parser
     {
-        private List<Lexeme> tokens = new List<Lexeme>();
+        private List<Lexeme> tokens = new();
         private int current = 0;
         private Scanner? scanner;
         private ServiceProvider services;

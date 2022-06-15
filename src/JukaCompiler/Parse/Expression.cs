@@ -4,7 +4,7 @@ namespace JukaCompiler.Parse
 {
     internal abstract class Expression
     {
-        internal interface Visitor<R>
+        internal interface IVisitor<R>
         {
             R VisitAssignExpr(Assign expr);
             R VisitBinaryExpr(Binary expr);
@@ -20,7 +20,7 @@ namespace JukaCompiler.Parse
             R VisitVariableExpr(Variable expr);
         }
 
-        internal abstract R Accept<R>(Expression.Visitor<R> vistor);
+        internal abstract R Accept<R>(Expression.IVisitor<R> vistor);
 
         internal Lexeme? name;
 
@@ -32,7 +32,7 @@ namespace JukaCompiler.Parse
 
         internal class Assign : Expression
         {
-            private Expression value;
+            private readonly Expression value;
 
             internal Assign(Lexeme name, Expression value)
             {
@@ -40,7 +40,7 @@ namespace JukaCompiler.Parse
                 this.value = value;
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 return vistor.VisitAssignExpr(this);
             }
@@ -52,7 +52,7 @@ namespace JukaCompiler.Parse
             {
                 this.name = name;
             }
-            internal override R Accept<R>(Visitor<R> visitor)
+            internal override R Accept<R>(IVisitor<R> visitor)
             {
                 return visitor.VisitVariableExpr(this);
             }
@@ -78,7 +78,7 @@ namespace JukaCompiler.Parse
                 this.op=null;
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 return vistor.VisitBinaryExpr(this);
             }
@@ -96,7 +96,7 @@ namespace JukaCompiler.Parse
                 this.paren = paren;
                 this.arguments = arguments;
             }
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 return vistor.VisitCallExpr(this);
             }
@@ -109,7 +109,7 @@ namespace JukaCompiler.Parse
 
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 throw new NotImplementedException();
             }
@@ -121,7 +121,7 @@ namespace JukaCompiler.Parse
             {
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 throw new NotImplementedException();
             }
@@ -140,7 +140,7 @@ namespace JukaCompiler.Parse
             {
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 return vistor.VisitGroupingExpr(this);
             }
@@ -148,8 +148,8 @@ namespace JukaCompiler.Parse
 
         internal class Literal : Expression
         {
-            private object? value;
-            private long type;
+            private readonly object? value;
+            private readonly long type;
 
             internal Literal(Lexeme literal, long type)
             {
@@ -161,7 +161,7 @@ namespace JukaCompiler.Parse
             {
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 return vistor.VisitLiteralExpr(this);
             }
@@ -173,9 +173,11 @@ namespace JukaCompiler.Parse
                     throw new ArgumentNullException("literal");
                 }
 
-                var v = new LexemeTypeLiteral();
-                v.lexemeType = this.Type;
-                v.literal = this.value.ToString();
+                LexemeTypeLiteral? v = new()
+                {
+                    lexemeType = this.Type,
+                    literal = this.value.ToString()
+                };
 
                 return v;
                 //return literal;
@@ -193,7 +195,7 @@ namespace JukaCompiler.Parse
             {
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 throw new NotImplementedException();
             }
@@ -205,7 +207,7 @@ namespace JukaCompiler.Parse
             {
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 throw new NotImplementedException();
             }
@@ -218,7 +220,7 @@ namespace JukaCompiler.Parse
 
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 throw new NotImplementedException();
             }
@@ -230,7 +232,7 @@ namespace JukaCompiler.Parse
             {
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 throw new NotImplementedException();
             }
@@ -240,7 +242,7 @@ namespace JukaCompiler.Parse
         {
             internal DefaultExpression()
             { }
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 throw new NotImplementedException();
             }
