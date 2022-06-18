@@ -54,6 +54,21 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
+        public void TestMultipleVariables()
+        {
+            Compiler compiler = new Compiler();
+            string sourceAsString = "func test_func() = { string x=\"32\"; string y=\"33\"; printLine(x);} test_func();";
+
+            var outputValue = compiler.Go(sourceAsString, false);
+            if (compiler.HasErrors())
+            {
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+            }
+            Assert.AreEqual("printLineTest" + Environment.NewLine + "printTest", outputValue);
+        }
+
+
+        [TestMethod]
         public void TestEmptyString()
         {
             Compiler compiler = new Compiler();

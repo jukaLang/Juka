@@ -6,7 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddCors(o => o.AddPolicy("AllowAnyOrigin",
                       builder =>
                       {
@@ -19,18 +18,8 @@ builder.Services.AddCors(o => o.AddPolicy("AllowAnyOrigin",
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 app.UseHttpsRedirection();
 app.UseCors("AllowAnyOrigin");
-
-
-
 
 
 app.MapGet("/", () =>
@@ -39,7 +28,7 @@ app.MapGet("/", () =>
 });
 
 
-app.MapGet("/{*src}", (string src) =>
+var executeCode = (string src) =>
 {
     JukaCompiler.Compiler compiler = new JukaCompiler.Compiler();
     string sourceAsString = HttpUtility.UrlDecode(src);
@@ -51,6 +40,11 @@ app.MapGet("/{*src}", (string src) =>
         return Results.Json(new { errors = errors });
     }
     return Results.Json(new { output = outputValue });
-});
+};
+
+app.MapGet("/{*src}", (string src) => executeCode(src));
+
+app.MapPost("/{*src}", (string src) => executeCode(src));
+
 
 app.Run();

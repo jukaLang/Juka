@@ -18,23 +18,23 @@ Juka's philosophy is code once, run everywhere.
 
 __Current Supported Device:__
 - Windows
-- Linux/Unix
-- MacOS
-- Microsoft Azure Function
-- API/Web
-- Docker Image
+- Linux (Debian and Redhat)
+- MacOS (M1 and Intel Chipset)
+- Azure (Microsoft Azure Function)
+- HTTPS/API (JukaAPI server)
+- Docker (JukaAPI)
 
 __Coming Soon:__
 - Android
 - iOS (iPhone/iPad)
 - Universal Windows App (Windows 10+)
+- FreeBSD
 
 __Potential Future Support:__
 - AWS (Amazon Web Service)
 - Xbox Series S/X
 - AndroidTV
 - Google Cloud
-
 
 ### Downloading Juka
 Latest Juka version can be found at https://github.com/jukaLang/juka/releases
