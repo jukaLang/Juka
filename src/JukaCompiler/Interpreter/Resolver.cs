@@ -234,7 +234,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitVariableExpr(Expression.Variable expr)
         {
-            if(( scopes.Any() && scopes.Peek().Count == 1 && scopes.Peek()[expr.Name.ToString()] == true) ||
+            if(( scopes.Any() && scopes.Peek()[expr.Name.ToString()] == true) ||
                 scopes.Any() && scopes.Peek().Count == 0 ||
                 !scopes.Any())
             {

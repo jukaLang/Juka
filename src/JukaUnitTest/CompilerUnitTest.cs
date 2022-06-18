@@ -1,7 +1,6 @@
 ﻿using JukaCompiler;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Diagnostics;
 
 namespace JukaUnitTest
 {
@@ -64,7 +63,7 @@ namespace JukaUnitTest
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
-            Assert.AreEqual("printLineTest" + Environment.NewLine + "printTest", outputValue);
+            Assert.AreEqual("32" + Environment.NewLine, outputValue);
         }
 
 
