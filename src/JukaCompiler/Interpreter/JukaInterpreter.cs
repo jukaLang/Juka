@@ -135,7 +135,7 @@ namespace JukaCompiler.Interpreter
         {
             if (stmt.expr != null)
             {
-                if (stmt.expr is Expression.LexemeTypeLiteral)
+                if (stmt.expr is Expression.Literal || stmt.expr is Expression.LexemeTypeLiteral)
                 {
                     var lexemeTypeLiteral = Evaluate(stmt.expr) as Expression.LexemeTypeLiteral;
                     Console.Write(lexemeTypeLiteral.Literal);

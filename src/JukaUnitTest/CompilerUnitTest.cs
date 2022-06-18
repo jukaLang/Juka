@@ -40,17 +40,17 @@ namespace JukaUnitTest
 
 
         [TestMethod]
-        public void TestOutput()
+        public void TestPrint()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "func testC_sharp() = { printLine(\"AsdfA\");} testC_sharp();";
+            string sourceAsString = "func test_func() = { printLine(\"printLineTest\"); print(\"printTest\");} test_func();";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
-            Assert.AreEqual("AsdfA"+ Environment.NewLine, outputValue);
+            Assert.AreEqual("printLineTest"+ Environment.NewLine+"printTest", outputValue);
         }
 
         [TestMethod]

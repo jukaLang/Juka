@@ -22,7 +22,7 @@ if (args == null || args.Length == 0)
                 break;
             }
         }
-        Console.WriteLine("=====OUTPUT:=======");
+        Console.WriteLine(Environment.NewLine+"=====OUTPUT:=======");
         Console.WriteLine(new JukaCompiler.Compiler().Go(sourceAsString, false));
     }
 }

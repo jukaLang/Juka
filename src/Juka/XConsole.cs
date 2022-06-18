@@ -80,11 +80,14 @@ namespace Juka
 
             if (cki.Key == cancelKey)
             {
-                startPosition = GetStartPosition(index);
+                /*startPosition = GetStartPosition(index);
                 ErasePrint(builder, startPosition);
 
                 isCancelled = true;
-                return string.Empty;
+                return string.Empty;*/
+
+                isCancelled = true;
+                return builder.ToString();
             }
 
             isCancelled = false;
