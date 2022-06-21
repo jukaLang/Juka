@@ -1,8 +1,4 @@
 os: freebsd
-addons:
- pkg:
-  - curl
-  - jq
 
 before_install:
   - wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/dotnet-sdk-6.0.301-freebsd-x64.tar.gz
@@ -16,7 +12,6 @@ script:
   - /usr/share/dotnet/dotnet publish -c release
 
 before_deploy:
-  - export TRAVIS_TAG=$(curl "https://api.github.com/repos/JukaLang/juka/releases/latest" | jq -r ".tag_name")
   - tar -czf Juka_FreeBSD_${TRAVIS_TAG}.tar.gz -C Juka/bin/Release/net6.0 .
   - tar -czf JukaAPI_FreeBSD_${TRAVIS_TAG}.tar.gz -C JukaApi/bin/Release/net6.0 .
 

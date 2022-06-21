@@ -16,8 +16,8 @@ Juka's main goal is to be a universal programming language that can run on any p
 Juka's philosophy is code once, run everywhere.
 
 __Current Supported Device:__
-- Windows
-- Linux
+- Windows (x64 and ARM)
+- Linux (Ubuntu and Debian)
 - MacOS (M1 and Intel Chipset)
 - FreeBSD/UNIX
 - Azure (Microsoft Azure Function)
