@@ -26,28 +26,28 @@ configuration:
 - Release
 
 artifacts:
-- path: 'src\Juka\bin\Release\net6.0\win-x64'
+- path: 'src\Juka\bin\Release\net6.0\win-x64\publish'
   name: Juka_Windows_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\Juka\bin\Release\net6.0\osx-x64'
+- path: 'src\Juka\bin\Release\net6.0\osx-x64\publish'
   name: Juka_MacOS_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\Juka\bin\Release\net6.0\linux-x64'
+- path: 'src\Juka\bin\Release\net6.0\linux-x64\publish'
   name: Juka_Linux_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\JukaApi\bin\Release\net6.0\win-x64'
+- path: 'src\JukaApi\bin\Release\net6.0\win-x64\publish'
   name: JukaAPI_Windows_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\JukaApi\bin\Release\net6.0\osx-x64'
+- path: 'src\JukaApi\bin\Release\net6.0\osx-x64\publish'
   name: JukaAPI_MacOS_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\JukaApi\bin\Release\net6.0\linux-x64'
+- path: 'src\JukaApi\bin\Release\net6.0\linux-x64\publish'
   name: JukaAPI_Linux_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\JukaAzureFunction\bin\Release\net6.0'
+- path: 'src\JukaAzureFunction\bin\Release\net6.0\publish'
   name: Juka_Azure_Function_$(APPVEYOR_BUILD_VERSION)
   type: AzureCloudService
-- path: 'src\JukaCompiler\bin\Release\net6.0'
+- path: 'src\JukaCompiler\bin\Release\net6.0\publish'
   name: Juka_Compiler_dll_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
