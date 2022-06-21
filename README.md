@@ -16,10 +16,12 @@ Juka's main goal is to be a universal programming language that can run on any p
 Juka's philosophy is code once, run everywhere.
 
 __Current Supported Device:__
-- Windows (x64 and ARM)
-- Linux (Ubuntu and Debian)
-- MacOS (M1 and Intel Chipset)
-- FreeBSD/UNIX
+- Windows (x64)
+- Windows ARM (arm x64)
+- Linux (CentOS, Debian, Fedora, Ubuntu and derivatives)
+- Linux ARM (Linux Distributions that run ARM e.g. Raspberry Pi Model 2+)
+- MacOS (macOS 10.12+)
+- FreeBSD/UNIX (FreeBSD 11+)
 - Azure (Microsoft Azure Function)
 - HTTPS/API (JukaAPI server)
 - Docker (JukaAPI)

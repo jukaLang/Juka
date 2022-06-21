@@ -2,18 +2,23 @@ os: freebsd
 
 before_install:
   - wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/dotnet-sdk-6.0.301-freebsd-x64.tar.gz
+  - wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/Microsoft.AspNetCore.App.Runtime.freebsd-x64.6.0.6.nupkg
+  - wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/Microsoft.NETCore.App.Runtime.freebsd-x64.6.0.6.nupkg
   - sudo mkdir /usr/share/dotnet
   - sudo tar xf dotnet-sdk-6.0.301-freebsd-x64.tar.gz -C /usr/share/dotnet/
+  - mv Microsoft.NETCore.App.Runtime.freebsd-x64.6.0.6.nupkg /usr/share/dotnet/
+  - mv Microsoft.AspNetCore.App.Runtime.freebsd-x64.6.0.6.nupkg /usr/share/dotnet/
 
 script:
   - cd src
+  - /usr/share/dotnet/dotnet nuget add source /usr/share/dotnet/
   - /usr/share/dotnet/dotnet restore
   - /usr/share/dotnet/dotnet test
-  - /usr/share/dotnet/dotnet publish -c release
+  - /usr/share/dotnet/dotnet publish Juka.sln -c release --self-contained true -a ""
 
 before_deploy:
-  - tar -czf Juka_FreeBSD_${TRAVIS_TAG}.tar.gz -C Juka/bin/Release/net6.0 .
-  - tar -czf JukaAPI_FreeBSD_${TRAVIS_TAG}.tar.gz -C JukaApi/bin/Release/net6.0 .
+  - tar -czf Juka_FreeBSD_${TRAVIS_TAG}.tar.gz -C Juka/bin/Release/net6.0/freebsd-x64/publish . 
+  - tar -czf JukaAPI_FreeBSD_${TRAVIS_TAG}.tar.gz -C JukaApi/bin/Release/net6.0/freebsd-x64/publish .
 
 
 deploy:
