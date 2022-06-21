@@ -23,6 +23,8 @@ after_build:
  - dotnet publish -c release -r win-x64 --self-contained
  - dotnet publish -c release -r win-arm64 --self-contained
  - dotnet publish -c release -r linux-arm --self-contained
+ - dotnet publish -c release -r tizen --self-contained
+
 
 configuration:
 - Release
@@ -42,6 +44,9 @@ artifacts:
   type: zip
 - path: 'src\Juka\bin\Release\net6.0\linux-arm\publish'
   name: Juka_LinuxARM_RaspberryPI_$(APPVEYOR_BUILD_VERSION)
+  type: zip
+- path: 'src\Juka\bin\Release\net6.0\tizen\publish'
+  name: Juka_Tizen_$(APPVEYOR_BUILD_VERSION)
   type: zip
 - path: 'src\JukaApi\bin\Release\net6.0\win-x64\publish'
   name: JukaAPI_Windows_$(APPVEYOR_BUILD_VERSION)

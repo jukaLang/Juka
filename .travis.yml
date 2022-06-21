@@ -6,8 +6,8 @@ before_install:
   - wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/Microsoft.NETCore.App.Runtime.freebsd-x64.6.0.6.nupkg
   - sudo mkdir /usr/share/dotnet
   - sudo tar xf dotnet-sdk-6.0.301-freebsd-x64.tar.gz -C /usr/share/dotnet/
-  - mv Microsoft.NETCore.App.Runtime.freebsd-x64.6.0.6.nupkg /usr/share/dotnet/
-  - mv Microsoft.AspNetCore.App.Runtime.freebsd-x64.6.0.6.nupkg /usr/share/dotnet/
+  - sudo mv Microsoft.NETCore.App.Runtime.freebsd-x64.6.0.6.nupkg /usr/share/dotnet/
+  - sudo mv Microsoft.AspNetCore.App.Runtime.freebsd-x64.6.0.6.nupkg /usr/share/dotnet/
 
 script:
   - cd src

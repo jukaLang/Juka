@@ -22,6 +22,7 @@ __Current Supported Device:__
 - Linux ARM (Linux Distributions that run ARM e.g. Raspberry Pi Model 2+)
 - MacOS (macOS 10.12+)
 - FreeBSD/UNIX (FreeBSD 11+)
+- Tizen
 - Azure (Microsoft Azure Function)
 - HTTPS/API (JukaAPI server)
 - Docker (JukaAPI)
