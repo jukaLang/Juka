@@ -17,6 +17,7 @@ Juka's philosophy is code once, run everywhere.
 
 __Current Supported Device:__
 - Windows (x64)
+- Windows (x86 32-bit)
 - Windows ARM (arm x64)
 - Linux (CentOS, Debian, Fedora, Ubuntu and derivatives)
 - Linux ARM (Linux Distributions that run ARM e.g. Raspberry Pi Model 2+)
@@ -27,14 +28,14 @@ __Current Supported Device:__
 - Docker (JukaAPI)
 
 __Coming Soon:__
-- Android
-- AndroidTV
-- iOS (iPhone/iPad)
-- Universal Windows App (Windows 10+)
+- Android App
+- AndroidTV App
+- iOS App (iPhone/iPad)
+- MacOS App
+- Windows App (Windows 10+)
 
 __Potential Future Support:__
 - AWS (Amazon Web Service)
-- Xbox Series S/X
 - Google Cloud
 
 ### Downloading Juka
