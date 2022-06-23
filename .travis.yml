@@ -1,36 +1,35 @@
-language: csharp
-mono: none
-dotnet: 6.0
-solution: src/Juka.sln
+os: freebsd
+
+before_install:
+  - wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/dotnet-sdk-6.0.301-freebsd-x64.tar.gz
+  - wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/Microsoft.AspNetCore.App.Runtime.freebsd-x64.6.0.6.nupkg
+  - wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/Microsoft.NETCore.App.Runtime.freebsd-x64.6.0.6.nupkg
+  - sudo mkdir /usr/share/dotnet
+  - sudo tar xf dotnet-sdk-6.0.301-freebsd-x64.tar.gz -C /usr/share/dotnet/
+  - sudo mv Microsoft.NETCore.App.Runtime.freebsd-x64.6.0.6.nupkg /usr/share/dotnet/
+  - sudo mv Microsoft.AspNetCore.App.Runtime.freebsd-x64.6.0.6.nupkg /usr/share/dotnet/
+
 script:
   - cd src
-  - dotnet restore
-  - dotnet test
+  - /usr/share/dotnet/dotnet nuget add source /usr/share/dotnet/
+  - /usr/share/dotnet/dotnet restore
+  - /usr/share/dotnet/dotnet test
+  - /usr/share/dotnet/dotnet publish Juka.sln -c release --self-contained true -a ""
+
+before_deploy:
+  - tar -czf Juka_FreeBSD_${TRAVIS_TAG}.tar.gz -C Juka/bin/Release/net6.0/freebsd-x64/publish . 
+  - tar -czf JukaAPI_FreeBSD_${TRAVIS_TAG}.tar.gz -C JukaApi/bin/Release/net6.0/freebsd-x64/publish .
 
 
-
-#before_install:
-#  - export JUKTEMP=$(curl "https://api.github.com/repos/JukaLang/juka/releases/latest" | jq -r ".tag_name")
-#
-#script:
-#  - cd src
-#  - dotnet restore
-#  - dotnet test
-#  - dotnet build
-#  - dotnet publish -c release -r ubuntu.16.04-x64 --self-contained
-#
-#before_deploy:
-#  - export TRAVIS_TAG=${JUKTEMP}
-#  - tar -zcf Juka_Ubuntu_${TRAVIS_TAG}.tar.gz -C JukaC/bin/Release/net6.0/ ubuntu.16.04-x64
-#  - git tag $TRAVIS_TAG_ubuntu
-#
-#deploy:
-#  provider: releases
-#  api_key:
-#    secure: "qfkKxi/yYs7dMuRm+GMMX3V9rTPednSVlB20+KJz8m4Clwkluk2ELcFlQ7697TWO32HksUBWc+HBeDaNoaCrywf0ouuJtIPXCqDWtlEqCsvxiGvrc9OgQKDcTj430IYodLQxSvDiHgMiAWzwWeQzk4tVkxV7xhCj0+JCjNk+GqpwcF6hze/64dNv95/zyS8eFLJticiE8m/lB83G0QCsNk/YXEN0Q2qHfE3xwUWuZ+C2cov5pZIBFmeAoAJhqqkJVJNXTur2l8E27WUnz+g0YYSSqvL2+GbS+JAP5XgI40o19QjmnJlUfmO0imsAnQXxAQxMUVmogfTT6DjPqJw7tSPD8ESyrWWMnkovIzeK5yqhEWzokXQGVCt2HVGAaiOGkecVDFFvQemarZojE/qRSbFkdkN4y0niX820aftdm7ZwbCxr+bKZ5tozPbzMVTYRb8wOTwVg+bklmQ76/6k0k9oYxEenHxHzkmGHkxmv3Fofn2cOrtnU7AVKd/WxAdy6eoeAUilZEq1ULgWLNTtKtcVEQv8MUCrX6RO+H/piRogFm2003FPLZLKd1vJ8a5pMOR7XRwH0/m3tXaQrpGhsnFp/Gei4DeLEGozwISJQ+ga4RiSIPSyIC6P/ASqAs751d0a++OX8mWPIDavY3ppmcXZ0RbFAM5l8L7BVOAL7fZs="
-#  file_glob: true
-#  file: Juka_Ubuntu_${TRAVIS_TAG}.tar.gz
-#  skip_cleanup: true
-#  on:
-#    all_branches: true
-#    tags: false
+deploy:
+  provider: releases
+  api_key:
+    secure: "qfkKxi/yYs7dMuRm+GMMX3V9rTPednSVlB20+KJz8m4Clwkluk2ELcFlQ7697TWO32HksUBWc+HBeDaNoaCrywf0ouuJtIPXCqDWtlEqCsvxiGvrc9OgQKDcTj430IYodLQxSvDiHgMiAWzwWeQzk4tVkxV7xhCj0+JCjNk+GqpwcF6hze/64dNv95/zyS8eFLJticiE8m/lB83G0QCsNk/YXEN0Q2qHfE3xwUWuZ+C2cov5pZIBFmeAoAJhqqkJVJNXTur2l8E27WUnz+g0YYSSqvL2+GbS+JAP5XgI40o19QjmnJlUfmO0imsAnQXxAQxMUVmogfTT6DjPqJw7tSPD8ESyrWWMnkovIzeK5yqhEWzokXQGVCt2HVGAaiOGkecVDFFvQemarZojE/qRSbFkdkN4y0niX820aftdm7ZwbCxr+bKZ5tozPbzMVTYRb8wOTwVg+bklmQ76/6k0k9oYxEenHxHzkmGHkxmv3Fofn2cOrtnU7AVKd/WxAdy6eoeAUilZEq1ULgWLNTtKtcVEQv8MUCrX6RO+H/piRogFm2003FPLZLKd1vJ8a5pMOR7XRwH0/m3tXaQrpGhsnFp/Gei4DeLEGozwISJQ+ga4RiSIPSyIC6P/ASqAs751d0a++OX8mWPIDavY3ppmcXZ0RbFAM5l8L7BVOAL7fZs="
+  file_glob: true
+  file: 
+  - Juka_FreeBSD_${TRAVIS_TAG}.tar.gz
+  - JukaAPI_FreeBSD_${TRAVIS_TAG}.tar.gz
+  skip_cleanup: true
+  on:
+    all_branches: true
+    tags: true

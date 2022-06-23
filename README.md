@@ -3,10 +3,9 @@
 [![Twitter](https://img.shields.io/twitter/follow/jukaLang.svg?style=social)](https://twitter.com/jukaLang)
 [![Discord](https://img.shields.io/discord/975787212954275910)](https://discord.com/invite/7BNpwKH8JC/)
 
+Travis (FreeBSD): [![Build Status](https://app.travis-ci.com/jukaLang/Juka.svg?branch=master)](https://app.travis-ci.com/jukaLang/Juka)
 
-Travis: [![Build Status](https://app.travis-ci.com/jukaLang/Juka.svg?branch=master)](https://app.travis-ci.com/jukaLang/Juka)
-
-Appveyor: [![Build status](https://ci.appveyor.com/api/projects/status/nmjmm04xhryx8p54?svg=true)](https://ci.appveyor.com/project/TheAndreiM/juka)
+Appveyor (Visual Studio Builds): [![Build status](https://ci.appveyor.com/api/projects/status/nmjmm04xhryx8p54?svg=true)](https://ci.appveyor.com/project/TheAndreiM/juka)
 
 ![jukaRun](https://user-images.githubusercontent.com/11934545/171545920-02493491-fa44-40d6-9a5b-46b2f90f8301.gif)
 
@@ -17,23 +16,25 @@ Juka's main goal is to be a universal programming language that can run on any p
 Juka's philosophy is code once, run everywhere.
 
 __Current Supported Device:__
-- Windows
-- Linux (Debian and Redhat)
-- MacOS (M1 and Intel Chipset)
+- Windows (x64)
+- Windows ARM (arm x64)
+- Linux (CentOS, Debian, Fedora, Ubuntu and derivatives)
+- Linux ARM (Linux Distributions that run ARM e.g. Raspberry Pi Model 2+)
+- MacOS (macOS 10.12+)
+- FreeBSD/UNIX (FreeBSD 11+)
 - Azure (Microsoft Azure Function)
 - HTTPS/API (JukaAPI server)
 - Docker (JukaAPI)
 
 __Coming Soon:__
-- Android
-- iOS (iPhone/iPad)
-- Universal Windows App (Windows 10+)
-- FreeBSD
+- Android App
+- AndroidTV App
+- iOS App (iPhone/iPad)
+- MacOS App
+- Windows App (Windows 10+)
 
 __Potential Future Support:__
 - AWS (Amazon Web Service)
-- Xbox Series S/X
-- AndroidTV
 - Google Cloud
 
 ### Downloading Juka
@@ -69,7 +70,7 @@ If you want to run Juka code from a file, run the following command (substitute 
 ./juka.exe HelloWorld.juk
 ```
 
-### Linux/MacOS
+### Linux/MacOS/FreeBSD
 
 Run the following command to start the Juka editor:
 ```jsx
