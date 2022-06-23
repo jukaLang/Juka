@@ -35,7 +35,7 @@ namespace JukaCompiler.Interpreter
             return declaration.Params.Count;
         }
 
-        public object Call(JukaInterpreter interpreter, List<object> arguments)
+        public object Call(string methodName, JukaInterpreter interpreter, List<object> arguments)
         {
             JukaEnvironment environment = new(closure);
 

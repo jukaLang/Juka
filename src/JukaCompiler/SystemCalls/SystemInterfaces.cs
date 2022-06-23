@@ -14,4 +14,9 @@ namespace JukaCompiler.SystemCalls
     internal interface IGetAvailableMemory : IJukaCallable
     {
     }
+
+    internal interface ISystemCalls : IJukaCallable
+    {
+
+    }
 }

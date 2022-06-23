@@ -34,6 +34,7 @@ namespace JukaCompiler
             hostBuilder.ConfigureServices(services =>
             {
                 services.AddSingleton<ICompilerError,CompilerError>();
+                services.AddSingleton<IJukaCallable, JukaSystemCalls>();
                 services.AddSingleton<IFileOpen, FileOpen>();
                 services.AddSingleton<ISystemClock, SystemClock>();
                 services.AddSingleton<IGetAvailableMemory, GetAvailableMemory>();

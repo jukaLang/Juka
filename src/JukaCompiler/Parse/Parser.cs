@@ -6,12 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Parse
 {
-    public enum CallableServices
-    {
-        GetAvailableMemory,
-        FileOpen,
-    }
-
     public class Parser
     {
         private List<Lexeme> tokens = new();
@@ -655,7 +649,7 @@ namespace JukaCompiler.Parse
             }
 
 
-            var callableServices = Enum.GetValues(typeof(CallableServices));
+            var callableServices = Enum.GetValues(typeof(JukaCompiler.SystemCalls.CallableServices));
             bool isCallable = false;
             foreach(var callableService in callableServices)
             {

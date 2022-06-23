@@ -24,7 +24,7 @@
             return initializer.Arity();
         }
 
-        public object Call(JukaInterpreter interpreter, List<object> arguments)
+        public object Call(string methodName, JukaInterpreter interpreter, List<object> arguments)
         {
             // FIND METHOD is broken
             // Declaration is never set correctly.
@@ -32,7 +32,7 @@
             JukaFunction? initializer = FindMethod("main");
             if (initializer != null)
             {
-                initializer.Bind(instance).Call(interpreter, arguments);
+                initializer.Bind(instance).Call(methodName, interpreter, arguments);
             }
 
             return instance;

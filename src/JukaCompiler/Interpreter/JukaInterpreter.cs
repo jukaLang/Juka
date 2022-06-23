@@ -460,39 +460,36 @@ namespace JukaCompiler.Interpreter
 
         public object VisitCallExpr(Expression.Call expr)
         {
-            List<object> arguments = new();
-            foreach (Expression argument in expr.arguments)
-            {
-                arguments.Add(argument);
-            }
+            var arguments = new List<object>();
+
 
             if (expr.isJukaCallable)
             {
-                var callableServices = Enum.GetValues(typeof(CallableServices));
-                System.Collections.IList list = callableServices;
-                for (int i = 0; i < list.Count; i++)
+                foreach (Expression argument in expr.arguments)
                 {
-                    object? callableService = list[i];
-                    if (expr.callee.Name.ToString().Equals(CallableServices.GetAvailableMemory.ToString()))
+                    if (argument is Expression.Variable)
                     {
-                        var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IGetAvailableMemory));
-                        return jukacall.Call(this, arguments);
+                        var lexeme = (Expression.Variable)argument;
+                        object? variable = environment.Get(lexeme.name);
+                        arguments.Add(variable);
                     }
-                    if (expr.callee.Name.ToString().Equals(CallableServices.FileOpen.ToString()))
-                    {
-                        var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IFileOpen));
-                        if (arguments[0] is Expression.Variable)
-                        {
-                            var lexeme = (Expression.Variable)arguments[0];
-                            object? variable = environment.Get(lexeme.name);
 
-                            return jukacall.Call(this, new List<object> {variable});
-                        }
-                        
+                    if (argument is Expression.Literal)
+                    {
+                        var literal = (Expression.Literal)argument;
+                        arguments.Add(literal.LiteralValue);
                     }
                 }
 
-                throw new Exception("no valid callable services");
+                try
+                { 
+                    var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IJukaCallable));
+                    return jukacall.Call(methodName: expr.callee.Name.ToString(), this, arguments);
+                }
+                catch(SystemCallException sce)
+                {
+                    return sce;
+                }
             }
             else
             {
@@ -503,7 +500,7 @@ namespace JukaCompiler.Interpreter
                     throw new ArgumentException("Wrong number of arguments");
                 }
 
-                return function.Call(this, arguments);
+                return function.Call(expr.callee.Name.ToString(),this, arguments);
             }
         }
 
