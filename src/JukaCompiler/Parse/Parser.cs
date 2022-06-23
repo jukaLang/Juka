@@ -6,6 +6,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Parse
 {
+    public enum CallableServices
+    {
+        GetAvailableMemory,
+        FileOpen,
+    }
+
     public class Parser
     {
         private List<Lexeme> tokens = new();
@@ -608,9 +614,20 @@ namespace JukaCompiler.Parse
                 } while (Match(LexemeType.COMMA));
             }
 
-            Lexeme paren = Consume(LexemeType.RIGHT_PAREN, Peek());
 
-            return new Expression.Call(callee, paren, arguments);
+            var callableServices = Enum.GetValues(typeof(CallableServices));
+            bool isCallable = false;
+            foreach(var callableService in callableServices)
+            {
+                if (callableService.ToString().Equals(callee.Name.ToString()))
+                {
+                    isCallable = true;
+                }
+            }
+
+            Consume(LexemeType.RIGHT_PAREN, Peek());
+
+            return new Expression.Call(callee, isCallable, arguments);
         }
     }
 }

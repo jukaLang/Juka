@@ -197,6 +197,10 @@ namespace JukaCompiler.Interpreter
 
             return new Stmt.DefaultStatement();
         }
+        public object VisitLexemeTypeLiteral(Expression.LexemeTypeLiteral expr)
+        {
+            return expr.Accept(this);
+        }
 
         private object Evaluate(Expression expr)
         {
@@ -407,25 +411,51 @@ namespace JukaCompiler.Interpreter
 
         public object VisitCallExpr(Expression.Call expr)
         {
-            object callee = Evaluate(expr.callee);
             List<object> arguments = new();
-            foreach(Expression argument in expr.arguments)
+            foreach (Expression argument in expr.arguments)
             {
                 arguments.Add(argument);
             }
 
-            if (!(callee is IJukaCallable))
+            if (expr.isJukaCallable)
             {
-                throw new ArgumentException("not a class or function");
-            }
+                var callableServices = Enum.GetValues(typeof(CallableServices));
+                System.Collections.IList list = callableServices;
+                for (int i = 0; i < list.Count; i++)
+                {
+                    object? callableService = list[i];
+                    if (expr.callee.Name.ToString().Equals(CallableServices.GetAvailableMemory.ToString()))
+                    {
+                        var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(JukaCompiler.SystemCalls.IGetAvailableMemory));
+                        return ((IJukaCallable)jukacall).Call(this, arguments);
+                    }
+                    if (expr.callee.Name.ToString().Equals(CallableServices.FileOpen.ToString()))
+                    {
+                        var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(JukaCompiler.SystemCalls.IFileOpen));
+                        if (arguments[0] is Expression.Variable)
+                        {
+                            var lexeme = (Expression.Variable)arguments[0];
+                            object? variable = environment.Get(lexeme.name);
 
-            IJukaCallable function = (IJukaCallable)callee;
-            if (arguments.Count != function.Arity())
+                            return ((IJukaCallable)jukacall).Call(this, new List<Object>{variable});
+                        }
+                        
+                    }
+                }
+
+                throw new Exception("no valid callable services");
+            }
+            else
             {
-                throw new ArgumentException("Wrong number of arguments");
-            }
+                object callee = Evaluate(expr.callee);
+                IJukaCallable function = (IJukaCallable)callee;
+                if (arguments.Count != function.Arity())
+                {
+                    throw new ArgumentException("Wrong number of arguments");
+                }
 
-            return function.Call(this, arguments);
+                return function.Call(this, arguments);
+            }
         }
 
         public object VisitGetExpr(Expression.Get expr)

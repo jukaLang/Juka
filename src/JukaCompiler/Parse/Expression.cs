@@ -1,4 +1,5 @@
 ﻿using JukaCompiler.Lexer;
+using JukaCompiler.Statements;
 
 namespace JukaCompiler.Parse
 {
@@ -18,6 +19,7 @@ namespace JukaCompiler.Parse
             R VisitThisExpr(This expr);
             R VisitUnaryExpr(Unary expr);
             R VisitVariableExpr(Variable expr);
+            R VisitLexemeTypeLiteral(LexemeTypeLiteral expr);
         }
 
         internal abstract R Accept<R>(Expression.IVisitor<R> vistor);
@@ -87,14 +89,14 @@ namespace JukaCompiler.Parse
         internal class Call : Expression
         {
             internal Expression callee;
-            internal Lexeme paren;
             internal List<Expression> arguments;
+            internal bool isJukaCallable = false;
 
-            internal Call(Expression callee, Lexeme paren, List<Expression> arguments)
+            internal Call(Expression callee, bool isCallable, List<Expression> arguments)
             {
                 this.callee = callee;
-                this.paren = paren;
                 this.arguments = arguments;
+                this.isJukaCallable = isCallable;
             }
             internal override R Accept<R>(IVisitor<R> vistor)
             {
@@ -248,7 +250,7 @@ namespace JukaCompiler.Parse
             }
         }
 
-        internal class LexemeTypeLiteral
+        internal class LexemeTypeLiteral : Expression
         {
             internal long lexemeType;
             internal object? literal;
@@ -258,6 +260,11 @@ namespace JukaCompiler.Parse
 
             internal long LexemeType
             { get { return this.lexemeType;} }
+
+            internal override R Accept<R>(IVisitor<R> visitor)
+            {
+                return visitor.VisitLexemeTypeLiteral(this);
+            }
         }
     }
 }

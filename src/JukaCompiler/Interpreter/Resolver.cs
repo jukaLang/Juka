@@ -88,11 +88,22 @@ namespace JukaCompiler.Interpreter
         {
             if (expr is Expression.Call)
             {
-                frames.Push(new StackFrame(expr.callee.Name.ToString()));
-                Declare(expr.callee.Name);
-                Resolve(expr.callee);
-                Define(expr.callee.Name);
-                frames.Pop();
+                var call = (Expression.Call)expr;
+                if (!call.isJukaCallable)
+                { 
+                    frames.Push(new StackFrame(expr.callee.Name.ToString()));
+                    Declare(expr.callee.Name);
+                    Resolve(expr.callee);
+                    Define(expr.callee.Name);
+                    frames.Pop();
+                }
+                else
+                {
+                    frames.Push(new StackFrame(expr.callee.Name.ToString()));
+                    Declare(expr.callee.Name);
+                    Define(expr.callee.Name);
+                    frames.Pop();
+                }
             }
 
 
@@ -123,6 +134,12 @@ namespace JukaCompiler.Interpreter
 
             ResolveFunction(stmt, FunctionType.FUNCTION);
             return new Stmt.DefaultStatement();
+        }
+
+        public object VisitLexemeTypeLiteral(Expression.LexemeTypeLiteral expr)
+        {
+            //return new Stmt.DefaultStatement();
+            return new Stmt.DefaultStatement(); 
         }
 
         public object VisitGetExpr(Expression.Get expr)
@@ -234,7 +251,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitVariableExpr(Expression.Variable expr)
         {
-            if(( scopes.Any() && scopes.Peek()[expr.Name.ToString()] == true) ||
+            if(( scopes.Any() && scopes.Peek()[expr.Name.ToString()]) ||
                 scopes.Any() && scopes.Peek().Count == 0 ||
                 !scopes.Any())
             {
@@ -286,7 +303,6 @@ namespace JukaCompiler.Interpreter
 
         private void Declare(Lexeme name)
         {
-
             if (scopes.Count() == 0)
             {
                 return;

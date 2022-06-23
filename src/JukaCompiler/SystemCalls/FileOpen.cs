@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JukaCompiler.Exceptions;
 using JukaCompiler.Interpreter;
 
 namespace JukaCompiler.SystemCalls
@@ -18,10 +19,13 @@ namespace JukaCompiler.SystemCalls
         {
             foreach(var argument in arguments)
             {
-                Console.Out.WriteLine(argument.ToString());
+                if (argument is Parse.Expression.LexemeTypeLiteral)
+                {
+                    Console.Out.WriteLine(((Parse.Expression.LexemeTypeLiteral)argument));
+                }
             }
 
-            return null;
+            return Encoding.ASCII.GetBytes("don reamey");
         }
     }
 }

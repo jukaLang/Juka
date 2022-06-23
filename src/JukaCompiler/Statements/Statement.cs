@@ -1,6 +1,5 @@
 ﻿using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
-using JukaCompiler.RoslynEmiter;
 
 namespace JukaCompiler.Statements
 {
@@ -21,7 +20,6 @@ namespace JukaCompiler.Statements
             R VisitBreakStmt(Break stmt);
         }
         internal abstract R Accept<R>(Stmt.Visitor<R> vistor);
-
         internal class Block : Stmt
         {
             internal Block(List<Stmt> statements)
@@ -102,7 +100,6 @@ namespace JukaCompiler.Statements
             }
 
         }
-
         internal class PrintLine : Stmt
         {
             internal Parse.Expression? expr;
@@ -208,7 +205,6 @@ namespace JukaCompiler.Statements
                 return vistor.VisitReturnStmt(this);
             }
         }
-
         internal class Break : Stmt
         {
             internal Parse.Expression expr;
@@ -217,10 +213,24 @@ namespace JukaCompiler.Statements
                 return vistor.VisitBreakStmt(this);
             }
         }
-
         internal class DefaultStatement : Stmt
         {
             // Does nothing used for return values;
+            internal override R Accept<R>(Visitor<R> vistor)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        internal class LiteralLexemeExpression : Stmt
+        {
+            internal Parse.Expression.LexemeTypeLiteral ltl;
+
+            internal LiteralLexemeExpression(Parse.Expression.LexemeTypeLiteral lexemeTypeLiteral)
+            {
+                this.ltl = lexemeTypeLiteral;
+            }
+
             internal override R Accept<R>(Visitor<R> vistor)
             {
                 throw new NotImplementedException();
