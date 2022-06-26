@@ -10,26 +10,39 @@ skip_non_tags: false
 
 before_build: 
   - cd src
-  - dotnet restore
   - dotnet test
 
-build: 
-  project: src/Juka.sln
-
-
 after_build:
- - dotnet publish -c release -r osx-x64 --self-contained
- - dotnet publish -c release -r linux-x64 --self-contained
- - dotnet publish -c release -r win-x64 --self-contained
- - dotnet publish -c release -r win-arm64 --self-contained
- - dotnet publish -c release -r linux-arm --self-contained
+ - dotnet publish -c Release -r osx-x64 --self-contained Juka
+ - dotnet publish -c Release -r osx-x64 --self-contained JukaApi
 
-configuration:
-- Release
+ - dotnet publish -c Release -r linux-x64 --self-contained Juka
+ - dotnet publish -c Release -r linux-x64 --self-contained JukaApi
+
+ - dotnet publish -c Release -r linux-arm --self-contained Juka
+ - dotnet publish -c Release -r linux-arm --self-contained JukaApi
+
+ - dotnet publish -c Release -r win-x86 --self-contained Juka
+ - dotnet publish -c Release -r win-x86 --self-contained JukaApi
+
+ - dotnet publish -c Release -r win-x64 --self-contained Juka
+ - dotnet publish -c Release -r win-x64 --self-contained JukaApi
+
+ - dotnet publish -c Release -r win-arm64 --self-contained Juka
+ - dotnet publish -c Release -r win-arm64 --self-contained JukaApi
+
+ - dotnet pack -c Release JukaCompiler 
+
+ - dotnet publish -c Release JukaAzureFunction
+
+configuration: Release
 
 artifacts:
+- path: 'src\Juka\bin\Release\net6.0\win-x86\publish'
+  name: Juka_WindowsX86_$(APPVEYOR_BUILD_VERSION)
+  type: zip
 - path: 'src\Juka\bin\Release\net6.0\win-x64\publish'
-  name: Juka_Windows_$(APPVEYOR_BUILD_VERSION)
+  name: Juka_WindowsX64_$(APPVEYOR_BUILD_VERSION)
   type: zip
 - path: 'src\Juka\bin\Release\net6.0\win-arm64\publish'
   name: Juka_WindowsARM64_$(APPVEYOR_BUILD_VERSION)
@@ -43,8 +56,12 @@ artifacts:
 - path: 'src\Juka\bin\Release\net6.0\linux-arm\publish'
   name: Juka_LinuxARM_RaspberryPI_$(APPVEYOR_BUILD_VERSION)
   type: zip
+
+- path: 'src\JukaApi\bin\Release\net6.0\win-x86\publish'
+  name: JukaAPI_WindowsX86_$(APPVEYOR_BUILD_VERSION)
+  type: zip
 - path: 'src\JukaApi\bin\Release\net6.0\win-x64\publish'
-  name: JukaAPI_Windows_$(APPVEYOR_BUILD_VERSION)
+  name: JukaAPI_WindowsX64_$(APPVEYOR_BUILD_VERSION)
   type: zip
 - path: 'src\JukaApi\bin\Release\net6.0\win-arm64\publish'
   name: JukaAPI_WindowsARM64_$(APPVEYOR_BUILD_VERSION)
@@ -58,13 +75,18 @@ artifacts:
 - path: 'src\JukaApi\bin\Release\net6.0\linux-arm\publish'
   name: JukaAPI_LinuxARM_RaspberryPI_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\JukaAzureFunction\bin\Release\net6.0\win-x64'
-  name: Juka_Azure_Function_$(APPVEYOR_BUILD_VERSION)
-  type: AzureCloudService
-- path: 'src\JukaCompiler\bin\Release\net6.0\win-x64\publish'
+
+- path: 'src\JukaCompiler\bin\Release\net6.0\'
   name: Juka_Compiler_dll_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
+- path: 'src\JukaCompiler\bin\Release\'
+  name: Juka_Compiler
+  type: nupkg
+
+- path: 'src\JukaAzureFunction\bin\Release\net6.0\publish'
+  name: Juka_Azure_Function_$(APPVEYOR_BUILD_VERSION)
+  type: zip
 
 deploy:
     # Deploy to GitHub Releases
@@ -77,12 +99,8 @@ deploy:
     on:
       branch: master                # release from master branch only
       APPVEYOR_REPO_TAG: false       # deploy on tag push only
-  - provider: GitHub
-    artifact: /.*\.cspkg/
-    auth_token:
-      secure: XCqLJKrsMnRCCEEcsPL53Emba/2GrP172INtXx86eu5XBbed614ug/2dcx8MZwmr
-    draft: false
-    prerelease: false
-    on:
-      branch: master                # release from master branch only
-      APPVEYOR_REPO_TAG: false       # deploy on tag push only
+  - provider: NuGet
+    api_key:
+      secure: XIjmQrVi0B29ojqwIKMLKDLNfA+oQag/R+pVAxoSSVpgiyuQG2avXqgesQASXF6+
+    skip_symbols: false
+    artifact: /.*(\.|\.s)nupkg/
