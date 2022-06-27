@@ -8,14 +8,17 @@ branches:
 skip_tags: false
 skip_non_tags: false
 
+version: '0.0.{build}'
 
 # .NET Core `*.*proj` files patching:
 dotnet_csproj:
   patch: true
-  file: 'src\**\*.csproj'
-  version: $(APPVEYOR_BUILD_VERSION)
+  file: 'src\**\*.csproj'; **\*.csproj'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}-rc1'
+  version: '{version}'
   package_version: $(APPVEYOR_BUILD_VERSION)
-  assembly_version: $(APPVEYOR_BUILD_VERSION)
   file_version: $(APPVEYOR_BUILD_VERSION)
   informational_version: $(APPVEYOR_BUILD_VERSION)
 
@@ -24,23 +27,23 @@ before_build:
   - dotnet test
 
 after_build:
- - dotnet publish -c Release -r osx-x64 --self-contained Juka
- - dotnet publish -c Release -r osx-x64 --self-contained JukaApi
+ - dotnet publish -c Release -r osx-x64 --self-contained true Juka
+ - dotnet publish -c Release -r osx-x64 --self-contained true JukaApi
 
- - dotnet publish -c Release -r linux-x64 --self-contained Juka
- - dotnet publish -c Release -r linux-x64 --self-contained JukaApi
+ - dotnet publish -c Release -r linux-x64 --self-contained true Juka
+ - dotnet publish -c Release -r linux-x64 --self-contained true JukaApi
 
- - dotnet publish -c Release -r linux-arm --self-contained Juka
- - dotnet publish -c Release -r linux-arm --self-contained JukaApi
+ - dotnet publish -c Release -r linux-arm --self-contained true Juka
+ - dotnet publish -c Release -r linux-arm --self-contained true JukaApi
 
- - dotnet publish -c Release -r win-x86 --self-contained Juka
- - dotnet publish -c Release -r win-x86 --self-contained JukaApi
+ - dotnet publish -c Release -r win-x86 --self-contained true Juka
+ - dotnet publish -c Release -r win-x86 --self-contained true JukaApi
 
- - dotnet publish -c Release -r win-x64 --self-contained Juka
- - dotnet publish -c Release -r win-x64 --self-contained JukaApi
+ - dotnet publish -c Release -r win-x64 --self-contained true Juka
+ - dotnet publish -c Release -r win-x64 --self-contained true JukaApi
 
- - dotnet publish -c Release -r win-arm64 --self-contained Juka
- - dotnet publish -c Release -r win-arm64 --self-contained JukaApi
+ - dotnet publish -c Release -r win-arm64 --self-contained true Juka
+ - dotnet publish -c Release -r win-arm64 --self-contained true JukaApi
 
  - dotnet pack -c Release JukaCompiler
 
