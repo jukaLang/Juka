@@ -25,25 +25,25 @@ before_build:
   - dotnet test
 
 after_build:
- - dotnet publish -c Release -r osx-x64 --self-contained true Juka
- - dotnet publish -c Release -r osx-x64 --self-contained true JukaApi
+ - dotnet publish -c Release --self-contained true --runtime osx-x64 Juka
+ - dotnet publish -c Release --self-contained true --runtime osx-x64 JukaApi
 
- - dotnet publish -c Release -r linux-x64 --self-contained true Juka
- - dotnet publish -c Release -r linux-x64 --self-contained true JukaApi
+ - dotnet publish -c Release --self-contained true --runtime linux-x64 Juka
+ - dotnet publish -c Release --self-contained true --runtime linux-x64 JukaApi
 
- - dotnet publish -c Release -r linux-arm --self-contained true Juka
- - dotnet publish -c Release -r linux-arm --self-contained true JukaApi
+ - dotnet publish -c Release --self-contained true --runtime linux-arm Juka
+ - dotnet publish -c Release --self-contained true --runtime linux-arm JukaApi
 
- - dotnet publish -c Release -r win-x86 --self-contained true Juka
- - dotnet publish -c Release -r win-x86 --self-contained true JukaApi
+ - dotnet publish -c Release --self-contained true --runtime win-x86 Juka
+ - dotnet publish -c Release --self-contained true --runtime win-x86 JukaApi
 
- - dotnet publish -c Release -r win-x64 --self-contained true Juka
- - dotnet publish -c Release -r win-x64 --self-contained true JukaApi
+ - dotnet publish -c Release --self-contained true --runtime win-x64 Juka
+ - dotnet publish -c Release --self-contained true --runtime win-x64 JukaApi
 
- - dotnet publish -c Release -r win-arm64 --self-contained true Juka
- - dotnet publish -c Release -r win-arm64 --self-contained true JukaApi
+ - dotnet publish -c Release --self-contained true --runtime win-arm64 Juka
+ - dotnet publish -c Release --self-contained true --runtime win-arm64 JukaApi
 
- - dotnet pack -c Release JukaCompiler
+ - dotnet pack -c Release JukaCompiler  -p:PackageVersion={version}
 
  - dotnet publish -c Release JukaAzureFunction
 
