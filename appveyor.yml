@@ -10,15 +10,23 @@ skip_non_tags: false
 
 version: '0.0.{build}'
 
-# .NET Core `*.*proj` files patching:
+assembly_info:
+  patch: true
+  file: '**/*;**/**/*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}-rc1'
+  package_version: $(APPVEYOR_BUILD_VERSION)
+
 dotnet_csproj:
   patch: true
   file: 'src\**\*.csproj; **\*.csproj'
   version: '{version}'
-  package_version: '{version}'
+  package_version: $(APPVEYOR_BUILD_VERSION)
   assembly_version: '{version}'
   file_version: '{version}'
   informational_version: '{version}'
+  self-contained: true
 
 before_build: 
   - cd src
@@ -43,7 +51,7 @@ after_build:
  - dotnet publish -c Release --self-contained true --runtime win-arm64 Juka
  - dotnet publish -c Release --self-contained true --runtime win-arm64 JukaApi
 
- - dotnet pack -c Release JukaCompiler  -p:PackageVersion={version}
+ - dotnet pack -c Release JukaCompiler
 
  - dotnet publish -c Release JukaAzureFunction
 
