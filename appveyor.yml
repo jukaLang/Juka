@@ -31,7 +31,7 @@ after_build:
  - dotnet publish -c Release -r win-arm64 --self-contained Juka
  - dotnet publish -c Release -r win-arm64 --self-contained JukaApi
 
- - dotnet pack -c Release JukaCompiler 
+ - dotnet pack -c Release JukaCompiler -p:PackageVersion=$(APPVEYOR_BUILD_VERSION)
 
  - dotnet publish -c Release JukaAzureFunction
 
@@ -80,9 +80,9 @@ artifacts:
   name: Juka_Compiler_dll_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
-- path: 'src\JukaCompiler\bin\Release\'
+- path: 'src\JukaCompiler\bin\Release\*.nupkg'
   name: Juka_Compiler
-  type: nupkg
+  type: NuGetPackage
 
 - path: 'src\JukaAzureFunction\bin\Release\net6.0\publish'
   name: Juka_Azure_Function_$(APPVEYOR_BUILD_VERSION)
