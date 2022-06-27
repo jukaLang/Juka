@@ -8,7 +8,6 @@ branches:
 skip_tags: false
 skip_non_tags: false
 
-package_version: $(APPVEYOR_BUILD_VERSION)
 
 # .NET Core `*.*proj` files patching:
 dotnet_csproj:
