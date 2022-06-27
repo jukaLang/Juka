@@ -13,7 +13,7 @@ version: '0.0.{build}'
 # .NET Core `*.*proj` files patching:
 dotnet_csproj:
   patch: true
-  file: 'src\**\*.csproj'; **\*.csproj'
+  file: 'src\**\*.csproj; **\*.csproj'
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}-rc1'
