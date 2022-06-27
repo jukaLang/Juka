@@ -25,7 +25,6 @@ dotnet_csproj:
   assembly_version: '{version}'
   file_version: '{version}'
   informational_version: '{version}'
-  self-contained: true
 
 before_build: 
   - cd src
