@@ -13,12 +13,11 @@ skip_non_tags: false
 dotnet_csproj:
   patch: true
   file: 'src\**\*.csproj'
-  version: '{version}'
-  version_prefix: '{version}'
-  package_version: '{version}'
-  assembly_version: '{version}'
-  file_version: '{version}'
-  informational_version: '{version}'
+  version: $(APPVEYOR_BUILD_VERSION)
+  package_version: $(APPVEYOR_BUILD_VERSION)
+  assembly_version: $(APPVEYOR_BUILD_VERSION)
+  file_version: $(APPVEYOR_BUILD_VERSION)
+  informational_version: $(APPVEYOR_BUILD_VERSION)
 
 before_build: 
   - cd src
@@ -113,6 +112,6 @@ deploy:
       APPVEYOR_REPO_TAG: false       # deploy on tag push only
   - provider: NuGet
     api_key:
-      secure: XIjmQrVi0B29ojqwIKMLKDLNfA+oQag/R+pVAxoSSVpgiyuQG2avXqgesQASXF6+
+      secure: x/4PXOtHjSV0Js8178xYZ+smiBELpwlYbKOw13d8r4tFWt9HFG/ln+vGOLvTstE3
     skip_symbols: false
     artifact: /.*(\.|\.s)nupkg/
