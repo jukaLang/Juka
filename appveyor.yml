@@ -8,6 +8,19 @@ branches:
 skip_tags: false
 skip_non_tags: false
 
+package_version: $(APPVEYOR_BUILD_VERSION)
+
+# .NET Core `*.*proj` files patching:
+dotnet_csproj:
+  patch: true
+  file: 'src\**\*.csproj'
+  version: '{version}'
+  version_prefix: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+
 before_build: 
   - cd src
   - dotnet test
@@ -31,7 +44,7 @@ after_build:
  - dotnet publish -c Release -r win-arm64 --self-contained Juka
  - dotnet publish -c Release -r win-arm64 --self-contained JukaApi
 
- - dotnet pack -c Release JukaCompiler -p:PackageVersion=$(APPVEYOR_BUILD_VERSION)
+ - dotnet pack -c Release JukaCompiler
 
  - dotnet publish -c Release JukaAzureFunction
 
