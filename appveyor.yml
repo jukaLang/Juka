@@ -14,13 +14,11 @@ version: '0.0.{build}'
 dotnet_csproj:
   patch: true
   file: 'src\**\*.csproj; **\*.csproj'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}-rc1'
   version: '{version}'
-  package_version: $(APPVEYOR_BUILD_VERSION)
-  file_version: $(APPVEYOR_BUILD_VERSION)
-  informational_version: $(APPVEYOR_BUILD_VERSION)
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
 
 before_build: 
   - cd src
