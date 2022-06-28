@@ -1,0 +1,32 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<h1>Welcome to Juka (Web Assembly Edition)!</h1>
+
+<div>Keep in mind that not all features will be available due to constraints of the Web.
+(This is still in very early stages)</div>
+
+
+<br/>
+
+Enter Code Here: <br/>
+<textarea rows="10" cols="80" @bind="InputValue"></textarea>
+
+
+<br/><br/>
+<button @onclick="RunCode">Run Code</button>
+<br/>
+Output:<br/>
+<pre>@OutputValue</pre>
+
+@code {
+    private string? InputValue { get; set; }
+
+    private string? OutputValue { get; set; }
+
+    public void RunCode()
+    {
+        OutputValue = new JukaCompiler.Compiler().Go(InputValue, false);
+    }
+}
