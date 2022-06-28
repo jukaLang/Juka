@@ -20,10 +20,11 @@ jobs:
       # Then simply use the dotnet container as you'd expect and run your tests
       - run:
           # Update this line with the directory that contains your tests project file
-          working_directory: ~/src/
+          working_directory: ~/src/JukaWebAssembly
           name: Web Assemble Juka
           command: |
-            dotnet publish -c release JukaWebAssembly
+            dotnet workload install wasm-tools
+            dotnet publish -c release JukaWebAssembly.sln
       - run:
           name: "Store Artifacts"
           command: |

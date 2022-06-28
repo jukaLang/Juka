@@ -3,6 +3,7 @@
 [![Twitter](https://img.shields.io/twitter/follow/jukaLang.svg?style=social)](https://twitter.com/jukaLang)
 [![Discord](https://img.shields.io/discord/975787212954275910)](https://discord.com/invite/7BNpwKH8JC/)
 
+CircleCI (Web Assembly Builds):[![CircleCI](https://dl.circleci.com/status-badge/img/gh/jukaLang/Juka/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/jukaLang/Juka/tree/master)
 Travis (FreeBSD): [![Build Status](https://app.travis-ci.com/jukaLang/Juka.svg?branch=master)](https://app.travis-ci.com/jukaLang/Juka)
 
 Appveyor (Visual Studio Builds): [![Build status](https://ci.appveyor.com/api/projects/status/nmjmm04xhryx8p54?svg=true)](https://ci.appveyor.com/project/TheAndreiM/juka)
@@ -25,6 +26,7 @@ __Current Supported Device:__
 - Azure (Microsoft Azure Function)
 - HTTPS/API (JukaAPI server)
 - Docker (JukaAPI)
+- Web Assembly (CDN/Browser/HTML server)
 
 __Coming Soon:__
 - Android App
