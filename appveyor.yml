@@ -122,3 +122,6 @@ deploy:
       secure: x/4PXOtHjSV0Js8178xYZ+smiBELpwlYbKOw13d8r4tFWt9HFG/ln+vGOLvTstE3
     skip_symbols: false
     artifact: /.*(\.|\.s)nupkg/
+    on:
+      branch: master                # release from master branch only
+      APPVEYOR_REPO_TAG: false       # deploy on tag push only
