@@ -1,10 +1,6 @@
 ﻿using JukaCompiler.Lexer;
 using static System.Char;
 using System.Text;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Emit;
-using System.Reflection;
 using JukaCompiler.Exceptions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -188,12 +184,12 @@ namespace JukaCompiler.Scan
             }
 
 
-            // C# Execution
-            if (Prev() != '\\' && t == '#' && Peek() == '{')
+            // C# Execution  -- Removed for now due to system.reflection class use which is incompatible with mobile
+            /*if (Prev() != '\\' && t == '#' && Peek() == '{')
             {
                 CSharpExec();
                 return;
-            }
+            }*/
 
 
             // Comments
@@ -291,7 +287,7 @@ namespace JukaCompiler.Scan
             this.lexemes.Add(identifier);
         }
 
-        internal void CSharpExec()
+        /*internal void CSharpExec()
         {
             while (Peek() != '}' && !IsEof())
             {
@@ -370,7 +366,7 @@ namespace JukaCompiler.Scan
 
 
             Advance();
-        }
+        }*/
 
         internal void Comment()
         {
