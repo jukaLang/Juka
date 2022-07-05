@@ -1,0 +1,28 @@
+func Process() = {
+	string s = "foobar";
+	string y = "file.txt";
+
+	string z = FileOpen(y);
+	printLine(z);
+
+	if(s == "foobar")
+	{
+		printLine("d:\source\repos\juksa\file.txt");
+	}
+
+	int x = GetAvailableMemory();
+	printLine(x);
+
+}
+
+
+func test() =
+{
+	string y = "file.txt";
+}
+
+
+
+Process();
+
+
