@@ -40,6 +40,9 @@ after_build:
  - dotnet publish -c Release --self-contained true --runtime linux-arm Juka
  - dotnet publish -c Release --self-contained true --runtime linux-arm JukaApi
 
+ - dotnet publish -c Release --self-contained true --runtime linux-arm64 Juka
+ - dotnet publish -c Release --self-contained true --runtime linux-arm64 JukaApi
+
  - dotnet publish -c Release --self-contained true --runtime win-x86 Juka
  - dotnet publish -c Release --self-contained true --runtime win-x86 JukaApi
 

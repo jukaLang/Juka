@@ -1,5 +1,7 @@
 # Juka - Programming Language 
 
+Official Website: https://jukalang.com
+
 [![Twitter](https://img.shields.io/twitter/follow/jukaLang.svg?style=social)](https://twitter.com/jukaLang)
 [![Discord](https://img.shields.io/discord/975787212954275910)](https://discord.com/invite/7BNpwKH8JC/)
 
@@ -7,7 +9,7 @@ Travis (FreeBSD): [![Build Status](https://app.travis-ci.com/jukaLang/Juka.svg?b
 
 Appveyor (Visual Studio Builds): [![Build status](https://ci.appveyor.com/api/projects/status/nmjmm04xhryx8p54?svg=true)](https://ci.appveyor.com/project/TheAndreiM/juka)
 
-![jukaRun](https://user-images.githubusercontent.com/11934545/176820860-9ff1eff4-cbde-4e90-a56f-b0826f4760a5.gif)
+![jukaRun](https://user-images.githubusercontent.com/11934545/178070066-f9290bfa-c191-431a-b39b-95a907ff8a95.gif)
 
 ## Introduction
 
@@ -16,17 +18,17 @@ Juka's main goal is to be a universal programming language that can run on any p
 Juka's philosophy is code once, run everywhere.
 
 __Current Supported Device:__
-- Windows (x64)
-- Windows ARM (arm x64)
+- Windows (x86/x64)
+- Windows ARM (ARM64)
 - Linux (CentOS, Debian, Fedora, Ubuntu and derivatives)
-- Linux ARM (Linux Distributions that run ARM e.g. Raspberry Pi Model 2+)
+- Linux ARM (ARM64 and ARM32) (Linux Distributions that run ARM e.g. Raspberry Pi Model 2+)
 - MacOS (macOS 10.12+)
 - FreeBSD/UNIX (FreeBSD 11+)
 - Azure (Microsoft Azure Function)
 - HTTPS/API (JukaAPI server)
 - Docker (JukaAPI)
-- ![Web Assembly (CDN/Browser/HTML server)](https://github.com/jukaLang/juka-webassembly)
-- ![Jupyter via juka-kernel](https://github.com/jukaLang/juka_kernel)
+- [Web Assembly (CDN/Browser/HTML server)](https://github.com/jukaLang/juka-webassembly)
+- [Jupyter via juka-kernel](https://github.com/jukaLang/juka_kernel)
 
 __Coming Soon:__
 - JukaOS
