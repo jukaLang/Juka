@@ -7,7 +7,7 @@ Travis (FreeBSD): [![Build Status](https://app.travis-ci.com/jukaLang/Juka.svg?b
 
 Appveyor (Visual Studio Builds): [![Build status](https://ci.appveyor.com/api/projects/status/nmjmm04xhryx8p54?svg=true)](https://ci.appveyor.com/project/TheAndreiM/juka)
 
-![jukaRun](https://user-images.githubusercontent.com/11934545/171545920-02493491-fa44-40d6-9a5b-46b2f90f8301.gif)
+![jukaRun](https://user-images.githubusercontent.com/11934545/176820860-9ff1eff4-cbde-4e90-a56f-b0826f4760a5.gif)
 
 ## Introduction
 
@@ -25,9 +25,11 @@ __Current Supported Device:__
 - Azure (Microsoft Azure Function)
 - HTTPS/API (JukaAPI server)
 - Docker (JukaAPI)
-- Web Assembly (CDN/Browser/HTML server)
+- ![Web Assembly (CDN/Browser/HTML server)](https://github.com/jukaLang/juka-webassembly)
+- ![Jupyter via juka-kernel](https://github.com/jukaLang/juka_kernel)
 
 __Coming Soon:__
+- JukaOS
 - Android App
 - AndroidTV App
 - iOS App (iPhone/iPad)
