@@ -27,7 +27,6 @@ dotnet_csproj:
   informational_version: '{version}'
 
 before_build: 
-  - PowerShell .\InstallSelfSignedCert.ps1
   - cd src
   - dotnet test
 
@@ -106,9 +105,6 @@ artifacts:
 - path: 'src\JukaAzureFunction\bin\Release\net6.0\publish'
   name: Juka_Azure_Function_$(APPVEYOR_BUILD_VERSION)
   type: zip
-
-before_deploy:
- - dotnet nuget sign Juka_Compiler.nupkg --certificate-path Juka.pfx --certificate-password jukatest
 
 deploy:
     # Deploy to GitHub Releases
