@@ -62,6 +62,17 @@ namespace JukaCompiler.Statements
         }
         internal class Class : Stmt
         {
+            internal Lexeme name;
+            internal List<Stmt> functions;
+            internal List<Stmt> variableDeclarations;
+
+            internal Class(Lexeme name, List<Stmt> functions, List<Stmt> variableDeclarations)
+            {
+                this.name = name;
+                this.functions = functions;
+                this.variableDeclarations = variableDeclarations;
+            }
+
             internal override R Accept<R>(Visitor<R> vistor)
             {
                 throw new NotImplementedException();

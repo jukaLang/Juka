@@ -1,3 +1,12 @@
+class x = {
+	string s = "bob";
+	func foo() = {
+	}
+
+	func bob() = {
+	}
+}
+
 func Process() = {
 	string s = "foobar";
 	string y = "file.txt";
@@ -20,6 +29,7 @@ func test() =
 {
 	string y = "file.txt";
 }
+
 
 
 

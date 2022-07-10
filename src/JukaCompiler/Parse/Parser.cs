@@ -77,6 +77,12 @@ namespace JukaCompiler.Parse
 
         private Stmt Declaration()
         {
+            if (Match(LexemeType.CLASS))
+            {
+                return ClassDeclaration("class");
+            }
+
+
             if (Match(LexemeType.FUNC))
             {
                 return Function("func");
@@ -354,6 +360,41 @@ namespace JukaCompiler.Parse
 
             var stmt = new Stmt.Function(name, typeMap, statements);
             return stmt;
+        }
+
+        private Stmt ClassDeclaration(string kind)
+        {
+            Lexeme name = Consume(LexemeType.IDENTIFIER, Peek());
+            Consume(LexemeType.EQUAL, Peek());
+            Consume(LexemeType.LEFT_BRACE, Peek());
+            List<Stmt> functions = new List<Stmt>();
+            List<Stmt> variableDeclarations = new List<Stmt>();
+
+            if(!Check(LexemeType.RIGHT_BRACE))
+            {
+                while(true)
+                {
+                    var isFunc = Peek();
+                    if (!isFunc.IsKeyWord)
+                    {
+                        break;
+                    }
+
+                    if (isFunc.LexemeType == LexemeType.FUNC)
+                    {
+                        functions.Add(Declaration());
+                    }
+
+                    if (MatchKeyWord())
+                    {
+                        variableDeclarations.Add(VariableDeclaration());
+                    }
+                }
+            }
+
+            Consume(LexemeType.RIGHT_BRACE, Peek());
+
+            return new Stmt.Class(name, functions, variableDeclarations);
         }
 
         private List<Stmt> Block()
