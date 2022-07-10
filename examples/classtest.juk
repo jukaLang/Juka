@@ -1,0 +1,13 @@
+class x(int initializer) = {
+   int z = initializer;
+
+   func m() = {
+      return z;
+   }
+}
+
+func y() = {
+   var d = new x(32);
+   printLine(d.m());
+}
+y();
