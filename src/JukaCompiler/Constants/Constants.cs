@@ -1,4 +1,8 @@
-﻿namespace JukaCompiler.Constants
+﻿/*
+ * 
+ * CURRENTLY NOT USED
+*/
+namespace JukaCompiler.Constants
 {
     class Constants
     {

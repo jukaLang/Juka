@@ -77,9 +77,11 @@ namespace JukaCompiler.Interpreter
             return null;
         }
 
-        public Stmt VisitClassStmt(Stmt.Class stmt)
+        Stmt Stmt.Visitor<Stmt>.VisitClassStmt(Stmt.Class stmt)
         {
-            throw new NotImplementedException();
+            JukaClass classCallable = new JukaClass("testclas", null, new Dictionary<string, JukaFunction> ());
+            environment.Define(stmt.name.ToString(), classCallable);
+            return null;
         }
 
         public Stmt VisitExpressionStmt(Stmt.Expression stmt)

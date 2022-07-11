@@ -9,7 +9,7 @@ Travis (FreeBSD): [![Build Status](https://app.travis-ci.com/jukaLang/Juka.svg?b
 
 Appveyor (Visual Studio Builds): [![Build status](https://ci.appveyor.com/api/projects/status/nmjmm04xhryx8p54?svg=true)](https://ci.appveyor.com/project/TheAndreiM/juka)
 
-![jukaRun](https://user-images.githubusercontent.com/11934545/178070066-f9290bfa-c191-431a-b39b-95a907ff8a95.gif)
+![RunJuka](https://user-images.githubusercontent.com/11934545/178172864-433ab5eb-5b76-4240-a98c-192c76f3b2f5.gif)
 
 ## Introduction
 

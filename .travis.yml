@@ -20,7 +20,7 @@ before_deploy:
   - tar -czf Juka_FreeBSD_${TRAVIS_TAG}.tar.gz -C Juka/bin/Release/net6.0/freebsd-x64/publish . 
   - tar -czf JukaAPI_FreeBSD_${TRAVIS_TAG}.tar.gz -C JukaApi/bin/Release/net6.0/freebsd-x64/publish .
   - curl -LO --retry 3 https://raw.githubusercontent.com/plume-lib/trigger-travis/master/trigger-travis.sh
-  - sh trigger-travis.sh --pro jukaLang juka-webassembly $TRAVIS_ACCESS_TOKEN
+  - sh trigger-travis.sh --pro --branch main jukaLang juka-webassembly $TRAVIS_ACCESS_TOKEN "JukaUpdated"
 
 
 deploy:
