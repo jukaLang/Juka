@@ -3,53 +3,43 @@ os:
   - linux
 
 before_install:
-  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then 
-	wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/dotnet-sdk-6.0.301-freebsd-x64.tar.gz;
-	wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/Microsoft.AspNetCore.App.Runtime.freebsd-x64.6.0.6.nupkg;
-	wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/Microsoft.NETCore.App.Runtime.freebsd-x64.6.0.6.nupkg;
- 	sudo mkdir /usr/share/dotnet;
-  	sudo tar xf dotnet-sdk-6.0.301-freebsd-x64.tar.gz -C /usr/share/dotnet/;
-  	sudo mv Microsoft.NETCore.App.Runtime.freebsd-x64.6.0.6.nupkg /usr/share/dotnet/;
-	sudo mv Microsoft.AspNetCore.App.Runtime.freebsd-x64.6.0.6.nupkg /usr/share/dotnet/; 
-	fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then
-	wget https://github.com/Servarr/dotnet-linux-x86/releases/download/v6.0.7-51/dotnet-runtime-6.0.7-linux-x86.tar.gz;
-	wget https://github.com/Servarr/dotnet-linux-x86/releases/download/v6.0.7-51/Microsoft.AspNetCore.App.Runtime.linux-x86.6.0.7.nupkg;
-	wget https://github.com/Servarr/dotnet-linux-x86/releases/download/v6.0.7-51/Microsoft.NETCore.App.Runtime.linux-x86.6.0.7.nupkg;
- 	sudo mkdir /usr/share/dotnet;
-  	sudo tar xf dotnet-runtime-6.0.7-linux-x86.tar.gz -C /usr/share/dotnet/;
-  	sudo mv Microsoft.NETCore.App.Runtime.linux-x86.6.0.7.nupkg /usr/share/dotnet/;
-	sudo mv Microsoft.AspNetCore.App.Runtime.linux-x86.6.0.7.nupkg /usr/share/dotnet/; 
-	fi
+  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/dotnet-sdk-6.0.301-freebsd-x64.tar.gz; fi
+  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/Microsoft.AspNetCore.App.Runtime.freebsd-x64.6.0.6.nupkg; fi
+  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/Microsoft.NETCore.App.Runtime.freebsd-x64.6.0.6.nupkg; fi
+  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then sudo mkdir /usr/share/dotnet; fi
+  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then sudo tar xf dotnet-sdk-6.0.301-freebsd-x64.tar.gz -C /usr/share/dotnet/; fi
+  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then sudo mv Microsoft.NETCore.App.Runtime.freebsd-x64.6.0.6.nupkg /usr/share/dotnet/; fi
+  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then sudo mv Microsoft.AspNetCore.App.Runtime.freebsd-x64.6.0.6.nupkg /usr/share/dotnet/; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then wget https://github.com/Servarr/dotnet-linux-x86/releases/download/v6.0.7-51/dotnet-sdk-6.0.302-linux-x86.tar.gz; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then wget https://github.com/Servarr/dotnet-linux-x86/releases/download/v6.0.7-51/Microsoft.AspNetCore.App.Runtime.linux-x86.6.0.7.nupkg; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then wget https://github.com/Servarr/dotnet-linux-x86/releases/download/v6.0.7-51/Microsoft.NETCore.App.Runtime.linux-x86.6.0.7.nupkg; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then sudo mkdir /usr/share/dotnet; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then sudo tar xf dotnet-sdk-6.0.302-linux-x86.tar.gz -C /usr/share/dotnet/; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then sudo mv Microsoft.NETCore.App.Runtime.linux-x86.6.0.7.nupkg /usr/share/dotnet/; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then sudo mv Microsoft.AspNetCore.App.Runtime.linux-x86.6.0.7.nupkg /usr/share/dotnet/; fi 
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then sudo dpkg --add-architecture i386; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then sudo apt-get update; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 libicu-dev:i386 -y; fi
 
 script:
   - cd src
-  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then 
-	/usr/share/dotnet/dotnet nuget add source /usr/share/dotnet/;
-	/usr/share/dotnet/dotnet restore;
-	/usr/share/dotnet/dotnet test;
-	/usr/share/dotnet/dotnet publish Juka/Juka.csproj -c release --self-contained true -a "";
-	/usr/share/dotnet/dotnet publish JukaApi/JukaApi.csproj -c release --self-contained true -a "";
-	fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-	dotnet resture;
-	dotnet test;
-	dotnet publish Juka/Juka.csproj -c release --self-contained true --runtime linux;
-	dotnet publish JukaApi/JukaApi.csproj -c release --self-contained true --runtime linux;
-	fi
+  - /usr/share/dotnet/dotnet nuget add source /usr/share/dotnet/
+  - /usr/share/dotnet/dotnet restore
+  - /usr/share/dotnet/dotnet test
+  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then /usr/share/dotnet/dotnet publish Juka/Juka.csproj -c release --self-contained true -a ""; fi
+  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then /usr/share/dotnet/dotnet publish JukaApi/JukaApi.csproj -c release --self-contained true -a ""; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then /usr/share/dotnet/dotnet publish Juka/Juka.csproj -c release --self-contained true --runtime linux; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then /usr/share/dotnet/dotnet publish JukaApi/JukaApi.csproj -c release --self-contained true --runtime linux; fi
+
 
 before_deploy:
-  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then 
-	tar -czf Juka_FreeBSD_${TRAVIS_TAG}.tar.gz -C Juka/bin/Release/net6.0/freebsd-x64/publish . ;
-	tar -czf JukaAPI_FreeBSD_${TRAVIS_TAG}.tar.gz -C JukaApi/bin/Release/net6.0/freebsd-x64/publish . ;
-	curl -LO --retry 3 https://raw.githubusercontent.com/plume-lib/trigger-travis/master/trigger-travis.sh;
-	sh trigger-travis.sh --pro --branch main jukaLang juka-webassembly $TRAVIS_ACCESS_TOKEN "JukaUpdated";
-	fi
+  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then tar -czf Juka_FreeBSD_${TRAVIS_TAG}.tar.gz -C Juka/bin/Release/net6.0/freebsd-x64/publish . ; fi
+  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then tar -czf JukaAPI_FreeBSD_${TRAVIS_TAG}.tar.gz -C JukaApi/bin/Release/net6.0/freebsd-x64/publish . ; fi
+  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then curl -LO --retry 3 https://raw.githubusercontent.com/plume-lib/trigger-travis/master/trigger-travis.sh; fi
+  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then sh trigger-travis.sh --pro --branch main jukaLang juka-webassembly $TRAVIS_ACCESS_TOKEN "JukaUpdated"; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then tar -czf Juka_LinuxX86_${TRAVIS_TAG}.tar.gz -C Juka/bin/Release/net6.0/linux-x64/publish . ; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then tar -czf JukaAPI_LinuxX86_${TRAVIS_TAG}.tar.gz -C JukaApi/bin/Release/net6.0/linux-x64/publish . ; fi
 
-  - if [ "$TRAVIS_OS_NAME" = "linux"]; then 
-	tar -czf Juka_LinuxX86_${TRAVIS_TAG}.tar.gz -C Juka/bin/Release/net6.0/linux-x64/publish . ;
-	tar -czf JukaAPI_LinuxX86_${TRAVIS_TAG}.tar.gz -C JukaApi/bin/Release/net6.0/linux-x64/publish . ;
-	fi
 
 
 deploy:
@@ -58,7 +48,7 @@ deploy:
     secure: "qfkKxi/yYs7dMuRm+GMMX3V9rTPednSVlB20+KJz8m4Clwkluk2ELcFlQ7697TWO32HksUBWc+HBeDaNoaCrywf0ouuJtIPXCqDWtlEqCsvxiGvrc9OgQKDcTj430IYodLQxSvDiHgMiAWzwWeQzk4tVkxV7xhCj0+JCjNk+GqpwcF6hze/64dNv95/zyS8eFLJticiE8m/lB83G0QCsNk/YXEN0Q2qHfE3xwUWuZ+C2cov5pZIBFmeAoAJhqqkJVJNXTur2l8E27WUnz+g0YYSSqvL2+GbS+JAP5XgI40o19QjmnJlUfmO0imsAnQXxAQxMUVmogfTT6DjPqJw7tSPD8ESyrWWMnkovIzeK5yqhEWzokXQGVCt2HVGAaiOGkecVDFFvQemarZojE/qRSbFkdkN4y0niX820aftdm7ZwbCxr+bKZ5tozPbzMVTYRb8wOTwVg+bklmQ76/6k0k9oYxEenHxHzkmGHkxmv3Fofn2cOrtnU7AVKd/WxAdy6eoeAUilZEq1ULgWLNTtKtcVEQv8MUCrX6RO+H/piRogFm2003FPLZLKd1vJ8a5pMOR7XRwH0/m3tXaQrpGhsnFp/Gei4DeLEGozwISJQ+ga4RiSIPSyIC6P/ASqAs751d0a++OX8mWPIDavY3ppmcXZ0RbFAM5l8L7BVOAL7fZs="
   file_glob: true
   file: 
-  - *.tar.gz
+  - ./*.tar.gz
   skip_cleanup: true
   on:
     all_branches: true
