@@ -6,14 +6,14 @@ dist: focal
 
 before_install:
   - sudo mkdir /usr/share/dotnet
-  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/dotnet-sdk-6.0.301-freebsd-x64.tar.gz; fi
+  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then sudo wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/dotnet-sdk-6.0.301-freebsd-x64.tar.gz; fi
   - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then sudo tar xf dotnet-sdk-6.0.301-freebsd-x64.tar.gz -C /usr/share/dotnet/; fi
-  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/Microsoft.AspNetCore.App.Runtime.freebsd-x64.6.0.6.nupkg -P /usr/share/dotnet/; fi
-  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/Microsoft.NETCore.App.Runtime.freebsd-x64.6.0.6.nupkg -P /usr/share/dotnet/; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then wget https://github.com/Servarr/dotnet-linux-x86/releases/download/v6.0.7-51/dotnet-sdk-6.0.302-linux-x86.tar.gz; fi
+  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then sudo wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/Microsoft.AspNetCore.App.Runtime.freebsd-x64.6.0.6.nupkg -P /usr/share/dotnet/; fi
+  - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then sudo wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/Microsoft.NETCore.App.Runtime.freebsd-x64.6.0.6.nupkg -P /usr/share/dotnet/; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then sudo wget https://github.com/Servarr/dotnet-linux-x86/releases/download/v6.0.7-51/dotnet-sdk-6.0.302-linux-x86.tar.gz; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ];  then sudo tar xf dotnet-sdk-6.0.302-linux-x86.tar.gz -C /usr/share/dotnet/; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then wget https://github.com/Servarr/dotnet-linux-x86/releases/download/v6.0.7-51/Microsoft.AspNetCore.App.Runtime.linux-x86.6.0.7.nupkg -P /usr/share/dotnet/; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then wget https://github.com/Servarr/dotnet-linux-x86/releases/download/v6.0.7-51/Microsoft.NETCore.App.Runtime.linux-x86.6.0.7.nupkg -P /usr/share/dotnet/; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then sudo wget https://github.com/Servarr/dotnet-linux-x86/releases/download/v6.0.7-51/Microsoft.AspNetCore.App.Runtime.linux-x86.6.0.7.nupkg -P /usr/share/dotnet/; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then sudo wget https://github.com/Servarr/dotnet-linux-x86/releases/download/v6.0.7-51/Microsoft.NETCore.App.Runtime.linux-x86.6.0.7.nupkg -P /usr/share/dotnet/; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ];  then sudo dpkg --add-architecture i386; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ];  then sudo apt-get update; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ];  then sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 libicu-dev:i386 libssl-dev:i386 zlib1g:i386 -y; fi
