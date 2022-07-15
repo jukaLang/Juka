@@ -2,7 +2,7 @@ os:
   - freebsd
   - linux
 
-dist: precise
+dist: focal
 
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/dotnet-sdk-6.0.301-freebsd-x64.tar.gz; fi

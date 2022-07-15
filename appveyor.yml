@@ -29,6 +29,7 @@ dotnet_csproj:
 before_build: 
   - cd src
   - dotnet test
+  - dotnet pack --nologo -c Release JukaCompiler -p:PackageReadmeFile=..\README.md
 
 after_build:
  - dotnet publish -c Release --self-contained true --runtime osx-x64 Juka
@@ -51,8 +52,6 @@ after_build:
 
  - dotnet publish -c Release --self-contained true --runtime win-arm64 Juka
  - dotnet publish -c Release --self-contained true --runtime win-arm64 JukaApi
-
- - dotnet pack --nologo -c Release JukaCompiler -p:PackageReadmeFile=..\..\README.md
 
  - dotnet publish -c Release JukaAzureFunction
 
