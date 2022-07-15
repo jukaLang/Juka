@@ -31,30 +31,30 @@ before_build:
   - dotnet test
 
 after_build:
- - dotnet publish -c Release --self-contained true --runtime osx-x64 Juka --no-restore
- - dotnet publish -c Release --self-contained true --runtime osx-x64 JukaApi --no-restore
+ - dotnet publish -c Release --self-contained true --runtime osx-x64 Juka 
+ - dotnet publish -c Release --self-contained true --runtime osx-x64 JukaApi 
 
- - dotnet publish -c Release --self-contained true --runtime linux-x64 Juka --no-restore
- - dotnet publish -c Release --self-contained true --runtime linux-x64 JukaApi --no-restore
+ - dotnet publish -c Release --self-contained true --runtime linux-x64 Juka
+ - dotnet publish -c Release --self-contained true --runtime linux-x64 JukaApi
 
- - dotnet publish -c Release --self-contained true --runtime linux-arm Juka --no-restore
- - dotnet publish -c Release --self-contained true --runtime linux-arm JukaApi --no-restore
+ - dotnet publish -c Release --self-contained true --runtime linux-arm Juka 
+ - dotnet publish -c Release --self-contained true --runtime linux-arm JukaApi
 
- - dotnet publish -c Release --self-contained true --runtime linux-arm64 Juka --no-restore
- - dotnet publish -c Release --self-contained true --runtime linux-arm64 JukaApi --no-restore
+ - dotnet publish -c Release --self-contained true --runtime linux-arm64 Juka
+ - dotnet publish -c Release --self-contained true --runtime linux-arm64 JukaApi 
 
- - dotnet publish -c Release --self-contained true --runtime win-x86 Juka --no-restore
- - dotnet publish -c Release --self-contained true --runtime win-x86 JukaApi --no-restore
+ - dotnet publish -c Release --self-contained true --runtime win-x86 Juka 
+ - dotnet publish -c Release --self-contained true --runtime win-x86 JukaApi
 
- - dotnet publish -c Release --self-contained true --runtime win-x64 Juka --no-restore
- - dotnet publish -c Release --self-contained true --runtime win-x64 JukaApi --no-restore
+ - dotnet publish -c Release --self-contained true --runtime win-x64 Juka 
+ - dotnet publish -c Release --self-contained true --runtime win-x64 JukaApi 
 
- - dotnet publish -c Release --self-contained true --runtime win-arm64 Juka --no-restore
- - dotnet publish -c Release --self-contained true --runtime win-arm64 JukaApi --no-restore
+ - dotnet publish -c Release --self-contained true --runtime win-arm64 Juka 
+ - dotnet publish -c Release --self-contained true --runtime win-arm64 JukaApi 
 
- - dotnet pack --nologo -c Release JukaCompiler --no-build
+ - dotnet pack --nologo -c Release JukaCompiler
 
- - dotnet publish -c Release JukaAzureFunction --no-restore
+ - dotnet publish -c Release JukaAzureFunction
 
 configuration: Release
 
