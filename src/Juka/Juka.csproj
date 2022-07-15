@@ -7,7 +7,14 @@
     <Nullable>enable</Nullable>
     <PackageVersion>$(PackageVersion)</PackageVersion>
     <PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>true</PublishTrimmed>
+    <PublishAot>true</PublishAot>
+    <ApplicationIcon>..\juka.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\juka.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\JukaCompiler\JukaCompiler.csproj" />

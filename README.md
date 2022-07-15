@@ -3,7 +3,7 @@
 Official Website: https://jukalang.com
 
 [![Twitter](https://img.shields.io/twitter/follow/jukaLang.svg?style=social)](https://twitter.com/jukaLang)
-[![Discord](https://img.shields.io/discord/975787212954275910)](https://discord.com/invite/7BNpwKH8JC/)
+[![Discord](https://img.shields.io/discord/975787212954275910)](https://discord.gg/MsKWsErzfp)
 
 Travis (FreeBSD): [![Build Status](https://app.travis-ci.com/jukaLang/Juka.svg?branch=master)](https://app.travis-ci.com/jukaLang/Juka)
 
@@ -37,6 +37,8 @@ __Coming Soon:__
 - iOS App (iPhone/iPad)
 - MacOS App
 - Windows App (Windows 10+)
+- Tizen (Samsung)
+- Linux 32-bit
 
 __Potential Future Support:__
 - AWS (Amazon Web Service)
