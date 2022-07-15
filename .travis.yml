@@ -2,6 +2,8 @@ os:
   - freebsd
   - linux
 
+dist: precise
+
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/dotnet-sdk-6.0.301-freebsd-x64.tar.gz; fi
   - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.301/Microsoft.AspNetCore.App.Runtime.freebsd-x64.6.0.6.nupkg; fi

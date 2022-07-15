@@ -4,9 +4,8 @@ Official Website: https://jukalang.com
 
 [![Twitter](https://img.shields.io/twitter/follow/jukaLang.svg?style=social)](https://twitter.com/jukaLang)
 [![Discord](https://img.shields.io/discord/975787212954275910)](https://discord.gg/MsKWsErzfp)
-
-Nuget: ![Nuget](https://img.shields.io/nuget/dt/JukaCompiler)
-Jupyter: ![PyPI - Wheel](https://img.shields.io/pypi/wheel/juka_kernel)
+![PyPI - Wheel](https://img.shields.io/pypi/wheel/juka_kernel)
+![Nuget](https://img.shields.io/nuget/dt/JukaCompiler)
 
 Travis (FreeBSD): [![Build Status](https://app.travis-ci.com/jukaLang/Juka.svg?branch=master)](https://app.travis-ci.com/jukaLang/Juka)
 
