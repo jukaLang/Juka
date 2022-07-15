@@ -5,7 +5,7 @@ branches:
   only:
     - master
 
-skip_tags: true
+skip_tags: false
 skip_non_tags: false
 
 version: '0.0.{build}'
