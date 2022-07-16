@@ -12,6 +12,8 @@
     <PublishTrimmed>true</PublishTrimmed>
     <PublishAot>true</PublishAot>
     <ApplicationIcon>..\juka.ico</ApplicationIcon>
+    <DebugType>None</DebugType>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>

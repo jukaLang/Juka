@@ -33,8 +33,8 @@ before_deploy:
   - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then tar -czf JukaAPI_FreeBSD_${TRAVIS_TAG}.tar.gz -C JukaApi/bin/Release/net6.0/freebsd-x64/publish .; fi
   - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then curl -LO --retry 3 https://raw.githubusercontent.com/plume-lib/trigger-travis/master/trigger-travis.sh; fi
   - if [ "$TRAVIS_OS_NAME" = "freebsd" ]; then sh trigger-travis.sh --pro --branch main jukaLang juka-webassembly $TRAVIS_ACCESS_TOKEN "JukaUpdated"; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then tar -czf Juka_LinuxX86_${TRAVIS_TAG}.tar.gz -C Juka/bin/Release/net6.0/linux-x64/publish .; fi
-  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then tar -czf JukaAPI_LinuxX86_${TRAVIS_TAG}.tar.gz -C JukaApi/bin/Release/net6.0/linux-x64/publish .; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then tar -czf Juka_LinuxX86_${TRAVIS_TAG}.tar.gz -C Juka/bin/Release/net6.0/linux-x86/publish .; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ];  then tar -czf JukaAPI_LinuxX86_${TRAVIS_TAG}.tar.gz -C JukaApi/bin/Release/net6.0/linux-x86/publish .; fi
 
 
 
