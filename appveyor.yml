@@ -11,7 +11,7 @@ skip_non_tags: false
 version: '0.0.{build}'
 
 environment:
-  my_variable:
+  token:
     secure: YPPyzDbCboQKYOfAl/4XahyYfDiWOsyjoL2WjyNOxH4=
 
 assembly_info:
@@ -60,7 +60,6 @@ after_build:
 
  - dotnet publish -c Release JukaAzureFunction
 
- - ps: $token = $my_variable
  - ps: $headers = @{}
  - ps: $headers['Authorization'] = "Bearer $token"
  - ps: $headers["Content-type"] = "application/json"
