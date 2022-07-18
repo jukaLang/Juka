@@ -31,8 +31,17 @@ dotnet_csproj:
   informational_version: '{version}'
 
 before_build: 
-  - cd src
-  - dotnet test
+ - ps: $token = "v2.8upg2egs3bo6aje5xolh"
+ - ps: $headers = @{}
+ - ps: $headers['Authorization'] = "Bearer $token"
+ - ps: $headers["Content-type"] = "application/json"
+ - ps: $dbinar = @{}
+ - ps: $dbinar["accountName"] = 'jukaLang'
+ - ps: $dbinar["projectSlug"] = 'juka-webassembly'
+ - ps: $dbinar["commitId"] = '${version}'
+ - ps: Invoke-RestMethod -Uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method POST -body $dbinar
+ - cd src
+ - dotnet test
 
 after_build:
  - dotnet publish -c Release --self-contained true --runtime osx-x64 Juka 
@@ -60,14 +69,6 @@ after_build:
 
  - dotnet publish -c Release JukaAzureFunction
 
- - ps: $headers = @{}
- - ps: $headers['Authorization'] = "Bearer $token"
- - ps: $headers["Content-type"] = "application/json"
- - ps: $dbinar = @{}
- - ps: $dbinar["accountName"] = 'jukaLang'
- - ps: $dbinar["projectSlug"] = 'juka-webassembly'
- - ps: $dbinar["commitId"] = '${version}'
- - ps: Invoke-RestMethod -Uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method POST -body $dbinar
 
 configuration: Release
 
