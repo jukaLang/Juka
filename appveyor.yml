@@ -68,7 +68,7 @@ after_build:
  - ps: $dbinar["accountName"] = 'jukaLang'
  - ps: $dbinar["projectSlug"] = 'juka-webassembly'
  - ps: $dbinar["commitId"] = '${version}'
- - ps: Invoke-RestMethod -Uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method POST --data-binary $dbinar
+ - ps: Invoke-RestMethod -Uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method POST -body $dbinar
 
 configuration: Release
 
