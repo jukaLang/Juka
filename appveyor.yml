@@ -32,7 +32,7 @@ dotnet_csproj:
 
 before_build: 
  - ps: $headers = @{}
- - ps: $headers['Authorization'] = "Bearer $token"
+ - ps: $headers['Authorization'] = "Bearer $env:token"
  - ps: $headers["Content-type"] = "application/json"
  - ps: $dbinar = @{}
  - ps: $dbinar["accountName"] = 'TheAndreiM'
