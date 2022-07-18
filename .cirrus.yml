@@ -32,7 +32,7 @@ task:
     setup_script:
     - dpkg --add-architecture i386
     - apt-get update
-    - apt-get install -y wget libc6:i386 libncurses5:i386 libstdc++6:i386 libicu-dev:i386 libssl-dev:i386 zlib1g:i386 
+    - apt-get install -y wget curl libc6:i386 libncurses5:i386 libstdc++6:i386 libicu-dev:i386 libssl-dev:i386 zlib1g:i386 
     - mkdir /usr/share/dotnet
     - wget https://github.com/Servarr/dotnet-linux-x86/releases/download/v6.0.7-51/dotnet-sdk-6.0.302-linux-x86.tar.gz
     - tar xf dotnet-sdk-6.0.302-linux-x86.tar.gz -C /usr/share/dotnet/
