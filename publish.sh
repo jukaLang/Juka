@@ -12,7 +12,7 @@ fi
 
 file_content_type="application/octet-stream"
 files_to_upload=(
-  ./*.tar.gz
+  *.tar.gz
 )
 
 for fpath in $files_to_upload
@@ -25,3 +25,4 @@ do
     --header "Authorization: token $GITHUB_TOKEN" \
     --header "Content-Type: $file_content_type" \
     $url_to_upload
+done
