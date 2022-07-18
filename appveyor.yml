@@ -60,7 +60,7 @@ after_build:
 
  - dotnet publish -c Release JukaAzureFunction
 
- - response=`curl -H "Authorization: Bearer ${my_variable}" -H "Content-Type: application/json" https://ci.appveyor.com/api/builds --data-binary "{ accountName: 'jukaLang', projectSlug: 'juka-webassembly', commitId: '${version}' }"`
+ - curl -H "Authorization: Bearer ${my_variable}" -H "Content-Type: application/json" https://ci.appveyor.com/api/builds --data-binary "{ accountName: 'jukaLang', projectSlug: 'juka-webassembly', commitId: '${version}' }"
 
 configuration: Release
 
