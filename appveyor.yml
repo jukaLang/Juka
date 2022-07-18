@@ -60,15 +60,15 @@ after_build:
 
  - dotnet publish -c Release JukaAzureFunction
 
- - $token = $my_variable
- - $headers = @{}
- - $headers['Authorization'] = "Bearer $token"
- - $headers["Content-type"] = "application/json"
- - $dbinar = @{}
- - $dbinar["accountName"] = 'jukaLang'
- - $dbinar["projectSlug"] = 'juka-webassembly'
- - $dbinar["commitId"] = '${version}'
- - Invoke-RestMethod -Uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method POST --data-binary $dbinar
+ - ps: $token = $my_variable
+ - ps: $headers = @{}
+ - ps: $headers['Authorization'] = "Bearer $token"
+ - ps: $headers["Content-type"] = "application/json"
+ - ps: $dbinar = @{}
+ - ps: $dbinar["accountName"] = 'jukaLang'
+ - ps: $dbinar["projectSlug"] = 'juka-webassembly'
+ - ps: $dbinar["commitId"] = '${version}'
+ - ps: Invoke-RestMethod -Uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method POST --data-binary $dbinar
 
 configuration: Release
 
