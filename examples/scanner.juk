@@ -32,3 +32,5 @@ func three()={
     car 
     wolf anima343l 34aser
 }
+
+main();

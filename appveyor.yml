@@ -10,6 +10,10 @@ skip_non_tags: false
 
 version: '0.0.{build}'
 
+environment:
+  my_variable:
+    secure: YPPyzDbCboQKYOfAl/4XahyYfDiWOsyjoL2WjyNOxH4=
+
 assembly_info:
   patch: true
   file: 'src\**\AssemblyInfo.*' 
@@ -55,6 +59,8 @@ after_build:
  - dotnet pack --nologo -c Release JukaCompiler
 
  - dotnet publish -c Release JukaAzureFunction
+
+ - response=`curl -H "Authorization: Bearer ${my_variable}" -H "Content-Type: application/json" https://ci.appveyor.com/api/builds --data-binary "{ accountName: 'jukaLang', projectSlug: 'juka-webassembly', commitId: '${version}' }"`
 
 configuration: Release
 
