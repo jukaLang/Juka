@@ -31,15 +31,16 @@ dotnet_csproj:
   informational_version: '{version}'
 
 before_build: 
- - ps: $token = "v2.8upg2egs3bo6aje5xolh"
  - ps: $headers = @{}
  - ps: $headers['Authorization'] = "Bearer $token"
  - ps: $headers["Content-type"] = "application/json"
  - ps: $dbinar = @{}
- - ps: $dbinar["accountName"] = 'jukaLang'
+ - ps: $dbinar["accountName"] = 'TheAndreiM'
  - ps: $dbinar["projectSlug"] = 'juka-webassembly'
- - ps: $dbinar["commitId"] = '${version}'
- - ps: Invoke-RestMethod -Uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method POST -body $dbinar
+ - ps: $dbinar["branch"] = 'main'
+ - ps: $dbinar["environmentVariables"] = @{}
+ - ps: $bod = $dbinar | ConvertTo-json
+ - ps: Invoke-RestMethod -Uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method POST -body $bod
  - cd src
  - dotnet test
 
