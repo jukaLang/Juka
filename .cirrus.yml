@@ -4,7 +4,8 @@ task:
     freebsd_instance:
       image_family: freebsd-13-0
     environment:
-      GITHUB_TOKEN: ENCRYPTED[38a5a4b83d9859dccc98655bdc993fb9da11ad43d0c787473b692f45732505f167335e45564474e9f3a1cbe7a883b3ae]
+      - GITHUB_TOKEN: ENCRYPTED[38a5a4b83d9859dccc98655bdc993fb9da11ad43d0c787473b692f45732505f167335e45564474e9f3a1cbe7a883b3ae]
+      - JUKA_TOKEN: FreeBSD
     setup_script:
     - pkg install -y wget bash libunwind icu libuv emby-server
     - sudo mkdir /dotnet
@@ -28,7 +29,8 @@ task:
     container:
       image: ubuntu:latest
     environment:
-      GITHUB_TOKEN: ENCRYPTED[38a5a4b83d9859dccc98655bdc993fb9da11ad43d0c787473b692f45732505f167335e45564474e9f3a1cbe7a883b3ae]
+      - GITHUB_TOKEN: ENCRYPTED[38a5a4b83d9859dccc98655bdc993fb9da11ad43d0c787473b692f45732505f167335e45564474e9f3a1cbe7a883b3ae]
+      - JUKA_TOKEN: LinuxX86
     setup_script:
     - dpkg --add-architecture i386
     - apt-get update
@@ -48,5 +50,6 @@ task:
     package_script:
     - tar -czf Juka_LinuxX86_${CIRRUS_RELEASE}.tar.gz -C /tmp/cirrus-ci-build/src/Juka/bin/Release/net6.0/linux-x86/publish .
     - tar -czf JukaAPI_LinuxX86_${CIRRUS_RELEASE}.tar.gz -C /tmp/cirrus-ci-build/src/JukaApi/bin/Release/net6.0/linux-x86/publish .
+    - pwd
     - chmod +x ./publish.sh
     - ./publish.sh

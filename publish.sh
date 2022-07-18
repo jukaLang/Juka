@@ -11,9 +11,19 @@ if [[ "$GITHUB_TOKEN" == "" ]]; then
 fi
 
 file_content_type="application/octet-stream"
+if [[ "$JUKA_TOKEN" == "FreeBSD" ]]; then
 files_to_upload=(
-  src/*.tar.gz
+  Juka_FreeBSD_${CIRRUS_RELEASE}.tar.gz
+  JukaAPI_FreeBSD_${CIRRUS_RELEASE}.tar.gz
 )
+fi
+
+if [[ "$JUKA_TOKEN" == "LinuxX86" ]]; then
+files_to_upload=(
+  Juka_LinuxX86_${CIRRUS_RELEASE}.tar.gz
+  JukaAPI_LinuxX86_${CIRRUS_RELEASE}.tar.gz
+)
+fi
 
 for fpath in $files_to_upload
 do

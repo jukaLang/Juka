@@ -9,7 +9,7 @@ PyPi: [![PyPI - Wheel](https://img.shields.io/pypi/wheel/juka-kernel)](https://p
 
 NuGet: [![Nuget](https://img.shields.io/nuget/dt/JukaCompiler)](https://www.nuget.org/packages/JukaCompiler)
 
-CirrusCI (FreeBSD/Linux(x86)): ![Cirrus CI - Base Branch Build Status](https://img.shields.io/cirrus/github/jukaLang/Juka)
+CirrusCI (FreeBSD/Linux(x86)): [![Cirrus CI - Base Branch Build Status](https://img.shields.io/cirrus/github/jukaLang/Juka)](https://cirrus-ci.com/github/jukaLang/Juka)
 
 Appveyor (Visual Studio Builds): [![Build status](https://ci.appveyor.com/api/projects/status/nmjmm04xhryx8p54?svg=true)](https://ci.appveyor.com/project/TheAndreiM/juka)
 
