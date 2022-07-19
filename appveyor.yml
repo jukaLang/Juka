@@ -60,16 +60,7 @@ after_build:
 
  - dotnet publish -c Release JukaAzureFunction
 
- - ps: $headers = @{}
- - ps: $headers['Authorization'] = "Bearer $env:token"
- - ps: $headers["Content-type"] = "application/json"
- - ps: $dbinar = @{}
- - ps: $dbinar["accountName"] = 'TheAndreiM'
- - ps: $dbinar["projectSlug"] = 'juka-webassembly'
- - ps: $dbinar["branch"] = 'main'
- - ps: $dbinar["environmentVariables"] = @{}
- - ps: $bod = $dbinar | ConvertTo-json
- - ps: Invoke-RestMethod -Uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method POST -body $bod
+
 
 configuration: Release
 
@@ -150,3 +141,15 @@ deploy:
     on:
       branch: master                # release from master branch only
       APPVEYOR_REPO_TAG: false       # deploy on tag push only
+
+after_deploy:
+ - ps: $headers = @{}
+ - ps: $headers['Authorization'] = "Bearer $env:token"
+ - ps: $headers["Content-type"] = "application/json"
+ - ps: $dbinar = @{}
+ - ps: $dbinar["accountName"] = 'TheAndreiM'
+ - ps: $dbinar["projectSlug"] = 'juka-webassembly'
+ - ps: $dbinar["branch"] = 'main'
+ - ps: $dbinar["environmentVariables"] = @{}
+ - ps: $bod = $dbinar | ConvertTo-json
+ - ps: Invoke-RestMethod -Uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method POST -body $bod
