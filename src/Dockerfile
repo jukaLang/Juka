@@ -10,10 +10,10 @@ COPY ["JukaCompiler/JukaCompiler.csproj", "JukaCompiler/"]
 RUN dotnet restore "JukaApi/JukaApi.csproj"
 COPY . .
 WORKDIR "/src/JukaApi"
-RUN dotnet build "JukaApi.csproj" -c Release -a "x64" -o /app/build
+RUN dotnet build "JukaApi.csproj" -c Release --self-contained true --runtime win-x64 -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "JukaApi.csproj" -c Release -a "x64" -o /app/publish
+RUN dotnet publish "JukaApi.csproj" -c Release --self-contained true --runtime win-x64 -o /app/publish
 
 FROM base AS final
 WORKDIR /app
