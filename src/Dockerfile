@@ -18,4 +18,4 @@ RUN dotnet publish "JukaApi.csproj" -c Release --self-contained true --runtime w
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "JukaApi.dll"]
+ENTRYPOINT ["JukaApi"]
