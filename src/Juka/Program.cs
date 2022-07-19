@@ -9,7 +9,7 @@ if (args.Length == 0)
 {
     Console.Title = "Juka Compiler";
     Console.WriteLine("♥ Welcome to Juka Compiler. If you need to run a file, pass it as an argument ♥");
-    Console.WriteLine("Press Return 4 times to run the code");
+    Console.WriteLine("Press Return 3 times to run the code");
 
     while (true)
     {
@@ -22,8 +22,14 @@ if (args.Length == 0)
             readline = Console.ReadLine();
             if (readline == "")
             {
+                if (userInput == "")
+                {
+                    Console.Write("> ");
+                    continue;
+                }
+
                 counter++;
-                if (counter == 3)
+                if (counter == 2)
                 {
                     break;
                 }

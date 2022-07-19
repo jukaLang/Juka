@@ -1,6 +1,3 @@
-using System.Text.Json;
-using System.Web;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -31,15 +28,14 @@ app.MapGet("/", () =>
 var executeCode = (string src) =>
 {
     JukaCompiler.Compiler compiler = new JukaCompiler.Compiler();
-    string sourceAsString = HttpUtility.UrlDecode(src);
-    var outputValue = compiler.Go(sourceAsString, false);
+    var outputValue = compiler.Go(src, false);
 
     if (compiler.HasErrors())
     {
-        var errors = compiler.ListErrors().ToString();
-        return Results.Json(new { errors = errors });
+        string errors = string.Join(Environment.NewLine, compiler.ListErrors());
+        return Results.Json(new { errors = errors, original = src });
     }
-    return Results.Json(new { output = outputValue });
+    return Results.Json(new { output = outputValue, original = src });
 };
 
 app.MapGet("/{*src}", (string src) => executeCode(src));

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -30,10 +31,10 @@ namespace JukaAzureFunction
 
             if (compiler.HasErrors())
             {
-                var errors = compiler.ListErrors().ToString();
-                return new OkObjectResult(new { errors = errors });
+                var errors = string.Join(Environment.NewLine, compiler.ListErrors());
+                return new OkObjectResult(new { errors = errors, original = code });
             }
-            return new OkObjectResult(new { output = outputValue });
+            return new OkObjectResult(new { output = outputValue, original = code });
         }
     }
 

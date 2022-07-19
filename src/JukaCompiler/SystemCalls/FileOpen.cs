@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JukaCompiler.Exceptions;
+﻿using System.Text;
 using JukaCompiler.Interpreter;
 
 namespace JukaCompiler.SystemCalls
