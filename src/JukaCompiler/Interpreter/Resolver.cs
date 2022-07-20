@@ -258,9 +258,16 @@ namespace JukaCompiler.Interpreter
                 ResolveLocal(expr, expr.Name);
                 return new Stmt.DefaultStatement();
             }
-            throw new NotImplementedException("Something went wrong visitng");
-            this.compilerError?.AddError(expr.Name.ToString() + "Can't read local variable");
-            return new Stmt.DefaultStatement();
+
+            try
+            {
+                ResolveLocal(expr, expr.Name);
+                return new Stmt.DefaultStatement();
+            }
+            catch
+            {
+                throw new NotImplementedException("Something went wrong visitng");
+            }
         }
 
         private void ResolveLocal(Expression expr, Lexeme name)
@@ -347,11 +354,12 @@ namespace JukaCompiler.Interpreter
                 var literalName = param.parameterName as Expression.Variable;
                 if (literalName == null)
                 {
-                    // throw something;
+                    throw new Exception("Something went wrong when resolving the function");
                 }
                 Declare(literalName.Name);
                 Define(param.parameterType);
             }
+
             Resolve(function.body);
             EndScope();
             //> restore-current-function

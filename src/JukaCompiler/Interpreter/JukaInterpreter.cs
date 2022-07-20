@@ -147,11 +147,16 @@ namespace JukaCompiler.Interpreter
                 if (stmt.expr is Expression.Variable)
                 {
                     var variable = LookUpVariable(stmt.expr.Name, stmt.expr);
+
                     if (variable != null)
                     {
                         if (variable is Expression.LexemeTypeLiteral)
                         {
-                            Console.Write(((Expression.LexemeTypeLiteral)variable).Literal);
+                            Console.Write(((Expression.LexemeTypeLiteral)variable).literal);
+                        }
+                        else if (variable is Expression.Literal)
+                        {
+                            Console.Write(((Expression.Literal)variable).name.ToString());
                         }
                     }
                 }

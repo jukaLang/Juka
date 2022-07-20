@@ -1,6 +1,7 @@
 ﻿using JukaCompiler;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using Microsoft.CodeAnalysis;
 
 namespace JukaUnitTest
 {
@@ -48,6 +49,21 @@ namespace JukaUnitTest
             }
             Assert.AreEqual("printLineTest" + Environment.NewLine + "printTest", outputValue);
         }
+
+        [TestMethod]
+        public void TestFunctionCall()
+        {
+            Compiler compiler = new Compiler();
+            string sourceAsString = "func test_func(var m) = { var u=m; print(u); } test_func(3);";
+
+            var outputValue = compiler.Go(sourceAsString, false);
+            if (compiler.HasErrors())
+            {
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+            }
+            Assert.AreEqual("3", outputValue);
+        }
+
 
         [TestMethod]
         public void TestMultipleVariables()
