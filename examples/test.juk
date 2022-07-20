@@ -1,5 +1,5 @@
 class x = {
-	string s = "bob";
+	var s = "bob";
 	func foo() = {
 	}
 
@@ -8,7 +8,7 @@ class x = {
 }
 
 func Process() = {
-	string s = "foobar";
+	var s = "foobar";
 	string y = "file.txt";
 
 	string z = FileOpen(y);

@@ -53,7 +53,7 @@ namespace JukaUnitTest
         public void TestMultipleVariables()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "func test_func() = { string x=\"32\"; string y=\"33\"; printLine(x);} test_func();";
+            string sourceAsString = "func test_func() = { var x=32; var y=33; printLine(x);} test_func();";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
@@ -67,56 +67,56 @@ namespace JukaUnitTest
         public void TestOperationAdd()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "func test_add() = {int x=\"32\"; int y=\"33\"; int z=x+y;printLine(z);} test_add();";
+            string sourceAsString = "func test_add() = {var x=32; var y=33; var z=x+y;printLine(z);} test_add();";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
-            //Assert.AreEqual("65" + Environment.NewLine, outputValue);
+            Assert.AreEqual("65" + Environment.NewLine, outputValue);
         }
 
         [TestMethod]
         public void TestOperationSubtract()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "func test_add() = {int x=\"32\"; int y=\"33\"; int z=x-y;printLine(z);} test_add();";
+            string sourceAsString = "func test_add() = {var x=32; var y=33; var z=x-y;printLine(z);} test_add();";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
-            //Assert.AreEqual("-1" + Environment.NewLine, outputValue);
+            Assert.AreEqual("-1" + Environment.NewLine, outputValue);
         }
 
         [TestMethod]
         public void TestOperationDivide()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "func test_add() = {int x=\"10\"; int y=\"3\"; int z=x/y;printLine(z);} test_add();";
+            string sourceAsString = "func test_add() = {var x=10; var y=3; var z=x/y;printLine(z);} test_add();";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
-            //Assert.AreEqual("3" + Environment.NewLine, outputValue);
+            Assert.AreEqual("3" + Environment.NewLine, outputValue);
         }
 
         [TestMethod]
         public void TestOperationMultiply()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "func test_add() = {int x=\"3\"; int y=\"3\"; int z=x*y;printLine(z);} test_add();";
+            string sourceAsString = "func test_add() = {var x=3; var y=3; var z=x*y;printLine(z);} test_add();";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
-            //Assert.AreEqual("9" + Environment.NewLine, outputValue);
+            Assert.AreEqual("9" + Environment.NewLine, outputValue);
         }
 
 

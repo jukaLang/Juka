@@ -248,7 +248,7 @@ namespace JukaCompiler.Parse
             if(Match(LexemeType.INT) || 
                 Match(LexemeType.STRING) ||
                 Match(LexemeType.FLOAT) ||
-                Match(LexemeType.DOUBLE))
+                Match(LexemeType.DOUBLE) || Match(LexemeType.VAR))
             {
                 return true;
             }

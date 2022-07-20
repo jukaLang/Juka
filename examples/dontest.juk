@@ -1,8 +1,8 @@
 func Process() = {
-	string s = "foobar";
-	string y = "file.txt";
+	var s = "foobar";
+	var y = "file.txt";
 
-	string z = FileOpen(y);
+	var z = FileOpen(y);
 	printLine(z);
 
 	if(s == "foobar")
@@ -10,7 +10,7 @@ func Process() = {
 		printLine("d:\source\repos\juksa\file.txt");
 	}
 
-	int x = GetAvailableMemory();
+	var x = GetAvailableMemory();
 	printLine(x);
 
 }
@@ -18,7 +18,7 @@ func Process() = {
 
 func test() =
 {
-	string y = "file.txt";
+	var y = "file.txt";
 }
 
 
