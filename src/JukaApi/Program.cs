@@ -28,14 +28,15 @@ app.MapGet("/", () =>
 var executeCode = (string src) =>
 {
     JukaCompiler.Compiler compiler = new JukaCompiler.Compiler();
+    string decoded = Uri.UnescapeDataString(src);
     var outputValue = compiler.Go(src, false);
 
     if (compiler.HasErrors())
     {
         string errors = string.Join(Environment.NewLine, compiler.ListErrors());
-        return Results.Json(new { errors = errors, original = src });
+        return Results.Json(new { errors = errors, original = decoded });
     }
-    return Results.Json(new { output = outputValue, original = src });
+    return Results.Json(new { output = outputValue, original = decoded });
 };
 
 app.MapGet("/{*src}", (string src) => executeCode(src));
