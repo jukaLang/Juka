@@ -19,7 +19,7 @@ task:
     - /dotnet/dotnet nuget add source /dotnet/
     - /dotnet/dotnet restore
     - /dotnet/dotnet test
-    - /dotnet/dotnet publish Juka.sln -c release --self-contained true -a ""
+    - /dotnet/dotnet publish Juka.sln -c release --self-contained true -a "" /property:Version=${CIRRUS_TAG}
     package_script:
     - tar -czf Juka_FreeBSD_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/Juka/bin/Release/net6.0/freebsd-x64/publish .
     - tar -czf JukaAPI_FreeBSD_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/JukaApi/bin/Release/net6.0/freebsd-x64/publish .
@@ -46,7 +46,7 @@ task:
     - /usr/share/dotnet/dotnet nuget add source /usr/share/dotnet/
     - /usr/share/dotnet/dotnet restore
     - /usr/share/dotnet/dotnet test
-    - /usr/share/dotnet/dotnet publish Juka.sln -c release --self-contained true --runtime linux-x86
+    - /usr/share/dotnet/dotnet publish Juka.sln -c release --self-contained true --runtime linux-x86 /property:Version=${CIRRUS_TAG}
     package_script:
     - tar -czf Juka_LinuxX86_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/Juka/bin/Release/net6.0/linux-x86/publish .
     - tar -czf JukaAPI_LinuxX86_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/JukaApi/bin/Release/net6.0/linux-x86/publish .

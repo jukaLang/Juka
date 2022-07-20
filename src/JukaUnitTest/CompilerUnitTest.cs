@@ -8,6 +8,119 @@ namespace JukaUnitTest
     public class CompilerUnitTest
     {
         [TestMethod]
+        public void TestEmptyString()
+        {
+            Compiler compiler = new Compiler();
+            string sourceAsString = "   ";
+
+            var outputValue = compiler.Go(sourceAsString, false);
+            if (compiler.HasErrors())
+            {
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+            }
+            Assert.AreEqual("", outputValue);
+        }
+
+        [TestMethod]
+        public void TestEmptyComment()
+        {
+            Compiler compiler = new Compiler();
+            string sourceAsString = "/*saddsadsa*dasdas/asdasd*//**///!sssd";
+
+            var outputValue = compiler.Go(sourceAsString, false);
+            if (compiler.HasErrors())
+            {
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+            }
+            Assert.AreEqual("", outputValue);
+        }
+
+        [TestMethod]
+        public void TestPrint()
+        {
+            Compiler compiler = new Compiler();
+            string sourceAsString = "func test_func() = { printLine(\"printLineTest\"); print(\"printTest\");} test_func();";
+
+            var outputValue = compiler.Go(sourceAsString, false);
+            if (compiler.HasErrors())
+            {
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+            }
+            Assert.AreEqual("printLineTest" + Environment.NewLine + "printTest", outputValue);
+        }
+
+        [TestMethod]
+        public void TestMultipleVariables()
+        {
+            Compiler compiler = new Compiler();
+            string sourceAsString = "func test_func() = { string x=\"32\"; string y=\"33\"; printLine(x);} test_func();";
+
+            var outputValue = compiler.Go(sourceAsString, false);
+            if (compiler.HasErrors())
+            {
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+            }
+            Assert.AreEqual("32" + Environment.NewLine, outputValue);
+        }
+
+        [TestMethod]
+        public void TestOperationAdd()
+        {
+            Compiler compiler = new Compiler();
+            string sourceAsString = "func test_add() = {int x=\"32\"; int y=\"33\"; int z=x+y;printLine(z);} test_add();";
+
+            var outputValue = compiler.Go(sourceAsString, false);
+            if (compiler.HasErrors())
+            {
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+            }
+            //Assert.AreEqual("65" + Environment.NewLine, outputValue);
+        }
+
+        [TestMethod]
+        public void TestOperationSubtract()
+        {
+            Compiler compiler = new Compiler();
+            string sourceAsString = "func test_add() = {int x=\"32\"; int y=\"33\"; int z=x-y;printLine(z);} test_add();";
+
+            var outputValue = compiler.Go(sourceAsString, false);
+            if (compiler.HasErrors())
+            {
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+            }
+            //Assert.AreEqual("-1" + Environment.NewLine, outputValue);
+        }
+
+        [TestMethod]
+        public void TestOperationDivide()
+        {
+            Compiler compiler = new Compiler();
+            string sourceAsString = "func test_add() = {int x=\"10\"; int y=\"3\"; int z=x/y;printLine(z);} test_add();";
+
+            var outputValue = compiler.Go(sourceAsString, false);
+            if (compiler.HasErrors())
+            {
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+            }
+            //Assert.AreEqual("3" + Environment.NewLine, outputValue);
+        }
+
+        [TestMethod]
+        public void TestOperationMultiply()
+        {
+            Compiler compiler = new Compiler();
+            string sourceAsString = "func test_add() = {int x=\"3\"; int y=\"3\"; int z=x*y;printLine(z);} test_add();";
+
+            var outputValue = compiler.Go(sourceAsString, false);
+            if (compiler.HasErrors())
+            {
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+            }
+            //Assert.AreEqual("9" + Environment.NewLine, outputValue);
+        }
+
+
+        [TestMethod]
         public void TestSourceAsFile()
         {
             Compiler compiler = new Compiler();
@@ -35,35 +148,6 @@ namespace JukaUnitTest
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
             Assert.AreEqual("AsdfA" + Environment.NewLine, outputValue);
-        }
-
-
-        [TestMethod]
-        public void TestPrint()
-        {
-            Compiler compiler = new Compiler();
-            string sourceAsString = "func test_func() = { printLine(\"printLineTest\"); print(\"printTest\");} test_func();";
-
-            var outputValue = compiler.Go(sourceAsString, false);
-            if (compiler.HasErrors())
-            {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-            }
-            Assert.AreEqual("printLineTest"+ Environment.NewLine+"printTest", outputValue);
-        }
-
-        [TestMethod]
-        public void TestMultipleVariables()
-        {
-            Compiler compiler = new Compiler();
-            string sourceAsString = "func test_func() = { string x=\"32\"; string y=\"33\"; printLine(x);} test_func();";
-
-            var outputValue = compiler.Go(sourceAsString, false);
-            if (compiler.HasErrors())
-            {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-            }
-            Assert.AreEqual("32" + Environment.NewLine, outputValue);
         }
 
         [TestMethod]
@@ -95,33 +179,7 @@ namespace JukaUnitTest
         }
 
 
-        [TestMethod]
-        public void TestEmptyString()
-        {
-            Compiler compiler = new Compiler();
-            string sourceAsString = "   ";
 
-            var outputValue = compiler.Go(sourceAsString, false);
-            if (compiler.HasErrors())
-            {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-            }
-            Assert.AreEqual("", outputValue);
-        }
-
-        [TestMethod]
-        public void TestEmptyComment()
-        {
-            Compiler compiler = new Compiler();
-            string sourceAsString = "/*saddsadsa*dasdas/asdasd*//**///!sssd";
-
-            var outputValue = compiler.Go(sourceAsString, false);
-            if (compiler.HasErrors())
-            {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-            }
-            Assert.AreEqual("", outputValue);
-        }
 
 
 
