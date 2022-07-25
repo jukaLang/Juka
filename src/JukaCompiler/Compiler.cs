@@ -6,7 +6,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using JukaCompiler.Exceptions;
 using JukaCompiler.SystemCalls;
-//using JukaCompiler.RoslynEmiter;
+using JukaCompiler.Lexer;
+
 
 namespace JukaCompiler
 {
@@ -68,10 +69,11 @@ namespace JukaCompiler
 
         private string Compile(List<Stmt> statements)
         {
-
             var interpreter = new Interpreter.JukaInterpreter(serviceProvider);
             Resolver? resolver = new(interpreter);
             resolver.Resolve(statements);
+
+            SetupMainMethodRuntimeHook(statements, resolver);
 
             var currentOut = Console.Out;
 
@@ -86,6 +88,32 @@ namespace JukaCompiler
 
                 return ConsoleOutput;
             }
+        }
+
+        private static void SetupMainMethodRuntimeHook(List<Stmt> statements, Resolver resolver)
+        {
+            var allFunctions = statements.Where(e => e is Stmt.Function == true).ToList();
+
+            foreach (var m in allFunctions)
+            {
+                if (((Stmt.Function)m).name.ToString().Equals("main"))
+                {
+                    break;
+                }
+                else
+                {
+                    continue;
+                }
+
+                throw new Exception("No main function defined");
+            }
+
+            Lexeme? lexeme = new(LexemeType.IDENTIFIER, 0, 0);
+            lexeme.AddToken("main");
+            Expression.Variable functionName = new(lexeme);
+            Expression.Call call = new(functionName, false, new List<Expression>());
+            Stmt.Expression expression = new(call);
+            resolver.Resolve(new List<Stmt>() { expression });
         }
 
         public bool HasErrors()

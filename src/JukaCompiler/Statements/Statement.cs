@@ -39,6 +39,10 @@ namespace JukaCompiler.Statements
             internal Lexeme name;
             internal List<TypeParameterMap> typeParameterMaps;
 
+            public override bool Equals(object obj)
+            {
+                return this.name.ToString().Equals(obj);
+            }
             internal Function(Lexeme name, List<TypeParameterMap> parametersMap, List<Stmt> body)
             {
                 if (!(name.ToString().All(c => char.IsLetterOrDigit(c) || c == '_')))
@@ -63,19 +67,20 @@ namespace JukaCompiler.Statements
         internal class Class : Stmt
         {
             internal Lexeme name;
-            internal List<Stmt> functions;
+            internal List<Stmt.Function> methods;
             internal List<Stmt> variableDeclarations;
+            internal Parse.Expression.Variable superClass;
 
-            internal Class(Lexeme name, List<Stmt> functions, List<Stmt> variableDeclarations)
+            internal Class(Lexeme name, List<Stmt.Function> methods, List<Stmt> variableDeclarations)
             {
                 this.name = name;
-                this.functions = functions;
+                this.methods = methods;
                 this.variableDeclarations = variableDeclarations;
             }
 
             internal override R Accept<R>(Visitor<R> vistor)
             {
-                throw new NotImplementedException();
+                return vistor.VisitClassStmt(this);
             }
         }
         internal class Expression : Stmt

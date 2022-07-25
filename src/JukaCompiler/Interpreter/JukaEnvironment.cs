@@ -12,6 +12,12 @@ namespace JukaCompiler.Interpreter
             enclosing = null;
         }
 
+        internal JukaEnvironment Enclosing
+        {
+            get { return enclosing; }
+            set { enclosing = value; }
+        }
+
         internal JukaEnvironment(JukaEnvironment enclosing)
         {
             this.enclosing = enclosing;

@@ -26,6 +26,8 @@
 
         public object Call(JukaInterpreter interpreter, List<object> arguments)
         {
+            // FIND METHOD is broken
+            // Declaration is never set correctly.
             JukaInstance instance = new JukaInstance(this);
             JukaFunction? initializer = FindMethod("main");
             if (initializer != null)
@@ -48,7 +50,7 @@
                 return superClass.FindMethod(name);
             }
 
-            return new JukaFunction();
+            return null;
         }
     }
 }

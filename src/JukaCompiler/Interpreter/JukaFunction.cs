@@ -9,11 +9,6 @@ namespace JukaCompiler.Interpreter
         private JukaEnvironment? closure;
         private bool isInitializer;
 
-        internal JukaFunction()
-        {
-           this.isInitializer = false;
-        }
-
         internal JukaFunction(Stmt.Function declaration, JukaEnvironment closure, bool isInitializer)
         {
             this.isInitializer = isInitializer;
@@ -31,6 +26,11 @@ namespace JukaCompiler.Interpreter
 
         public int Arity()
         {
+            if(declaration == null)
+            {
+                return 0;
+            }
+
             return declaration.Params.Count;
         }
 

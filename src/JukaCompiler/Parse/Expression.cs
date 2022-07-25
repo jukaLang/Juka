@@ -106,14 +106,16 @@ namespace JukaCompiler.Parse
 
         internal class Get : Expression
         {
-            internal Get(Expression expr, Lexeme lex, Expression right)
+            internal Expression expr;
+            internal Get(Expression expr, Lexeme lex)
             {
-
+                this.expr = expr;
+                this.Name = lex;
             }
 
             internal override R Accept<R>(IVisitor<R> vistor)
             {
-                throw new NotImplementedException();
+                return vistor.VisitGetExpr(this);
             }
         }
 

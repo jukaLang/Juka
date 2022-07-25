@@ -10,7 +10,7 @@ namespace JukaCompiler.Interpreter
     {
         private JukaInterpreter interpreter;
         private FunctionType currentFunction = FunctionType.NONE;
-        // private ClassType currentClass = ClassType.NONE;
+        private ClassType currentClass = ClassType.NONE;
         private ServiceProvider? ServiceProvider;
         private Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
         private Stack<StackFrame> frames = new Stack<StackFrame>();
@@ -93,8 +93,8 @@ namespace JukaCompiler.Interpreter
                 { 
                     frames.Push(new StackFrame(expr.callee.Name.ToString()));
                     Declare(expr.callee.Name);
-                    Resolve(expr.callee);
                     Define(expr.callee.Name);
+                    Resolve(expr.callee);
                     frames.Pop();
                 }
                 else
@@ -118,7 +118,49 @@ namespace JukaCompiler.Interpreter
 
         public object VisitClassStmt(Stmt.Class stmt)
         {
-            throw new NotImplementedException("Resolver VisitClassStmt is not implemented");
+            ClassType enclosingClass = currentClass;
+            currentClass = ClassType.CLASS;
+
+            Declare(stmt.name);
+            Define(stmt.name);
+
+            if (stmt.superClass != null && stmt.name.ToString().Equals(stmt.superClass.name.ToString()))
+            {
+                this.compilerError.AddError("can't inhert from itself");
+            }
+
+            if (stmt.superClass != null)
+            {
+                currentClass = ClassType.SUBCLASS;
+                Resolve(stmt.superClass);
+            }
+
+            if(stmt.superClass != null)
+            {
+                BeginScope();
+                scopes.Peek().Add("super",true);
+            }
+
+            BeginScope();
+            scopes.Peek().Add("this", true);
+
+            foreach(Stmt.Function method in stmt.methods)
+            {
+                //FunctionType decl = FunctionType.METHOD;
+                //implement ctor
+                // if(method.name.ToString
+
+                ResolveFunction(method, FunctionType.METHOD);
+            }
+
+            EndScope();
+            if(stmt.superClass != null)
+            {
+                EndScope();
+            }
+
+            currentClass = enclosingClass;
+            return null;
         }
 
         public object VisitExpressionStmt(Stmt.Expression stmt)
@@ -144,7 +186,8 @@ namespace JukaCompiler.Interpreter
 
         public object VisitGetExpr(Expression.Get expr)
         {
-            throw new NotImplementedException("Resolver VisitGetExpr is not implemented");
+            Resolve(expr.expr);
+            return null;
         }
 
         public object VisitGroupingExpr(Expression.Grouping expr)
@@ -251,13 +294,23 @@ namespace JukaCompiler.Interpreter
 
         public object VisitVariableExpr(Expression.Variable expr)
         {
-            if(( scopes.Any() && scopes.Peek()[expr.Name.ToString()]) ||
+            if ((scopes.Any() && scopes.Peek()[expr.Name.ToString()]) ||
                 scopes.Any() && scopes.Peek().Count == 0 ||
                 !scopes.Any())
             {
                 ResolveLocal(expr, expr.Name);
                 return new Stmt.DefaultStatement();
             }
+
+            foreach (var v in scopes)
+            {
+                if (v.ContainsKey(expr.name.ToString()))
+                {
+                    ResolveLocal(expr, expr.name);
+                    return new Stmt.DefaultStatement();
+                }
+            };
+
             throw new NotImplementedException("Something went wrong visitng");
             this.compilerError?.AddError(expr.Name.ToString() + "Can't read local variable");
             return new Stmt.DefaultStatement();

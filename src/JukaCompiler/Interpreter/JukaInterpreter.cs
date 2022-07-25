@@ -4,6 +4,7 @@ using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 using JukaCompiler.Statements;
 using JukaCompiler.SystemCalls;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Interpreter
@@ -36,11 +37,45 @@ namespace JukaCompiler.Interpreter
 
         internal void Interpert(List<Stmt> statements)
         {
-            foreach(var stmt in statements)
+            foreach (Stmt stmt in statements)
             {
+                if (stmt is Stmt.Expression)
+                {
+                    continue;
+                }
+
                 Execute(stmt);
             }
+
+            //var allFunctions = statements.Where(e => e is Stmt.Function == true).ToList();
+
+            //foreach (var m in allFunctions)
+            //{
+            //    if (((Stmt.Function)m).name.ToString().Equals("main"))
+            //    {
+            //        break;
+            //    }
+            //    else
+            //    {
+            //        continue;
+            //    }
+
+            //    throw new Exception("No main function defined");
+            //}
+
+            //foreach (var stmt in statements)
+            //{
+            //    // Execute(stmt);
+            Lexeme? lexeme = new(LexemeType.IDENTIFIER, 0, 0);
+            lexeme.AddToken("main");
+            Expression.Variable functionName = new(lexeme);
+            Expression.Call call = new(functionName, false, new List<Expression>());
+            Stmt.Expression expression = new(call);
+            //expression.Accept(this);
+            Execute(expression);
+            //}
         }
+
         private void Execute(Stmt stmt)
         {
             stmt.Accept(this);
@@ -79,7 +114,36 @@ namespace JukaCompiler.Interpreter
 
         public Stmt VisitClassStmt(Stmt.Class stmt)
         {
-            throw new NotImplementedException();
+            object superclass = null;
+            if (stmt.superClass != null)
+            {
+                superclass = Evaluate(stmt.superClass);
+            }
+
+            environment.Define(stmt.name.ToString(), null);
+
+            if (stmt.superClass != null)
+            {
+                environment = new JukaEnvironment(environment);
+                environment.Define("super", superclass);
+            }
+
+            Dictionary<string, JukaFunction> functions = new Dictionary<string, JukaFunction>();
+            foreach(var method in stmt.methods)
+            {
+                JukaFunction jukaFunction = new JukaFunction(method, environment, false);
+                functions.Add(method.name.ToString(), jukaFunction);
+            }
+
+            JukaClass jukaClass = new JukaClass(stmt.name.ToString(), (JukaClass)superclass, functions);
+
+            if (superclass != null)
+            {
+                environment = environment.Enclosing;
+            }
+
+            environment.Assign(stmt.name, jukaClass);
+            return null;
         }
 
         public Stmt VisitExpressionStmt(Stmt.Expression stmt)
@@ -426,18 +490,18 @@ namespace JukaCompiler.Interpreter
                     object? callableService = list[i];
                     if (expr.callee.Name.ToString().Equals(CallableServices.GetAvailableMemory.ToString()))
                     {
-                        var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(JukaCompiler.SystemCalls.IGetAvailableMemory));
-                        return ((IJukaCallable)jukacall).Call(this, arguments);
+                        var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IGetAvailableMemory));
+                        return jukacall.Call(this, arguments);
                     }
                     if (expr.callee.Name.ToString().Equals(CallableServices.FileOpen.ToString()))
                     {
-                        var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(JukaCompiler.SystemCalls.IFileOpen));
+                        var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IFileOpen));
                         if (arguments[0] is Expression.Variable)
                         {
                             var lexeme = (Expression.Variable)arguments[0];
                             object? variable = environment.Get(lexeme.name);
 
-                            return ((IJukaCallable)jukacall).Call(this, new List<Object>{variable});
+                            return jukacall.Call(this, new List<object> {variable});
                         }
                         
                     }
@@ -460,7 +524,13 @@ namespace JukaCompiler.Interpreter
 
         public object VisitGetExpr(Expression.Get expr)
         {
-            throw new NotImplementedException();
+            var getexpr = Evaluate(expr.expr);
+            if (getexpr is JukaInstance)
+            {
+                return ((JukaInstance)getexpr).Get(expr.Name);
+            }
+
+            throw new Exception("not a class instances");
         }
 
         public object VisitGroupingExpr(Expression.Grouping expr)
