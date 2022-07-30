@@ -7,7 +7,20 @@
     <Nullable>enable</Nullable>
     <PackageVersion>$(PackageVersion)</PackageVersion>
     <PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>true</PublishTrimmed>
+    <PublishAot>true</PublishAot>
+    <ApplicationIcon>..\juka.ico</ApplicationIcon>
+    <DebugType>None</DebugType>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\juka.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\JukaCompiler\JukaCompiler.csproj" />

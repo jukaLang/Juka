@@ -41,7 +41,7 @@ namespace JukaCompiler.Interpreter
 
             for (int i = 0; i < declaration.Params.Count; i++)
             {
-                string? name = declaration.Params[i].parameterName.ToString();
+                string? name = declaration.Params[i].parameterName.Name.ToString();
                 if (string.IsNullOrEmpty(name))
                 {
                     throw new ArgumentException("unable to call function");

@@ -98,7 +98,7 @@ namespace JukaCompiler.Interpreter
             return new Stmt.DefaultStatement();
         }
 
-        public Stmt VisitClassStmt(Stmt.Class stmt)
+        Stmt Stmt.Visitor<Stmt>.VisitClassStmt(Stmt.Class stmt)
         {
             object superclass = null;
             if (stmt.superClass != null)
@@ -196,11 +196,16 @@ namespace JukaCompiler.Interpreter
                 if (stmt.expr is Expression.Variable)
                 {
                     var variable = LookUpVariable(stmt.expr.Name, stmt.expr);
+
                     if (variable != null)
                     {
                         if (variable is Expression.LexemeTypeLiteral)
                         {
-                            Console.Write(((Expression.LexemeTypeLiteral)variable).Literal);
+                            Console.Write(((Expression.LexemeTypeLiteral)variable).literal);
+                        }
+                        else if (variable is Expression.Literal)
+                        {
+                            Console.Write(((Expression.Literal)variable).name.ToString());
                         }
                     }
                 }
@@ -360,7 +365,7 @@ namespace JukaCompiler.Interpreter
                 return literalStringSum;
             }
 
-            throw new ArgumentNullException("can't add types");
+            throw new ArgumentNullException("Can't add types");
         }
 
         private static object SubtractTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
@@ -375,10 +380,10 @@ namespace JukaCompiler.Interpreter
 
             if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
             {
-                throw new ArgumentException("can't subtract strings");
+                throw new ArgumentException("Can't subtract strings");
             }
 
-            throw new ArgumentNullException("can't subtract types");
+            throw new ArgumentNullException("Can't subtract types");
         }
 
         private static object MultiplyTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
@@ -393,10 +398,10 @@ namespace JukaCompiler.Interpreter
 
             if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
             {
-                throw new ArgumentException("can't multiply strings");
+                throw new ArgumentException("Can't multiply strings");
             }
 
-            throw new ArgumentNullException("can't multiply types");
+            throw new ArgumentNullException("Can't multiply types");
         }
 
         private static object DivideTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
@@ -404,10 +409,9 @@ namespace JukaCompiler.Interpreter
             if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
             {
                 var literalProduction = new Expression.LexemeTypeLiteral();
-                int divisor = Convert.ToInt32(leftValue);
                 int divident = Convert.ToInt32(rightValue);
 
-                if (divisor == 0 || divident == 0)
+                if (divident == 0)
                 {
                     throw new ArgumentException("Can't divide by zero");
 

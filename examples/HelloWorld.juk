@@ -2,3 +2,4 @@ func main() = {
     // Print Hello World
     printLine("Hello World");
 }
+main();

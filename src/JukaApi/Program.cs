@@ -1,5 +1,4 @@
-using System.Text.Json;
-using System.Web;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,25 +20,25 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseCors("AllowAnyOrigin");
 
-
+string assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 app.MapGet("/", () =>
 {
-    return "Welcome to JukaAPI! To execute a program, send a GET request to \"/code_you_want_to_execute\".";
+    return "Welcome to JukaAPI version "+ assemblyVersion + "! To execute a program, send a GET request to \"/code_you_want_to_execute\".";
 });
 
 
 var executeCode = (string src) =>
 {
     JukaCompiler.Compiler compiler = new JukaCompiler.Compiler();
-    string sourceAsString = HttpUtility.UrlDecode(src);
-    var outputValue = compiler.Go(sourceAsString, false);
+    string decoded = Uri.UnescapeDataString(src);
+    var outputValue = compiler.Go(decoded, false);
 
     if (compiler.HasErrors())
     {
-        var errors = compiler.ListErrors().ToString();
-        return Results.Json(new { errors = errors });
+        string errors = string.Join(Environment.NewLine, compiler.ListErrors());
+        return Results.Json(new { errors = errors, original = decoded });
     }
-    return Results.Json(new { output = outputValue });
+    return Results.Json(new { output = outputValue, original = decoded });
 };
 
 app.MapGet("/{*src}", (string src) => executeCode(src));

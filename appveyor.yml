@@ -10,6 +10,10 @@ skip_non_tags: false
 
 version: '0.0.{build}'
 
+environment:
+  token:
+    secure: YPPyzDbCboQKYOfAl/4XahyYfDiWOsyjoL2WjyNOxH4=
+
 assembly_info:
   patch: true
   file: 'src\**\AssemblyInfo.*' 
@@ -27,34 +31,36 @@ dotnet_csproj:
   informational_version: '{version}'
 
 before_build: 
-  - cd src
-  - dotnet test
+ - cd src
+ - dotnet test
 
 after_build:
- - dotnet publish -c Release --self-contained true --runtime osx-x64 Juka
- - dotnet publish -c Release --self-contained true --runtime osx-x64 JukaApi
+ - dotnet publish -c Release --self-contained true --runtime osx-x64 Juka 
+ - dotnet publish -c Release --self-contained true --runtime osx-x64 JukaApi 
 
  - dotnet publish -c Release --self-contained true --runtime linux-x64 Juka
  - dotnet publish -c Release --self-contained true --runtime linux-x64 JukaApi
 
- - dotnet publish -c Release --self-contained true --runtime linux-arm Juka
+ - dotnet publish -c Release --self-contained true --runtime linux-arm Juka 
  - dotnet publish -c Release --self-contained true --runtime linux-arm JukaApi
 
  - dotnet publish -c Release --self-contained true --runtime linux-arm64 Juka
- - dotnet publish -c Release --self-contained true --runtime linux-arm64 JukaApi
+ - dotnet publish -c Release --self-contained true --runtime linux-arm64 JukaApi 
 
- - dotnet publish -c Release --self-contained true --runtime win-x86 Juka
+ - dotnet publish -c Release --self-contained true --runtime win-x86 Juka 
  - dotnet publish -c Release --self-contained true --runtime win-x86 JukaApi
 
- - dotnet publish -c Release --self-contained true --runtime win-x64 Juka
- - dotnet publish -c Release --self-contained true --runtime win-x64 JukaApi
+ - dotnet publish -c Release --self-contained true --runtime win-x64 Juka 
+ - dotnet publish -c Release --self-contained true --runtime win-x64 JukaApi 
 
- - dotnet publish -c Release --self-contained true --runtime win-arm64 Juka
- - dotnet publish -c Release --self-contained true --runtime win-arm64 JukaApi
+ - dotnet publish -c Release --self-contained true --runtime win-arm64 Juka 
+ - dotnet publish -c Release --self-contained true --runtime win-arm64 JukaApi 
 
- - dotnet pack -c Release JukaCompiler
+ - dotnet pack --nologo -c Release JukaCompiler
 
  - dotnet publish -c Release JukaAzureFunction
+
+
 
 configuration: Release
 
@@ -135,3 +141,15 @@ deploy:
     on:
       branch: master                # release from master branch only
       APPVEYOR_REPO_TAG: false       # deploy on tag push only
+
+after_deploy:
+ - ps: $headers = @{}
+ - ps: $headers['Authorization'] = "Bearer $env:token"
+ - ps: $headers["Content-type"] = "application/json"
+ - ps: $dbinar = @{}
+ - ps: $dbinar["accountName"] = 'TheAndreiM'
+ - ps: $dbinar["projectSlug"] = 'juka-webassembly'
+ - ps: $dbinar["branch"] = 'main'
+ - ps: $dbinar["environmentVariables"] = @{}
+ - ps: $bod = $dbinar | ConvertTo-json
+ - ps: Invoke-RestMethod -Uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method POST -body $bod

@@ -94,12 +94,6 @@ namespace JukaCompiler.Scan
             this.column++;
             char t = Advance();
 
-            // Comments
-            if (t != '\\' && Peek() == '/')
-            {
-                Comment();
-                return;
-            }
 
             if (IsLetter(t) || t == '_')
             {
@@ -127,6 +121,35 @@ namespace JukaCompiler.Scan
                     case '+': AddSymbol( t, LexemeType.PLUS); break;
                     case ';': AddSymbol( t, LexemeType.SEMICOLON); break;
                     case '*': AddSymbol( t, LexemeType.STAR); break;
+                    case '/':
+                        if (Peek() == '/')
+                        {
+                            while (Peek() != '\n' && !IsEof())
+                            {
+                                Advance();
+                            }
+                        }
+                        else if (Peek() == '*')
+                        {
+                            while (true)
+                            {
+                                if (Advance() == '*' && Peek() == '/')
+                                {
+                                    Advance();
+                                    break;
+                                }
+                                if (IsEof())
+                                {
+                                    throw new Exception("Comment is not closed");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            AddSymbol(t, LexemeType.SLASH);
+                        }
+                        break;
+
 
                     case '=':
                         {
@@ -184,20 +207,6 @@ namespace JukaCompiler.Scan
             }
 
 
-            // C# Execution  -- Removed for now due to system.reflection class use which is incompatible with mobile
-            /*if (Prev() != '\\' && t == '#' && Peek() == '{')
-            {
-                CSharpExec();
-                return;
-            }*/
-
-
-            // Comments
-            if (Prev() != '\\' && t == '/')
-            {
-                Comment();
-                return;
-            }
 
             IsWhiteSpace();
         }
@@ -368,31 +377,6 @@ namespace JukaCompiler.Scan
             Advance();
         }*/
 
-        internal void Comment()
-        {
-            if (Peek() == '/')
-            {
-                while(Peek() != '\n' && !IsEof())
-                {
-                    Advance();
-                }
-            } else if(Peek() == '*')
-            {
-                while (true)
-                {
-                    if (Advance() == '*' && Peek() == '/')
-                    {
-                        Advance();
-                        break;
-                    }
-                    if (IsEof())
-                    {
-                        throw new Exception("Comment is not closed");
-                    }
-                }
-            }
-        }
-
         internal void Number()
         {
             while(IsNumber(Peek()))
@@ -452,18 +436,6 @@ namespace JukaCompiler.Scan
 
             return '\0';
         }
-
-        internal char Prev()
-        {
-            if ((current - 1) >= 0)
-            {
-                return (char)fileData[current-1];
-            }
-
-            return '\n';
-        }
-
-
         internal char Peek()
         {
             if (!IsEof())
@@ -473,13 +445,6 @@ namespace JukaCompiler.Scan
             return '\0';
         }
 
-        internal void Reverse()
-        {
-            if (current - 1 > 0)
-            {
-                this.current--;
-            }
-        }
     }
 }
 

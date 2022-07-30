@@ -1,5 +1,5 @@
-class x(int initializer) = {
-   int z = initializer;
+class x(var initializer) = {
+   var z = initializer;
 
    func m() = {
       return z;

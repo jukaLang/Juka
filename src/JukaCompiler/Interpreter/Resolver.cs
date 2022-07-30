@@ -228,7 +228,7 @@ namespace JukaCompiler.Interpreter
         {
             if (stmt == null || stmt.expr == null)
             {
-                throw new ArgumentNullException("stmt and or expressoin are null");
+                throw new ArgumentNullException("stmt and or expression are null");
             }
 
             Resolve(stmt.expr);
@@ -239,7 +239,7 @@ namespace JukaCompiler.Interpreter
         {
             if (stmt == null || stmt.expr == null)
             {
-                throw new ArgumentNullException("stmt and or expressoin are null");
+                throw new ArgumentNullException("stmt and or expression are null");
             }
 
             Resolve(stmt.expr);
@@ -257,7 +257,7 @@ namespace JukaCompiler.Interpreter
             {
                 if (currentFunction == FunctionType.INITIALIZER)
                 {
-                    this.compilerError?.AddError("can't return from an initializer function");
+                    this.compilerError?.AddError("Can't return from an initializer function");
                 }
 
                 Resolve(stmt.expr);
@@ -395,11 +395,12 @@ namespace JukaCompiler.Interpreter
                 var literalName = param.parameterName as Expression.Variable;
                 if (literalName == null)
                 {
-                    // throw something;
+                    throw new Exception("Something went wrong when resolving the function");
                 }
                 Declare(literalName.Name);
                 Define(param.parameterType);
             }
+
             Resolve(function.body);
             EndScope();
             //> restore-current-function
