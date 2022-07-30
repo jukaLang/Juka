@@ -294,36 +294,31 @@ namespace JukaCompiler.Interpreter
 
         public object VisitVariableExpr(Expression.Variable expr)
         {
-            if ((scopes.Any() && scopes.Peek()[expr.Name.ToString()]) ||
-                scopes.Any() && scopes.Peek().Count == 0 ||
-                !scopes.Any())
-            {
+            try
+            { 
+                if ( !(scopes.Count == 0) && !scopes.Peek().ContainsKey(expr.Name.ToString()) && 
+                    (!(scopes.Count == 1 && scopes.Peek().Keys.Count == 0)))
+                {
+                    this.compilerError?.AddError(expr.Name.ToString() + "Can't read local variable");
+                }
+
                 ResolveLocal(expr, expr.Name);
-                return new Stmt.DefaultStatement();
+            }
+            catch(Exception ex)
+            {
+                this.compilerError?.AddError(ex.Message);
             }
 
-            foreach (var v in scopes)
-            {
-                if (v.ContainsKey(expr.name.ToString()))
-                {
-                    ResolveLocal(expr, expr.name);
-                    return new Stmt.DefaultStatement();
-                }
-            };
-
-            throw new NotImplementedException("Something went wrong visitng");
-            this.compilerError?.AddError(expr.Name.ToString() + "Can't read local variable");
             return new Stmt.DefaultStatement();
         }
 
         private void ResolveLocal(Expression expr, Lexeme name)
         {
-            for(int i = 0; i < scopes.Count(); i++)
+            for (int i = scopes.Count -1; i >= 0; i--)
             {
-                if (scopes.ElementAt(i).ContainsKey(name.ToString()))
+                if (scopes.Peek().ContainsKey(name.ToString()))
                 {
-                    this.interpreter.Resolve(expr, i);
-                    return;
+                    this.interpreter.Resolve(expr, scopes.Count() - 1 - i);
                 }
             }
         }
@@ -356,7 +351,7 @@ namespace JukaCompiler.Interpreter
 
         private void Declare(Lexeme name)
         {
-            if (scopes.Count() == 0)
+            if (scopes.Count() == 0 || scopes.Count() == 1 && scopes.Peek().Keys.Count == 0)
             {
                 return;
             }
@@ -373,7 +368,7 @@ namespace JukaCompiler.Interpreter
 
         private void Define(Lexeme name)
         {
-            if (!scopes.Any())
+            if (!scopes.Any() || (scopes.Peek().Count == 0))
             {
                 return;
             }

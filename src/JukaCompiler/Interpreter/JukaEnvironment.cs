@@ -14,7 +14,6 @@ namespace JukaCompiler.Interpreter
 
         internal JukaEnvironment Enclosing
         {
-            get { return enclosing; }
             set { enclosing = value; }
         }
 

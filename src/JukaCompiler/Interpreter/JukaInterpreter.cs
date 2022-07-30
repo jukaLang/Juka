@@ -35,45 +35,31 @@ namespace JukaCompiler.Interpreter
             }
         }
 
+        internal JukaEnvironment Environment
+        {
+            get { return environment; }
+        }
+
         internal void Interpert(List<Stmt> statements)
         {
+            // populate the environment with the function call locations
+            // only functions are populated in the environment
+            // classes will need to be added. 
+            // no local variables.
             foreach (Stmt stmt in statements)
             {
-                if (stmt is Stmt.Expression)
+                if (stmt is Stmt.Function)
                 {
-                    continue;
+                    Execute(stmt);
                 }
-
-                Execute(stmt);
             }
 
-            //var allFunctions = statements.Where(e => e is Stmt.Function == true).ToList();
-
-            //foreach (var m in allFunctions)
-            //{
-            //    if (((Stmt.Function)m).name.ToString().Equals("main"))
-            //    {
-            //        break;
-            //    }
-            //    else
-            //    {
-            //        continue;
-            //    }
-
-            //    throw new Exception("No main function defined");
-            //}
-
-            //foreach (var stmt in statements)
-            //{
-            //    // Execute(stmt);
             Lexeme? lexeme = new(LexemeType.IDENTIFIER, 0, 0);
             lexeme.AddToken("main");
             Expression.Variable functionName = new(lexeme);
             Expression.Call call = new(functionName, false, new List<Expression>());
             Stmt.Expression expression = new(call);
-            //expression.Accept(this);
             Execute(expression);
-            //}
         }
 
         private void Execute(Stmt stmt)
@@ -102,14 +88,14 @@ namespace JukaCompiler.Interpreter
         Stmt Stmt.Visitor<Stmt>.VisitBlockStmt(Stmt.Block stmt)
         {
             ExecuteBlock(stmt.statements, new JukaEnvironment(this.environment));
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         Stmt Stmt.Visitor<Stmt>.VisitFunctionStmt(Stmt.Function stmt)
         {
-            JukaFunction functionCallable = new JukaFunction(stmt, null, false);
+            JukaFunction functionCallable = new JukaFunction(stmt, this.environment, false);
             environment.Define(stmt.name.ToString(), functionCallable);
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         public Stmt VisitClassStmt(Stmt.Class stmt)
@@ -139,17 +125,18 @@ namespace JukaCompiler.Interpreter
 
             if (superclass != null)
             {
-                environment = environment.Enclosing;
+                environment = new JukaEnvironment(environment);
+                environment.Define("super", superclass);
             }
 
             environment.Assign(stmt.name, jukaClass);
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         public Stmt VisitExpressionStmt(Stmt.Expression stmt)
         {
             Evaluate(stmt.expression);
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         public Stmt VisitIfStmt(Stmt.If stmt)
@@ -249,7 +236,7 @@ namespace JukaCompiler.Interpreter
             }
 
             environment.Define(stmt.name.ToString() , value);
-            return null;
+            return new Stmt.DefaultStatement(); 
         }
 
         public Stmt VisitWhileStmt(Stmt.While stmt)
@@ -580,7 +567,6 @@ namespace JukaCompiler.Interpreter
 
         internal object LookUpVariable(Lexeme name, Expression expr)
         {
-            //locals.TryGetValueEx(expr, out int? distance);
             locals.TryGetValue(expr, out int? distance);
 
             if (distance != null)
