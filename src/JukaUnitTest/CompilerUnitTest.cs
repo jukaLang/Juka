@@ -40,7 +40,18 @@ namespace JukaUnitTest
         public void TestFunctionCall()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "func test_func(var m) = { var u=m; print(u); } test_func(3);";
+            string sourceAsString = 
+                @"func test_func(var m) = 
+                {
+                    var u=m;
+                    print(u); 
+                }
+
+                func main() = 
+                {
+                    test_func(3);
+                }";
+
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
