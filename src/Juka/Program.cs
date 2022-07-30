@@ -5,15 +5,17 @@ using System.Reflection;
 string? userInput;
 string? readline;
 
+string assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
 if (args.Length == 0)
 {
     Console.Title = "Juka Compiler";
-    Console.WriteLine("♥ Welcome to Juka Compiler. If you need to run a file, pass it as an argument ♥");
+    Console.WriteLine("♥ Welcome to Juka Compiler Version: "+assemblyVersion+". If you need to run a file, pass it as an argument ♥");
     Console.WriteLine("Press Return 3 times to run the code");
 
     while (true)
     {
-        Console.Write("> ");
+        Console.Write("Juka > ");
         userInput = "";
 
         int counter = 0;
@@ -24,7 +26,7 @@ if (args.Length == 0)
             {
                 if (userInput == "")
                 {
-                    Console.Write("> ");
+                    Console.Write("Juka > ");
                     continue;
                 }
 
