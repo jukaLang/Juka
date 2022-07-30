@@ -1,6 +1,7 @@
 func main() = {
 	foo();
 	printLine("main");
+	var bb = testClass();
 }
 
 func process() = {
@@ -12,4 +13,11 @@ func foo() = {
 	printLine("foo");
 }
 
+
+class testClass = {
+	func one() = {
+	}
+
+	func two() = {
+	}
 }

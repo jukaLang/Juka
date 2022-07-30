@@ -4,7 +4,6 @@ using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 using JukaCompiler.Statements;
 using JukaCompiler.SystemCalls;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Interpreter
@@ -48,7 +47,7 @@ namespace JukaCompiler.Interpreter
             // no local variables.
             foreach (Stmt stmt in statements)
             {
-                if (stmt is Stmt.Function)
+                if (stmt is Stmt.Function || stmt is Stmt.Class)
                 {
                     Execute(stmt);
                 }
@@ -231,7 +230,6 @@ namespace JukaCompiler.Interpreter
             return VisitReturnStmt(returnStatement);
         }
 
-
         public Stmt VisitVarStmt(Stmt.Var stmt)
         {
             object value = null;
@@ -266,10 +264,6 @@ namespace JukaCompiler.Interpreter
         public object VisitAssignExpr(Expression.Assign expr)
         {
             object value = Evaluate(expr);
-            /* Statements and State visit-assign < Resolving and Binding resolved-assign
-                environment.assign(expr.name, value);
-            */
-            //> Resolving and Binding resolved-assign
 
             locals.TryGetValueEx(expr, out int? distance);
             if (distance != null)
