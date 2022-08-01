@@ -1,28 +1,23 @@
-func Process() = {
-	var s = "foobar";
-	var y = "file.txt";
+func main() = {
+	foo();
+	printLine("main");
+	var bb = testClass();
+}
 
-	var z = FileOpen(y);
-	printLine(z);
+func process() = {
+	printLine("process");
+}
 
-	if(s == "foobar")
-	{
-		printLine("d:\source\repos\juksa\file.txt");
+func foo() = {
+	process();
+	printLine("foo");
+}
+
+
+class testClass = {
+	func one() = {
 	}
 
-	var x = GetAvailableMemory();
-	printLine(x);
-
+	func two() = {
+	}
 }
-
-
-func test() =
-{
-	var y = "file.txt";
-}
-
-
-
-Process();
-
-

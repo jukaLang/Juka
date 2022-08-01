@@ -1,4 +1,0 @@
-func x() = {
-	printLine("Hello World");
-}
-x();

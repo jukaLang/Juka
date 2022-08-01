@@ -1,5 +1,6 @@
 ﻿using JukaCompiler.Exceptions;
 using JukaCompiler.Statements;
+using System.Reflection;
 
 namespace JukaCompiler.Interpreter
 {
@@ -8,11 +9,6 @@ namespace JukaCompiler.Interpreter
         private Stmt.Function? declaration;
         private JukaEnvironment? closure;
         private bool isInitializer;
-
-        internal JukaFunction()
-        {
-           this.isInitializer = false;
-        }
 
         internal JukaFunction(Stmt.Function declaration, JukaEnvironment closure, bool isInitializer)
         {
@@ -31,6 +27,11 @@ namespace JukaCompiler.Interpreter
 
         public int Arity()
         {
+            if(declaration == null)
+            {
+                return 0;
+            }
+
             return declaration.Params.Count;
         }
 

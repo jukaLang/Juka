@@ -23,7 +23,7 @@ namespace JukaCompiler.Interpreter
 
             if (method != null)
             {
-                return method.Bind(this);
+                return method;//.Bind(this);
             }
 
             throw new ArgumentException("undefined property" + name.ToString());

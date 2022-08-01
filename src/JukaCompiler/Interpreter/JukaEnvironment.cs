@@ -12,6 +12,11 @@ namespace JukaCompiler.Interpreter
             enclosing = null;
         }
 
+        internal JukaEnvironment Enclosing
+        {
+            set { enclosing = value; }
+        }
+
         internal JukaEnvironment(JukaEnvironment enclosing)
         {
             this.enclosing = enclosing;
@@ -29,7 +34,7 @@ namespace JukaCompiler.Interpreter
                 return enclosing.Get(name);
             }
 
-            throw new ArgumentException(name.ToString() + "undefined variable");
+            throw new ArgumentException("JukaEnvironment.Get() has an undefined variable ('" + name.ToString() + "') undefined variable");
         }
 
         internal void Assign(Lexeme name, Object value)
@@ -46,7 +51,7 @@ namespace JukaCompiler.Interpreter
                 return;
             }
 
-            throw new ArgumentException(name.ToString() + "undefined variable");
+            throw new ArgumentException("JukaEnvironment.Assign() has an undefined variable ('" + name.ToString() + "') undefined variable");
         }
 
         internal void Define(string name, Object value)

@@ -245,10 +245,11 @@ namespace JukaCompiler.Parse
                 return true;
             }
 
-            if(Match(LexemeType.INT) || 
-                Match(LexemeType.STRING) ||
-                Match(LexemeType.FLOAT) ||
-                Match(LexemeType.DOUBLE) || Match(LexemeType.VAR))
+            if(Match(LexemeType.INT)        || 
+                Match(LexemeType.STRING)    ||
+                Match(LexemeType.FLOAT)     ||
+                Match(LexemeType.DOUBLE)    ||
+                Match(LexemeType.VAR))
             {
                 return true;
             }
@@ -367,7 +368,7 @@ namespace JukaCompiler.Parse
             Lexeme name = Consume(LexemeType.IDENTIFIER, Peek());
             Consume(LexemeType.EQUAL, Peek());
             Consume(LexemeType.LEFT_BRACE, Peek());
-            List<Stmt> functions = new List<Stmt>();
+            List<Stmt.Function> functions = new List<Stmt.Function>();
             List<Stmt> variableDeclarations = new List<Stmt>();
 
             if(!Check(LexemeType.RIGHT_BRACE))
@@ -382,7 +383,7 @@ namespace JukaCompiler.Parse
 
                     if (isFunc.LexemeType == LexemeType.FUNC)
                     {
-                        functions.Add(Declaration());
+                        functions.Add((Stmt.Function)Declaration());
                     }
 
                     if (MatchKeyWord())
@@ -585,17 +586,15 @@ namespace JukaCompiler.Parse
             Expression expr = Primary();
 
             while (true)
-            { // [while-true]
+            {
                 if (Match(LexemeType.LEFT_PAREN))
                 {
                     expr = FinishCall(expr);
-                    //> Classes parse-property
                 }
                 else if (Match(LexemeType.DOT))
                 {
                     Lexeme name = Consume(LexemeType.IDENTIFIER, Peek());
-                    //******* expr = new Expression.Get(expr, name);
-                    //< Classes parse-property
+                    expr = new Expression.Get(expr, name);
                 }
                 else
                 {

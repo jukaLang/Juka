@@ -34,13 +34,33 @@ namespace JukaCompiler.Interpreter
             }
         }
 
+        internal JukaEnvironment Environment
+        {
+            get { return environment; }
+        }
+
         internal void Interpert(List<Stmt> statements)
         {
-            foreach(var stmt in statements)
+            // populate the environment with the function call locations
+            // only functions are populated in the environment
+            // classes will need to be added. 
+            // no local variables.
+            foreach (Stmt stmt in statements)
             {
-                Execute(stmt);
+                if (stmt is Stmt.Function || stmt is Stmt.Class)
+                {
+                    Execute(stmt);
+                }
             }
+
+            Lexeme? lexeme = new(LexemeType.IDENTIFIER, 0, 0);
+            lexeme.AddToken("main");
+            Expression.Variable functionName = new(lexeme);
+            Expression.Call call = new(functionName, false, new List<Expression>());
+            Stmt.Expression expression = new(call);
+            Execute(expression);
         }
+
         private void Execute(Stmt stmt)
         {
             stmt.Accept(this);
@@ -67,27 +87,55 @@ namespace JukaCompiler.Interpreter
         Stmt Stmt.Visitor<Stmt>.VisitBlockStmt(Stmt.Block stmt)
         {
             ExecuteBlock(stmt.statements, new JukaEnvironment(this.environment));
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         Stmt Stmt.Visitor<Stmt>.VisitFunctionStmt(Stmt.Function stmt)
         {
-            JukaFunction functionCallable = new JukaFunction(stmt, null, false);
+            JukaFunction functionCallable = new JukaFunction(stmt, this.environment, false);
             environment.Define(stmt.name.ToString(), functionCallable);
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         Stmt Stmt.Visitor<Stmt>.VisitClassStmt(Stmt.Class stmt)
         {
-            JukaClass classCallable = new JukaClass("testclas", null, new Dictionary<string, JukaFunction> ());
-            environment.Define(stmt.name.ToString(), classCallable);
-            return null;
+            object superclass = null;
+            if (stmt.superClass != null)
+            {
+                superclass = Evaluate(stmt.superClass);
+            }
+
+            environment.Define(stmt.name.ToString(), null);
+
+            if (stmt.superClass != null)
+            {
+                environment = new JukaEnvironment(environment);
+                environment.Define("super", superclass);
+            }
+
+            Dictionary<string, JukaFunction> functions = new Dictionary<string, JukaFunction>();
+            foreach(var method in stmt.methods)
+            {
+                JukaFunction jukaFunction = new JukaFunction(method, environment, false);
+                functions.Add(method.name.ToString(), jukaFunction);
+            }
+
+            JukaClass jukaClass = new JukaClass(stmt.name.ToString(), (JukaClass)superclass, functions);
+
+            if (superclass != null)
+            {
+                environment = new JukaEnvironment(environment);
+                environment.Define("super", superclass);
+            }
+
+            environment.Assign(stmt.name, jukaClass);
+            return new Stmt.DefaultStatement();
         }
 
         public Stmt VisitExpressionStmt(Stmt.Expression stmt)
         {
             Evaluate(stmt.expression);
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         public Stmt VisitIfStmt(Stmt.If stmt)
@@ -182,7 +230,6 @@ namespace JukaCompiler.Interpreter
             return VisitReturnStmt(returnStatement);
         }
 
-
         public Stmt VisitVarStmt(Stmt.Var stmt)
         {
             object value = null;
@@ -192,7 +239,7 @@ namespace JukaCompiler.Interpreter
             }
 
             environment.Define(stmt.name.ToString() , value);
-            return null;
+            return new Stmt.DefaultStatement(); 
         }
 
         public Stmt VisitWhileStmt(Stmt.While stmt)
@@ -217,10 +264,6 @@ namespace JukaCompiler.Interpreter
         public object VisitAssignExpr(Expression.Assign expr)
         {
             object value = Evaluate(expr);
-            /* Statements and State visit-assign < Resolving and Binding resolved-assign
-                environment.assign(expr.name, value);
-            */
-            //> Resolving and Binding resolved-assign
 
             locals.TryGetValueEx(expr, out int? distance);
             if (distance != null)
@@ -432,18 +475,18 @@ namespace JukaCompiler.Interpreter
                     object? callableService = list[i];
                     if (expr.callee.Name.ToString().Equals(CallableServices.GetAvailableMemory.ToString()))
                     {
-                        var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(JukaCompiler.SystemCalls.IGetAvailableMemory));
-                        return ((IJukaCallable)jukacall).Call(this, arguments);
+                        var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IGetAvailableMemory));
+                        return jukacall.Call(this, arguments);
                     }
                     if (expr.callee.Name.ToString().Equals(CallableServices.FileOpen.ToString()))
                     {
-                        var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(JukaCompiler.SystemCalls.IFileOpen));
+                        var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IFileOpen));
                         if (arguments[0] is Expression.Variable)
                         {
                             var lexeme = (Expression.Variable)arguments[0];
                             object? variable = environment.Get(lexeme.name);
 
-                            return ((IJukaCallable)jukacall).Call(this, new List<Object>{variable});
+                            return jukacall.Call(this, new List<object> {variable});
                         }
                         
                     }
@@ -466,7 +509,13 @@ namespace JukaCompiler.Interpreter
 
         public object VisitGetExpr(Expression.Get expr)
         {
-            throw new NotImplementedException();
+            var getexpr = Evaluate(expr.expr);
+            if (getexpr is JukaInstance)
+            {
+                return ((JukaInstance)getexpr).Get(expr.Name);
+            }
+
+            throw new Exception("not a class instances");
         }
 
         public object VisitGroupingExpr(Expression.Grouping expr)
@@ -516,7 +565,6 @@ namespace JukaCompiler.Interpreter
 
         internal object LookUpVariable(Lexeme name, Expression expr)
         {
-            //locals.TryGetValueEx(expr, out int? distance);
             locals.TryGetValue(expr, out int? distance);
 
             if (distance != null)

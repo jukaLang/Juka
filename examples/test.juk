@@ -1,38 +1,14 @@
-class x = {
-	var s = "bob";
-	func foo() = {
-	}
-
-	func bob() = {
-	}
-}
-
-func Process() = {
-	var s = "foobar";
-	string y = "file.txt";
-
-	string z = FileOpen(y);
-	printLine(z);
-
-	if(s == "foobar")
-	{
-		printLine("d:\source\repos\juksa\file.txt");
-	}
-
-	int x = GetAvailableMemory();
-	printLine(x);
-
-}
-
-
-func test() =
+func process() = 
 {
-	string y = "file.txt";
+	printLine("process");
 }
 
 
+func main() = 
+{
+	printLine("main");
+	process();
+}
 
 
-Process();
-
-
+main();
