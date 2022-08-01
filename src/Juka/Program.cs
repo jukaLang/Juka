@@ -1,6 +1,9 @@
 ﻿using System.IO.Compression;
 using System.Net.Http.Headers;
 using System.Reflection;
+using ICSharpCode.SharpZipLib.GZip;
+using ICSharpCode.SharpZipLib.Tar;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Newtonsoft.Json.Linq;
 
 string? userInput;
@@ -59,7 +62,7 @@ else
     if (userInput == "-v" || userInput == "--version")
     {
         string currentVersion = "0.0.0.1";
-        var curVer = Assembly.GetExecutingAssembly().GetName().Version;
+        Version? curVer = Assembly.GetExecutingAssembly().GetName().Version;
         if (curVer != null)
         {
             currentVersion = curVer.ToString();
@@ -71,7 +74,7 @@ else
     {
         Console.WriteLine("Updating Juka Programming Language...");
         string currentVersion = "0.0.0.1";
-        var curVer = Assembly.GetExecutingAssembly().GetName().Version;
+        Version? curVer = Assembly.GetExecutingAssembly().GetName().Version;
         if (curVer != null)
         {
             currentVersion = curVer.ToString();
@@ -79,7 +82,7 @@ else
 
         Console.WriteLine($"Current Version: {currentVersion}");
         
-        var client = new HttpClient();
+        HttpClient client = new HttpClient();
         client.DefaultRequestHeaders.Accept.Clear();
         client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/json"));
@@ -107,7 +110,7 @@ else
                     platform = "Unix";
                     break;
                 case PlatformID.MacOSX:
-                    platform = "Mac";
+                    platform = "MacOS";
                     break;
                 default:
                     platform = "Linux";
@@ -115,61 +118,69 @@ else
             }
             Console.WriteLine($"Your Juka Assembly Version: {processor}");
             Console.WriteLine($"Your Operating System: {platform} ");
+            string dir = AppDomain.CurrentDomain.BaseDirectory;
+            string name = Assembly.GetExecutingAssembly().GetName().Name;
+
+            if (File.Exists(dir + "JukaCompiler.pdb"))
+            {
+                File.Delete(dir + "JukaCompiler.pdb");
+            }
+
+            string extension = "";
+            
+
             if (platform == "Windows")
             {
-                string dir = AppDomain.CurrentDomain.BaseDirectory;
-                string name = Assembly.GetExecutingAssembly().GetName().Name;
-                if (File.Exists(dir + name + ".backup.exe"))
-                {
-                    File.Delete(dir + name + ".backup.exe");
-                }
-
-                if (File.Exists(dir + "JukaCompiler.pdb"))
-                {
-                    File.Delete(dir + "JukaCompiler.pdb");
-                }
-
-                File.Move(dir + name + ".exe", dir + name + ".backup.exe");
-                if (processor == "Amd64" || processor == "X86" || processor == "Arm")
-                {
-                    string url = "";
-                    if (processor == "Amd64")
-                    {
-                        url =
-                            "https://github.com/jukaLang/Juka/releases/download/" + latestVersion + "/Juka_WindowsX64_" +
-                            latestVersion + ".zip";
-                    } else if (processor == "X86")
-                    {
-                        url =
-                            "https://github.com/jukaLang/Juka/releases/download/" + latestVersion + "/Juka_WindowsX86_" +
-                            latestVersion + ".zip";
-                    }
-                    else
-                    {
-                        url =
-                            "https://github.com/jukaLang/Juka/releases/download/" + latestVersion + "/Juka_WindowsARM64_" +
-                            latestVersion + ".zip";
-                    }
-                    using var response2 = await new HttpClient().GetAsync(url);
-                    await using var streamToReadFrom = await response2.Content.ReadAsStreamAsync();
-                    using var zip = new ZipArchive(streamToReadFrom);
-                    zip.ExtractToDirectory(dir);
-                    Console.WriteLine("Updated to version: "+latestVersion);
-                }
-                else if (processor == "MSIL")
-                {
-                    Console.WriteLine("You seem to be using a debug version of Juka. Can't update!");
-                }
-                else
-                {
-                    Console.WriteLine("Something went wrong! Please post this on Juka's issues page");
-                }
+                extension = ".exe";
             }
-            else
+
+            if (File.Exists(dir + name + ".backup" + extension))
+            { 
+                File.Delete(dir + name + ".backup" + extension);
+            }
+
+            File.Move(dir + name + extension, dir + name + extension);
+
+            string zipext = ".zip";
+            if (platform == "Unix" || (platform == "Linux" && processor == "X86"))
             {
-                Console.WriteLine("You need to download a new version at https://jukalang.com/download");
+                zipext = ".tar.gz";
             }
-        }
+
+            switch (processor)
+            {
+                case "Amd64":
+                case "X86":
+                case "Arm":
+                {
+                    string url = "https://github.com/jukaLang/Juka/releases/download/" + latestVersion + "/Juka_" +
+                                 platform + "_" + processor + "_" + latestVersion + zipext;
+                    using HttpResponseMessage response2 = await new HttpClient().GetAsync(url);
+                    await using Stream streamToReadFrom = await response2.Content.ReadAsStreamAsync();
+                    if(zipext == ".zip"){
+                        using ZipArchive zip = new ZipArchive(streamToReadFrom);
+                        zip.ExtractToDirectory(dir);
+                    } else
+                    {
+                        using (Stream gzipStream = new GZipInputStream(streamToReadFrom))
+                        {
+                            TarArchive tarArchive = TarArchive.CreateInputTarArchive(gzipStream);
+                            tarArchive.ExtractContents(dir);
+                            tarArchive.Close();
+                        }
+                    }
+                    Console.WriteLine("Updated to version: "+latestVersion);
+                    break;
+                }
+                case "MSIL":
+                    Console.WriteLine("You seem to be using a debug version of Juka. Can't update!");
+                    break;
+                default:
+                    Console.WriteLine("Something went wrong! Please post this on Juka's issues page");
+                    break;
+            }
+
+        } 
         else
         {
             Console.WriteLine("No need to update. You are using the latest version!");

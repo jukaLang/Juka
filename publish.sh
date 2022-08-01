@@ -11,17 +11,17 @@ if [[ "$GITHUB_TOKEN" == "" ]]; then
 fi
 
 file_content_type="application/octet-stream"
-if [[ "$JUKA_TOKEN" == "FreeBSD" ]]; then
+if [[ "$JUKA_TOKEN" == "Unix_Amd64" ]]; then
 files_to_upload=(
-  "Juka_FreeBSD_${CIRRUS_TAG}.tar.gz"
-  "JukaAPI_FreeBSD_${CIRRUS_TAG}.tar.gz"
+  "Juka_Unix_Amd64_${CIRRUS_TAG}.tar.gz"
+  "JukaAPI_Unix_Amd64_${CIRRUS_TAG}.tar.gz"
 )
 fi
 
-if [[ "$JUKA_TOKEN" == "LinuxX86" ]]; then
+if [[ "$JUKA_TOKEN" == "Linux_X86" ]]; then
 files_to_upload=(
-  "Juka_LinuxX86_${CIRRUS_TAG}.tar.gz"
-  "JukaAPI_LinuxX86_${CIRRUS_TAG}.tar.gz"
+  "Juka_Linux_X86_${CIRRUS_TAG}.tar.gz"
+  "JukaAPI_Linux_X86_${CIRRUS_TAG}.tar.gz"
 )
 fi
 
