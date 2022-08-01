@@ -1,19 +1,25 @@
-﻿using Newtonsoft.Json;
+﻿using System.IO.Compression;
 using System.Net.Http.Headers;
 using System.Reflection;
+using ICSharpCode.SharpZipLib.GZip;
+using ICSharpCode.SharpZipLib.Tar;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Newtonsoft.Json.Linq;
 
 string? userInput;
 string? readline;
 
+string assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
 if (args.Length == 0)
 {
     Console.Title = "Juka Compiler";
-    Console.WriteLine("♥ Welcome to Juka Compiler. If you need to run a file, pass it as an argument ♥");
+    Console.WriteLine("♥ Welcome to Juka Compiler Version: "+assemblyVersion+". If you need to run a file, pass it as an argument ♥");
     Console.WriteLine("Press Return 3 times to run the code");
 
     while (true)
     {
-        Console.Write("> ");
+        Console.Write("Juka > ");
         userInput = "";
 
         int counter = 0;
@@ -24,7 +30,7 @@ if (args.Length == 0)
             {
                 if (userInput == "")
                 {
-                    Console.Write("> ");
+                    Console.Write("Juka > ");
                     continue;
                 }
 
@@ -49,11 +55,26 @@ if (args.Length == 0)
 else
 {
     userInput = args[0];
+    if (userInput == "-d" || userInput == "--debug")
+    {
+
+    }
+    if (userInput == "-v" || userInput == "--version")
+    {
+        string currentVersion = "0.0.0.1";
+        Version? curVer = Assembly.GetExecutingAssembly().GetName().Version;
+        if (curVer != null)
+        {
+            currentVersion = curVer.ToString();
+        }
+
+        Console.WriteLine($"Current Version: {currentVersion}");
+    }
     if (userInput == "-su" || userInput == "--self-update")
     {
         Console.WriteLine("Updating Juka Programming Language...");
-        string currentVersion = "0.0.0";
-        var curVer = Assembly.GetExecutingAssembly().GetName().Version;
+        string currentVersion = "0.0.0.1";
+        Version? curVer = Assembly.GetExecutingAssembly().GetName().Version;
         if (curVer != null)
         {
             currentVersion = curVer.ToString();
@@ -61,7 +82,7 @@ else
 
         Console.WriteLine($"Current Version: {currentVersion}");
         
-        var client = new HttpClient();
+        HttpClient client = new HttpClient();
         client.DefaultRequestHeaders.Accept.Clear();
         client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/json"));
@@ -69,8 +90,7 @@ else
         HttpResponseMessage response = await client.GetAsync("https://api.github.com/repos/JukaLang/juka/releases/latest");
         response.EnsureSuccessStatusCode();
         string responseBody = await response.Content.ReadAsStringAsync();
-        GitHubApi myGitObj = JsonConvert.DeserializeObject<GitHubApi>(responseBody);
-        string latestVersion = myGitObj.ToString();
+        string latestVersion = (string)JObject.Parse(responseBody).SelectToken("tag_name");
         Console.WriteLine($"Latest Version: {latestVersion}");
         if (String.Compare(currentVersion, latestVersion, StringComparison.Ordinal) < 0)
         {
@@ -90,20 +110,80 @@ else
                     platform = "Unix";
                     break;
                 case PlatformID.MacOSX:
-                    platform = "Mac";
+                    platform = "MacOS";
                     break;
                 default:
                     platform = "Linux";
                     break;
             }
-            Console.WriteLine($"Your Processor: {processor}");
-            Console.WriteLine($"Your OS: {platform} ");
-            Console.WriteLine("You need to download a new version at https://jukalang.com/download");
+            Console.WriteLine($"Your Juka Assembly Version: {processor}");
+            Console.WriteLine($"Your Operating System: {platform} ");
+            string dir = AppDomain.CurrentDomain.BaseDirectory;
+            string name = Assembly.GetExecutingAssembly().GetName().Name;
 
-        }
+            if (File.Exists(dir + "JukaCompiler.pdb"))
+            {
+                File.Delete(dir + "JukaCompiler.pdb");
+            }
+
+            string extension = "";
+            
+
+            if (platform == "Windows")
+            {
+                extension = ".exe";
+            }
+
+            if (File.Exists(dir + name + ".backup" + extension))
+            { 
+                File.Delete(dir + name + ".backup" + extension);
+            }
+
+            File.Move(dir + name + extension, dir + name + extension);
+
+            string zipext = ".zip";
+            if (platform == "Unix" || (platform == "Linux" && processor == "X86"))
+            {
+                zipext = ".tar.gz";
+            }
+
+            switch (processor)
+            {
+                case "Amd64":
+                case "X86":
+                case "Arm":
+                {
+                    string url = "https://github.com/jukaLang/Juka/releases/download/" + latestVersion + "/Juka_" +
+                                 platform + "_" + processor + "_" + latestVersion + zipext;
+                    using HttpResponseMessage response2 = await new HttpClient().GetAsync(url);
+                    await using Stream streamToReadFrom = await response2.Content.ReadAsStreamAsync();
+                    if(zipext == ".zip"){
+                        using ZipArchive zip = new ZipArchive(streamToReadFrom);
+                        zip.ExtractToDirectory(dir);
+                    } else
+                    {
+                        using (Stream gzipStream = new GZipInputStream(streamToReadFrom))
+                        {
+                            TarArchive tarArchive = TarArchive.CreateInputTarArchive(gzipStream);
+                            tarArchive.ExtractContents(dir);
+                            tarArchive.Close();
+                        }
+                    }
+                    Console.WriteLine("Updated to version: "+latestVersion);
+                    break;
+                }
+                case "MSIL":
+                    Console.WriteLine("You seem to be using a debug version of Juka. Can't update!");
+                    break;
+                default:
+                    Console.WriteLine("Something went wrong! Please post this on Juka's issues page");
+                    break;
+            }
+
+        } 
         else
         {
-            Console.WriteLine("You are using the latest version!");
+            Console.WriteLine("No need to update. You are using the latest version!");
         }
     }
     else
@@ -111,14 +191,4 @@ else
         Console.WriteLine(new JukaCompiler.Compiler().Go(userInput, isFile: true));
     }
 
-}
-
-internal class GitHubApi                     
-{
-    string tag_name { get; set; }
-
-    public override string ToString()
-    {
-        return tag_name;
-    }
 }

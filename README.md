@@ -1,4 +1,4 @@
-# Juka - Programming Language 
+# <a href="https://jukalang.com"><img src="./logo.svg" align="left" height="40" width="40"></a>Juka - Programming Language
 
 Official Website: https://jukalang.com
 
