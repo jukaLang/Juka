@@ -16,23 +16,22 @@ namespace JukaAzureFunction
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req, ILogger log)
         {
-            string code = "";
-            code = req.Query["code"];
+            string code = req.Query["code"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
-            code = code ?? data?.code;
+            code ??= data?.code;
 
-            log.LogInformation("Running code" + code);
+            log.LogInformation("Running code: " + code);
 
-            JukaCompiler.Compiler compiler = new JukaCompiler.Compiler();
+            JukaCompiler.Compiler compiler = new();
 
             var outputValue = compiler.Go(code, false);
 
             if (compiler.HasErrors())
             {
                 var errors = string.Join(Environment.NewLine, compiler.ListErrors());
-                return new OkObjectResult(new { errors = errors, original = code });
+                return new OkObjectResult(new { errors, original = code });
             }
             return new OkObjectResult(new { output = outputValue, original = code });
         }
@@ -40,6 +39,7 @@ namespace JukaAzureFunction
 
 
         /*public static class JukaAzureFunction
+        FUTRURE USE FOR COMPILER
         {
             [FunctionName("JukaAzureFunction")]
             public static async Task<IActionResult> Run(

@@ -1,15 +1,12 @@
 ﻿using System.IO.Compression;
-using System.Net.Http.Headers;
 using System.Reflection;
-using ICSharpCode.SharpZipLib.GZip;
-using ICSharpCode.SharpZipLib.Tar;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Text;
 using Newtonsoft.Json.Linq;
 
 string? userInput;
 string? readline;
 
-string assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+string? assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
 
 if (args.Length == 0)
 {
@@ -82,44 +79,43 @@ else
 
         Console.WriteLine($"Current Version: {currentVersion}");
         
-        HttpClient client = new HttpClient();
+        HttpClient client = new()
+        {
+            BaseAddress = null,
+            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrLower,
+            MaxResponseContentBufferSize = 0,
+            Timeout = default
+        };
         client.DefaultRequestHeaders.Accept.Clear();
         client.DefaultRequestHeaders.Accept.Add(
-            new MediaTypeWithQualityHeaderValue("application/json"));
+            new("application/json"));
         client.DefaultRequestHeaders.Add("User-Agent", "Juka HTTPClient");
         HttpResponseMessage response = await client.GetAsync("https://api.github.com/repos/JukaLang/juka/releases/latest");
         response.EnsureSuccessStatusCode();
         string responseBody = await response.Content.ReadAsStringAsync();
-        string latestVersion = (string)JObject.Parse(responseBody).SelectToken("tag_name");
+        string? latestVersion = (string?)JObject.Parse(responseBody).SelectToken("tag_name");
         Console.WriteLine($"Latest Version: {latestVersion}");
         if (String.Compare(currentVersion, latestVersion, StringComparison.Ordinal) < 0)
         {
             string processor = Assembly.GetExecutingAssembly().GetName().ProcessorArchitecture.ToString();
 
             PlatformID pid = Environment.OSVersion.Platform;
-            string platform;
-            switch (pid)
+            string platform = pid switch
             {
-                case PlatformID.Win32NT:
-                case PlatformID.Win32S:
-                case PlatformID.Win32Windows:
-                case PlatformID.WinCE:
-                    platform = "Windows";
-                    break;
-                case PlatformID.Unix:
-                    platform = "Unix";
-                    break;
-                case PlatformID.MacOSX:
-                    platform = "MacOS";
-                    break;
-                default:
-                    platform = "Linux";
-                    break;
-            }
+                PlatformID.Win32NT => "Windows",
+                PlatformID.Win32S => "Windows",
+                PlatformID.Win32Windows => "Windows",
+                PlatformID.WinCE => "Windows",
+                PlatformID.Unix => "Unix",
+                PlatformID.MacOSX => "MacOS",
+                PlatformID.Xbox => "Linux",
+                PlatformID.Other => "Linux",
+                _ => "Linux"
+            };
             Console.WriteLine($"Your Juka Assembly Version: {processor}");
             Console.WriteLine($"Your Operating System: {platform} ");
             string dir = AppDomain.CurrentDomain.BaseDirectory;
-            string name = Assembly.GetExecutingAssembly().GetName().Name;
+            string? name = Assembly.GetExecutingAssembly().GetName().Name;
 
             if (File.Exists(dir + "JukaCompiler.pdb"))
             {
@@ -158,15 +154,59 @@ else
                     using HttpResponseMessage response2 = await new HttpClient().GetAsync(url);
                     await using Stream streamToReadFrom = await response2.Content.ReadAsStreamAsync();
                     if(zipext == ".zip"){
-                        using ZipArchive zip = new ZipArchive(streamToReadFrom);
+                        using ZipArchive zip = new(streamToReadFrom);
                         zip.ExtractToDirectory(dir);
                     } else
                     {
-                        using (Stream gzipStream = new GZipInputStream(streamToReadFrom))
+                        using (var gzip = new GZipStream(streamToReadFrom, CompressionMode.Decompress))
                         {
-                            TarArchive tarArchive = TarArchive.CreateInputTarArchive(gzipStream);
-                            tarArchive.ExtractContents(dir);
-                            tarArchive.Close();
+                            const int chunk = 4096;
+                            using (var memStr = new MemoryStream())
+                            {
+                                int read;
+                                var buffer = new byte[chunk];
+                                do
+                                {
+                                    read = gzip.Read(buffer, 0, chunk);
+                                    memStr.Write(buffer, 0, read);
+                                } while (read == chunk);
+                                memStr.Seek(0, SeekOrigin.Begin);
+
+                                buffer = new byte[100];
+                                while (true)
+                                {
+                                    memStr.Read(buffer, 0, 100);
+                                    var fname = Encoding.ASCII.GetString(buffer).Trim('\0');
+                                    if (String.IsNullOrWhiteSpace(fname))
+                                        break;
+                                    memStr.Seek(24, SeekOrigin.Current);
+                                    memStr.Read(buffer, 0, 12);
+                                    var size = Convert.ToInt64(Encoding.UTF8.GetString(buffer, 0, 12).Trim('\0').Trim(), 8);
+
+                                    memStr.Seek(376L, SeekOrigin.Current);
+
+                                    var output = Path.Combine(dir, fname);
+                                    if (!Directory.Exists(Path.GetDirectoryName(output)))
+                                        Directory.CreateDirectory(Path.GetDirectoryName(output));
+                                    if (!fname.Equals("./", StringComparison.InvariantCulture))
+                                    {
+                                        using (var str = File.Open(output, FileMode.OpenOrCreate, FileAccess.Write))
+                                        {
+                                            var buf = new byte[size];
+                                            memStr.Read(buf, 0, buf.Length);
+                                            str.Write(buf, 0, buf.Length);
+                                        }
+                                    }
+
+                                    var pos = memStr.Position;
+
+                                    var offset = 512 - (pos % 512);
+                                    if (offset == 512)
+                                        offset = 0;
+
+                                    memStr.Seek(offset, SeekOrigin.Current);
+                                }
+                            }
                         }
                     }
                     Console.WriteLine("Updated to version: "+latestVersion);
