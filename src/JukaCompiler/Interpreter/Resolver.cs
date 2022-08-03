@@ -14,7 +14,7 @@ namespace JukaCompiler.Interpreter
         private ServiceProvider? ServiceProvider;
         private Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
         private Stack<StackFrame> frames = new Stack<StackFrame>();
-        //Dictionary<string,bool>> processScope = new Stack<string, Dictionary<string, bool>>();
+        Dictionary<string,List<Expression>> processScope = new Dictionary<string, List<Expression>>();
         private ICompilerError? compilerError;
 
         private enum FunctionType
@@ -139,12 +139,14 @@ namespace JukaCompiler.Interpreter
             {
                 BeginScope();
                 scopes.Peek().Add("super",true);
+                processScope.Add("super", new List<Expression>());
             }
 
             BeginScope();
             scopes.Peek().Add("this", true);
+            processScope.Add("this", new List<Expression>());
 
-            foreach(Stmt.Function method in stmt.methods)
+            foreach (Stmt.Function method in stmt.methods)
             {
                 //FunctionType decl = FunctionType.METHOD;
                 //implement ctor
@@ -295,7 +297,7 @@ namespace JukaCompiler.Interpreter
         public object VisitVariableExpr(Expression.Variable expr)
         {
             try
-            { 
+            {
                 if ( !(scopes.Count == 0) && !scopes.Peek().ContainsKey(expr.Name.ToString()) && 
                     (!(scopes.Count == 1 && scopes.Peek().Keys.Count == 0)))
                 {

@@ -8,6 +8,51 @@ namespace JukaUnitTest
     [TestClass]
     public class CompilerUnitTest
     {
+
+        string sourceAsString =
+            @"func main() = 
+                {
+                    test_func();
+                }";
+
+
+        private string Go(string source)
+        {
+            Compiler compiler = new Compiler();
+            var outputValue = compiler.Go(sourceAsString, false);
+            if (compiler.HasErrors())
+            {
+                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+            }
+
+            return outputValue;
+        }
+
+        [TestMethod]
+        public void PrintLiteral()
+        {
+            sourceAsString +=
+                @"func test_func() = 
+                {
+                    print(""print""); 
+                }";
+
+            Assert.AreEqual("print", Go(sourceAsString));
+        }
+
+        [TestMethod]
+        public void PrintVariable()
+        {
+            sourceAsString +=
+                @"func test_func() = 
+                {
+                    var x = ""print"";
+                    print(x); 
+                }";
+
+            Assert.AreEqual("print", Go(sourceAsString));
+        }
+
         [TestMethod]
         public void TestEmptyString()
         {
