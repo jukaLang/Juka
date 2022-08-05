@@ -37,7 +37,8 @@ namespace JukaUnitTest
                     print(""print""); 
                 }";
 
-            Assert.AreEqual("print", Go(sourceAsString));
+            var value = Go(sourceAsString);
+            Assert.AreEqual("print", value);
         }
 
         [TestMethod]

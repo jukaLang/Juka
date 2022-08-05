@@ -7,6 +7,12 @@ namespace JukaCompiler.Interpreter
         private Dictionary<string, Lexeme> frameVariables = new Dictionary<string, Lexeme>();
         private string frameName;
 
+
+        internal string FrameName
+        {
+            get { return frameName; }
+        }
+
         internal StackFrame(string name)
         {
             this.frameName = name;

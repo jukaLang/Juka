@@ -14,7 +14,8 @@ namespace JukaCompiler.Interpreter
         private ServiceProvider? ServiceProvider;
         private Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
         private Stack<StackFrame> frames = new Stack<StackFrame>();
-        Dictionary<string,List<Expression>> processScope = new Dictionary<string, List<Expression>>();
+        Dictionary<string,BlockScope> processScope = new Dictionary<string, BlockScope>();
+        private Stack<string> blockScope = new Stack<string>();
         private ICompilerError? compilerError;
 
         private enum FunctionType
@@ -78,9 +79,9 @@ namespace JukaCompiler.Interpreter
 
         public object VisitBlockStmt(Stmt.Block stmt)
         {
-            BeginScope();
+            //BeginScope(stmt.);
             Resolve(stmt.statements);
-            EndScope();
+            //EndScope();
             return new Stmt.DefaultStatement();
         }
 
@@ -92,17 +93,21 @@ namespace JukaCompiler.Interpreter
                 if (!call.isJukaCallable)
                 { 
                     frames.Push(new StackFrame(expr.callee.Name.ToString()));
+                    BeginScope(expr.callee.Name.ToString());
                     Declare(expr.callee.Name);
                     Define(expr.callee.Name);
                     Resolve(expr.callee);
                     frames.Pop();
+                    EndScope();
                 }
                 else
                 {
                     frames.Push(new StackFrame(expr.callee.Name.ToString()));
+                    BeginScope(expr.callee.Name.ToString());
                     Declare(expr.callee.Name);
                     Define(expr.callee.Name);
                     frames.Pop();
+                    EndScope();
                 }
             }
 
@@ -120,6 +125,7 @@ namespace JukaCompiler.Interpreter
         {
             ClassType enclosingClass = currentClass;
             currentClass = ClassType.CLASS;
+            BlockScope blockScope = new BlockScope();
 
             Declare(stmt.name);
             Define(stmt.name);
@@ -137,14 +143,15 @@ namespace JukaCompiler.Interpreter
 
             if(stmt.superClass != null)
             {
-                BeginScope();
+                BeginScope(stmt.name.ToString());
                 scopes.Peek().Add("super",true);
-                processScope.Add("super", new List<Expression>());
+                
+                processScope.Add("super", blockScope);
             }
 
-            BeginScope();
+            BeginScope(stmt.name.ToString());
             scopes.Peek().Add("this", true);
-            processScope.Add("this", new List<Expression>());
+            processScope.Add("this", blockScope);
 
             foreach (Stmt.Function method in stmt.methods)
             {
@@ -173,10 +180,14 @@ namespace JukaCompiler.Interpreter
 
         public object VisitFunctionStmt(Stmt.Function stmt)
         {
+            BeginScope(stmt.name.ToString());
+
             Declare(stmt.name);
             Define(stmt.name);
 
             ResolveFunction(stmt, FunctionType.FUNCTION);
+
+            EndScope();
             return new Stmt.DefaultStatement();
         }
 
@@ -298,13 +309,38 @@ namespace JukaCompiler.Interpreter
         {
             try
             {
-                if ( !(scopes.Count == 0) && !scopes.Peek().ContainsKey(expr.Name.ToString()) && 
-                    (!(scopes.Count == 1 && scopes.Peek().Keys.Count == 0)))
+                // the expr is a call to a function. 
+                if(this.frames.Count > 0 && this.frames.Peek().FrameName.Equals(expr.Name.ToString()))
                 {
-                    this.compilerError?.AddError(expr.Name.ToString() + "Can't read local variable");
+                    return new Stmt.DefaultStatement();
                 }
 
-                ResolveLocal(expr, expr.Name);
+                string currentScope = this.blockScope.Peek();
+                
+                if(processScope.TryGetValue(currentScope, out var localScope))
+                {
+                    if(localScope.lexemeScope.TryGetValue(expr.name.ToString(), out Lexeme value))
+                    {
+                        this.interpreter.Resolve(expr,0);
+                    }
+                    //{
+                    //    return new Stmt.DefaultStatement();
+                    //}
+                }
+
+                //if ( !(scopes.Count == 0) && !scopes.Peek().ContainsKey(expr.Name.ToString()) && 
+                //    (!(scopes.Count == 1 && scopes.Peek().Keys.Count == 0)))
+                //{
+                //    this.compilerError?.AddError(expr.Name.ToString() + "Can't read local variable");
+                //}
+
+
+                //var processDictionary = new Dictionary<string,Expression>();
+                //processDictionary.Add(currentScope, expr);
+                //processScope.Add(currentScope, processDictionary);
+                //this.interpreter.Resolve(expr, 0);
+
+                // ResolveLocal(expr, expr.Name);
             }
             catch(Exception ex)
             {
@@ -353,19 +389,31 @@ namespace JukaCompiler.Interpreter
 
         private void Declare(Lexeme name)
         {
-            if (scopes.Count() == 0 || scopes.Count() == 1 && scopes.Peek().Keys.Count == 0)
+            if (blockScope != null && blockScope.Count > 0)
             {
-                return;
+                var block = blockScope.Peek();
+                if (block.Equals(name.ToString()))
+                {
+                    // current context is a function
+                    return;
+                }
+
+                if(this.processScope.TryGetValue(block, out BlockScope bsLocal))
+                {
+                    bsLocal.lexemeScope.Add(name.ToString(), name);
+                    this.processScope.Add(block, bsLocal);
+                    return;
+                }
+
+                BlockScope bsObject = new BlockScope();
+                if (bsObject.lexemeScope.ContainsKey(name.ToString()))
+                {
+                    throw new Exception("variable already exist");
+                }
+
+                bsObject.lexemeScope.Add(name.ToString(), name);
+                this.processScope.Add(block, bsObject);
             }
-
-            Dictionary<string,bool> scope = this.scopes.Peek();
-
-            if (scope != null && scope.ContainsKey(name.ToString()))
-            {
-                throw new Exception("variable exist, - need to add to internal error log");
-            }
-
-            scope?.Add(name.ToString(), false);
         }
 
         private void Define(Lexeme name)
@@ -391,7 +439,7 @@ namespace JukaCompiler.Interpreter
             currentFunction = type;
 
             //< set-current-function
-            BeginScope();
+            //BeginScope(function.name.ToString());
             foreach (var param in function.typeParameterMaps)
             {
                 var literalName = param.parameterName as Expression.Variable;
@@ -404,21 +452,29 @@ namespace JukaCompiler.Interpreter
             }
 
             Resolve(function.body);
-            EndScope();
+            //EndScope();
             //> restore-current-function
             currentFunction = enclosingFunction;
             //< restore-current-function
         }
 
-        private void BeginScope()
+        private void BeginScope(string scopeName)
         {
             scopes.Push(new Dictionary<string, bool>());
+            blockScope.Push(scopeName);
         }
         //< begin-scope
         //> end-scope
         private void EndScope()
         {
             scopes.Pop();
+            blockScope.Pop();
         }
+    }
+
+    internal class BlockScope
+    {
+        internal Dictionary<string, Dictionary<string, Expression>> processScope = new Dictionary<string, Dictionary<string, Expression>>();
+        internal Dictionary<string, Lexeme> lexemeScope = new Dictionary<string, Lexeme>();
     }
 }
