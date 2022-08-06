@@ -1,7 +1,6 @@
 ﻿using JukaCompiler;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Microsoft.CodeAnalysis;
 
 namespace JukaUnitTest
 {
@@ -65,14 +64,14 @@ namespace JukaUnitTest
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
-            Assert.AreEqual("", outputValue);
+            Assert.AreEqual("process"+ Environment.NewLine+"foo"+ Environment.NewLine+"main"+Environment.NewLine, outputValue);
         }
 
         [TestMethod]
         public void TestEmptyComment()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "/*saddsadsa*dasdas/asdasd*//**///!sssd";
+            string sourceAsString = "func main() = {} /*saddsadsa*dasdas/asdasd*//**///!sssd";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
@@ -86,20 +85,19 @@ namespace JukaUnitTest
         public void TestFunctionCall()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = 
-                @"func test_func(var m) = 
-                {
-                    var u=m;
-                    print(u); 
-                }
+            string testfunccall = @"
+            func x() = {
+                var u = ""3"";
+                print(u); 
+            }
 
-                func main() = 
-                {
-                    test_func(3);
-                }";
+            func main() = 
+            {
+                x();
+            }";
 
 
-            var outputValue = compiler.Go(sourceAsString, false);
+            var outputValue = compiler.Go(testfunccall, false);
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
@@ -112,7 +110,11 @@ namespace JukaUnitTest
         public void TestMultipleVariables()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "func test_func() = { var x=32; var y=33; printLine(x);} test_func();";
+            string sourceAsString = @"func main() = { 
+                var x=32; 
+
+                printLine(x);
+            }";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
@@ -126,7 +128,10 @@ namespace JukaUnitTest
         public void TestOperationAdd()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "func test_add() = {var x=32; var y=33; var z=x+y;printLine(z);} test_add();";
+            string sourceAsString = @"func main() = {
+                var x=32 + 33;
+                printLine(x);
+             }";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
@@ -140,7 +145,10 @@ namespace JukaUnitTest
         public void TestOperationSubtract()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "func test_add() = {var x=32; var y=33; var z=x-y;printLine(z);} test_add();";
+            string sourceAsString = @"func main() = {
+                var x=32-33;
+                printLine(x);
+            }";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
@@ -154,7 +162,10 @@ namespace JukaUnitTest
         public void TestOperationDivide()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "func test_add() = {var x=10; var y=3; var z=x/y;printLine(z);} test_add();";
+            string sourceAsString = @"func main() = {
+                var x=10/3;
+                printLine(x);
+            }";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
@@ -168,7 +179,10 @@ namespace JukaUnitTest
         public void TestOperationMultiply()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "func test_add() = {var x=3; var y=3; var z=x*y;printLine(z);} test_add();";
+            string sourceAsString = @"func main() = {
+                var x=3*3;
+                printLine(x);
+            }";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
@@ -213,7 +227,7 @@ namespace JukaUnitTest
         public void TestClass()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "class x = {  } ";
+            string sourceAsString = "class x = {  }; func main(){}";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
