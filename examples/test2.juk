@@ -1,6 +1,7 @@
 func testC_sharp() = {
-   printLine("AsdfA");
+  printLine("AsdfA");
 }
 
-
-testC_sharp();
+func main() = {
+   testC_sharp();
+}
