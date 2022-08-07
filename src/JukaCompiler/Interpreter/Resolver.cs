@@ -3,6 +3,7 @@ using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 using JukaCompiler.Statements;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace JukaCompiler.Interpreter
 {
@@ -13,7 +14,6 @@ namespace JukaCompiler.Interpreter
         private ClassType currentClass = ClassType.NONE;
         private ServiceProvider? ServiceProvider;
         private Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
-        private Stack<StackFrame> frames = new Stack<StackFrame>();
         Dictionary<string,BlockScope> processScope = new Dictionary<string, BlockScope>();
         private Stack<string> blockScope = new Stack<string>();
         private ICompilerError? compilerError;
@@ -90,34 +90,16 @@ namespace JukaCompiler.Interpreter
             if (expr is Expression.Call)
             {
                 var call = (Expression.Call)expr;
+                BeginScope(expr.callee.Name.ToString());
+                Declare(expr.callee.Name);
+                Define(expr.callee.Name);
+
                 if (!call.isJukaCallable)
                 { 
-                    frames.Push(new StackFrame(expr.callee.Name.ToString()));
-                    BeginScope(expr.callee.Name.ToString());
-                    Declare(expr.callee.Name);
-                    Define(expr.callee.Name);
                     Resolve(expr.callee);
-                    frames.Pop();
-                    EndScope();
                 }
-                else
-                {
-                    frames.Push(new StackFrame(expr.callee.Name.ToString()));
-                    BeginScope(expr.callee.Name.ToString());
-                    Declare(expr.callee.Name);
-                    Define(expr.callee.Name);
-                    frames.Pop();
-                    EndScope();
-                }
+                EndScope();
             }
-
-
-
-            foreach(Expression arg in expr.arguments)
-            {
-                Resolve(arg);
-            }
-
             return new Stmt.DefaultStatement();
         }
 
@@ -310,11 +292,6 @@ namespace JukaCompiler.Interpreter
             try
             {
                 // the expr is a call to a function. 
-                if(this.frames.Count > 0 && this.frames.Peek().FrameName.Equals(expr.Name.ToString()))
-                {
-                    return new Stmt.DefaultStatement();
-                }
-
                 string currentScope = this.blockScope.Peek();
                 
                 if(processScope.TryGetValue(currentScope, out var localScope))
@@ -438,8 +415,6 @@ namespace JukaCompiler.Interpreter
             FunctionType enclosingFunction = currentFunction;
             currentFunction = type;
 
-            //< set-current-function
-            //BeginScope(function.name.ToString());
             foreach (var param in function.typeParameterMaps)
             {
                 var literalName = param.parameterName as Expression.Variable;
@@ -452,10 +427,7 @@ namespace JukaCompiler.Interpreter
             }
 
             Resolve(function.body);
-            //EndScope();
-            //> restore-current-function
             currentFunction = enclosingFunction;
-            //< restore-current-function
         }
 
         private void BeginScope(string scopeName)
@@ -463,8 +435,7 @@ namespace JukaCompiler.Interpreter
             scopes.Push(new Dictionary<string, bool>());
             blockScope.Push(scopeName);
         }
-        //< begin-scope
-        //> end-scope
+
         private void EndScope()
         {
             scopes.Pop();

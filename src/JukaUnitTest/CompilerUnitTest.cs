@@ -55,24 +55,57 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
-        public void TestEmptyString()
+        public void PassVariable()
         {
-            Compiler compiler = new Compiler();
-            string sourceAsString = @"../../../../../examples/dontest.juk";
+            sourceAsString +=
+                @"func test_func() = 
+                {
+                    var x = ""print"";
+                    varpass(x);
+                }
+                
+                func varpass(var x) = 
+                {
+                    print(x); 
+                }";
 
-            var outputValue = compiler.Go(sourceAsString, true);
-            if (compiler.HasErrors())
-            {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-            }
-            Assert.AreEqual("", outputValue);
+            var value = Go(sourceAsString);
+            Assert.AreEqual("print", value);
+        }
+
+        [TestMethod]
+        public void PrintThreeLevelsNesting()
+        {
+            sourceAsString +=
+                @"func test_func() = 
+                {
+                    var y = ""one two three"";
+                    nest1(y);
+                }
+                
+                func nest1(var y) = 
+                {
+                    nest2(y);
+                }
+
+                func nest2(var z) = 
+                {
+                    print(z);
+                }";
+
+            var value = Go(sourceAsString);
+            Assert.AreEqual("one two three", value);
         }
 
         [TestMethod]
         public void TestEmptyComment()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "/*saddsadsa*dasdas/asdasd*//**///!sssd";
+            sourceAsString += @"func test_func() =
+                {
+                    var y = ""one two three"";
+                    /*nest1(y);*/
+                }";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
@@ -86,7 +119,7 @@ namespace JukaUnitTest
         public void TestFunctionCall()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = 
+            sourceAsString +=
                 @"func test_func(var m) = 
                 {
                     var u=m;
@@ -111,15 +144,23 @@ namespace JukaUnitTest
         [TestMethod]
         public void TestMultipleVariables()
         {
-            Compiler compiler = new Compiler();
-            string sourceAsString = "func test_func() = { var x=32; var y=33; printLine(x);} test_func();";
+            sourceAsString += @"
+                func test_func() = 
+                {
+                    var z = 3;
+                    var x=""a""; 
+                    print(x);
+                }";
 
-            var outputValue = compiler.Go(sourceAsString, false);
+            Compiler compiler = new Compiler();
+            var outputValue = new Compiler().Go(sourceAsString, false);
+
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
-            Assert.AreEqual("32" + Environment.NewLine, outputValue);
+
+            Assert.AreEqual("a" , outputValue);
         }
 
         [TestMethod]

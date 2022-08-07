@@ -14,6 +14,7 @@ namespace JukaCompiler.Interpreter
         private JukaEnvironment globals;
         private JukaEnvironment environment;
         private Dictionary<Expression, int?> locals = new Dictionary<Expression, int?>();
+        private Stack<StackFrame> frames = new Stack<StackFrame>();
 
         internal JukaInterpreter(ServiceProvider services)
         {
@@ -460,27 +461,42 @@ namespace JukaCompiler.Interpreter
 
         public object VisitCallExpr(Expression.Call expr)
         {
-            var arguments = new List<object>();
+            if (expr == null || expr.callee == null || expr.callee.name == null)
+            {
+                throw new Exception("VisitCallExpr - runtime exception interperter");
+            }
 
+            var currentStackFrame = new StackFrame(expr.callee.name.ToString());
+            frames.Push(currentStackFrame);
+
+            var arguments = new List<object>();
+            Dictionary<string, object> argumentsMap = new Dictionary<string, object>();
+
+            foreach (Expression argument in expr.arguments)
+            {
+                if (argument is Expression.Variable)
+                {
+                    var lexeme = (Expression.Variable)argument;
+                    object? variable = environment.Get(lexeme.name);
+                    arguments.Add(variable);
+                    argumentsMap.Add(lexeme.Name.ToString(), variable);
+                }
+
+                if (argument is Expression.Literal)
+                {
+                    var literal = (Expression.Literal)argument;
+                    arguments.Add(literal.LiteralValue);
+                    argumentsMap.Add(literal.Name.ToString(), literal);
+                }
+            }
+            
+            if (argumentsMap.Count > 0)
+            {
+                currentStackFrame.AddVariables(argumentsMap);
+            }
 
             if (expr.isJukaCallable)
             {
-                foreach (Expression argument in expr.arguments)
-                {
-                    if (argument is Expression.Variable)
-                    {
-                        var lexeme = (Expression.Variable)argument;
-                        object? variable = environment.Get(lexeme.name);
-                        arguments.Add(variable);
-                    }
-
-                    if (argument is Expression.Literal)
-                    {
-                        var literal = (Expression.Literal)argument;
-                        arguments.Add(literal.LiteralValue);
-                    }
-                }
-
                 try
                 { 
                     var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IJukaCallable));
@@ -563,6 +579,11 @@ namespace JukaCompiler.Interpreter
         internal object LookUpVariable(Lexeme name, Expression expr)
         {
             locals.TryGetValue(expr, out int? distance);
+
+            if (frames.Peek().TryGetStackVariableByName(name.ToString(), out object variable))
+            {
+                return variable;
+            }
 
             if (distance != null)
             {
