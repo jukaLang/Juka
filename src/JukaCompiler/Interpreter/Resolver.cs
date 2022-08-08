@@ -3,7 +3,6 @@ using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 using JukaCompiler.Statements;
 using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
 
 namespace JukaCompiler.Interpreter
 {
@@ -175,7 +174,6 @@ namespace JukaCompiler.Interpreter
 
         public object VisitLexemeTypeLiteral(Expression.LexemeTypeLiteral expr)
         {
-            //return new Stmt.DefaultStatement();
             return new Stmt.DefaultStatement(); 
         }
 
@@ -300,24 +298,7 @@ namespace JukaCompiler.Interpreter
                     {
                         this.interpreter.Resolve(expr,0);
                     }
-                    //{
-                    //    return new Stmt.DefaultStatement();
-                    //}
                 }
-
-                //if ( !(scopes.Count == 0) && !scopes.Peek().ContainsKey(expr.Name.ToString()) && 
-                //    (!(scopes.Count == 1 && scopes.Peek().Keys.Count == 0)))
-                //{
-                //    this.compilerError?.AddError(expr.Name.ToString() + "Can't read local variable");
-                //}
-
-
-                //var processDictionary = new Dictionary<string,Expression>();
-                //processDictionary.Add(currentScope, expr);
-                //processScope.Add(currentScope, processDictionary);
-                //this.interpreter.Resolve(expr, 0);
-
-                // ResolveLocal(expr, expr.Name);
             }
             catch(Exception ex)
             {
@@ -378,7 +359,6 @@ namespace JukaCompiler.Interpreter
                 if(this.processScope.TryGetValue(block, out BlockScope bsLocal))
                 {
                     bsLocal.lexemeScope.Add(name.ToString(), name);
-                    this.processScope.Add(block, bsLocal);
                     return;
                 }
 

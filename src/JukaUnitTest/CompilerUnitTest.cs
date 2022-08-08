@@ -8,7 +8,9 @@ namespace JukaUnitTest
     [TestClass]
     public class CompilerUnitTest
     {
-
+        /// <summary>
+        /// Default main function calls hard code test func"
+        /// </summary>
         string sourceAsString =
             @"func main() = 
                 {
@@ -16,7 +18,7 @@ namespace JukaUnitTest
                 }";
 
 
-        private string Go(string source)
+        private string Go()
         {
             Compiler compiler = new Compiler();
             var outputValue = compiler.Go(sourceAsString, false);
@@ -37,7 +39,7 @@ namespace JukaUnitTest
                     print(""print""); 
                 }";
 
-            var value = Go(sourceAsString);
+            var value = Go();
             Assert.AreEqual("print", value);
         }
 
@@ -51,7 +53,7 @@ namespace JukaUnitTest
                     print(x); 
                 }";
 
-            Assert.AreEqual("print", Go(sourceAsString));
+            Assert.AreEqual("print", Go());
         }
 
         [TestMethod]
@@ -69,7 +71,7 @@ namespace JukaUnitTest
                     print(x); 
                 }";
 
-            var value = Go(sourceAsString);
+            var value = Go();
             Assert.AreEqual("print", value);
         }
 
@@ -93,12 +95,12 @@ namespace JukaUnitTest
                     print(z);
                 }";
 
-            var value = Go(sourceAsString);
+            var value = Go();
             Assert.AreEqual("one two three", value);
         }
 
         [TestMethod]
-        public void TestEmptyComment()
+        public void EmptyComment()
         {
             Compiler compiler = new Compiler();
             sourceAsString += @"func test_func() =
@@ -116,33 +118,7 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
-        public void TestFunctionCall()
-        {
-            Compiler compiler = new Compiler();
-            sourceAsString +=
-                @"func test_func(var m) = 
-                {
-                    var u=m;
-                    print(u); 
-                }
-
-                func main() = 
-                {
-                    test_func(3);
-                }";
-
-
-            var outputValue = compiler.Go(sourceAsString, false);
-            if (compiler.HasErrors())
-            {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-            }
-            Assert.AreEqual("3", outputValue);
-        }
-
-
-        [TestMethod]
-        public void TestMultipleVariables()
+        public void MultipleVariables()
         {
             sourceAsString += @"
                 func test_func() = 
@@ -150,6 +126,7 @@ namespace JukaUnitTest
                     var z = 3;
                     var x=""a""; 
                     print(x);
+                    print(z);
                 }";
 
             Compiler compiler = new Compiler();
@@ -160,16 +137,23 @@ namespace JukaUnitTest
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
 
-            Assert.AreEqual("a" , outputValue);
+            Assert.AreEqual("a3" , outputValue);
         }
 
         [TestMethod]
-        public void TestOperationAdd()
+        public void Add()
         {
+            sourceAsString += @"
+                func test_func() = {
+                    var x=32; 
+                    var y=33; 
+                    var z=x+y;
+                    printLine(z);
+                 }";
+            
             Compiler compiler = new Compiler();
-            string sourceAsString = "func test_add() = {var x=32; var y=33; var z=x+y;printLine(z);} test_add();";
-
             var outputValue = compiler.Go(sourceAsString, false);
+
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
@@ -178,10 +162,13 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
-        public void TestOperationSubtract()
+        public void Subtract()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "func test_add() = {var x=32; var y=33; var z=x-y;printLine(z);} test_add();";
+            sourceAsString += @"func test_func() = {
+                var x=32; var y=33; var z=x-y;
+                printLine(z);
+            }";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
@@ -192,11 +179,17 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
-        public void TestOperationDivide()
+        public void Divide()
         {
-            Compiler compiler = new Compiler();
-            string sourceAsString = "func test_add() = {var x=10; var y=3; var z=x/y;printLine(z);} test_add();";
+            sourceAsString += @"func test_func() =
+            {
+                var x=10; 
+                var y=3;
+                var z=x/y;
+                printLine(z);
+            }";
 
+            Compiler compiler = new Compiler();
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
             {
@@ -206,11 +199,17 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
-        public void TestOperationMultiply()
+        public void Multiply()
         {
-            Compiler compiler = new Compiler();
-            string sourceAsString = "func test_add() = {var x=3; var y=3; var z=x*y;printLine(z);} test_add();";
+            sourceAsString += @"func test_func() = 
+            {
+                var x=3;
+                var y=3;
+                var z=x*y;
+                printLine(z);
+            }";
 
+            Compiler compiler = new Compiler();
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
             {
@@ -251,31 +250,54 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
-        public void TestClass()
+        public void Class()
         {
             Compiler compiler = new Compiler();
-            string sourceAsString = "class x = {  } ";
+            sourceAsString += @"
+                class x = {  }
+                func test_func() = 
+                {
+                }";
 
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
-            //Assert.AreEqual("", outputValue);
+            
+            Assert.AreEqual(String.Empty, outputValue);
         }
 
         [TestMethod]
-        public void TestMain()
+        public void Primitives()
         {
-            Compiler compiler = new Compiler();
-            string sourceAsString = "func main() = { print(\"Hello World\"); }";
+            sourceAsString += @"
+                func test_func() = 
+                {
+                    availableMemory();
+                }
 
+                func availableMemory() = 
+                {
+                    var v = getAvailableMemory();
+                    print(v);
+                }";
+
+            //func test_func() = 
+            //{
+            //}
+            //func test_func() = 
+            //{
+            //}";
+
+            Compiler compiler = new Compiler();
             var outputValue = compiler.Go(sourceAsString, false);
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
-            //Assert.AreEqual("Hello World", outputValue);
+
+            Assert.AreNotEqual(0, double.Parse(outputValue));
         }
     }
 }

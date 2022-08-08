@@ -276,7 +276,6 @@ namespace JukaCompiler.Interpreter
                 globals.Assign(expr.name, value);
             }
 
-            //< Resolving and Binding resolved-assign
             return value;
         }
 
