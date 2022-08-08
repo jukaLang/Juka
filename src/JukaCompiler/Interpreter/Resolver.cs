@@ -2,6 +2,7 @@
 using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 using JukaCompiler.Statements;
+using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Interpreter
@@ -16,6 +17,7 @@ namespace JukaCompiler.Interpreter
         Dictionary<string,BlockScope> processScope = new Dictionary<string, BlockScope>();
         private Stack<string> blockScope = new Stack<string>();
         private ICompilerError? compilerError;
+        private string errorMessage = "Resolver error - message:{0}";
 
         private enum FunctionType
         {
@@ -63,7 +65,20 @@ namespace JukaCompiler.Interpreter
 
         public object VisitAssignExpr(Expression.Assign expr)
         {
-            throw new NotImplementedException("Resolver assign is not implemented"); 
+            var frame = blockScope.Peek();
+            if (frame == null)
+            {
+                throw new Exception(string.Format(errorMessage,"No stack frames"));
+            }
+
+            if(processScope.TryGetValue(frame, out BlockScope value))
+            {
+                if (value.lexemeScope.TryGetValue(expr.Name.ToString(), out var lexeme))
+                {
+                    //value.lexemeScope[expr.name.ToString] = expr.
+                }
+            }
+            return new Stmt.DefaultStatement();
         }
 
         public object VisitBinaryExpr(Expression.Binary expr)

@@ -147,7 +147,7 @@ namespace JukaCompiler.Interpreter
             {
                 Execute(stmt.thenBranch);
             }
-            else
+            else if (stmt.elseBranch != null)
             { 
                 Execute(stmt.elseBranch);
             }

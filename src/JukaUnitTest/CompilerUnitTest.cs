@@ -30,6 +30,65 @@ namespace JukaUnitTest
             return outputValue;
         }
 
+
+        [TestMethod]
+        public void WhileBoolean()
+        {
+            sourceAsString +=
+                @"func test_func() = 
+                {
+                    var x = true;
+                    while(x == true)
+                    {
+                        print(""y"");
+                        x = false;
+                    }
+                }";
+
+            Assert.AreEqual("x", Go());
+        }
+
+        [TestMethod]
+        public void IfBoolean()
+        {
+            sourceAsString +=
+                @"func test_func() = 
+                {
+                    var x = true;
+                    if ( x == true)
+                    {
+                        print(""x"");
+                    }
+                    else
+                    {
+                        print(""y"");
+                    }
+                }";
+
+            Assert.AreEqual("x", Go());
+        }
+
+
+        [TestMethod]
+        public void IfBooleanElseBranch()
+        {
+            sourceAsString +=
+                @"func test_func() = 
+                {
+                    var x = false;
+                    if ( x == true)
+                    {
+                        print(""x"");
+                    }
+                    else
+                    {
+                        print(""y"");
+                    }
+                }";
+
+            Assert.AreEqual("y", Go());
+        }
+
         [TestMethod]
         public void PrintLiteral()
         {
@@ -109,12 +168,7 @@ namespace JukaUnitTest
                     /*nest1(y);*/
                 }";
 
-            var outputValue = compiler.Go(sourceAsString, false);
-            if (compiler.HasErrors())
-            {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-            }
-            Assert.AreEqual("", outputValue);
+            Assert.AreEqual("", Go());
         }
 
         [TestMethod]
@@ -129,15 +183,7 @@ namespace JukaUnitTest
                     print(z);
                 }";
 
-            Compiler compiler = new Compiler();
-            var outputValue = new Compiler().Go(sourceAsString, false);
-
-            if (compiler.HasErrors())
-            {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-            }
-
-            Assert.AreEqual("a3" , outputValue);
+            Assert.AreEqual("a3" , Go());
         }
 
         [TestMethod]
@@ -150,15 +196,8 @@ namespace JukaUnitTest
                     var z=x+y;
                     printLine(z);
                  }";
-            
-            Compiler compiler = new Compiler();
-            var outputValue = compiler.Go(sourceAsString, false);
 
-            if (compiler.HasErrors())
-            {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-            }
-            Assert.AreEqual("65" + Environment.NewLine, outputValue);
+            Assert.AreEqual("65" + Environment.NewLine, Go());
         }
 
         [TestMethod]
@@ -170,12 +209,7 @@ namespace JukaUnitTest
                 printLine(z);
             }";
 
-            var outputValue = compiler.Go(sourceAsString, false);
-            if (compiler.HasErrors())
-            {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-            }
-            Assert.AreEqual("-1" + Environment.NewLine, outputValue);
+            Assert.AreEqual("-1" + Environment.NewLine, Go());
         }
 
         [TestMethod]
@@ -189,13 +223,7 @@ namespace JukaUnitTest
                 printLine(z);
             }";
 
-            Compiler compiler = new Compiler();
-            var outputValue = compiler.Go(sourceAsString, false);
-            if (compiler.HasErrors())
-            {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-            }
-            Assert.AreEqual("3" + Environment.NewLine, outputValue);
+            Assert.AreEqual("3" + Environment.NewLine, Go());
         }
 
         [TestMethod]
@@ -209,13 +237,7 @@ namespace JukaUnitTest
                 printLine(z);
             }";
 
-            Compiler compiler = new Compiler();
-            var outputValue = compiler.Go(sourceAsString, false);
-            if (compiler.HasErrors())
-            {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-            }
-            Assert.AreEqual("9" + Environment.NewLine, outputValue);
+            Assert.AreEqual("9" + Environment.NewLine, Go());
         }
 
 
@@ -252,20 +274,13 @@ namespace JukaUnitTest
         [TestMethod]
         public void Class()
         {
-            Compiler compiler = new Compiler();
             sourceAsString += @"
                 class x = {  }
                 func test_func() = 
                 {
                 }";
 
-            var outputValue = compiler.Go(sourceAsString, false);
-            if (compiler.HasErrors())
-            {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-            }
-            
-            Assert.AreEqual(String.Empty, outputValue);
+            Assert.AreEqual(String.Empty, Go());
         }
 
         [TestMethod]
@@ -283,21 +298,7 @@ namespace JukaUnitTest
                     print(v);
                 }";
 
-            //func test_func() = 
-            //{
-            //}
-            //func test_func() = 
-            //{
-            //}";
-
-            Compiler compiler = new Compiler();
-            var outputValue = compiler.Go(sourceAsString, false);
-            if (compiler.HasErrors())
-            {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-            }
-
-            Assert.AreNotEqual(0, double.Parse(outputValue));
+            Assert.AreNotEqual(0, Go());
         }
     }
 }
