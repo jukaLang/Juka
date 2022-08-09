@@ -24,6 +24,18 @@ namespace JukaCompiler.Interpreter
             this.variables = variables;
         }
 
+        internal void AddVariable(string name, object obj)
+        {
+            if (variables.ContainsKey(name))
+            { 
+                variables[name] = obj;
+            }
+            else
+            {
+                variables.Add(name, obj);
+            }
+        }
+
         internal bool TryGetStackVariableByName(string name, out object variable)
         {
             if(variables.ContainsKey(name))
