@@ -76,6 +76,7 @@ namespace JukaCompiler.Interpreter
                 if (value.lexemeScope.TryGetValue(expr.Name.ToString(), out var lexeme))
                 {
                     //value.lexemeScope[expr.name.ToString] = expr.
+                    //var xx= interpreter.LookUpVariable(lexeme, expr);
                 }
             }
             return new Stmt.DefaultStatement();

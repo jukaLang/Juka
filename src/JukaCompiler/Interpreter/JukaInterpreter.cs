@@ -5,6 +5,7 @@ using JukaCompiler.Parse;
 using JukaCompiler.Statements;
 using JukaCompiler.SystemCalls;
 using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.CompilerServices;
 
 namespace JukaCompiler.Interpreter
 {
@@ -15,6 +16,8 @@ namespace JukaCompiler.Interpreter
         private JukaEnvironment environment;
         private Dictionary<Expression, int?> locals = new Dictionary<Expression, int?>();
         private Stack<StackFrame> frames = new Stack<StackFrame>();
+        private readonly string globalScope = "__global__scope__";
+        private readonly string mainScope = "__main__scope__";
 
         internal JukaInterpreter(ServiceProvider services)
         {
@@ -46,8 +49,14 @@ namespace JukaCompiler.Interpreter
             // only functions are populated in the environment
             // classes will need to be added. 
             // no local variables.
+            frames.Clear();
+            frames.Push(new StackFrame(globalScope));
             foreach (Stmt stmt in statements)
             {
+                //if (!(stmt is Stmt.Function) && !(stmt is Stmt.Class))
+                //{
+                //    Execute(stmt);
+                //}
                 if (stmt is Stmt.Function || stmt is Stmt.Class)
                 {
                     Execute(stmt);
@@ -239,6 +248,7 @@ namespace JukaCompiler.Interpreter
                 value = Evaluate(stmt.exprInitializer);
             }
 
+            frames.Peek().AddVariable(stmt.name.ToString(), value);
             environment.Define(stmt.name.ToString() , value);
             return new Stmt.DefaultStatement(); 
         }
