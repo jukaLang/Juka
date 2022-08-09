@@ -36,7 +36,7 @@ __Current Supported Device:__
 - [Jupyter via juka-kernel](https://github.com/jukaLang/juka-kernel)
 - [Virtual Box Image (JukaVM)](https://github.com/jukaLang/jukaVM)
 
-__Coming Soon:__
+**__Coming Soon:__**
 - Android App
 - iOS App (iPhone/iPad)
 - MacOS App
