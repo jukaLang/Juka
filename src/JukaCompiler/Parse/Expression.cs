@@ -33,7 +33,7 @@ namespace JukaCompiler.Parse
 
         internal class Assign : Expression
         {
-            private readonly Expression value;
+            internal readonly Expression value;
 
             internal Assign(Lexeme name, Expression value)
             {
