@@ -36,6 +36,14 @@ namespace JukaCompiler.Interpreter
             }
         }
 
+        internal void UpdateVariable(string name, object value)
+        {
+            if(variables.ContainsKey(name))
+            {
+                variables[name] = value;
+            }
+        }
+
         internal bool TryGetStackVariableByName(string name, out object variable)
         {
             if(variables.ContainsKey(name))

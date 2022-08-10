@@ -45,7 +45,7 @@ namespace JukaUnitTest
                     }
                 }";
 
-            Assert.AreEqual("x", Go());
+            Assert.AreEqual("y", Go());
         }
 
         [TestMethod]

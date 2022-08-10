@@ -274,9 +274,11 @@ namespace JukaCompiler.Interpreter
 
         public object VisitAssignExpr(Expression.Assign expr)
         {
-            object value = Evaluate(expr);
+            object value = Evaluate(expr.value);
 
             locals.TryGetValueEx(expr, out int? distance);
+            frames.Peek().UpdateVariable(expr.name.ToString(), value);
+
             if (distance != null)
             {
                 environment.AssignAt(distance.Value, expr.name, value);
