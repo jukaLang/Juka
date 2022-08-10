@@ -34,7 +34,7 @@ namespace JukaCompiler.SystemCalls
             throw new NotImplementedException();
         }
 
-        public object Call(string methodName, JukaInterpreter interpreter, List<object> arguments)
+        public object? Call(string methodName, JukaInterpreter interpreter, List<object?> arguments)
         {
             if(JukaSystemCalls.kv.TryGetValue(methodName, out var theType))
             { 
@@ -53,7 +53,7 @@ namespace JukaCompiler.SystemCalls
             return 1;
         }
 
-        public object Call(string methodName, JukaInterpreter interpreter, List<object> arguments)
+        public object? Call(string methodName, JukaInterpreter interpreter, List<object?> arguments)
         {
             try
             { 

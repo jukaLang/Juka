@@ -5,7 +5,7 @@ namespace JukaCompiler.Interpreter
     internal class JukaEnvironment
     {
         private JukaEnvironment? enclosing;
-        private Dictionary<string, Object> values = new Dictionary<string, Object>();
+        private Dictionary<string, object?> values = new Dictionary<string, object?>();
         
         internal JukaEnvironment()
         {
@@ -22,7 +22,7 @@ namespace JukaCompiler.Interpreter
             this.enclosing = enclosing;
         }
 
-        internal Object Get(Lexeme name)
+        internal object? Get(Lexeme name)
         {
             if (values.ContainsKey(name.ToString()))
             {
@@ -37,7 +37,7 @@ namespace JukaCompiler.Interpreter
             throw new ArgumentException("JukaEnvironment.Get() has an undefined variable ('" + name.ToString() + "') undefined variable");
         }
 
-        internal void Assign(Lexeme name, Object value)
+        internal void Assign(Lexeme name, object? value)
         {
             if (values.ContainsKey(name.ToString()))
             {
@@ -54,7 +54,7 @@ namespace JukaCompiler.Interpreter
             throw new ArgumentException("JukaEnvironment.Assign() has an undefined variable ('" + name.ToString() + "') undefined variable");
         }
 
-        internal void Define(string name, Object value)
+        internal void Define(string name, object? value)
         {
             values.Add(name, value);
         }
@@ -70,12 +70,12 @@ namespace JukaCompiler.Interpreter
             return environment;
         }
 
-        internal Object GetAt(int distance, string name)
+        internal object? GetAt(int distance, string name)
         {
             return Ancestor(distance).values[name];
         }
 
-        internal void AssignAt(int distance, Lexeme name, Object value)
+        internal void AssignAt(int distance, Lexeme name, object? value)
         {
             Ancestor(distance).values[name.ToString()] = value;
         }

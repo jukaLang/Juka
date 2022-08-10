@@ -17,7 +17,7 @@ namespace JukaCompiler.Interpreter
             this.closure = closure;
         }
 
-        internal JukaFunction Bind(JukaInstance instance)
+        internal JukaFunction Bind(JukaInstance? instance)
         {
             JukaEnvironment env = new(closure);
             env.Define("this", instance);
@@ -35,7 +35,7 @@ namespace JukaCompiler.Interpreter
             return declaration.Params.Count;
         }
 
-        public object Call(string methodName, JukaInterpreter interpreter, List<object> arguments)
+        public object? Call(string methodName, JukaInterpreter interpreter, List<object?> arguments)
         {
             JukaEnvironment environment = new(closure);
 
@@ -46,7 +46,7 @@ namespace JukaCompiler.Interpreter
                 {
                     throw new ArgumentException("unable to call function");
                 }
-                object value = arguments[i];
+                object? value = arguments[i];
                 environment.Define(name, value);
             }
 

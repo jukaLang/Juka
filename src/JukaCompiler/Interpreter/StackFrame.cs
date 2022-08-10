@@ -6,7 +6,7 @@ namespace JukaCompiler.Interpreter
     {
         private Dictionary<string, Lexeme> frameVariables = new Dictionary<string, Lexeme>();
         private string frameName;
-        private Dictionary<string, Object> variables = new Dictionary<string, Object>();
+        private Dictionary<string, object?> variables = new Dictionary<string, object?>();
 
 
         internal string FrameName
@@ -19,12 +19,12 @@ namespace JukaCompiler.Interpreter
             this.frameName = name;
         }
 
-        internal void AddVariables(Dictionary<string,Object> variables)
+        internal void AddVariables(Dictionary<string, object?> variables)
         {
             this.variables = variables;
         }
 
-        internal void AddVariable(string name, object obj)
+        internal void AddVariable(string name, object? obj)
         {
             if (variables.ContainsKey(name))
             { 
@@ -36,7 +36,7 @@ namespace JukaCompiler.Interpreter
             }
         }
 
-        internal void UpdateVariable(string name, object value)
+        internal void UpdateVariable(string name, object? value)
         {
             if(variables.ContainsKey(name))
             {
@@ -44,7 +44,7 @@ namespace JukaCompiler.Interpreter
             }
         }
 
-        internal bool TryGetStackVariableByName(string name, out object variable)
+        internal bool TryGetStackVariableByName(string name, out object? variable)
         {
             if(variables.ContainsKey(name))
             {
