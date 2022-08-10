@@ -24,11 +24,11 @@
             return initializer.Arity();
         }
 
-        public object Call(string methodName, JukaInterpreter interpreter, List<object> arguments)
+        public object? Call(string methodName, JukaInterpreter interpreter, List<object?> arguments)
         {
             // FIND METHOD is broken
             // Declaration is never set correctly.
-            JukaInstance instance = new JukaInstance(this);
+            JukaInstance? instance = new JukaInstance(this);
             JukaFunction? initializer = FindMethod("main");
             if (initializer != null)
             {

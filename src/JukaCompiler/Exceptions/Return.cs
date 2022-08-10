@@ -2,8 +2,8 @@
 {
     internal class Return : JRuntimeException
     {
-        internal object value;
-        internal Return(object value)
+        internal object? value;
+        internal Return(object? value)
             : base("return")
         {
             this.value = value; 

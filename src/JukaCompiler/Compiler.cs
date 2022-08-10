@@ -82,7 +82,7 @@ namespace JukaCompiler
             using (StringWriter stringWriter = new StringWriter())
             {
                 Console.SetOut(stringWriter);
-                interpreter.Interpert(statements);
+                interpreter.Interpret(statements);
 
                 String ConsoleOutput = stringWriter.ToString();
                 Console.SetOut(currentOut);

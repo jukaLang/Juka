@@ -169,7 +169,7 @@ namespace JukaCompiler.Parse
                 return vistor.VisitLiteralExpr(this);
             }
 
-            internal object LiteralValue()
+            internal object? LiteralValue()
             {
                 if (value == null)
                 {

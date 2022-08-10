@@ -3,6 +3,6 @@
     internal interface IJukaCallable
     {
         int Arity();
-        Object Call(string methodName, JukaInterpreter interpreter, List<Object> arguments);
+        object? Call(string methodName, JukaInterpreter interpreter, List<object?> arguments);
     }
 }
