@@ -49,6 +49,20 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
+        public void Fibonacci()
+        {
+            sourceAsString +=
+                @"func test_func() = 
+                {
+                    var x = [3];
+                    print(""y"");
+                }";
+
+            Assert.AreEqual("y", Go());
+        }
+
+
+       [TestMethod]
         public void IfBoolean()
         {
             sourceAsString +=
@@ -209,7 +223,8 @@ namespace JukaUnitTest
                 printLine(z);
             }";
 
-            Assert.AreEqual("-1" + Environment.NewLine, Go());
+            var x = Go();
+            Assert.AreEqual("-1" + Environment.NewLine, x);
         }
 
         [TestMethod]
