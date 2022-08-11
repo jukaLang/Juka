@@ -1,52 +1,62 @@
-﻿using System.IO.Compression;
+﻿using System.Collections;
+using System.IO.Compression;
 using System.Reflection;
 using System.Text;
 using Newtonsoft.Json.Linq;
-
-string? userInput;
-string? readline;
-
 string? assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
+
+
+string userInput = string.Empty;
+string readline = string.Empty;
 
 if (args.Length == 0)
 {
     Console.Title = "Juka Compiler";
     Console.WriteLine("♥ Welcome to Juka Compiler Version: "+assemblyVersion+". If you need to run a file, pass it as an argument ♥");
-    Console.WriteLine("Press Return 3 times to run the code");
+
+
+    string dataStart = "func main() = {";
+    string dataEnd = "}";
+
+    var userData = new List<string>();
 
     while (true)
     {
-        Console.Write("Juka > ");
-        userInput = "";
-
-        int counter = 0;
         while (true)
         {
+            Console.Write("Juka > ");
             readline = Console.ReadLine();
-            if (readline == "")
+            if (readline == string.Empty)
             {
-                if (userInput == "")
-                {
-                    Console.Write("Juka > ");
-                    continue;
-                }
+                continue;
+            }
 
-                counter++;
-                if (counter == 2)
+            if (readline.Equals("clear", StringComparison.OrdinalIgnoreCase))
+            {
+                userData.Clear();
+                continue;
+            }
+
+            userData.Add(readline);
+
+            string userDataToExecute = string.Empty;
+            foreach (var item in userData)
+            {
+                userDataToExecute += item;
+            }
+
+            string codeToExecute = dataStart + userDataToExecute + dataEnd;
+
+            Console.WriteLine(new JukaCompiler.Compiler().Go(codeToExecute, isFile: false));
+
+            for(int i=0; i<userData.Count; i++)
+            {
+                if (userData[i].StartsWith("print") || userData[i].StartsWith("printLine"))
                 {
-                    break;
+                    userData.RemoveAt(i);
                 }
             }
-            else
-            {
-                counter = 0;
-            }
-            userInput += readline;
-
         }
-
-        Console.WriteLine(Environment.NewLine + "=====OUTPUT:=======");
-        Console.WriteLine(new JukaCompiler.Compiler().Go(userInput, isFile: false));
     }
 }
 else
