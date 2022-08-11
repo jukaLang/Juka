@@ -123,6 +123,8 @@ namespace JukaCompiler.Interpreter
                 environment.Define("super", superclass);
             }
 
+            frames.Peek().AddVariable(stmt.name.Literal(), jukaClass);
+
             environment.Assign(stmt.name, jukaClass);
             return new Stmt.DefaultStatement();
         }
@@ -446,6 +448,20 @@ namespace JukaCompiler.Interpreter
             if (expr == null || expr.callee == null || expr.callee.name == null)
             {
                 throw new Exception("VisitCallExpr - runtime exception interperter");
+            }
+
+            if (expr.callee is Expression.Get)
+            {
+                var instanceMethod = expr.callee.Accept(this);
+                var declaration = ((JukaFunction)instanceMethod).Declaration;
+                if (declaration != null)
+                {
+                    var instanceStackFrame = new StackFrame(declaration.name.ToString());
+                    frames.Push(instanceStackFrame);
+                    var instanceMethodReturn = ((JukaFunction)instanceMethod).Call(declaration.name.ToString(), this, null);
+                    frames.Pop();
+                    return instanceMethodReturn;
+                }
             }
 
             var currentStackFrame = new StackFrame(expr.callee.name.ToString());

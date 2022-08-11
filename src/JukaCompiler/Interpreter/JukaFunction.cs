@@ -25,6 +25,11 @@ namespace JukaCompiler.Interpreter
             return new JukaFunction(declaration, env, isInitializer);
         }
 
+        internal Stmt.Function? Declaration => declaration;
+
+        internal JukaEnvironment? Closure => closure;
+
+
         public int Arity()
         {
             if(declaration == null)
