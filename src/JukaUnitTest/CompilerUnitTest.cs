@@ -275,12 +275,27 @@ namespace JukaUnitTest
         public void Class()
         {
             sourceAsString += @"
-                class x = {  }
+                class x = 
+                {
+                    func xmethod() = 
+                    {
+                        print(""foo"");
+                    }
+
+                    func zmethod() = 
+                    {
+                        print(""bar"");
+                    }
+                }
+
                 func test_func() = 
                 {
+                    var v = x();
+                    v.xmethod();
+                    v.zmethod();
                 }";
 
-            Assert.AreEqual(String.Empty, Go());
+            Assert.AreEqual("foobar", Go());
         }
 
         [TestMethod]
