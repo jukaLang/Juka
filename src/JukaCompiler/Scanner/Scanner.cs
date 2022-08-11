@@ -121,6 +121,24 @@ namespace JukaCompiler.Scan
                     case '+': AddSymbol( t, LexemeType.PLUS); break;
                     case ';': AddSymbol( t, LexemeType.SEMICOLON); break;
                     case '*': AddSymbol( t, LexemeType.STAR); break;
+                    case '[':
+                    {
+                        AddSymbol(t, LexemeType.LEFT_BRACE);
+                        if (IsDigit(Peek()) || IsNumber(Peek()))
+                        {
+                            // HACK
+                            start++;
+                            // HACK
+                            Number();
+                        }
+
+                        if (Peek() == ']')
+                        {
+                            AddSymbol(Peek(), LexemeType.RIGHT_BRACE);
+                        }
+
+                        break;
+                    }
                     case '/':
                         if (Peek() == '/')
                         {

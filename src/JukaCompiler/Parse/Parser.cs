@@ -565,6 +565,8 @@ namespace JukaCompiler.Parse
 
         private Expression Unary()
         {
+            // Expression expr = Array();
+
             if (Match(LexemeType.BANG) || Match(LexemeType.MINUS))
             {
                 Lexeme op = Previous();
@@ -573,6 +575,22 @@ namespace JukaCompiler.Parse
             }
 
             return Call();
+            //return expr;
+        }
+
+        private Expression Array()
+        {
+            if (Match(LexemeType.LEFT_BRACE))
+            {
+                Lexeme value = Consume(LexemeType.NUMBER, Peek());
+                if (Match(LexemeType.RIGHT_BRACE))
+                {
+                    return new Expression.ArrayExpression(int.Parse(value.ToString()));
+                }
+            }
+
+            throw new JRuntimeException("Unable to Parse Array[]");
+            // return Call();
         }
 
         private Expression Call()
@@ -624,6 +642,13 @@ namespace JukaCompiler.Parse
                 Expression expr = Expr();
                 Consume(LexemeType.RIGHT_PAREN, Peek());
                 return new Expression.Grouping(expr);
+            }
+
+            if (Match(LexemeType.LEFT_BRACE))
+            {
+                Lexeme value = Consume(LexemeType.NUMBER, Peek());
+                Consume(LexemeType.RIGHT_BRACE, Peek());
+                return new Expression.ArrayExpression(int.Parse(value.ToString()));
             }
 
             throw new Exception(Peek() + "Expect expression");

@@ -16,7 +16,7 @@ namespace JukaCompiler.Interpreter
         private readonly Dictionary<Expression, int?> locals = new Dictionary<Expression, int?>();
         private Stack<StackFrame> frames = new();
         private readonly string globalScope = "__global__scope__";
-
+        private readonly int __max_stack_depth__ = 500;
 
         internal JukaInterpreter(ServiceProvider services)
         {
@@ -236,6 +236,10 @@ namespace JukaCompiler.Interpreter
         }
         public Stmt VisitWhileStmt(Stmt.While stmt)
         {
+            if (frames.Count >= __max_stack_depth__)
+            {
+                throw new JRuntimeException($"Stack depth exceeded. Depth = {frames.Count}");
+            }
             while (IsTrue(Evaluate(stmt.condition)))
             {
                 Execute(stmt.whileBlock);
@@ -598,6 +602,11 @@ namespace JukaCompiler.Interpreter
             }
 
             return true;
+        }
+
+        public object VisitArrayExpr(Expression.ArrayExpression expr)
+        {
+            throw new NotImplementedException();
         }
     }
 }

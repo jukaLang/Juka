@@ -281,6 +281,11 @@ namespace JukaCompiler.Interpreter
             return VisitReturnStmt(returnStatement);
         }
 
+        public object VisitArrayExpr(Expression.ArrayExpression expr)
+        {
+            return new Stmt.DefaultStatement();
+        }
+
         public object VisitSetExpr(Expression.Set expr)
         {
             throw new NotImplementedException("Resolver VisitSetExpr is not implemented");
