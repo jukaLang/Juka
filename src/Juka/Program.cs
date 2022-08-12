@@ -13,32 +13,57 @@ if (args.Length == 0)
 {
     Console.Title = "Juka Compiler";
     Console.WriteLine("♥ Welcome to Juka Compiler Version: "+assemblyVersion+". If you need to run a file, pass it as an argument ♥");
+    Console.WriteLine("REPL Usage: ");
+    Console.WriteLine("Single line commands can be entered on one line");
+    Console.WriteLine("Multline line commands support are class and func. Terminated with ';' symbol");
 
 
     string dataStart = "func main() = {";
     string dataEnd = "}";
 
     var userData = new List<string>();
+    var funcData = new List<string>();
+    bool isFuncOrClass = false;
 
     while (true)
     {
-        while (true)
+        Console.Write("Juka > ");
+        readline = Console.ReadLine();
+        if (readline == string.Empty)
         {
-            Console.Write("Juka > ");
-            readline = Console.ReadLine();
-            if (readline == string.Empty)
+            continue;
+        }
+
+        if (readline.Equals("clear", StringComparison.OrdinalIgnoreCase))
+        {
+            userData.Clear();
+            continue;
+        }
+
+        if (readline.StartsWith("func") || readline.StartsWith("class"))
+        {
+            isFuncOrClass = true;
+        }
+
+        if (readline.Equals(";"))
+        {
+            if (isFuncOrClass)
             {
-                continue;
+                string userDataToExecute = string.Empty;
+                foreach (var item in funcData)
+                {
+                    userDataToExecute += item;
+                }
+
+                dataEnd += userDataToExecute;
             }
 
-            if (readline.Equals("clear", StringComparison.OrdinalIgnoreCase))
-            {
-                userData.Clear();
-                continue;
-            }
+            isFuncOrClass = false;
+            continue;
+        }
 
-            userData.Add(readline);
-
+        if (readline.Equals("go", StringComparison.OrdinalIgnoreCase))
+        {
             string userDataToExecute = string.Empty;
             foreach (var item in userData)
             {
@@ -46,17 +71,28 @@ if (args.Length == 0)
             }
 
             string codeToExecute = dataStart + userDataToExecute + dataEnd;
-
+            System.Diagnostics.Trace.Write(codeToExecute);
             Console.WriteLine(new JukaCompiler.Compiler().Go(codeToExecute, isFile: false));
-
-            for(int i=0; i<userData.Count; i++)
-            {
-                if (userData[i].StartsWith("print") || userData[i].StartsWith("printLine"))
-                {
-                    userData.RemoveAt(i);
-                }
-            }
+            continue;
         }
+
+        if (isFuncOrClass)
+        {
+            funcData.Add(readline);
+        }
+        else
+        {
+            userData.Add(readline);
+        }
+
+
+        //for(int i=0; i<userData.Count; i++)
+        //{
+        //    if (userData[i].StartsWith("print") || userData[i].StartsWith("printLine"))
+        //    {
+        //        userData.RemoveAt(i);
+        //    }
+        //}
     }
 }
 else
