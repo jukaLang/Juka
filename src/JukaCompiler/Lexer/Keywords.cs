@@ -3,6 +3,7 @@
     public enum KeyWordsEnum
     {
         Notakeyword,
+        Array,
         Break,
         Do,
         Instanceof,
@@ -41,6 +42,7 @@
     };
     public class KeyWords
     {
+        public const string ARRAY = "array";
         public const string BREAK = "break";
         public const string DO = "do";
         public const string INSTANCEOF = "instanceof";
@@ -84,6 +86,7 @@
 
         public static List<string> keyWordNames = new List<string>()
         {
+            {"array"},
             {"break"},
             {"do"},
             {"instanceof"},
@@ -123,6 +126,7 @@
 
         public static Dictionary<string, KeyWordsEnum> keyValuePairs = new Dictionary<string, KeyWordsEnum>()
         {
+            { "array",      KeyWordsEnum.Array },
             { "break",      KeyWordsEnum.Break },
             { "do",         KeyWordsEnum.Do},
             { "instanceof", KeyWordsEnum.Instanceof },   

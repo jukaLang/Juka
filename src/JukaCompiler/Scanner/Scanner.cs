@@ -37,6 +37,7 @@ namespace JukaCompiler.Scan
             { "char",   LexemeType.CHAR },
             { "string", LexemeType.STRING },
             { "break",  LexemeType.BREAK },
+            { "array", LexemeType.ARRAY},
         };
 
         private static readonly Dictionary<string, Int64> internalFunctionsList = new Dictionary<string, Int64>
