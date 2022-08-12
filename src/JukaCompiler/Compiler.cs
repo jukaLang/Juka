@@ -22,10 +22,6 @@ namespace JukaCompiler
         public Compiler()
         {
             Initialize();
-            if (serviceProvider == null)
-            {
-                throw new ArgumentException("unable to init host builder");
-            }
         }
 
         internal void Initialize()
@@ -52,11 +48,6 @@ namespace JukaCompiler
 
                 Parser parser = new(new Scanner(data, this.serviceProvider, isFile), this.serviceProvider);
                 List<Stmt> statements = parser.Parse();
-
-                if (HasErrors())
-                {
-                    return String.Empty;
-                }
 
                 return Compile(statements);
             }
