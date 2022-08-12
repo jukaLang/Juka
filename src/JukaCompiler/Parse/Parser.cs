@@ -632,6 +632,11 @@ namespace JukaCompiler.Parse
                 return new Expression.Literal(Previous(), LexemeType.NUMBER);
             }
 
+            if (Match(LexemeType.ARRAY))
+            {
+                return new Expression.ArrayExpression(Previous());
+            }
+
             if ( Match(LexemeType.IDENTIFIER))
             {
                 return new Expression.Variable(Previous());

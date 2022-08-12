@@ -30,6 +30,20 @@ namespace JukaUnitTest
             return outputValue;
         }
 
+        [TestMethod]
+        public void ArrayTest()
+        {
+            sourceAsString +=
+                @"func test_func() = 
+                {
+                    var x = array[3];
+                    x[1] = ""test"";
+                    print(x[0]); 
+                }";
+
+            Assert.AreEqual("test", Go());
+        }
+
 
         [TestMethod]
         public void WhileBoolean()
