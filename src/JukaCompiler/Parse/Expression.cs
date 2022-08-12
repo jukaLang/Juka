@@ -32,6 +32,18 @@ namespace JukaCompiler.Parse
             set { name = value; }
         }
 
+        internal class ArrayExpression : Expression
+        {
+            internal ArrayExpression(Lexeme name)
+            {
+
+            }
+            internal override R Accept<R>(IVisitor<R> vistor)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         internal class Assign : Expression
         {
             internal readonly Expression value;
