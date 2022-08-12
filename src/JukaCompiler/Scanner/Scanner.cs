@@ -276,28 +276,6 @@ namespace JukaCompiler.Scan
 
             return false;
         }
-
-        internal char CurrentChar()
-        {
-            return (char)fileData[current];
-        }
-
-        internal bool Match(char expected)
-        {
-            if (IsEof())
-            {
-                return false;
-            }
-
-            if ((char)fileData[current] != expected)
-            {
-                return false;
-            }
-
-            current++;
-            return true;
-        }
-
         internal void Identifier()
         {
             while (IsLetterOrDigit(Peek()) || Peek() == '_')
