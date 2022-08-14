@@ -19,29 +19,19 @@ namespace JukaCompiler.Parse
             R VisitUnaryExpr(Unary expr);
             R VisitVariableExpr(Variable expr);
             R VisitLexemeTypeLiteral(LexemeTypeLiteral expr);
-            R VisitArrayExpr(ArrayExpression expr);
+            R VisitArrayExpr(ArrayDeclarationExpression expr);
+            R VisitArrayAccessExpr(ArrayAccessExpression expr);
         }
 
         internal abstract R Accept<R>(Expression.IVisitor<R> visitor);
 
         internal Lexeme? name;
+        internal Lexeme? initializerContextVariableName;
 
         internal Lexeme? Name
         {
             get { return name; }
             set { name = value; }
-        }
-
-        internal class ArrayExpression : Expression
-        {
-            internal ArrayExpression(Lexeme name)
-            {
-
-            }
-            internal override R Accept<R>(IVisitor<R> vistor)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         internal class Assign : Expression
@@ -62,9 +52,12 @@ namespace JukaCompiler.Parse
         
         internal class Variable : Expression
         {
+            internal Int64 lexemeType;
+
             internal Variable(Lexeme name)
             {
                 this.name = name;
+                this.lexemeType = name.LexemeType;
             }
             internal override R Accept<R>(IVisitor<R> visitor)
             {
@@ -98,17 +91,42 @@ namespace JukaCompiler.Parse
             }
         }
 
-        internal class ArrayExpression : Expression
+        internal class ArrayDeclarationExpression : Expression
         {
-            internal int size;
-            internal ArrayExpression(int size)
+            internal int ArraySize { get; }
+            internal Lexeme ArrayDeclarationName { get; }
+
+            internal ArrayDeclarationExpression(int size)
             {
-                this.size = size;
+                this.ArraySize = size;
+            }
+
+            internal ArrayDeclarationExpression(Lexeme arrayDeclarationName, Lexeme arraySize)
+            {
+                ArraySize = int.Parse(arraySize.ToString());
+                name = arrayDeclarationName = arrayDeclarationName;
             }
 
             internal override R Accept<R>(IVisitor<R> visitor)
             {
                 return visitor.VisitArrayExpr(this);
+            }
+        }
+
+        internal class ArrayAccessExpression : Expression
+        {
+            internal int ArraySize { get; }
+            internal Lexeme ArrayVariableName { get; }
+
+            internal ArrayAccessExpression(Lexeme arrayVariableName, Lexeme arraySize)
+            {
+                ArraySize = int.Parse(arraySize.ToString());
+                name = ArrayVariableName = arrayVariableName;
+            }
+
+            internal override R Accept<R>(IVisitor<R> visitor)
+            {
+                return visitor.VisitArrayAccessExpr(this);
             }
         }
         

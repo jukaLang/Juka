@@ -4,6 +4,7 @@ using JukaCompiler.Parse;
 using JukaCompiler.Statements;
 using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.Extensions.DependencyInjection;
+using static JukaCompiler.Parse.Expression;
 
 namespace JukaCompiler.Interpreter
 {
@@ -281,9 +282,14 @@ namespace JukaCompiler.Interpreter
             return VisitReturnStmt(returnStatement);
         }
 
-        public object VisitArrayExpr(Expression.ArrayExpression expr)
+        public object VisitArrayExpr(Expression.ArrayDeclarationExpression expr)
         {
             return new Stmt.DefaultStatement();
+        }
+
+        public object VisitArrayAccessExpr(ArrayAccessExpression expr)
+        {
+            return null;
         }
 
         public object VisitSetExpr(Expression.Set expr)
