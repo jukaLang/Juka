@@ -37,11 +37,12 @@ namespace JukaUnitTest
                 @"func test_func() = 
                 {
                     var x = array[3];
-                    x[1] = ""test"";
+                    //x[1] = ""test"";
                     print(x[0]); 
                 }";
 
-            Assert.AreEqual("test", Go());
+            var value = Go();
+            Assert.AreEqual("System.Object", value);
         }
 
 
@@ -68,7 +69,7 @@ namespace JukaUnitTest
             sourceAsString +=
                 @"func test_func() = 
                 {
-                    var x = [3];
+                    var x = array[3];
                     print(""y"");
                 }";
 
@@ -222,10 +223,11 @@ namespace JukaUnitTest
                     var x=32; 
                     var y=33; 
                     var z=x+y;
-                    printLine(z);
+                    print(z);
                  }";
 
-            Assert.AreEqual("65" + Environment.NewLine, Go());
+            var value = Go();
+            Assert.AreEqual("65" , Go());
         }
 
         [TestMethod]
@@ -234,11 +236,11 @@ namespace JukaUnitTest
             Compiler compiler = new Compiler();
             sourceAsString += @"func test_func() = {
                 var x=32; var y=33; var z=x-y;
-                printLine(z);
+                print(z);
             }";
 
             var x = Go();
-            Assert.AreEqual("-1" + Environment.NewLine, x);
+            Assert.AreEqual("-1", x);
         }
 
         [TestMethod]
@@ -249,10 +251,10 @@ namespace JukaUnitTest
                 var x=10; 
                 var y=3;
                 var z=x/y;
-                printLine(z);
+                print(z);
             }";
 
-            Assert.AreEqual("3" + Environment.NewLine, Go());
+            Assert.AreEqual("3", Go());
         }
 
         [TestMethod]
@@ -263,10 +265,10 @@ namespace JukaUnitTest
                 var x=3;
                 var y=3;
                 var z=x*y;
-                printLine(z);
+                print(z);
             }";
 
-            Assert.AreEqual("9" + Environment.NewLine, Go());
+            Assert.AreEqual("9" , Go());
         }
 
 

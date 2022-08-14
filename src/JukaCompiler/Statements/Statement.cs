@@ -166,6 +166,7 @@ namespace JukaCompiler.Statements
                 }
                 this.name = name;
                 this.exprInitializer = expr;
+                this.exprInitializer.initializerContextVariableName = name;
                 this.isInitalizedVar = true;
 
             }

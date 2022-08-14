@@ -585,7 +585,7 @@ namespace JukaCompiler.Parse
                 Lexeme value = Consume(LexemeType.NUMBER, Peek());
                 if (Match(LexemeType.RIGHT_BRACE))
                 {
-                    return new Expression.ArrayExpression(int.Parse(value.ToString()));
+                    return new Expression.ArrayDeclarationExpression(int.Parse(value.ToString()));
                 }
             }
 
@@ -634,12 +634,25 @@ namespace JukaCompiler.Parse
 
             if (Match(LexemeType.ARRAY))
             {
-                return new Expression.ArrayExpression(Previous());
+                Consume(LexemeType.LEFT_BRACE, Peek());
+                var size = Consume(LexemeType.NUMBER, Peek());
+                Consume(LexemeType.RIGHT_BRACE, Peek());
+                var name = new Lexeme(LexemeType.ARRAY, 0, 0);
+                name.AddToken("array");
+                return new Expression.ArrayDeclarationExpression(name,size);
             }
 
             if ( Match(LexemeType.IDENTIFIER))
             {
-                return new Expression.Variable(Previous());
+                Lexeme identifierName = Previous();
+                if (Match(LexemeType.LEFT_BRACE))
+                {
+                    var size = Consume(LexemeType.NUMBER, Peek());
+                    Consume(LexemeType.RIGHT_BRACE, Peek());
+                    return new Expression.ArrayAccessExpression(identifierName, size);
+                }
+
+                return new Expression.Variable(identifierName);
             }
 
             if (Match(LexemeType.LEFT_PAREN))
@@ -649,12 +662,12 @@ namespace JukaCompiler.Parse
                 return new Expression.Grouping(expr);
             }
 
-            if (Match(LexemeType.LEFT_BRACE))
-            {
-                Lexeme value = Consume(LexemeType.NUMBER, Peek());
-                Consume(LexemeType.RIGHT_BRACE, Peek());
-                return new Expression.ArrayExpression(int.Parse(value.ToString()));
-            }
+            //if (Match(LexemeType.LEFT_BRACE))
+            //{
+            //    Lexeme value = Consume(LexemeType.NUMBER, Peek());
+            //    Consume(LexemeType.RIGHT_BRACE, Peek());
+            //    return new Expression.ArrayDeclarationExpression(int.Parse(value.ToString()));
+            //}
 
             throw new Exception(Peek() + "Expect expression");
         }
