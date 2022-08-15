@@ -45,7 +45,10 @@ namespace JukaCompiler.Interpreter
                     throw new JRuntimeException("the value of the variable is null");
                 }
 
-                AddVariable(variable.name?.ToString(), variableValue, variableValue.GetType(), variable.exprInitializer );
+                if (!(variable.exprInitializer is Expression.Call))
+                {
+                    AddVariable(variable.name?.ToString(), variableValue, variableValue.GetType(),variable.exprInitializer);
+                }
 
                 return variableValue;
             }
@@ -53,7 +56,7 @@ namespace JukaCompiler.Interpreter
             throw new JRuntimeException("unable to add variable");
         }
 
-        private void AddVariable(string name, object? variableValue, Type variableKind, Parse.Expression expressionContext)
+        internal void AddVariable(string name, object? variableValue, Type variableKind, Parse.Expression expressionContext)
         {
             var stackVariableState = new StackVariableState
             {
