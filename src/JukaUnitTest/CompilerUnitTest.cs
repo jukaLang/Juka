@@ -190,7 +190,6 @@ namespace JukaUnitTest
         [TestMethod]
         public void EmptyComment()
         {
-            Compiler compiler = new Compiler();
             sourceAsString += @"func test_func() =
                 {
                     var y = ""one two three"";
@@ -233,7 +232,6 @@ namespace JukaUnitTest
         [TestMethod]
         public void Subtract()
         {
-            Compiler compiler = new Compiler();
             sourceAsString += @"func test_func() = {
                 var x=32; var y=33; var z=x-y;
                 print(z);
