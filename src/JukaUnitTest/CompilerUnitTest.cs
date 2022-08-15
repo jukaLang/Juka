@@ -1,7 +1,6 @@
 ﻿using JukaCompiler;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Microsoft.CodeAnalysis;
 
 namespace JukaUnitTest
 {
@@ -16,7 +15,6 @@ namespace JukaUnitTest
                 {
                     test_func();
                 }";
-
 
         private string Go()
         {
@@ -44,7 +42,6 @@ namespace JukaUnitTest
             var value = Go();
             Assert.AreEqual("System.Object", value);
         }
-
 
         [TestMethod]
         public void WhileBoolean()
@@ -76,7 +73,6 @@ namespace JukaUnitTest
             Assert.AreEqual("y", Go());
         }
 
-
        [TestMethod]
         public void IfBoolean()
         {
@@ -96,7 +92,6 @@ namespace JukaUnitTest
 
             Assert.AreEqual("x", Go());
         }
-
 
         [TestMethod]
         public void IfBooleanElseBranch()
@@ -124,11 +119,11 @@ namespace JukaUnitTest
             sourceAsString +=
                 @"func test_func() = 
                 {
-                    print(""print""); 
+                    printLine(""print""); 
                 }";
 
             var value = Go();
-            Assert.AreEqual("print", value);
+            Assert.AreEqual("print\r\n", value);
         }
 
         [TestMethod]
@@ -269,13 +264,15 @@ namespace JukaUnitTest
             Assert.AreEqual("9" , Go());
         }
 
-
         [TestMethod]
         public void TestSourceAsFile()
         {
             Compiler compiler = new Compiler();
 
-            var outputValue = compiler.Go(@"../../../../../examples/test.juk");
+            var currentDirectory = System.IO.Directory.GetCurrentDirectory();
+            
+
+            var outputValue = compiler.Go(@"..\..\..\..\..\examples\test2.juk");
             if (compiler.HasErrors())
             {
                 var errors = compiler.ListErrors();
@@ -285,20 +282,9 @@ namespace JukaUnitTest
                 }
             }
 
-            //Assert.AreEqual("AsdfA" + Environment.NewLine, outputValue);
-        }
-
-        [TestMethod]
-        public void TestSourceAsFile2()
-        {
-            Compiler compiler = new Compiler();
-            var outputValue = compiler.Go(@"../../../../../examples/test2.juk");
-            if (compiler.HasErrors())
-            {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
-            }
             Assert.AreEqual("AsdfA" + Environment.NewLine, outputValue);
         }
+
 
         [TestMethod]
         public void Class()

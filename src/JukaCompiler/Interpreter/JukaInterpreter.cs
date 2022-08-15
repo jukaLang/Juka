@@ -162,27 +162,10 @@ namespace JukaCompiler.Interpreter
         {
             if (stmt.expr != null)
             {
-                if (!PrintVariableLookUp((Expression.Variable)stmt.expr))
+                VisitPrintAllInternal(stmt.expr, o =>
                 {
-                    if (stmt.expr is Expression.Literal or Expression.LexemeTypeLiteral)
-                    {
-                        var lexemeTypeLiteral = Evaluate(stmt.expr) as Expression.LexemeTypeLiteral;
-                        Console.WriteLine(lexemeTypeLiteral?.Literal);
-                        return new Stmt.PrintLine();
-                    }
-
-                    if (stmt.expr is Expression.Variable)
-                    {
-                        if (stmt.expr.Name != null)
-                        {
-                            var variable = LookUpVariable(stmt.expr.Name, stmt.expr);
-                            if (variable is Expression.LexemeTypeLiteral literal)
-                            {
-                                Console.WriteLine(literal.Literal);
-                            }
-                        }
-                    }
-                }
+                    Console.WriteLine(o);
+                });
             }
 
             return new Stmt.PrintLine();
@@ -191,21 +174,37 @@ namespace JukaCompiler.Interpreter
         {
             if (stmt.expr != null)
             {
-                if (stmt.expr is Expression.Literal || stmt.expr is Expression.LexemeTypeLiteral)
+                VisitPrintAllInternal(stmt.expr, o =>
                 {
-                    var lexemeTypeLiteral = Evaluate(stmt.expr) as Expression.LexemeTypeLiteral;
-                    Console.Write(lexemeTypeLiteral?.Literal);
-                    return new Stmt.Print();
+                    Console.Write(o);
+                });
+            }
+
+            return new Stmt.Print();
+        }
+
+
+        private Stmt.Print VisitPrintAllInternal(Parse.Expression expr, Action<object> printAction)
+        {
+            if (expr != null)
+            {
+                if (expr is Expression.Literal || expr is Expression.LexemeTypeLiteral)
+                {
+                    var lexemeTypeLiteral = Evaluate(expr) as Expression.LexemeTypeLiteral;
+                    printAction(lexemeTypeLiteral?.Literal);
                 }
 
-                if (stmt.expr is Variable)
+                if (expr is Variable)
                 {
-                    PrintVariableLookUp((Expression.Variable) stmt.expr);
+                    PrintVariableLookUp((Expression.Variable)expr, o =>
+                    {
+                        printAction(o);
+                    });
                 }
 
-                if (stmt.expr is ArrayAccessExpression)
+                if (expr is ArrayAccessExpression)
                 {
-                    var variableExpression = stmt.expr as ArrayAccessExpression;
+                    var variableExpression = expr as ArrayAccessExpression;
                     var variableName = variableExpression?.ArrayVariableName.ToString();
 
                     if (frames.Peek().TryGetStackArrayVariableByName(variableName,
@@ -215,7 +214,7 @@ namespace JukaCompiler.Interpreter
                             .TryGetStackVariableByName(variableName, out StackVariableState variableState))
                         {
                             int arrayIndex = (int)variableState.Value;
-                            Console.Write(arrayImplementation.GetAt(arrayIndex));
+                            printAction(arrayImplementation.GetAt(arrayIndex));
                         }
                     }
                 }
@@ -224,7 +223,7 @@ namespace JukaCompiler.Interpreter
             return new Stmt.Print();
         }
 
-        private bool PrintVariableLookUp(Expression.Variable expr)
+        private bool PrintVariableLookUp(Expression.Variable expr, Action<object> printTypeAction)
         {
             if (expr is Expression.Variable)
             {
@@ -237,27 +236,27 @@ namespace JukaCompiler.Interpreter
                         var stackVariable = (StackVariableState) variable;
                         if (stackVariable.Value is Expression.LexemeTypeLiteral)
                         {
-                            Console.Write(((Expression.LexemeTypeLiteral) stackVariable.Value).literal);
+                            printTypeAction(((Expression.LexemeTypeLiteral)stackVariable.Value).literal);
                         }
                         
                         if (stackVariable.Value is Expression.Literal literal)
                         {
-                            Console.Write(literal.name?.ToString());
+                            printTypeAction(literal.name?.ToString());
                         }
 
                         if (stackVariable.Value is string)
                         {
-                            Console.Write(stackVariable.Value);
+                            printTypeAction(stackVariable.Value);
                         }
                     }
 
                     if (variable is Expression.LexemeTypeLiteral)
                     {
-                        Console.Write(((Expression.LexemeTypeLiteral) variable).literal);
+                        printTypeAction(((Expression.LexemeTypeLiteral)variable).literal);
                     }
                     else if (variable is Expression.Literal literal)
                     {
-                        Console.Write(literal.name?.ToString());
+                        printTypeAction(literal.name?.ToString());
                     }
                 }
 
