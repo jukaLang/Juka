@@ -1,16 +1,10 @@
-﻿using System.Net.Mail;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Xml.Linq;
-using JukaCompiler.Exceptions;
-using JukaCompiler.Extensions;
+﻿using JukaCompiler.Exceptions;
 using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 using JukaCompiler.Statements;
 using JukaCompiler.SystemCalls;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.VisualBasic.CompilerServices;
 using static JukaCompiler.Interpreter.StackFrame;
 using static JukaCompiler.Parse.Expression;
 
@@ -131,8 +125,6 @@ namespace JukaCompiler.Interpreter
                 environment.Define("super", superclass);
             }
 
-            //frames.Peek().AddVariable(stmt.name.Literal(), jukaClass);
-
             environment.Assign(stmt.name, jukaClass);
             return new Stmt.DefaultStatement();
         }
@@ -162,10 +154,7 @@ namespace JukaCompiler.Interpreter
         {
             if (stmt.expr != null)
             {
-                VisitPrintAllInternal(stmt.expr, o =>
-                {
-                    Console.WriteLine(o);
-                });
+                VisitPrintAllInternal(stmt.expr, Console.WriteLine);
             }
 
             return new Stmt.PrintLine();
@@ -174,10 +163,7 @@ namespace JukaCompiler.Interpreter
         {
             if (stmt.expr != null)
             {
-                VisitPrintAllInternal(stmt.expr, o =>
-                {
-                    Console.Write(o);
-                });
+                VisitPrintAllInternal(stmt.expr, Console.Write);
             }
 
             return new Stmt.Print();
@@ -292,10 +278,14 @@ namespace JukaCompiler.Interpreter
             // doing the check of the initializer allows the code
             // to put the variable in the callers stack.
             object value = frames.Peek().AddVariable(stmt,this);
-            if (stmt.exprInitializer is Expression.Call)
+            if (stmt.exprInitializer is Call)
             {
-                var tempFrame = frames.Pop();
+                frames.Pop();
                 frames.Peek().AddVariable(stmt.name.ToString(), value, stmt.name.GetType(), stmt.exprInitializer);
+
+                //This could be a problem in the future.
+                //The stack frame is popped but never pushed.
+                //There could be issues when/if CTOR is implemented
             }
 
             environment.Define(stmt.name.ToString() , value);
