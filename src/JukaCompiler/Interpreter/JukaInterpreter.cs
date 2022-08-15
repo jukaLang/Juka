@@ -286,12 +286,19 @@ namespace JukaCompiler.Interpreter
 
         public Stmt VisitVarStmt(Stmt.Var stmt)
         {
-            //if (stmt.isInitalizedVar != null)
-            //{
-            //    value = Evaluate(stmt.exprInitializer);
-            //}
-
+            // Hack. If the expression is a method call assignment
+            // i.e. var x = foo(); 
+            // AddVariable does an Evaluate which will put the assigee
+            // in the stack frame of foo().
+            // doing the check of the initializer allows the code
+            // to put the variable in the callers stack.
             object value = frames.Peek().AddVariable(stmt,this);
+            if (stmt.exprInitializer is Expression.Call)
+            {
+                var tempFrame = frames.Pop();
+                frames.Peek().AddVariable(stmt.name.ToString(), value, stmt.name.GetType(), stmt.exprInitializer);
+            }
+
             environment.Define(stmt.name.ToString() , value);
             return new Stmt.DefaultStatement(); 
         }
@@ -317,7 +324,6 @@ namespace JukaCompiler.Interpreter
         {
             return expr.Accept(this);
         }
-
         public object? VisitAssignExpr(Expression.Assign expr)
         {
             object? value = Evaluate(expr.value);
@@ -403,7 +409,6 @@ namespace JukaCompiler.Interpreter
 
             return new Expression.LexemeTypeLiteral();
         }
-
         private static object IsLessThan(long leftValueType, long rightValueType, object leftValue, object rightValue)
         {
             if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
@@ -443,7 +448,6 @@ namespace JukaCompiler.Interpreter
 
             throw new ArgumentNullException("Can't add types");
         }
-
         private static object SubtractTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
         {
             if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
@@ -479,7 +483,6 @@ namespace JukaCompiler.Interpreter
 
             throw new ArgumentNullException("Can't multiply types");
         }
-
         private static object DivideTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
         {
             if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
@@ -504,7 +507,6 @@ namespace JukaCompiler.Interpreter
 
             throw new ArgumentNullException("can't divide types");
         }
-
         private bool IsEqual(object a, object b)
         {
             if (a == null && b == null)
@@ -519,7 +521,6 @@ namespace JukaCompiler.Interpreter
 
             return a.Equals(b);
         }
-
         private void CheckNumberOperand(Lexeme op, object operand)
         {
             if (operand is int)
@@ -617,10 +618,10 @@ namespace JukaCompiler.Interpreter
 
         public object VisitGetExpr(Expression.Get expr)
         {
-            var getexpr = Evaluate(expr.expr);
-            if (getexpr is JukaInstance)
+            StackVariableState getexpr = (StackVariableState)Evaluate(expr.expr);
+            if (getexpr.Value is JukaInstance)
             {
-                return ((JukaInstance)getexpr).Get(expr.Name);
+                return ((JukaInstance)getexpr.Value).Get(expr.Name);
             }
 
             throw new Exception("not a class instances");
