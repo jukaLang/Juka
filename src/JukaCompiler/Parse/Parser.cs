@@ -55,6 +55,18 @@ namespace JukaCompiler.Parse
             return tokens[current];
         }
 
+        private bool PeekLookAhead(out Lexeme lookAheadLexeme)
+        {
+            lookAheadLexeme = null;
+            if (current + 2 <= tokens.Count)
+            {
+                lookAheadLexeme = tokens[current + 2];
+                return true;
+            }
+
+            return false;
+        }
+
         private Lexeme Previous()
         {
             return tokens[current - 1]; 
@@ -585,16 +597,31 @@ namespace JukaCompiler.Parse
         {
             // Expression expr = Array();
 
-            if (Match(LexemeType.BANG) || Match(LexemeType.MINUS))
+            if (Match(LexemeType.BANG))
             {
                 Lexeme op = Previous();
                 Expression right = Unary();
                 //******* return new Expression.Unary(op, right);
             }
 
-            if (Match(LexemeType.IDENTIFIER))
+            if (Peek().LexemeType == LexemeType.IDENTIFIER && PeekLookAhead(out Lexeme unaryOp))
             {
+                Lexeme ident = Previous();
+                if (Match(LexemeType.PLUS))
+                {
+                    Consume(LexemeType.PLUS, Previous());
+                    if (Match(LexemeType.PLUS))
+                    {
+                        Consume(LexemeType.PLUS, Previous());
+                    }
 
+                    throw new JParserError("Unable to parse unary");
+                }
+
+                if (Match(LexemeType.MINUS))
+                {
+
+                }
             }
 
             return Call();
@@ -685,19 +712,11 @@ namespace JukaCompiler.Parse
                 return new Expression.Grouping(expr);
             }
 
-            //if (Match(LexemeType.VAR))
-            //{
-            //    //Lexeme variableName = Consume(LexemeType.IDENTIFIER, Peek());
-            //    //Lexeme op = Consume(LexemeType.EQUAL, Peek());
-            //    //Expression expr = Expr();
-
-            //    //Lexeme initalizer = Consume(LexemeType.NUMBER, Peek());
-            //    //expr.
-            //    //Previous();
-            //    var expr = Assignment();
-
-            //    return new Expression.Assign(null, expr);
-            //}
+            if (Match(LexemeType.VAR))
+            {
+                var expr = Assignment();
+                return new Expression.Assign(null, expr);
+            }
 
             throw new Exception(Peek() + "Expect expression");
         }

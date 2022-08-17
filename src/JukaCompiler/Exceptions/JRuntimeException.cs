@@ -7,4 +7,12 @@
         {
         }
     }
+
+    internal class JParserError : Exception
+    {
+        internal JParserError(string message)
+            : base(message)
+        {
+        }
+    }
 }
