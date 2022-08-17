@@ -685,19 +685,19 @@ namespace JukaCompiler.Parse
                 return new Expression.Grouping(expr);
             }
 
-            if (Match(LexemeType.VAR))
-            {
-                //Lexeme variableName = Consume(LexemeType.IDENTIFIER, Peek());
-                //Lexeme op = Consume(LexemeType.EQUAL, Peek());
-                //Expression expr = Expr();
+            //if (Match(LexemeType.VAR))
+            //{
+            //    //Lexeme variableName = Consume(LexemeType.IDENTIFIER, Peek());
+            //    //Lexeme op = Consume(LexemeType.EQUAL, Peek());
+            //    //Expression expr = Expr();
 
-                //Lexeme initalizer = Consume(LexemeType.NUMBER, Peek());
-                //expr.
-                //Previous();
-                var expr = Assignment();
+            //    //Lexeme initalizer = Consume(LexemeType.NUMBER, Peek());
+            //    //expr.
+            //    //Previous();
+            //    var expr = Assignment();
 
-                return new Expression.Assign(null, expr);
-            }
+            //    return new Expression.Assign(null, expr);
+            //}
 
             throw new Exception(Peek() + "Expect expression");
         }
