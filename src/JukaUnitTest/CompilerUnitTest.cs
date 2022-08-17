@@ -330,5 +330,21 @@ namespace JukaUnitTest
 
             Assert.AreNotEqual(0, Go());
         }
+
+        [TestMethod]
+        public void ForLoop()
+        {
+            sourceAsString += @"
+                func test_func() = 
+                {
+                    for(var i = 0; i<10; i++;)
+                    {
+                        print(i);
+                    }
+                }";
+
+            var runValue = Go();
+            Assert.AreSame("0123456789", runValue);
+        }
     }
 }
