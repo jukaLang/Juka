@@ -2,6 +2,7 @@
 using JukaCompiler.Lexer;
 using JukaCompiler.Scan;
 using JukaCompiler.Statements;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JukaCompiler.Parse
@@ -122,6 +123,11 @@ namespace JukaCompiler.Parse
                 return WhileStatement();
             }
 
+            if (Match(LexemeType.FOR))
+            {
+                return ForStatement();
+            }
+
             if (Match(LexemeType.BREAK))
             {
                 return BreakStatement();
@@ -154,7 +160,6 @@ namespace JukaCompiler.Parse
             return new Stmt.If(condition, thenBlock, elseBlock);
         }
 
-
         private Stmt WhileStatement()
         {
             Consume(LexemeType.LEFT_PAREN, Previous());
@@ -171,6 +176,19 @@ namespace JukaCompiler.Parse
             var whileBlock = Statement();
 
             return new Stmt.While(condition, whileBlock);
+        }
+
+        private Stmt ForStatement()
+        {
+            Consume(LexemeType.LEFT_PAREN, Previous());
+
+            var initCondition = Expr();
+            Consume(LexemeType.SEMICOLON, Previous());
+            var breakCondition = Expr();
+            Consume(LexemeType.SEMICOLON, Previous());
+            var incrementCondition = Expr();
+
+            return new Stmt.For();
         }
 
         private Stmt BreakStatement()
@@ -574,6 +592,11 @@ namespace JukaCompiler.Parse
                 //******* return new Expression.Unary(op, right);
             }
 
+            if (Match(LexemeType.IDENTIFIER))
+            {
+
+            }
+
             return Call();
             //return expr;
         }
@@ -662,12 +685,19 @@ namespace JukaCompiler.Parse
                 return new Expression.Grouping(expr);
             }
 
-            //if (Match(LexemeType.LEFT_BRACE))
-            //{
-            //    Lexeme value = Consume(LexemeType.NUMBER, Peek());
-            //    Consume(LexemeType.RIGHT_BRACE, Peek());
-            //    return new Expression.ArrayDeclarationExpression(int.Parse(value.ToString()));
-            //}
+            if (Match(LexemeType.VAR))
+            {
+                //Lexeme variableName = Consume(LexemeType.IDENTIFIER, Peek());
+                //Lexeme op = Consume(LexemeType.EQUAL, Peek());
+                //Expression expr = Expr();
+
+                //Lexeme initalizer = Consume(LexemeType.NUMBER, Peek());
+                //expr.
+                //Previous();
+                var expr = Assignment();
+
+                return new Expression.Assign(null, expr);
+            }
 
             throw new Exception(Peek() + "Expect expression");
         }

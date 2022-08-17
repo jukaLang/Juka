@@ -207,6 +207,14 @@ namespace JukaCompiler.Statements
                 return vistor.VisitWhileStmt(this);
             }
         }
+
+        internal class For : Stmt
+        {
+            internal override R Accept<R>(Visitor<R> visitor)
+            {
+                throw new NotImplementedException();
+            }
+        }
         internal class Return : Stmt
         {
             internal Lexeme keyword;
