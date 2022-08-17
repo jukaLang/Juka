@@ -20,6 +20,19 @@ namespace JukaCompiler.Statements
             R VisitBreakStmt(Break stmt);
         }
         internal abstract R Accept<R>(Stmt.Visitor<R> vistor);
+        private Lexeme stmtLexeme;
+
+        internal Lexeme StmtLexeme
+        {
+            get => stmtLexeme;
+            set => stmtLexeme = value;
+        }
+
+        internal string StmtLexemeName
+        {
+            get => stmtLexeme.ToString();
+        }
+
         internal class Block : Stmt
         {
             internal Block(List<Stmt> statements)
@@ -36,20 +49,19 @@ namespace JukaCompiler.Statements
         internal class Function : Stmt
         {
             internal List<Stmt> body = new List<Stmt>();
-            internal Lexeme name;
             internal List<TypeParameterMap> typeParameterMaps;
 
             public override bool Equals(object obj)
             {
-                return this.name.ToString().Equals(obj);
+                return this.StmtLexemeName.Equals(obj);
             }
-            internal Function(Lexeme name, List<TypeParameterMap> parametersMap, List<Stmt> body)
+            internal Function(Lexeme stmtLexeme, List<TypeParameterMap> parametersMap, List<Stmt> body)
             {
-                if (!(name.ToString().All(c => char.IsLetterOrDigit(c) || c == '_')))
+                if (!(stmtLexeme.ToString().All(c => char.IsLetterOrDigit(c) || c == '_')))
                 {
-                    throw new Exception("Function {name.ToString()} has an invalid name");
+                    throw new Exception("Function {ExpressionLexeme.ToString()} has an invalid ExpressionLexeme");
                 }
-                this.name = name;
+                this.StmtLexeme = stmtLexeme;
                 this.typeParameterMaps = parametersMap;
                 this.body = body;
             }
@@ -162,7 +174,7 @@ namespace JukaCompiler.Statements
             {
                 if (!(name.ToString().All(c => char.IsLetterOrDigit(c) || c == '_')))
                 {
-                    throw new Exception("Variable {name.ToString()} has an invalid name");
+                    throw new Exception("Variable {ExpressionLexeme.ToString()} has an invalid ExpressionLexeme");
                 }
                 this.name = name;
                 this.exprInitializer = expr;
@@ -175,7 +187,7 @@ namespace JukaCompiler.Statements
             {
                 if (!(name.ToString().All(c => char.IsLetterOrDigit(c) || c == '_')))
                 {
-                    throw new Exception("Variable {name.ToString()} has an invalid name");
+                    throw new Exception("Variable {ExpressionLexeme.ToString()} has an invalid ExpressionLexeme");
                 }
                 this.name = name;
                 exprInitializer = null;

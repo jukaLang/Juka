@@ -455,24 +455,24 @@ namespace JukaCompiler.Parse
 
                 if (expr is Expression.Variable && 
                     ((Expression.Variable)expr) != null && 
-                    ((Expression.Variable)expr).Name != null)
+                    ((Expression.Variable)expr).ExpressionLexeme != null)
                 {
                     Expression.Variable variable = (Expression.Variable)expr;
-                    if (variable != null && variable.Name != null) 
+                    if (variable != null && variable.ExpressionLexeme != null) 
                     {
-                        return new Expression.Assign(variable.Name, value);
+                        return new Expression.Assign(variable.ExpressionLexeme, value);
                     }
                     //> Classes assign-set
                 }
 
                 if (expr is Expression.Get &&
                     ((Expression.Get)expr) != null &&
-                    ((Expression.Get)expr).Name != null) 
+                    ((Expression.Get)expr).ExpressionLexeme != null) 
                 {
                     Expression.Get get = (Expression.Get)expr;
-                    if (get != null && get.Name != null)
+                    if (get != null && get.ExpressionLexeme != null)
                     {
-                        return new Expression.Set(get, get.Name, value);
+                        return new Expression.Set(get, get.ExpressionLexeme, value);
                     }
                     //< Classes assign-set
                 }
@@ -726,7 +726,7 @@ namespace JukaCompiler.Parse
             bool isCallable = false;
             foreach(var callableService in callableServices)
             {
-                if (callableService.ToString().Equals(callee.Name.ToString()))
+                if (callableService.ToString().Equals(callee.ExpressionLexeme.ToString()))
                 {
                     isCallable = true;
                 }
