@@ -88,7 +88,7 @@ namespace JukaCompiler
 
             foreach (var m in allFunctions)
             {
-                if (((Stmt.Function)m).name.ToString().Equals("main"))
+                if (((Stmt.Function)m).StmtLexemeName.Equals("main"))
                 {
                     break;
                 }
