@@ -74,9 +74,9 @@ namespace JukaCompiler.Interpreter
 
             if(processScope.TryGetValue(frame, out BlockScope value))
             {
-                if (value.lexemeScope.TryGetValue(expr.Name.ToString(), out var lexeme))
+                if (value.lexemeScope.TryGetValue(expr.ExpressionLexeme.ToString(), out var lexeme))
                 {
-                    //value.lexemeScope[expr.name.ToString] = expr.
+                    //value.lexemeScope[expr.ExpressionLexeme.ToString] = expr.
                     //var xx= interpreter.LookUpVariable(lexeme, expr);
                 }
             }
@@ -106,9 +106,9 @@ namespace JukaCompiler.Interpreter
             if (expr is Expression.Call)
             {
                 var call = (Expression.Call)expr;
-                BeginScope(expr.callee.Name.ToString());
-                Declare(expr.callee.Name);
-                Define(expr.callee.Name);
+                BeginScope(expr.callee.ExpressionLexeme.ToString());
+                Declare(expr.callee.ExpressionLexeme);
+                Define(expr.callee.ExpressionLexeme);
 
                 if (!call.isJukaCallable)
                 { 
@@ -128,7 +128,7 @@ namespace JukaCompiler.Interpreter
             Declare(stmt.name);
             Define(stmt.name);
 
-            if (stmt.superClass != null && stmt.name.ToString().Equals(stmt.superClass.name.ToString()))
+            if (stmt.superClass != null && stmt.name.ToString().Equals(stmt.superClass.ExpressionLexeme.ToString()))
             {
                 this.compilerError.AddError("can't inhert from itself");
             }
@@ -155,7 +155,7 @@ namespace JukaCompiler.Interpreter
             {
                 //FunctionType decl = FunctionType.METHOD;
                 //implement ctor
-                // if(method.name.ToString
+                // if(method.ExpressionLexeme.ToString
 
                 ResolveFunction(method, FunctionType.METHOD);
             }
@@ -178,10 +178,10 @@ namespace JukaCompiler.Interpreter
 
         public object VisitFunctionStmt(Stmt.Function stmt)
         {
-            BeginScope(stmt.name.ToString());
+            BeginScope(stmt.StmtLexemeName);
 
-            Declare(stmt.name);
-            Define(stmt.name);
+            Declare(stmt.StmtLexeme);
+            Define(stmt.StmtLexeme);
 
             ResolveFunction(stmt, FunctionType.FUNCTION);
 
@@ -321,7 +321,7 @@ namespace JukaCompiler.Interpreter
                 
                 if(processScope.TryGetValue(currentScope, out var localScope))
                 {
-                    if(localScope.lexemeScope.TryGetValue(expr.name.ToString(), out Lexeme value))
+                    if(localScope.lexemeScope.TryGetValue(expr.ExpressionLexeme.ToString(), out Lexeme value))
                     {
                         this.interpreter.Resolve(expr,0);
                     }
@@ -429,7 +429,7 @@ namespace JukaCompiler.Interpreter
                 {
                     throw new Exception("Something went wrong when resolving the function");
                 }
-                Declare(literalName.Name);
+                Declare(literalName.ExpressionLexeme);
                 Define(param.parameterType);
             }
 

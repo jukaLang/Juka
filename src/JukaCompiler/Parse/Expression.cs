@@ -25,22 +25,27 @@ namespace JukaCompiler.Parse
 
         internal abstract R Accept<R>(Expression.IVisitor<R> visitor);
 
-        internal Lexeme? name;
+        private Lexeme? expressionLexeme;
         internal Lexeme? initializerContextVariableName;
 
-        internal Lexeme? Name
+        internal Lexeme? ExpressionLexeme
         {
-            get { return name; }
-            set { name = value; }
+            get => expressionLexeme;
+            set { expressionLexeme = value; }
+        }
+
+        internal string ExpressionLexemeName
+        {
+            get => this.expressionLexeme.ToString();
         }
 
         internal class Assign : Expression
         {
             internal readonly Expression value;
 
-            internal Assign(Lexeme name, Expression value)
+            internal Assign(Lexeme ExpressionLexeme, Expression value)
             {
-                this.name = name;
+                this.expressionLexeme = ExpressionLexeme;
                 this.value = value;
             }
 
@@ -54,10 +59,10 @@ namespace JukaCompiler.Parse
         {
             internal Int64 lexemeType;
 
-            internal Variable(Lexeme name)
+            internal Variable(Lexeme ExpressionLexeme)
             {
-                this.name = name;
-                this.lexemeType = name.LexemeType;
+                this.ExpressionLexeme = ExpressionLexeme;
+                this.lexemeType = ExpressionLexeme.LexemeType;
             }
             internal override R Accept<R>(IVisitor<R> visitor)
             {
@@ -104,7 +109,7 @@ namespace JukaCompiler.Parse
             internal ArrayDeclarationExpression(Lexeme arrayDeclarationName, Lexeme arraySize)
             {
                 ArraySize = int.Parse(arraySize.ToString());
-                name = arrayDeclarationName = arrayDeclarationName;
+                ExpressionLexeme = arrayDeclarationName = arrayDeclarationName;
             }
 
             internal override R Accept<R>(IVisitor<R> visitor)
@@ -121,7 +126,7 @@ namespace JukaCompiler.Parse
             internal ArrayAccessExpression(Lexeme arrayVariableName, Lexeme arraySize)
             {
                 ArraySize = int.Parse(arraySize.ToString());
-                name = ArrayVariableName = arrayVariableName;
+                ExpressionLexeme = ArrayVariableName = arrayVariableName;
             }
 
             internal override R Accept<R>(IVisitor<R> visitor)
@@ -154,7 +159,7 @@ namespace JukaCompiler.Parse
             internal Get(Expression expr, Lexeme lex)
             {
                 this.expr = expr;
-                this.Name = lex;
+                this.ExpressionLexeme = lex;
             }
 
             internal override R Accept<R>(IVisitor<R> visitor)
@@ -201,7 +206,7 @@ namespace JukaCompiler.Parse
 
             internal Literal(Lexeme literal, long type)
             {
-                this.Name = literal;
+                this.ExpressionLexeme = literal;
                 this.value = literal;
                 this.type = type;
             }

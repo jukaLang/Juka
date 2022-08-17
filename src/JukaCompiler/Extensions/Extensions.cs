@@ -14,7 +14,7 @@ namespace JukaCompiler.Extensions
                     var variable = kvp.Key as Parse.Expression.Variable;
                     if (variable != null)
                     {
-                        if (variable.Name.ToString().Equals(expr.Name.ToString(), StringComparison.OrdinalIgnoreCase))
+                        if (variable.ExpressionLexeme.ToString().Equals(expr.ExpressionLexeme.ToString(), StringComparison.OrdinalIgnoreCase))
                         {
                             distance = (int)(object)kvp.Value;
                             return true;
