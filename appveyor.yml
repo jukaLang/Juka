@@ -158,3 +158,13 @@ after_deploy:
  - ps: $dbinar["environmentVariables"] = @{}
  - ps: $bod = $dbinar | ConvertTo-json
  - ps: Invoke-RestMethod -Uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method POST -body $bod
+ - ps: $headers = @{}
+ - ps: $headers['Authorization'] = "Bearer $env:token"
+ - ps: $headers["Content-type"] = "application/json"
+ - ps: $dbinar = @{}
+ - ps: $dbinar["accountName"] = 'TheAndreiM'
+ - ps: $dbinar["projectSlug"] = 'jukaApp'
+ - ps: $dbinar["branch"] = 'main'
+ - ps: $dbinar["environmentVariables"] = @{}
+ - ps: $bod = $dbinar | ConvertTo-json
+ - ps: Invoke-RestMethod -Uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method POST -body $bod

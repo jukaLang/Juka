@@ -1,103 +1,103 @@
-﻿using System.Collections;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using System.Reflection;
 using System.Text;
+using JukaCompiler;
 using Newtonsoft.Json.Linq;
 string? assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
 
 
-string userInput = string.Empty;
-string readline = string.Empty;
+bool isFuncOrClass = false;
 
 if (args.Length == 0)
 {
     Console.Title = "Juka Compiler";
-    Console.WriteLine("♥ Welcome to Juka Compiler Version: "+assemblyVersion+". If you need to run a file, pass it as an argument ♥");
-    Console.WriteLine("REPL Usage: ");
-    Console.WriteLine("Single line commands can be entered on one line");
-    Console.WriteLine("Multline line commands support are class and func. Terminated with ';' symbol");
+    Console.BackgroundColor = ConsoleColor.Black;
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.OutputEncoding = Encoding.UTF8;
+    Console.WriteLine("🍲 Welcome to Juka Compiler 🍲 Version: " + assemblyVersion+". If you need to run a file, pass it as an argument");
+    Console.WriteLine("class and func should be terminated with single '}' on a new line");
+    Compiler compiler = new Compiler();
 
 
     string dataStart = "func main() = {";
     string dataEnd = "}";
 
-    var userData = new List<string>();
-    var funcData = new List<string>();
-    bool isFuncOrClass = false;
+    List<string> funcData = new List<string>();
 
+
+    Console.Write("Juka > ");
     while (true)
     {
-        Console.Write("Juka > ");
-        readline = Console.ReadLine();
-        if (readline == string.Empty)
+        string? readLine = Console.ReadLine();
+        if (string.IsNullOrEmpty(readLine))
         {
+            Console.Write("Juka > ");
             continue;
         }
 
-        if (readline.Equals("clear", StringComparison.OrdinalIgnoreCase))
+        if (readLine.Equals("clear", StringComparison.OrdinalIgnoreCase))
         {
-            userData.Clear();
+            Console.Clear();
+            compiler = new Compiler();
             continue;
         }
 
-        if (readline.StartsWith("func") || readline.StartsWith("class"))
+        if (readLine.StartsWith("func") || readLine.StartsWith("class"))
         {
             isFuncOrClass = true;
+            funcData.Add(readLine);
+            System.Diagnostics.Trace.WriteLine("Starting Func: " + readLine);
         }
-
-        if (readline.Equals(";"))
+        else if (isFuncOrClass)
         {
-            if (isFuncOrClass)
+            if (readLine.StartsWith("}"))
             {
+                funcData.Add(readLine);
+                System.Diagnostics.Trace.WriteLine("Ending Func: " + readLine);
                 string userDataToExecute = string.Empty;
-                foreach (var item in funcData)
+                foreach (string item in funcData)
                 {
                     userDataToExecute += item;
                 }
 
                 dataEnd += userDataToExecute;
+                funcData.Clear();
+                isFuncOrClass = false;
+                Console.Write("Juka > ");
             }
-
-            isFuncOrClass = false;
-            continue;
-        }
-
-        if (readline.Equals("go", StringComparison.OrdinalIgnoreCase))
-        {
-            string userDataToExecute = string.Empty;
-            foreach (var item in userData)
+            else
             {
-                userDataToExecute += item;
+                System.Diagnostics.Trace.WriteLine("Reading Func: " + readLine);
+                funcData.Add(readLine);
             }
-
-            string codeToExecute = dataStart + userDataToExecute + dataEnd;
-            System.Diagnostics.Trace.Write(codeToExecute);
-            Console.WriteLine(new JukaCompiler.Compiler().Go(codeToExecute, isFile: false));
-            continue;
-        }
-
-        if (isFuncOrClass)
-        {
-            funcData.Add(readline);
         }
         else
         {
-            userData.Add(readline);
+            if (readLine.StartsWith("var"))
+            {
+                dataStart += readLine;
+                readLine = "";
+            }
+            
+
+            string codeToExecute = dataStart + readLine+ dataEnd;
+            try
+            {
+                System.Diagnostics.Trace.WriteLine(codeToExecute);
+                Console.WriteLine(compiler.Go(codeToExecute, isFile: false));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+            Console.Write("Juka > ");
         }
-
-
-        //for(int i=0; i<userData.Count; i++)
-        //{
-        //    if (userData[i].StartsWith("print") || userData[i].StartsWith("printLine"))
-        //    {
-        //        userData.RemoveAt(i);
-        //    }
-        //}
     }
 }
 else
 {
-    userInput = args[0];
+    string userInput = args[0];
     if (userInput == "-d" || userInput == "--debug")
     {
 
@@ -204,13 +204,13 @@ else
                         zip.ExtractToDirectory(dir);
                     } else
                     {
-                        using (var gzip = new GZipStream(streamToReadFrom, CompressionMode.Decompress))
+                        using (GZipStream gzip = new GZipStream(streamToReadFrom, CompressionMode.Decompress))
                         {
                             const int chunk = 4096;
-                            using (var memStr = new MemoryStream())
+                            using (MemoryStream memStr = new MemoryStream())
                             {
                                 int read;
-                                var buffer = new byte[chunk];
+                                byte[] buffer = new byte[chunk];
                                 do
                                 {
                                     read = gzip.Read(buffer, 0, chunk);
@@ -222,31 +222,31 @@ else
                                 while (true)
                                 {
                                     memStr.Read(buffer, 0, 100);
-                                    var fname = Encoding.ASCII.GetString(buffer).Trim('\0');
+                                    string fname = Encoding.ASCII.GetString(buffer).Trim('\0');
                                     if (String.IsNullOrWhiteSpace(fname))
                                         break;
                                     memStr.Seek(24, SeekOrigin.Current);
                                     memStr.Read(buffer, 0, 12);
-                                    var size = Convert.ToInt64(Encoding.UTF8.GetString(buffer, 0, 12).Trim('\0').Trim(), 8);
+                                    long size = Convert.ToInt64(Encoding.UTF8.GetString(buffer, 0, 12).Trim('\0').Trim(), 8);
 
                                     memStr.Seek(376L, SeekOrigin.Current);
 
-                                    var output = Path.Combine(dir, fname);
+                                    string output = Path.Combine(dir, fname);
                                     if (!Directory.Exists(Path.GetDirectoryName(output)))
                                         Directory.CreateDirectory(Path.GetDirectoryName(output));
                                     if (!fname.Equals("./", StringComparison.InvariantCulture))
                                     {
-                                        using (var str = File.Open(output, FileMode.OpenOrCreate, FileAccess.Write))
+                                        using (FileStream str = File.Open(output, FileMode.OpenOrCreate, FileAccess.Write))
                                         {
-                                            var buf = new byte[size];
+                                            byte[] buf = new byte[size];
                                             memStr.Read(buf, 0, buf.Length);
                                             str.Write(buf, 0, buf.Length);
                                         }
                                     }
 
-                                    var pos = memStr.Position;
+                                    long pos = memStr.Position;
 
-                                    var offset = 512 - (pos % 512);
+                                    long offset = 512 - (pos % 512);
                                     if (offset == 512)
                                         offset = 0;
 
