@@ -1,5 +1,6 @@
 ﻿using System.IO.Compression;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using JukaCompiler;
 using Newtonsoft.Json.Linq;
@@ -7,6 +8,7 @@ string? assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToS
 
 
 bool isFuncOrClass = false;
+string prompt = "Juka >";
 
 if (args.Length == 0)
 {
@@ -19,19 +21,20 @@ if (args.Length == 0)
     Compiler compiler = new Compiler();
 
 
+
     string dataStart = "func main() = {";
     string dataEnd = "}";
 
     List<string> funcData = new List<string>();
 
 
-    Console.Write("Juka > ");
+    Console.Write(prompt);
     while (true)
     {
         string? readLine = Console.ReadLine();
         if (string.IsNullOrEmpty(readLine))
         {
-            Console.Write("Juka > ");
+            Console.Write(prompt);
             continue;
         }
 
@@ -39,6 +42,19 @@ if (args.Length == 0)
         {
             Console.Clear();
             compiler = new Compiler();
+            funcData.Clear();
+            Console.Write(prompt);
+            continue;
+        }
+
+        if (readLine.Equals("list", StringComparison.OrdinalIgnoreCase))
+        {
+            foreach (var data in funcData)
+            {
+                Console.WriteLine(data);
+            }
+            
+            Console.Write(prompt);
             continue;
         }
 
@@ -61,9 +77,8 @@ if (args.Length == 0)
                 }
 
                 dataEnd += userDataToExecute;
-                funcData.Clear();
                 isFuncOrClass = false;
-                Console.Write("Juka > ");
+                Console.Write(prompt);
             }
             else
             {
@@ -78,20 +93,23 @@ if (args.Length == 0)
                 dataStart += readLine;
                 readLine = "";
             }
-            
+
+            funcData.Add(readLine);
 
             string codeToExecute = dataStart + readLine+ dataEnd;
             try
             {
                 System.Diagnostics.Trace.WriteLine(codeToExecute);
-                Console.WriteLine(compiler.Go(codeToExecute, isFile: false));
+                Console.Write(prompt);
+                Console.Write(compiler.Go(codeToExecute, isFile: false));
+                continue;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                Console.Write(e.ToString());
             }
 
-            Console.Write("Juka > ");
+            Console.Write(prompt);
         }
     }
 }
