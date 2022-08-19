@@ -1,4 +1,4 @@
-# <a href="https://jukalang.com"><img src="./logo.svg" align="left" height="40" width="40"></a>Juka - Programming Language
+# [![Juka Programming Language](./logo.png)](https://jukalang.com) Juka - Programming Language
 
 Official Website: https://jukalang.com
 
@@ -33,20 +33,23 @@ __Current Supported Device:__
 - Docker (JukaAPI)
 - Unity Game Engine (via NuGet.org) 
 - [Web Assembly (CDN/Browser/HTML server)](https://github.com/jukaLang/juka-webassembly)
+- ChromeOS* (see Web Assembly)
 - [Jupyter via juka-kernel](https://github.com/jukaLang/juka-kernel)
 - [Virtual Box Image (JukaVM)](https://github.com/jukaLang/jukaVM)
+- [Windows App (Windows 10+)](https://github.com/jukaLang/JukaApp)
 
 **__Coming Soon:__**
 - Android App
 - iOS App (iPhone/iPad)
 - MacOS App
-- Windows App (Windows 10+)
 - Tizen (Samsung)
+- TempleOS
 
 __Potential Future Support:__
 - AndroidTV App
 - Amazon Web Service (Native Support)
 - Google Cloud (Native Support)
+- Arduino
 
 ### Downloading Juka
 
