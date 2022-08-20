@@ -44,15 +44,23 @@ namespace JukaCompiler.Interpreter
         {
             JukaEnvironment environment = new(closure);
 
-            for (int i = 0; i < declaration.Params.Count; i++)
+            if (declaration != null)
             {
-                string? name = declaration.Params[i].parameterName.ExpressionLexeme.ToString();
-                if (string.IsNullOrEmpty(name))
+                for (int i = 0; i < declaration.Params.Count; i++)
                 {
-                    throw new ArgumentException("unable to call function");
+                    var parameterNameExpressionLexeme = declaration.Params[i].parameterName.ExpressionLexeme;
+                    if (parameterNameExpressionLexeme != null)
+                    {
+                        string? name = parameterNameExpressionLexeme.ToString();
+                        if (string.IsNullOrEmpty(name))
+                        {
+                            throw new ArgumentException("unable to call function");
+                        }
+
+                        object? value = arguments[i];
+                        environment.Define(name, value);
+                    }
                 }
-                object? value = arguments[i];
-                environment.Define(name, value);
             }
 
             try
