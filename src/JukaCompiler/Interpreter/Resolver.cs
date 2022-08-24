@@ -15,7 +15,7 @@ namespace JukaCompiler.Interpreter
         private ClassType currentClass = ClassType.NONE;
         private ServiceProvider? ServiceProvider;
         private Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
-        Dictionary<string,BlockScope> processScope = new Dictionary<string, BlockScope>();
+        Dictionary<string, BlockScope?> processScope = new Dictionary<string, BlockScope?>();
         private Stack<string> blockScope = new Stack<string>();
         private ICompilerError? compilerError;
         private string errorMessage = "Resolver error - message:{0}";
@@ -72,7 +72,7 @@ namespace JukaCompiler.Interpreter
                 throw new Exception(string.Format(errorMessage,"No stack frames"));
             }
 
-            if(processScope.TryGetValue(frame, out BlockScope value))
+            if(processScope.TryGetValue(frame, out BlockScope? value))
             {
                 if (value.lexemeScope.TryGetValue(expr.ExpressionLexeme.ToString(), out var lexeme))
                 {
@@ -123,7 +123,7 @@ namespace JukaCompiler.Interpreter
         {
             ClassType enclosingClass = currentClass;
             currentClass = ClassType.CLASS;
-            BlockScope blockScope = new BlockScope();
+            BlockScope? blockScope = new BlockScope();
 
             Declare(stmt.name);
             Define(stmt.name);
@@ -383,13 +383,13 @@ namespace JukaCompiler.Interpreter
                     return;
                 }
 
-                if(this.processScope.TryGetValue(block, out BlockScope bsLocal))
+                if(this.processScope.TryGetValue(block, out BlockScope? bsLocal))
                 {
-                    bsLocal.lexemeScope.Add(name.ToString(), name);
+                    bsLocal?.lexemeScope.Add(name.ToString(), name);
                     return;
                 }
 
-                BlockScope bsObject = new BlockScope();
+                BlockScope? bsObject = new BlockScope();
                 if (bsObject.lexemeScope.ContainsKey(name.ToString()))
                 {
                     throw new Exception("variable already exist");
@@ -429,7 +429,11 @@ namespace JukaCompiler.Interpreter
                 {
                     throw new Exception("Something went wrong when resolving the function");
                 }
-                Declare(literalName.ExpressionLexeme);
+
+                if (literalName.ExpressionLexeme != null)
+                {
+                    Declare(literalName.ExpressionLexeme);
+                }
                 Define(param.parameterType);
             }
 

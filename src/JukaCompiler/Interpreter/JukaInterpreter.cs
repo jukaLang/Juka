@@ -3,7 +3,6 @@ using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 using JukaCompiler.Statements;
 using JukaCompiler.SystemCalls;
-using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using static JukaCompiler.Interpreter.StackFrame;
 using static JukaCompiler.Parse.Expression;
@@ -313,7 +312,7 @@ namespace JukaCompiler.Interpreter
         {
             return expr.Accept(this);
         }
-        public object? VisitAssignExpr(Expression.Assign expr)
+        public object VisitAssignExpr(Expression.Assign expr)
         {
             object? value = Evaluate(expr.value);
             var stackVariableState = new StackVariableState
@@ -562,16 +561,19 @@ namespace JukaCompiler.Interpreter
                 if (argument is Expression.Variable)
                 {
                     var lexeme = (Expression.Variable)argument;
-                    object? variable = environment.Get(lexeme.ExpressionLexeme);
-                    arguments.Add(variable);
-                    argumentsMap.Add(lexeme.ExpressionLexeme.ToString(), variable);
+                    if (lexeme.ExpressionLexeme != null)
+                    {
+                        object? variable = environment.Get(lexeme.ExpressionLexeme);
+                        arguments.Add(variable);
+                        argumentsMap.Add(lexeme.ExpressionLexeme.ToString(), variable);
+                    }
                 }
 
                 if (argument is Expression.Literal)
                 {
                     var literal = (Expression.Literal)argument;
                     arguments.Add(literal.LiteralValue);
-                    argumentsMap.Add(literal.ExpressionLexeme.ToString(), literal);
+                    argumentsMap.Add(literal.ExpressionLexeme?.ToString(), literal);
                 }
             }
             
@@ -595,8 +597,8 @@ namespace JukaCompiler.Interpreter
             else
             {
                 object? callee = Evaluate(expr.callee);
-                IJukaCallable function = (IJukaCallable)callee;
-                if (arguments.Count != function.Arity())
+                IJukaCallable? function = (IJukaCallable)callee;
+                if (function != null && arguments.Count != function.Arity())
                 {
                     throw new ArgumentException("Wrong number of arguments");
                 }
@@ -607,28 +609,31 @@ namespace JukaCompiler.Interpreter
 
         public object VisitGetExpr(Expression.Get expr)
         {
-            StackVariableState getexpr = (StackVariableState)Evaluate(expr.expr);
-            if (getexpr.Value is JukaInstance)
+            StackVariableState? getexpr = Evaluate(expr.expr) as StackVariableState;
+            if (getexpr?.Value is JukaInstance instance)
             {
-                return ((JukaInstance)getexpr.Value).Get(expr.ExpressionLexeme);
+                if (expr.ExpressionLexeme != null)
+                {
+                    return instance.Get(expr.ExpressionLexeme);
+                }
             }
 
             throw new Exception("not a class instances");
         }
 
-        public object? VisitGroupingExpr(Expression.Grouping expr)
+        public object VisitGroupingExpr(Expression.Grouping expr)
         {
             if (expr == null || expr.expression == null)
             {
                 throw new ArgumentNullException("expr or expression == null");
             }
 
-            return Evaluate(expr.expression);
+            return Evaluate(expr.expression) ?? throw new JRuntimeException("Grouping is null");
         }
 
-        public object? VisitLiteralExpr(Expression.Literal expr)
+        public object VisitLiteralExpr(Expression.Literal expr)
         {
-            return expr.LiteralValue();
+            return expr.LiteralValue() ?? throw new JRuntimeException("literal is null");
         }
 
         public object VisitLogicalExpr(Expression.Logical expr)
@@ -656,21 +661,33 @@ namespace JukaCompiler.Interpreter
             throw new NotImplementedException();
         }
 
-        public object? VisitVariableExpr(Expression.Variable expr)
+        public object VisitVariableExpr(Expression.Variable expr)
         {
-            return LookUpVariable(expr.ExpressionLexeme, expr);
+            if (expr.ExpressionLexeme != null)
+            {
+                var lookUp = LookUpVariable(expr.ExpressionLexeme, expr);
+                if (lookUp == null)
+                {
+                    throw new Exception("variable is null");
+                }
+
+                return lookUp;
+            }
+
+            throw new JRuntimeException("visit variable returned null");
         }
 
         public object VisitArrayExpr(Expression.ArrayDeclarationExpression expr)
         {
             var currentFrame = frames.Peek();
-            currentFrame.AddStackArray(expr.initializerContextVariableName, expr.ArraySize);
+            if (expr.initializerContextVariableName != null)
+                currentFrame.AddStackArray(expr.initializerContextVariableName, expr.ArraySize);
             return expr.ArraySize;
         }
 
         public object VisitArrayAccessExpr(ArrayAccessExpression expr)
         {
-            return null;
+            return new Stmt.DefaultStatement();
         }
 
         internal object? LookUpVariable(Lexeme name, Expression expr)
@@ -698,7 +715,7 @@ namespace JukaCompiler.Interpreter
 
         internal void Resolve(Expression expr, int depth)
         {
-            if (locals.Where( f => f.Key.ExpressionLexeme.ToString().Equals(expr.ExpressionLexeme.ToString()) ).Count() <= 1)
+            if (locals.Where( f => f.Key.ExpressionLexeme != null && expr.ExpressionLexeme != null && f.Key.ExpressionLexeme.ToString().Equals(expr.ExpressionLexeme.ToString()) ).Count() <= 1)
             {
                 locals.Add(expr,depth);
             }
