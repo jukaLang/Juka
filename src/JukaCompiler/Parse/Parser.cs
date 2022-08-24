@@ -200,7 +200,7 @@ namespace JukaCompiler.Parse
 
             Consume(LexemeType.RIGHT_BRACE, Peek());
 
-            return new Stmt.For(initCondition, breakCondition, incrementCondition, forBody);
+            return new Stmt.For(initCondition, breakCondition, incrementCondition, forBody ?? new Stmt.DefaultStatement());
         }
 
         private Stmt BreakStatement()
