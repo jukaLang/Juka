@@ -55,17 +55,6 @@ namespace JukaCompiler.Parse
             return tokens[current];
         }
 
-        private bool PeekLookAhead(out Lexeme lookAheadLexeme)
-        {
-            lookAheadLexeme = null;
-            if (current + 2 <= tokens.Count)
-            {
-                lookAheadLexeme = tokens[current + 2];
-                return true;
-            }
-
-            return false;
-        }
 
         private Lexeme Previous()
         {
@@ -199,8 +188,19 @@ namespace JukaCompiler.Parse
             var breakCondition = Expr();
             Consume(LexemeType.SEMICOLON, Previous());
             var incrementCondition = Expr();
+            Consume(LexemeType.SEMICOLON, Previous());
 
-            return new Stmt.For();
+            Consume(LexemeType.RIGHT_PAREN, Previous());
+
+            Stmt forBody = null;
+            if (Match(LexemeType.LEFT_BRACE))
+            {
+                forBody = Statement();
+            }
+
+            Consume(LexemeType.RIGHT_BRACE, Peek());
+
+            return new Stmt.For(initCondition, breakCondition, incrementCondition, forBody);
         }
 
         private Stmt BreakStatement()
@@ -373,8 +373,7 @@ namespace JukaCompiler.Parse
                         typeMap.Add(new TypeParameterMap( parameterType,varName ));
                     }
                 }
-               while (Match(LexemeType.COMMA));
-
+                while (Match(LexemeType.COMMA));
             }
 
             Consume(LexemeType.RIGHT_PAREN, Peek());
@@ -604,28 +603,8 @@ namespace JukaCompiler.Parse
                 //******* return new Expression.Unary(op, right);
             }
 
-            if (Peek().LexemeType == LexemeType.IDENTIFIER && PeekLookAhead(out Lexeme unaryOp))
-            {
-                Lexeme ident = Previous();
-                if (Match(LexemeType.PLUS))
-                {
-                    Consume(LexemeType.PLUS, Previous());
-                    if (Match(LexemeType.PLUS))
-                    {
-                        Consume(LexemeType.PLUS, Previous());
-                    }
-
-                    throw new JParserError("Unable to parse unary");
-                }
-
-                if (Match(LexemeType.MINUS))
-                {
-
-                }
-            }
 
             return Call();
-            //return expr;
         }
 
         private Expression Array()
@@ -640,7 +619,6 @@ namespace JukaCompiler.Parse
             }
 
             throw new JRuntimeException("Unable to Parse Array[]");
-            // return Call();
         }
 
         private Expression Call()

@@ -222,6 +222,18 @@ namespace JukaCompiler.Statements
 
         internal class For : Stmt
         {
+            private Parse.Expression init;
+            private Parse.Expression breakExpression;
+            private Parse.Expression incExpression;
+            private Stmt forBody;
+
+            internal For(Parse.Expression init, Parse.Expression breakExpression, Parse.Expression incExpression, Stmt forBody)
+            {
+                this.init = init;
+                this.breakExpression = breakExpression;
+                this.incExpression = incExpression;
+                this.forBody = forBody;
+            }
             internal override R Accept<R>(Visitor<R> visitor)
             {
                 throw new NotImplementedException();
