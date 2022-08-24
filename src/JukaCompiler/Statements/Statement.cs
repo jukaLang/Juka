@@ -88,6 +88,7 @@ namespace JukaCompiler.Statements
                 this.name = name;
                 this.methods = methods;
                 this.variableDeclarations = variableDeclarations;
+                this.superClass = null;
             }
 
             internal override R Accept<R>(Visitor<R> vistor)
@@ -257,6 +258,12 @@ namespace JukaCompiler.Statements
         internal class Break : Stmt
         {
             internal Parse.Expression expr;
+
+            internal Break(Parse.Expression expr)
+            {
+                this.expr = expr;
+            }
+
             internal override R Accept<R>(Visitor<R> vistor)
             {
                 return vistor.VisitBreakStmt(this);

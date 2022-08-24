@@ -206,7 +206,8 @@ namespace JukaCompiler.Parse
         private Stmt BreakStatement()
         {
             Consume(LexemeType.SEMICOLON, Previous());
-            return new Stmt.Break();
+            var expr = Expr();
+            return new Stmt.Break(expr);
         }
 
 
@@ -693,7 +694,7 @@ namespace JukaCompiler.Parse
             if (Match(LexemeType.VAR))
             {
                 var expr = Assignment();
-                return new Expression.Assign(null, expr);
+                return new Expression.Assign(new Lexeme(0,0,0), expr);
             }
 
             throw new Exception(Peek() + "Expect expression");
@@ -723,9 +724,13 @@ namespace JukaCompiler.Parse
             bool isCallable = false;
             foreach(var callableService in callableServices)
             {
-                if (callableService.ToString().Equals(callee.ExpressionLexeme.ToString()))
+                if (callableService != null)
                 {
-                    isCallable = true;
+                    var serviceName = callableService.ToString();
+                    if (!string.IsNullOrEmpty(serviceName))
+                    {
+                        isCallable = serviceName.Equals(callee.ExpressionLexeme?.ToString());
+                    }
                 }
             }
 

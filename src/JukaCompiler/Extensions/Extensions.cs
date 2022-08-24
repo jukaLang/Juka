@@ -4,7 +4,7 @@ namespace JukaCompiler.Extensions
 {
     static internal class Extensions
     {
-        public static bool TryGetValueEx<T,Y>(this Dictionary<T,Y> dict, Expression expr, out int? distance)
+        public static bool TryGetValueEx<T,Y>(this Dictionary<T,Y> dict, Expression expr, out int? distance) where T : notnull
         {
             distance = null;
             foreach(var kvp in dict)
