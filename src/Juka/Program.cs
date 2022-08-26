@@ -1,6 +1,6 @@
-﻿using System.IO.Compression;
+﻿using System.Diagnostics;
+using System.IO.Compression;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using JukaCompiler;
 using Newtonsoft.Json.Linq;
@@ -16,6 +16,10 @@ if (args.Length == 0)
     Console.BackgroundColor = ConsoleColor.Black;
     Console.ForegroundColor = ConsoleColor.White;
     Console.OutputEncoding = Encoding.UTF8;
+    if (assemblyVersion == "0.0.0.1")
+    {
+        assemblyVersion = "DEBUG BUILD";
+    }
     Console.WriteLine("🍲 Welcome to Juka Compiler 🍲 Version: " + assemblyVersion+". If you need to run a file, pass it as an argument");
     Console.WriteLine("class and func should be terminated with single '}' on a new line");
     Compiler compiler = new Compiler();
@@ -62,14 +66,14 @@ if (args.Length == 0)
         {
             isFuncOrClass = true;
             funcData.Add(readLine);
-            System.Diagnostics.Trace.WriteLine("Starting Func: " + readLine);
+            Trace.WriteLine("Starting Func: " + readLine);
         }
         else if (isFuncOrClass)
         {
             if (readLine.StartsWith("}"))
             {
                 funcData.Add(readLine);
-                System.Diagnostics.Trace.WriteLine("Ending Func: " + readLine);
+                Trace.WriteLine("Ending Func: " + readLine);
                 string userDataToExecute = string.Empty;
                 foreach (string item in funcData)
                 {
@@ -82,7 +86,7 @@ if (args.Length == 0)
             }
             else
             {
-                System.Diagnostics.Trace.WriteLine("Reading Func: " + readLine);
+                Trace.WriteLine("Reading Func: " + readLine);
                 funcData.Add(readLine);
             }
         }
@@ -99,7 +103,7 @@ if (args.Length == 0)
             string codeToExecute = dataStart + readLine+ dataEnd;
             try
             {
-                System.Diagnostics.Trace.WriteLine(codeToExecute);
+                Trace.WriteLine(codeToExecute);
                 Console.Write(prompt);
                 Console.Write(compiler.Go(codeToExecute, isFile: false));
                 continue;
@@ -129,6 +133,7 @@ else
             currentVersion = curVer.ToString();
         }
 
+        if (currentVersion == "0.0.0.1") currentVersion = "DEBUG BUILD";
         Console.WriteLine($"Current Version: {currentVersion}");
     }
     if (userInput == "-su" || userInput == "--self-update")
@@ -141,8 +146,15 @@ else
             currentVersion = curVer.ToString();
         }
 
-        Console.WriteLine($"Current Version: {currentVersion}");
-        
+        if (currentVersion == "0.0.0.1")
+        {
+            Console.WriteLine("Current Version: DEBUG BUILD");
+        }
+        else
+        {
+            Console.WriteLine($"Current Version: {currentVersion}");
+        }
+
         HttpClient client = new()
         {
             BaseAddress = null,
@@ -292,7 +304,7 @@ else
     }
     else
     {
-        Console.WriteLine(new JukaCompiler.Compiler().Go(userInput, isFile: true));
+        Console.WriteLine(new Compiler().Go(userInput, isFile: true));
     }
 
 }
