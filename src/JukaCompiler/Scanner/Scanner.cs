@@ -13,8 +13,8 @@ namespace JukaCompiler.Scan
         private int line = 1;
         private int column = 0;
         private byte[] fileData;
-        private List<Lexeme> lexemes = new List<Lexeme>();
-        private ICompilerError compilerError = null;
+        private readonly List<Lexeme?> lexemes = new List<Lexeme?>();
+        private ICompilerError compilerError;
 
         private static readonly Dictionary<string, Int64> keywordsDictionary = new Dictionary<string, Int64>
         {
@@ -68,7 +68,7 @@ namespace JukaCompiler.Scan
             fileData = Encoding.ASCII.GetBytes(data);
         }
 
-        internal List<Lexeme> Scan()
+        internal List<Lexeme?> Scan()
         {
             while(!IsEof())
             {
@@ -237,20 +237,26 @@ namespace JukaCompiler.Scan
             this.lexemes.Add(lex);
         }
 
-        internal bool TryGetKeyWord(Lexeme lex)
+        internal bool TryGetKeyWord(Lexeme? lex)
         {
             bool isKeyword = false;
 
-            if (keywordsDictionary.TryGetValue(lex.ToString(), out var lexemeType))
+            if (keywordsDictionary.TryGetValue(lex?.ToString()!, out var lexemeType))
             {
-                isKeyword = lex.IsKeyWord = true;
-                lex.LexemeType = lexemeType;
+                if (lex != null)
+                {
+                    isKeyword = lex.IsKeyWord = true;
+                    lex.LexemeType = lexemeType;
+                }
             }
 
-            if (internalFunctionsList.ContainsKey(lex.ToString()))
+            if (internalFunctionsList.ContainsKey(lex?.ToString()!))
             {
-                lex.LexemeType = internalFunctionsList[lex.ToString()];
-                lex.LexemeType |= LexemeType.INTERNALFUNCTION;
+                if (lex != null)
+                {
+                    lex.LexemeType = internalFunctionsList[lex.ToString()];
+                    lex.LexemeType |= LexemeType.INTERNALFUNCTION;
+                }
             }
 
             return isKeyword;
@@ -285,7 +291,7 @@ namespace JukaCompiler.Scan
             }
 
             var svalue = Encoding.Default.GetString(Memcopy(fileData, start, current));
-            Lexeme identifier = new Lexeme(LexemeType.IDENTIFIER, this.line, this.column);
+            Lexeme? identifier = new Lexeme(LexemeType.IDENTIFIER, this.line, this.column);
             
             identifier.AddToken(svalue);
 
@@ -300,7 +306,7 @@ namespace JukaCompiler.Scan
             }
 
             var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start, current));
-            Lexeme number = new Lexeme(LexemeType.NUMBER, this.line, this.column);
+            Lexeme? number = new Lexeme(LexemeType.NUMBER, this.line, this.column);
 
             number.AddToken(svalue);
             this.lexemes.Add(number);
@@ -325,7 +331,7 @@ namespace JukaCompiler.Scan
             }
 
             var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start + 1, current - 1));
-            Lexeme s = new Lexeme(LexemeType.STRING, this.line, this.column);
+            Lexeme? s = new Lexeme(LexemeType.STRING, this.line, this.column);
             s.AddToken(svalue.ToString());
             this.lexemes.Add(s);
             Advance();

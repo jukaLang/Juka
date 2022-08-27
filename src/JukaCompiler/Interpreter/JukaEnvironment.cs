@@ -1,4 +1,5 @@
-﻿using JukaCompiler.Lexer;
+﻿using JukaCompiler.Exceptions;
+using JukaCompiler.Lexer;
 
 namespace JukaCompiler.Interpreter
 {
@@ -37,9 +38,11 @@ namespace JukaCompiler.Interpreter
             throw new ArgumentException("JukaEnvironment.Get() has an undefined variable ('" + name.ToString() + "') undefined variable");
         }
 
-        internal void Assign(Lexeme name, object? value)
+        internal void Assign(Lexeme? name, object? value)
         {
-            if (values.ContainsKey(name.ToString()))
+            var nameAsString = name?.ToString() ?? throw new JRuntimeException("unable to get variable name");
+
+            if (values.ContainsKey(nameAsString))
             {
                 values[name.ToString()] = value;
                 return;
@@ -59,12 +62,12 @@ namespace JukaCompiler.Interpreter
             values.Add(name, value);
         }
 
-        internal JukaEnvironment Ancestor(int distance)
+        internal JukaEnvironment? Ancestor(int distance)
         {
-            JukaEnvironment environment = this;
+            JukaEnvironment? environment = this;
             for(int i= 0; i < distance; i++)
             {
-                environment = environment.enclosing;
+                environment = environment?.enclosing;
             }
 
             return environment;
@@ -72,17 +75,17 @@ namespace JukaCompiler.Interpreter
 
         internal object? GetAt(int distance, string name)
         {
-            return Ancestor(distance).values[name];
+            return Ancestor(distance)?.values[name];
         }
 
         internal void AssignAt(int distance, Lexeme name, object? value)
         {
-            Ancestor(distance).values[name.ToString()] = value;
+            Ancestor(distance)!.values[name.ToString()] = value;
         }
 
-        override public string ToString()
+        public override string ToString()
         {
-            string result = values.ToString();
+            string result = values.ToString()!;
             if (enclosing != null)
             {
                 result += " -> " + enclosing.ToString();

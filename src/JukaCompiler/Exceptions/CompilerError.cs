@@ -3,7 +3,7 @@
     internal class CompilerError : ICompilerError
     {
         internal List<String> Errors = new List<String> ();
-        internal string sourceFileName;
+        internal string sourceFileName = string.Empty;
 
         public CompilerError()
         {

@@ -12,7 +12,7 @@ namespace JukaCompiler.Interpreter
         private string frameName;
         private Dictionary<string, object?> variables = new Dictionary<string, object?>();
         private Dictionary<string, StackVariableState> variableAndKind = new Dictionary<string, StackVariableState>();
-        private Dictionary<string, ArrayImplementation> stackArrayImplementations = new Dictionary<string, ArrayImplementation>();
+        private Dictionary<string, ArrayImplementation?> stackArrayImplementations = new Dictionary<string, ArrayImplementation?>();
 
         internal string FrameName
         {
@@ -29,8 +29,8 @@ namespace JukaCompiler.Interpreter
             foreach (var variable in variables)
             {
                 string name = variable.Key;
-                object? value = ((Expression.LexemeTypeLiteral) variable.Value).literal;
-                AddVariable(name, value, variable.Value.GetType(), null);
+                object? value = ((Expression.LexemeTypeLiteral) variable.Value!)?.literal;
+                AddVariable(name, value, variable.Value?.GetType(), null);
             }
         }
 
@@ -47,7 +47,8 @@ namespace JukaCompiler.Interpreter
 
                 if (!(variable.exprInitializer is Expression.Call))
                 {
-                    AddVariable(variable.name?.ToString(), variableValue, variableValue.GetType(),variable.exprInitializer);
+                    string variableName = variable.name?.ToString() ?? throw new JRuntimeException("variable name is missing");
+                    AddVariable(variableName, variableValue, variableValue.GetType(),variable.exprInitializer);
                 }
 
                 return variableValue;
@@ -56,7 +57,7 @@ namespace JukaCompiler.Interpreter
             throw new JRuntimeException("unable to add variable");
         }
 
-        internal void AddVariable(string name, object? variableValue, Type variableKind, Parse.Expression expressionContext)
+        internal void AddVariable(string name, object? variableValue, Type? variableKind, Expression? expressionContext)
         {
             var stackVariableState = new StackVariableState
             {
@@ -97,7 +98,7 @@ namespace JukaCompiler.Interpreter
             return false;
         }
 
-        internal bool TryGetStackArrayVariableByName(string name, out ArrayImplementation arrayImplementation)
+        internal bool TryGetStackArrayVariableByName(string name, out ArrayImplementation? arrayImplementation)
         {
             arrayImplementation = null;
             if (this.stackArrayImplementations.ContainsKey(name))
@@ -112,16 +113,16 @@ namespace JukaCompiler.Interpreter
         internal void AddStackArray(Lexeme name, int size)
         {
             var arrayName = name.ToString();
-            ArrayImplementation arrayImplementation = new ArrayImplementation(arrayName, size);
+            ArrayImplementation? arrayImplementation = new ArrayImplementation(arrayName, size);
             this.stackArrayImplementations.Add(arrayName, arrayImplementation);
         }
 
         internal class StackVariableState
         {
-            internal string Name;
+            internal string Name = null!;
             internal object? Value;
             internal Type? type;
-            internal Parse.Expression expressionContext;
+            internal Expression? expressionContext;
         }
     }
 }

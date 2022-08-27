@@ -61,7 +61,7 @@ namespace JukaCompiler.SystemCalls
                 {
                     if (argument is Parse.Expression.LexemeTypeLiteral)
                     {
-                        byte[] bytes = File.ReadAllBytes( ((Parse.Expression.LexemeTypeLiteral)argument).literal.ToString());
+                        byte[] bytes = File.ReadAllBytes( ((Parse.Expression.LexemeTypeLiteral)argument).literal?.ToString() ?? string.Empty);
                         Console.Out.WriteLine(((Parse.Expression.LexemeTypeLiteral)argument));
                         return bytes;
                     }

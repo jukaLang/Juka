@@ -89,9 +89,9 @@ namespace JukaCompiler.Lexer
             this.tokenBuilder.Append(token);
         }
 
-        internal void AddToken(Lexeme token)
+        internal void AddToken(Lexeme? token)
         {
-            this.tokenBuilder.Append(token.ToString());
+            this.tokenBuilder.Append(token?.ToString());
         }
 
         internal bool IsKeyWord
