@@ -17,7 +17,7 @@ namespace JukaCompiler
      */
     public class Compiler
     {
-        private ServiceProvider serviceProvider;
+        private ServiceProvider? serviceProvider = null;
 
         public Compiler()
         {
@@ -44,12 +44,16 @@ namespace JukaCompiler
         {
             try
             {
-                this.serviceProvider.GetRequiredService<ICompilerError>().SourceFileName(data);
+                var provider = this.serviceProvider;
+                if (provider != null)
+                {
+                    provider.GetRequiredService<ICompilerError>().SourceFileName(data);
 
-                Parser parser = new(new Scanner(data, this.serviceProvider, isFile), this.serviceProvider);
-                List<Stmt> statements = parser.Parse();
+                    Parser parser = new(new Scanner(data, provider, isFile), provider);
+                    List<Stmt> statements = parser.Parse();
 
-                return Compile(statements);
+                    return Compile(statements);
+                }
             }
             catch (Exception ex)
             {
@@ -61,25 +65,30 @@ namespace JukaCompiler
 
         private string Compile(List<Stmt> statements)
         {
-            var interpreter = new Interpreter.JukaInterpreter(serviceProvider);
-            Resolver? resolver = new(interpreter);
-            resolver.Resolve(statements);
-
-            SetupMainMethodRuntimeHook(statements, resolver);
-
-            var currentOut = Console.Out;
-
-
-            using (StringWriter stringWriter = new StringWriter())
+            if (serviceProvider != null)
             {
-                Console.SetOut(stringWriter);
-                interpreter.Interpret(statements);
+                var interpreter = new Interpreter.JukaInterpreter(serviceProvider);
+                Resolver? resolver = new(interpreter);
+                resolver.Resolve(statements);
 
-                String ConsoleOutput = stringWriter.ToString();
-                Console.SetOut(currentOut);
+                SetupMainMethodRuntimeHook(statements, resolver);
 
-                return ConsoleOutput;
+                var currentOut = Console.Out;
+
+
+                using (StringWriter stringWriter = new StringWriter())
+                {
+                    Console.SetOut(stringWriter);
+                    interpreter.Interpret(statements);
+
+                    String ConsoleOutput = stringWriter.ToString();
+                    Console.SetOut(currentOut);
+
+                    return ConsoleOutput;
+                }
             }
+
+            throw new JRuntimeException("service provider is not created");
         }
 
         private static void SetupMainMethodRuntimeHook(List<Stmt> statements, Resolver resolver)
@@ -110,12 +119,19 @@ namespace JukaCompiler
 
         public bool HasErrors()
         {
-            return this.serviceProvider.GetRequiredService<ICompilerError>().HasErrors();
+            var provider = this.serviceProvider;
+            return provider != null && provider.GetRequiredService<ICompilerError>().HasErrors();
         }
 
         public List<String> ListErrors()
         {
-            return this.serviceProvider.GetRequiredService<ICompilerError>().ListErrors();
+            var provider = this.serviceProvider;
+            if (provider != null)
+            {
+                return provider.GetRequiredService<ICompilerError>().ListErrors();
+            }
+
+            throw new JRuntimeException("unable to initialize provider for errors");
         }
 
     }

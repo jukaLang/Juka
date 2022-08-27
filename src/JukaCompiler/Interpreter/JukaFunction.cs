@@ -19,10 +19,18 @@ namespace JukaCompiler.Interpreter
 
         internal JukaFunction Bind(JukaInstance? instance)
         {
-            JukaEnvironment env = new(closure);
-            env.Define("this", instance);
+            if (closure != null)
+            {
+                JukaEnvironment env = new(closure);
+                env.Define("this", instance);
 
-            return new JukaFunction(declaration, env, isInitializer);
+                if (declaration != null)
+                {
+                    return new JukaFunction(declaration, env, isInitializer);
+                }
+            }
+
+            throw new JRuntimeException("unable to bind");
         }
 
         internal Stmt.Function? Declaration => declaration;
@@ -42,44 +50,51 @@ namespace JukaCompiler.Interpreter
 
         public object? Call(string methodName, JukaInterpreter interpreter, List<object?> arguments)
         {
-            JukaEnvironment environment = new(closure);
-
-            if (declaration != null)
+            if (closure != null)
             {
-                for (int i = 0; i < declaration.Params.Count; i++)
-                {
-                    var parameterNameExpressionLexeme = declaration.Params[i].parameterName.ExpressionLexeme;
-                    if (parameterNameExpressionLexeme != null)
-                    {
-                        string? name = parameterNameExpressionLexeme.ToString();
-                        if (string.IsNullOrEmpty(name))
-                        {
-                            throw new ArgumentException("unable to call function");
-                        }
+                JukaEnvironment environment = new(closure);
 
-                        object? value = arguments[i];
-                        environment.Define(name, value);
+                if (declaration != null)
+                {
+                    for (int i = 0; i < declaration.Params.Count; i++)
+                    {
+                        var parameterNameExpressionLexeme = declaration.Params[i].parameterName.ExpressionLexeme;
+                        if (parameterNameExpressionLexeme != null)
+                        {
+                            string? name = parameterNameExpressionLexeme.ToString();
+                            if (string.IsNullOrEmpty(name))
+                            {
+                                throw new ArgumentException("unable to call function");
+                            }
+
+                            object? value = arguments[i];
+                            environment.Define(name, value);
+                        }
                     }
                 }
-            }
 
-            try
-            {
-                interpreter.ExecuteBlock(declaration.body, environment);
-            }
-            catch(Return ex)
-            {
-                if (isInitializer)
+                try
                 {
-                    return closure.GetAt(0, "this");
+                    if (declaration?.body != null)
+                    {
+                        var body = declaration?.body!;
+                        interpreter.ExecuteBlock(body, environment);
+                    }
                 }
+                catch(Return ex)
+                {
+                    if (isInitializer)
+                    {
+                        return closure.GetAt(0, "this");
+                    }
 
-                return ex.value;
+                    return ex.value;
+                }
             }
 
             if (isInitializer)
             {
-                return closure.GetAt(0, "this");
+                return closure?.GetAt(0, "this");
             }
 
             return null;

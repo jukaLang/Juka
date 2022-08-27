@@ -20,7 +20,7 @@ namespace JukaCompiler.Statements
             R VisitBreakStmt(Break stmt);
         }
         internal abstract R Accept<R>(Stmt.Visitor<R> vistor);
-        private Lexeme stmtLexeme;
+        private Lexeme stmtLexeme = new Lexeme();
 
         internal Lexeme StmtLexeme
         {
@@ -51,7 +51,9 @@ namespace JukaCompiler.Statements
             internal List<Stmt> body = new List<Stmt>();
             internal List<TypeParameterMap> typeParameterMaps;
 
-            public override bool Equals(object obj)
+#pragma warning disable CS0659
+            public override bool Equals(object? obj)
+#pragma warning restore CS0659
             {
                 return this.StmtLexemeName.Equals(obj);
             }
@@ -75,13 +77,18 @@ namespace JukaCompiler.Statements
             {
                 get { return this.typeParameterMaps; }
             }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
         }
         internal class Class : Stmt
         {
             internal Lexeme name;
             internal List<Stmt.Function> methods;
             internal List<Stmt> variableDeclarations;
-            internal Parse.Expression.Variable superClass;
+            internal Parse.Expression.Variable? superClass;
 
             internal Class(Lexeme name, List<Stmt.Function> methods, List<Stmt> variableDeclarations)
             {
@@ -242,12 +249,16 @@ namespace JukaCompiler.Statements
         }
         internal class Return : Stmt
         {
-            internal Lexeme keyword;
-            internal Parse.Expression expr;
+            internal Lexeme? keyword;
+            internal Parse.Expression? expr;
             internal Return(Lexeme keyword, Parse.Expression expression)
             {
                 this.keyword = keyword;
                 this.expr = expression;
+            }
+
+            internal Return()
+            {
             }
 
             internal override R Accept<R>(Visitor<R> vistor)

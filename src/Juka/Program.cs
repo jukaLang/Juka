@@ -251,7 +251,7 @@ else
 
                                     string output = Path.Combine(dir, fname);
                                     if (!Directory.Exists(Path.GetDirectoryName(output)))
-                                        Directory.CreateDirectory(Path.GetDirectoryName(output));
+                                        Directory.CreateDirectory(Path.GetDirectoryName(output) ?? throw new Exception("output path is invalid"));
                                     if (!fname.Equals("./", StringComparison.InvariantCulture))
                                     {
                                         using (FileStream str = File.Open(output, FileMode.OpenOrCreate, FileAccess.Write))

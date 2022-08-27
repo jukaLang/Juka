@@ -30,7 +30,7 @@ namespace JukaCompiler.Parse
                 throw new ArgumentNullException("Scanner is null");
             }
 
-            tokens = scanner.Scan();
+            tokens = scanner.Scan()!;
             List<Stmt> statements = new();
             while(!IsAtEnd())
             {
@@ -158,7 +158,12 @@ namespace JukaCompiler.Parse
                 elseBlock = Statement();
             }
 
-            return new Stmt.If(condition, thenBlock, elseBlock);
+            if (condition != null && elseBlock != null)
+            {
+                return new Stmt.If(condition, thenBlock, elseBlock);
+            }
+
+            throw new JRuntimeException("If statement failure");
         }
 
         private Stmt WhileStatement()
@@ -166,11 +171,6 @@ namespace JukaCompiler.Parse
             Consume(LexemeType.LEFT_PAREN, Previous());
 
             var condition = Expr();
-
-            if (condition == null)
-            {
-                compilerError.AddError("no while condition statement");
-            }
 
             Consume(LexemeType.RIGHT_PAREN, Previous());
 
@@ -192,7 +192,7 @@ namespace JukaCompiler.Parse
 
             Consume(LexemeType.RIGHT_PAREN, Previous());
 
-            Stmt forBody = null;
+            Stmt forBody = null!;
             if (Match(LexemeType.LEFT_BRACE))
             {
                 forBody = Statement();
@@ -214,7 +214,7 @@ namespace JukaCompiler.Parse
         private Stmt ReturnStatement()
         {
             var keyword = Previous();
-            Expression value = null;
+            Expression value = null!;
 
             if (!Check(LexemeType.SEMICOLON))
             {
