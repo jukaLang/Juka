@@ -14,11 +14,6 @@ namespace JukaCompiler.Interpreter
         private Dictionary<string, StackVariableState> variableAndKind = new Dictionary<string, StackVariableState>();
         private Dictionary<string, ArrayImplementation?> stackArrayImplementations = new Dictionary<string, ArrayImplementation?>();
 
-        internal string FrameName
-        {
-            get { return frameName; }
-        }
-
         internal StackFrame(string name)
         {
             this.frameName = name;
