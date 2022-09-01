@@ -285,6 +285,11 @@ namespace JukaCompiler.Interpreter
             return VisitReturnStmt(returnStatement);
         }
 
+        public object VisitForStmt(Stmt.For stmt)
+        {
+            return new Stmt.DefaultStatement();
+        }
+
         public object VisitArrayExpr(Expression.ArrayDeclarationExpression expr)
         {
             return new Stmt.DefaultStatement();

@@ -280,6 +280,23 @@ namespace JukaCompiler.Interpreter
             return VisitReturnStmt(returnStatement);
         }
 
+        public Stmt VisitForStmt(Stmt.For stmt)
+        {
+            var init = Evaluate(stmt.Init);
+            environment.Define(stmt.Init.ExpressionLexemeName,init);
+
+            while (IsTrue(Evaluate(stmt.IncExpression)))
+            {
+                var breakExpression = Evaluate(stmt.BreakExpression);
+                if (!IsTrue(breakExpression))
+                {
+                    Execute(stmt.ForBody);
+                }
+            }
+
+            return new Stmt.DefaultStatement();
+        }
+
         public Stmt VisitVarStmt(Stmt.Var stmt)
         {
             // Hack. If the expression is a method call assignment
