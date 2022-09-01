@@ -12,13 +12,13 @@ namespace JukaCompiler.Parse
         private List<Lexeme> tokens = new();
         private int current = 0;
         private Scanner? scanner;
-        private ServiceProvider services;
+        public ServiceProvider Services { get; }
         private ICompilerError compilerError;
 
         internal Parser(Scanner scanner, ServiceProvider services)
         {
             this.scanner = scanner;
-            this.services = services;
+            this.Services = services;
 
             this.compilerError = services.GetRequiredService<ICompilerError>();
         }
@@ -465,11 +465,14 @@ namespace JukaCompiler.Parse
                 Lexeme equals = Previous();
                 Expression value = Assignment();
 
+                //expr.ExpressionLexemeName =
+
                 if (expr is Expression.Variable && 
                     ((Expression.Variable)expr) != null && 
                     ((Expression.Variable)expr).ExpressionLexeme != null)
                 {
                     Expression.Variable variable = (Expression.Variable)expr;
+                    //expr.ExpressionLexemeName = variable.ExpressionLexeme.
                     if (variable != null && variable.ExpressionLexeme != null) 
                     {
                         return new Expression.Assign(variable.ExpressionLexeme, value);
@@ -693,8 +696,7 @@ namespace JukaCompiler.Parse
 
             if (Match(LexemeType.VAR))
             {
-                var expr = Assignment();
-                return new Expression.Assign(new Lexeme(0,0,0), expr);
+                return Assignment();
             }
 
             throw new Exception(Peek() + "Expect expression");

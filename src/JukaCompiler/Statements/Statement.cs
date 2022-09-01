@@ -18,6 +18,8 @@ namespace JukaCompiler.Statements
             R VisitVarStmt(Var stmt);
             R VisitWhileStmt(While stmt);
             R VisitBreakStmt(Break stmt);
+
+            R VisitForStmt(For stmt);
         }
         internal abstract R Accept<R>(Stmt.Visitor<R> vistor);
         private Lexeme stmtLexeme = new Lexeme();
@@ -242,9 +244,15 @@ namespace JukaCompiler.Statements
                 this.incExpression = incExpression;
                 this.forBody = forBody;
             }
+
+            internal Parse.Expression Init => init;
+            internal Parse.Expression BreakExpression => breakExpression;
+            internal Parse.Expression IncExpression => incExpression;
+            internal Stmt ForBody => forBody;
+
             internal override R Accept<R>(Visitor<R> visitor)
             {
-                throw new NotImplementedException();
+                return visitor.VisitForStmt(this);
             }
         }
         internal class Return : Stmt
