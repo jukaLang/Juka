@@ -232,23 +232,20 @@ namespace JukaCompiler.Statements
 
         internal class For : Stmt
         {
-            private Parse.Expression init;
-            private Parse.Expression breakExpression;
-            private Parse.Expression incExpression;
-            private Stmt forBody;
-
             internal For(Parse.Expression init, Parse.Expression breakExpression, Parse.Expression incExpression, Stmt forBody)
             {
-                this.init = init;
-                this.breakExpression = breakExpression;
-                this.incExpression = incExpression;
-                this.forBody = forBody;
+                this.Init = init;
+                this.BreakExpression = breakExpression;
+                this.IncExpression = incExpression;
+                this.ForBody = forBody;
             }
+            internal Parse.Expression Init { get; }
 
-            internal Parse.Expression Init => init;
-            internal Parse.Expression BreakExpression => breakExpression;
-            internal Parse.Expression IncExpression => incExpression;
-            internal Stmt ForBody => forBody;
+            internal Parse.Expression BreakExpression { get; }
+
+            internal Parse.Expression IncExpression { get; }
+
+            internal Stmt ForBody { get; }
 
             internal override R Accept<R>(Visitor<R> visitor)
             {

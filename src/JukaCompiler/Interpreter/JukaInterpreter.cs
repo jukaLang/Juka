@@ -352,7 +352,13 @@ namespace JukaCompiler.Interpreter
                 expressionContext = expr,
             };
 
-            frames.Peek().UpdateVariable(expr.ExpressionLexeme?.ToString() ?? string.Empty, stackVariableState);
+            var stackFrame = frames.Peek();
+
+            if (!stackFrame.UpdateVariable(expr.ExpressionLexeme?.ToString() ?? string.Empty, stackVariableState))
+            {
+                var newVar = new Stmt.Expression.Var(expr.ExpressionLexeme, expr);
+                stackFrame.AddVariable(newVar, this);
+            }
 
             Debug.Assert(value != null, nameof(value) + " != null");
             return value;
