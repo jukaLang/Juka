@@ -13,7 +13,7 @@ namespace JukaCompiler.SystemCalls
         }
         public object? Call(string methodName, JukaInterpreter interpreter, List<object?> arguments)
         {
-            Expression.LexemeTypeLiteral? lexemeTypeLiteral = new();
+            Expr.LexemeTypeLiteral? lexemeTypeLiteral = new();
             lexemeTypeLiteral.literal = (double)DateTime.Now.Millisecond / 1000.0;
             return lexemeTypeLiteral;
         }
@@ -42,7 +42,7 @@ namespace JukaCompiler.SystemCalls
             memory = Math.Round((decimal)proc.PrivateMemorySize64 / (1024 * 1024), 2);
             proc.Dispose();
 
-            Expression.LexemeTypeLiteral? lexemeTypeLiteral = new();
+            Expr.LexemeTypeLiteral? lexemeTypeLiteral = new();
             lexemeTypeLiteral.literal = memory;
             return lexemeTypeLiteral;
         }

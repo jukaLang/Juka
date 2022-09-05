@@ -5,11 +5,11 @@ using JukaCompiler.Parse;
 using JukaCompiler.Statements;
 using Microsoft.CodeAnalysis.FlowAnalysis;
 using Microsoft.Extensions.DependencyInjection;
-using static JukaCompiler.Expressions.Expression;
+using static JukaCompiler.Expressions.Expr;
 
 namespace JukaCompiler.Interpreter
 {
-    internal class Resolver : Stmt.Visitor<object>, Expression.IVisitor<object>
+    internal class Resolver : Stmt.Visitor<object>, Expr.IVisitor<object>
     {
         private JukaInterpreter interpreter;
         private FunctionType currentFunction = FunctionType.NONE;
@@ -60,12 +60,12 @@ namespace JukaCompiler.Interpreter
             stmt.Accept(this);
         }
 
-        private void Resolve(Expression expr)
+        private void Resolve(Expr expr)
         {
             expr.Accept(this);
         }
 
-        public object VisitAssignExpr(Expression.Assign expr)
+        public object VisitAssignExpr(Expr.Assign expr)
         {
             var frame = blockScope.Peek();
             if (frame == null)
@@ -84,14 +84,14 @@ namespace JukaCompiler.Interpreter
             return new Stmt.DefaultStatement();
         }
 
-        public object VisitBinaryExpr(Expression.Binary expr)
+        public object VisitBinaryExpr(Expr.Binary expr)
         {
             if (expr != null && expr.left != null && expr.right != null)
             {
                 Resolve(expr.left);
                 Resolve(expr.right);
             }
-            return new Expression.Binary();
+            return new Expr.Binary();
         }
 
         public object VisitBlockStmt(Stmt.Block stmt)
@@ -102,11 +102,11 @@ namespace JukaCompiler.Interpreter
             return new Stmt.DefaultStatement();
         }
 
-        public object VisitCallExpr(Expression.Call expr)
+        public object VisitCallExpr(Expr.Call expr)
         {
-            if (expr is Expression.Call)
+            if (expr is Expr.Call)
             {
-                var call = (Expression.Call)expr;
+                var call = (Expr.Call)expr;
                 BeginScope(expr.callee.ExpressionLexeme?.ToString()!);
                 if (expr.callee.ExpressionLexeme != null)
                 {
@@ -176,7 +176,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitExpressionStmt(Stmt.Expression stmt)
         {
-            Resolve(stmt.expression);
+            Resolve(stmt.Expr);
             return new Stmt.DefaultStatement();
         }
 
@@ -193,18 +193,18 @@ namespace JukaCompiler.Interpreter
             return new Stmt.DefaultStatement();
         }
 
-        public object VisitLexemeTypeLiteral(Expression.LexemeTypeLiteral expr)
+        public object VisitLexemeTypeLiteral(Expr.LexemeTypeLiteral expr)
         {
             return new Stmt.DefaultStatement(); 
         }
 
-        public object VisitGetExpr(Expression.Get expr)
+        public object VisitGetExpr(Expr.Get expr)
         {
             Resolve(expr.expr);
             return new Stmt.DefaultStatement();
         }
 
-        public object VisitGroupingExpr(Expression.Grouping expr)
+        public object VisitGroupingExpr(Expr.Grouping expr)
         {
             if (expr == null || expr.expression == null)
             {
@@ -212,7 +212,7 @@ namespace JukaCompiler.Interpreter
             }
 
             Resolve(expr.expression);
-            return new Expression.Grouping();
+            return new Expr.Grouping();
         }
 
         public object VisitIfStmt(Stmt.If stmt)
@@ -228,12 +228,12 @@ namespace JukaCompiler.Interpreter
             return new Stmt.DefaultStatement();
         }
 
-        public object VisitLiteralExpr(Expression.Literal expr)
+        public object VisitLiteralExpr(Expr.Literal expr)
         {
-            return new Expression.Literal();
+            return new Expr.Literal();
         }
 
-        public object VisitLogicalExpr(Expression.Logical expr)
+        public object VisitLogicalExpr(Expr.Logical expr)
         {
             throw new NotImplementedException("Resolver VisitLogicalExpr is not implemented");
         }
@@ -242,7 +242,7 @@ namespace JukaCompiler.Interpreter
         {
             if (stmt == null || stmt.expr == null)
             {
-                throw new ArgumentNullException("stmt and or expression are null");
+                throw new ArgumentNullException("stmt and or expr are null");
             }
 
             Resolve(stmt.expr);
@@ -253,7 +253,7 @@ namespace JukaCompiler.Interpreter
         {
             if (stmt == null || stmt.expr == null)
             {
-                throw new ArgumentNullException("stmt and or expression are null");
+                throw new ArgumentNullException("stmt and or expr are null");
             }
 
             Resolve(stmt.expr);
@@ -291,37 +291,37 @@ namespace JukaCompiler.Interpreter
             return new Stmt.DefaultStatement();
         }
 
-        public object VisitArrayExpr(Expression.ArrayDeclarationExpression expr)
+        public object VisitArrayExpr(Expr.ArrayDeclarationExpr expr)
         {
             return new Stmt.DefaultStatement();
         }
 
-        public object VisitArrayAccessExpr(ArrayAccessExpression expr)
+        public object VisitArrayAccessExpr(ArrayAccessExpr expr)
         {
             return new Stmt.DefaultStatement();
         }
 
-        public object VisitSetExpr(Expression.Set expr)
+        public object VisitSetExpr(Expr.Set expr)
         {
             throw new NotImplementedException("Resolver VisitSetExpr is not implemented");
         }
 
-        public object VisitSuperExpr(Expression.Super expr)
+        public object VisitSuperExpr(Expr.Super expr)
         {
             throw new NotImplementedException("Resolver VisitSuperExpr is not implemented");
         }
 
-        public object VisitThisExpr(Expression.This expr)
+        public object VisitThisExpr(Expr.This expr)
         {
             throw new NotImplementedException("Resolver VisitThisExpr is not implemented");
         }
 
-        public object VisitUnaryExpr(Expression.Unary expr)
+        public object VisitUnaryExpr(Expr.Unary expr)
         {
             throw new NotImplementedException("Resolver VisitUnaryExpr is not implemented");
         }
 
-        public object VisitVariableExpr(Expression.Variable expr)
+        public object VisitVariableExpr(Expr.Variable expr)
         {
             try
             {
@@ -344,7 +344,7 @@ namespace JukaCompiler.Interpreter
             return new Stmt.DefaultStatement();
         }
 
-        private void ResolveLocal(Expression expr, Lexeme name)
+        private void ResolveLocal(Expr expr, Lexeme name)
         {
             for (int i = scopes.Count -1; i >= 0; i--)
             {
@@ -433,7 +433,7 @@ namespace JukaCompiler.Interpreter
 
             foreach (var param in function.typeParameterMaps)
             {
-                var literalName = param.parameterName as Expression.Variable;
+                var literalName = param.parameterName as Expr.Variable;
                 if (literalName == null)
                 {
                     throw new Exception("Something went wrong when resolving the function");
@@ -469,7 +469,7 @@ namespace JukaCompiler.Interpreter
 
     internal class BlockScope
     {
-        internal Dictionary<string, Dictionary<string, Expression>> processScope = new Dictionary<string, Dictionary<string, Expression>>();
+        internal Dictionary<string, Dictionary<string, Expr>> processScope = new Dictionary<string, Dictionary<string, Expr>>();
         internal Dictionary<string, Lexeme> lexemeScope = new Dictionary<string, Lexeme>();
     }
 }

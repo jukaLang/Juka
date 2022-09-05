@@ -215,7 +215,7 @@ namespace JukaCompiler.Parse
         private Stmt ReturnStatement()
         {
             var keyword = Previous();
-            Expression value = null!;
+            Expr value = null!;
 
             if (!Check(LexemeType.SEMICOLON))
             {
@@ -233,9 +233,9 @@ namespace JukaCompiler.Parse
 
         private Stmt ExpressionStatement()
         {
-            Expression expression = Expr();
+            Expr expr = Expr();
             Consume(LexemeType.SEMICOLON, Peek());
-            return new Stmt.Expression(expression);
+            return new Stmt.Expression(expr);
         }
 
         private Stmt PrintLine()
@@ -243,7 +243,7 @@ namespace JukaCompiler.Parse
             Lexeme keyword = Previous();
             Consume(LexemeType.LEFT_PAREN, Peek());
 
-            Expression value = Expr();
+            Expr value = Expr();
 
             Consume(LexemeType.RIGHT_PAREN, Peek());
             Consume(LexemeType.SEMICOLON, Peek());
@@ -256,7 +256,7 @@ namespace JukaCompiler.Parse
             Lexeme keyword = Previous();
             Consume(LexemeType.LEFT_PAREN, Peek());
 
-            Expression value = Expr();
+            Expr value = Expr();
 
             Consume(LexemeType.RIGHT_PAREN, Peek());
             Consume(LexemeType.SEMICOLON, Peek());
@@ -438,7 +438,7 @@ namespace JukaCompiler.Parse
         private Stmt VariableDeclaration()
         {
             Lexeme name = Consume(LexemeType.IDENTIFIER, Peek());
-            Expression? initalizedState = null;
+            Expr? initalizedState = null;
 
             if (Match(LexemeType.EQUAL))
             {
@@ -452,43 +452,43 @@ namespace JukaCompiler.Parse
             return new Stmt.Var(name);
         }
 
-        private Expression Expr()
+        private Expr Expr()
         {
             return Assignment();
         }
 
-        private Expression Assignment()
+        private Expr Assignment()
         {
-            Expression expr = Or();
+            Expr expr = Or();
 
             if (Match(LexemeType.EQUAL))
             {
                 Lexeme equals = Previous();
-                Expression value = Assignment();
+                Expr value = Assignment();
 
                 //expr.ExpressionLexemeName =
 
-                if (expr is Expression.Variable && 
-                    ((Expression.Variable)expr) != null && 
-                    ((Expression.Variable)expr).ExpressionLexeme != null)
+                if (expr is Expr.Variable && 
+                    ((Expr.Variable)expr) != null && 
+                    ((Expr.Variable)expr).ExpressionLexeme != null)
                 {
-                    Expression.Variable variable = (Expression.Variable)expr;
+                    Expr.Variable variable = (Expr.Variable)expr;
                     //expr.ExpressionLexemeName = variable.ExpressionLexeme.
                     if (variable != null && variable.ExpressionLexeme != null) 
                     {
-                        return new Expression.Assign(variable.ExpressionLexeme, value);
+                        return new Expr.Assign(variable.ExpressionLexeme, value);
                     }
                     //> Classes assign-set
                 }
 
-                if (expr is Expression.Get &&
-                    ((Expression.Get)expr) != null &&
-                    ((Expression.Get)expr).ExpressionLexeme != null) 
+                if (expr is Expr.Get &&
+                    ((Expr.Get)expr) != null &&
+                    ((Expr.Get)expr).ExpressionLexeme != null) 
                 {
-                    Expression.Get get = (Expression.Get)expr;
+                    Expr.Get get = (Expr.Get)expr;
                     if (get != null && get.ExpressionLexeme != null)
                     {
-                        return new Expression.Set(get, get.ExpressionLexeme, value);
+                        return new Expr.Set(get, get.ExpressionLexeme, value);
                     }
                     //< Classes assign-set
                 }
@@ -500,9 +500,9 @@ namespace JukaCompiler.Parse
         }
 
 
-        private Expression Equality()
+        private Expr Equality()
         {
-            Expression expr = Comparison();
+            Expr expr = Comparison();
 
             while (Match(LexemeType.BANG_EQUAL) || Match(LexemeType.EQUAL_EQUAL))
             {
@@ -518,8 +518,8 @@ namespace JukaCompiler.Parse
                 }
                 // see what it is? maybe update the lexeme?
 
-                Expression right = Comparison();
-                expr = new Expression.Binary(expr, op, right);
+                Expr right = Comparison();
+                expr = new Expr.Binary(expr, op, right);
             }
 
             return expr;
@@ -527,108 +527,108 @@ namespace JukaCompiler.Parse
 
         //< Statements and State parse-assignment
         //> Control Flow or
-        private Expression Or()
+        private Expr Or()
         {
-            Expression expr = And();
+            Expr expr = And();
 
             while (Match(LexemeType.OR))
             {
                 Lexeme op = Previous();
-                Expression right = And();
-                expr = new Expression.Logical(expr, op, right);
+                Expr right = And();
+                expr = new Expr.Logical(expr, op, right);
             }
 
             return expr;
         }
 
-        private Expression And()
+        private Expr And()
         {
-            Expression expr = Equality();
+            Expr expr = Equality();
 
             while (Match(LexemeType.AND))
             {
                 Lexeme op = Previous();
-                Expression right = Equality();
-                expr = new Expression.Logical(expr, op, right);
+                Expr right = Equality();
+                expr = new Expr.Logical(expr, op, right);
             }
 
             return expr;
         }
 
-        private Expression Comparison()
+        private Expr Comparison()
         {
-            Expression expr = Term();
+            Expr expr = Term();
 
             while (Match(LexemeType.GREATER) || Match(LexemeType.GREATER_EQUAL) || Match(LexemeType.LESS) || Match(LexemeType.LESS_EQUAL))
             {
                 Lexeme op = Previous();
-                Expression right = Term();
-                expr = new Expression.Binary(expr, op, right);
+                Expr right = Term();
+                expr = new Expr.Binary(expr, op, right);
             }
 
             return expr;
         }
 
-        private Expression Term()
+        private Expr Term()
         {
-            Expression expr = Factor();
+            Expr expr = Factor();
 
             while (Match(LexemeType.MINUS) || Match(LexemeType.PLUS))
             {
                 Lexeme op = Previous();
-                Expression right = Factor();
-                expr = new Expression.Binary(expr, op, right);
+                Expr right = Factor();
+                expr = new Expr.Binary(expr, op, right);
             }
 
             return expr;
         }
 
-        private Expression Factor()
+        private Expr Factor()
         {
-            Expression expr = Unary();
+            Expr expr = Unary();
 
             while (Match(LexemeType.SLASH) || Match(LexemeType.STAR))
             {
                 Lexeme op = Previous();
-                Expression right = Unary();
-                expr = new Expression.Binary(expr, op, right);
+                Expr right = Unary();
+                expr = new Expr.Binary(expr, op, right);
             }
 
             return expr;
         }
 
-        private Expression Unary()
+        private Expr Unary()
         {
-            // Expression expr = Array();
+            // Expr expr = Array();
 
             if (Match(LexemeType.BANG))
             {
                 Lexeme op = Previous();
-                Expression right = Unary();
-                //******* return new Expression.Unary(op, right);
+                Expr right = Unary();
+                //******* return new Expr.Unary(op, right);
             }
 
 
             return Call();
         }
 
-        private Expression Array()
+        private Expr Array()
         {
             if (Match(LexemeType.LEFT_BRACE))
             {
                 Lexeme value = Consume(LexemeType.NUMBER, Peek());
                 if (Match(LexemeType.RIGHT_BRACE))
                 {
-                    return new Expression.ArrayDeclarationExpression(int.Parse(value.ToString()));
+                    return new Expr.ArrayDeclarationExpr(int.Parse(value.ToString()));
                 }
             }
 
             throw new JRuntimeException("Unable to Parse Array[]");
         }
 
-        private Expression Call()
+        private Expr Call()
         {
-            Expression expr = Primary();
+            Expr expr = Primary();
 
             while (true)
             {
@@ -639,7 +639,7 @@ namespace JukaCompiler.Parse
                 else if (Match(LexemeType.DOT))
                 {
                     Lexeme name = Consume(LexemeType.IDENTIFIER, Peek());
-                    expr = new Expression.Get(expr, name);
+                    expr = new Expr.Get(expr, name);
                 }
                 else
                 {
@@ -649,20 +649,20 @@ namespace JukaCompiler.Parse
             return expr;
         }
 
-        private Expression Primary()
+        private Expr Primary()
         {
-            if (Match(LexemeType.FALSE)) return new Expression.Literal(Previous(), LexemeType.FALSE);
-            if (Match(LexemeType.TRUE)) return new Expression.Literal(Previous(), LexemeType.TRUE);
-            if (Match(LexemeType.NULL)) return new Expression.Literal(Previous(), LexemeType.NULL);
+            if (Match(LexemeType.FALSE)) return new Expr.Literal(Previous(), LexemeType.FALSE);
+            if (Match(LexemeType.TRUE)) return new Expr.Literal(Previous(), LexemeType.TRUE);
+            if (Match(LexemeType.NULL)) return new Expr.Literal(Previous(), LexemeType.NULL);
 
             if (Match(LexemeType.STRING))
             {
-                return new Expression.Literal(Previous(), LexemeType.STRING);
+                return new Expr.Literal(Previous(), LexemeType.STRING);
             }
 
             if (Match(LexemeType.NUMBER))
             {
-                return new Expression.Literal(Previous(), LexemeType.NUMBER);
+                return new Expr.Literal(Previous(), LexemeType.NUMBER);
             }
 
             if (Match(LexemeType.ARRAY))
@@ -672,7 +672,7 @@ namespace JukaCompiler.Parse
                 Consume(LexemeType.RIGHT_BRACE, Peek());
                 var name = new Lexeme(LexemeType.ARRAY, 0, 0);
                 name.AddToken("array");
-                return new Expression.ArrayDeclarationExpression(name,size);
+                return new Expr.ArrayDeclarationExpr(name,size);
             }
 
             if ( Match(LexemeType.IDENTIFIER))
@@ -682,17 +682,17 @@ namespace JukaCompiler.Parse
                 {
                     var size = Consume(LexemeType.NUMBER, Peek());
                     Consume(LexemeType.RIGHT_BRACE, Peek());
-                    return new Expression.ArrayAccessExpression(identifierName, size);
+                    return new Expr.ArrayAccessExpr(identifierName, size);
                 }
 
-                return new Expression.Variable(identifierName);
+                return new Expr.Variable(identifierName);
             }
 
             if (Match(LexemeType.LEFT_PAREN))
             {
-                Expression expr = Expr();
+                Expr expr = Expr();
                 Consume(LexemeType.RIGHT_PAREN, Peek());
-                return new Expression.Grouping(expr);
+                return new Expr.Grouping(expr);
             }
 
             if (Match(LexemeType.VAR))
@@ -700,12 +700,12 @@ namespace JukaCompiler.Parse
                 return Assignment();
             }
 
-            throw new Exception(Peek() + "Expect expression");
+            throw new Exception(Peek() + "Expect expr");
         }
 
-        private Expression FinishCall(Expression callee)
+        private Expr FinishCall(Expr callee)
         {
-            List<Expression> arguments = new();
+            List<Expr> arguments = new();
             if (!Check(LexemeType.RIGHT_PAREN))
             {
                 do
@@ -739,7 +739,7 @@ namespace JukaCompiler.Parse
 
             Consume(LexemeType.RIGHT_PAREN, Peek());
 
-            return new Expression.Call(callee, isCallable, arguments);
+            return new Expr.Call(callee, isCallable, arguments);
         }
     }
 }

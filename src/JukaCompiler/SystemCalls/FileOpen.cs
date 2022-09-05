@@ -60,10 +60,10 @@ namespace JukaCompiler.SystemCalls
             { 
                 foreach(var argument in arguments)
                 {
-                    if (argument is Expression.LexemeTypeLiteral)
+                    if (argument is Expr.LexemeTypeLiteral)
                     {
-                        byte[] bytes = File.ReadAllBytes( ((Expression.LexemeTypeLiteral)argument).literal?.ToString() ?? string.Empty);
-                        Console.Out.WriteLine(((Expression.LexemeTypeLiteral)argument));
+                        byte[] bytes = File.ReadAllBytes( ((Expr.LexemeTypeLiteral)argument).literal?.ToString() ?? string.Empty);
+                        Console.Out.WriteLine(((Expr.LexemeTypeLiteral)argument));
                         return bytes;
                     }
                 }

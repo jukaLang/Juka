@@ -112,8 +112,8 @@ namespace JukaCompiler
 
             Lexeme? lexeme = new(LexemeType.IDENTIFIER, 0, 0);
             lexeme.AddToken("main");
-            Expression.Variable functionName = new(lexeme);
-            Expression.Call call = new(functionName, false, new List<Expression>());
+            Expr.Variable functionName = new(lexeme);
+            Expr.Call call = new(functionName, false, new List<Expr>());
             Stmt.Expression expression = new(call);
             resolver.Resolve(new List<Stmt>() { expression });
         }

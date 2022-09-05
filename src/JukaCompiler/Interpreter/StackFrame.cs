@@ -25,7 +25,7 @@ namespace JukaCompiler.Interpreter
             foreach (var variable in variables)
             {
                 string name = variable.Key;
-                object? value = ((Expression.LexemeTypeLiteral) variable.Value!)?.literal;
+                object? value = ((Expr.LexemeTypeLiteral) variable.Value!)?.literal;
                 AddVariable(name, value, variable.Value?.GetType(), null);
             }
         }
@@ -41,7 +41,7 @@ namespace JukaCompiler.Interpreter
                     throw new JRuntimeException("the value of the variable is null");
                 }
 
-                if (!(variable.exprInitializer is Expression.Call))
+                if (!(variable.exprInitializer is Expr.Call))
                 {
                     string variableName = variable.name?.ToString() ?? throw new JRuntimeException("variable name is missing");
                     AddVariable(variableName, variableValue, variableValue.GetType(),variable.exprInitializer);
@@ -53,7 +53,7 @@ namespace JukaCompiler.Interpreter
             throw new JRuntimeException("unable to add variable");
         }
 
-        internal void AddVariable(string name, object? variableValue, Type? variableKind, Expression? expressionContext)
+        internal void AddVariable(string name, object? variableValue, Type? variableKind, Expr? expressionContext)
         {
             var stackVariableState = new StackVariableState
             {
@@ -118,7 +118,7 @@ namespace JukaCompiler.Interpreter
             internal string Name = null!;
             internal object? Value;
             internal Type? type;
-            internal Expression? expressionContext;
+            internal Expr? expressionContext;
         }
     }
 }
