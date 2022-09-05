@@ -1,6 +1,6 @@
 ﻿using JukaCompiler.Lexer;
 
-namespace JukaCompiler.Parse
+namespace JukaCompiler.Expressions
 {
     internal abstract class Expression
     {

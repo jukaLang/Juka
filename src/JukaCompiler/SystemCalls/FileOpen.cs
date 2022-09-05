@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using JukaCompiler.Expressions;
 using JukaCompiler.Interpreter;
 
 namespace JukaCompiler.SystemCalls
@@ -59,10 +60,10 @@ namespace JukaCompiler.SystemCalls
             { 
                 foreach(var argument in arguments)
                 {
-                    if (argument is Parse.Expression.LexemeTypeLiteral)
+                    if (argument is Expression.LexemeTypeLiteral)
                     {
-                        byte[] bytes = File.ReadAllBytes( ((Parse.Expression.LexemeTypeLiteral)argument).literal?.ToString() ?? string.Empty);
-                        Console.Out.WriteLine(((Parse.Expression.LexemeTypeLiteral)argument));
+                        byte[] bytes = File.ReadAllBytes( ((Expression.LexemeTypeLiteral)argument).literal?.ToString() ?? string.Empty);
+                        Console.Out.WriteLine(((Expression.LexemeTypeLiteral)argument));
                         return bytes;
                     }
                 }

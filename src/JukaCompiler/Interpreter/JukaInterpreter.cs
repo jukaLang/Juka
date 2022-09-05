@@ -1,12 +1,14 @@
 ﻿using System.Diagnostics;
 using JukaCompiler.Exceptions;
+using JukaCompiler.Expressions;
 using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
 using JukaCompiler.Statements;
 using JukaCompiler.SystemCalls;
 using Microsoft.Extensions.DependencyInjection;
 using static JukaCompiler.Interpreter.StackFrame;
-using static JukaCompiler.Parse.Expression;
+using static JukaCompiler.Expressions.Expression;
+
 
 namespace JukaCompiler.Interpreter
 {
@@ -170,7 +172,7 @@ namespace JukaCompiler.Interpreter
         }
 
 
-        private Stmt.Print VisitPrintAllInternal(Parse.Expression expr, Action<object> printAction)
+        private Stmt.Print VisitPrintAllInternal(Expressions.Expression expr, Action<object> printAction)
         {
             if (expr != null)
             {
@@ -337,7 +339,7 @@ namespace JukaCompiler.Interpreter
             return expr.Accept(this);
         }
 
-        internal object? Evaluate(Expression expr)
+        internal object? Evaluate(Expressions.Expression expr)
         {
             return expr.Accept(this);
         }
