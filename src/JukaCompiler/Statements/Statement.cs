@@ -1,6 +1,7 @@
-﻿using JukaCompiler.Lexer;
+﻿using JukaCompiler.Expressions;
+using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
-using static JukaCompiler.Expressions.Expression;
+using static JukaCompiler.Expressions.Expr;
 
 namespace JukaCompiler.Statements
 {
@@ -91,7 +92,7 @@ namespace JukaCompiler.Statements
             internal Lexeme name;
             internal List<Stmt.Function> methods;
             internal List<Stmt> variableDeclarations;
-            internal Variable? superClass;
+            internal Expr.Variable? superClass;
 
             internal Class(Lexeme name, List<Stmt.Function> methods, List<Stmt> variableDeclarations)
             {
@@ -108,11 +109,11 @@ namespace JukaCompiler.Statements
         }
         internal class Expression : Stmt
          {
-            internal Expressions.Expression expression;
+            internal Expr Expr;
 
-            internal Expression(Expressions.Expression expression)
+            internal Expression(Expr expr)
             {
-                this.expression = expression;
+                this.Expr = expr;
             }
 
              internal override R Accept<R>(Visitor<R> vistor)
@@ -122,11 +123,11 @@ namespace JukaCompiler.Statements
         }
         internal class If : Stmt
         {
-            internal Expressions.Expression condition;
+            internal Expr condition;
             internal Stmt thenBranch;
             internal Stmt elseBranch;
 
-            internal If(Expressions.Expression condition, Stmt thenBranch, Stmt elseBranch)
+            internal If(Expr condition, Stmt thenBranch, Stmt elseBranch)
             {
                 this.condition = condition;
                 this.thenBranch = thenBranch;
@@ -141,9 +142,9 @@ namespace JukaCompiler.Statements
         }
         internal class PrintLine : Stmt
         {
-            internal Expressions.Expression? expr;
+            internal Expr? expr;
 
-            internal PrintLine(Expressions.Expression expr)
+            internal PrintLine(Expr expr)
             {
                 this.expr = expr;
             }
@@ -159,9 +160,9 @@ namespace JukaCompiler.Statements
         }
         internal class Print : Stmt
         {
-            internal Expressions.Expression? expr;
+            internal Expr? expr;
 
-            internal Print(Expressions.Expression expr)
+            internal Print(Expr expr)
             {
                 this.expr = expr;
             }
@@ -178,10 +179,10 @@ namespace JukaCompiler.Statements
         internal class Var : Stmt
         {
             internal Lexeme? name;
-            internal Expressions.Expression? exprInitializer;
+            internal Expr? exprInitializer;
             internal bool isInitalizedVar = false;
 
-            internal Var(Lexeme name, Expressions.Expression expr)
+            internal Var(Lexeme name, Expr expr)
             {
                 if (!(name.ToString().All(c => char.IsLetterOrDigit(c) || c == '_')))
                 {
@@ -216,10 +217,10 @@ namespace JukaCompiler.Statements
         }
         internal class While : Stmt
         {
-            internal Expressions.Expression condition;
+            internal Expr condition;
             internal Stmt whileBlock;
 
-            internal While(Expressions.Expression condition, Stmt whileBlock)
+            internal While(Expr condition, Stmt whileBlock)
             {
                 this.condition = condition;
                 this.whileBlock = whileBlock;
@@ -233,22 +234,22 @@ namespace JukaCompiler.Statements
 
         internal class For : Stmt
         {
-            private Expressions.Expression init;
-            private Expressions.Expression breakExpression;
-            private Expressions.Expression incExpression;
+            private Expr init;
+            private Expr breakExpr;
+            private Expr incExpr;
             private Stmt forBody;
 
-            internal For(Expressions.Expression init, Expressions.Expression breakExpression, Expressions.Expression incExpression, Stmt forBody)
+            internal For(Expr init, Expr breakExpr, Expr incExpr, Stmt forBody)
             {
                 this.init = init;
-                this.breakExpression = breakExpression;
-                this.incExpression = incExpression;
+                this.breakExpr = breakExpr;
+                this.incExpr = incExpr;
                 this.forBody = forBody;
             }
 
-            internal Expressions.Expression Init => init;
-            internal Expressions.Expression BreakExpression => breakExpression;
-            internal Expressions.Expression IncExpression => incExpression;
+            internal Expr Init => init;
+            internal Expr BreakExpr => breakExpr;
+            internal Expr IncExpr => incExpr;
             internal Stmt ForBody => forBody;
 
             internal override R Accept<R>(Visitor<R> visitor)
@@ -259,11 +260,11 @@ namespace JukaCompiler.Statements
         internal class Return : Stmt
         {
             internal Lexeme? keyword;
-            internal Expressions.Expression? expr;
-            internal Return(Lexeme keyword, Expressions.Expression expression)
+            internal Expr? expr;
+            internal Return(Lexeme keyword, Expr expr)
             {
                 this.keyword = keyword;
-                this.expr = expression;
+                this.expr = expr;
             }
 
             internal Return()
@@ -277,9 +278,9 @@ namespace JukaCompiler.Statements
         }
         internal class Break : Stmt
         {
-            internal Expressions.Expression expr;
+            internal Expr expr;
 
-            internal Break(Expressions.Expression expr)
+            internal Break(Expr expr)
             {
                 this.expr = expr;
             }
@@ -300,9 +301,9 @@ namespace JukaCompiler.Statements
 
         internal class LiteralLexemeExpression : Stmt
         {
-            internal LexemeTypeLiteral ltl;
+            internal Expr.LexemeTypeLiteral ltl;
 
-            internal LiteralLexemeExpression(LexemeTypeLiteral lexemeTypeLiteral)
+            internal LiteralLexemeExpression(Expr.LexemeTypeLiteral lexemeTypeLiteral)
             {
                 this.ltl = lexemeTypeLiteral;
             }

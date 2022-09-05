@@ -2,7 +2,7 @@
 
 namespace JukaCompiler.Expressions
 {
-    internal abstract class Expression
+    internal abstract class Expr
     {
         internal interface IVisitor<R>
         {
@@ -19,11 +19,11 @@ namespace JukaCompiler.Expressions
             R VisitUnaryExpr(Unary expr);
             R VisitVariableExpr(Variable expr);
             R VisitLexemeTypeLiteral(LexemeTypeLiteral expr);
-            R VisitArrayExpr(ArrayDeclarationExpression expr);
-            R VisitArrayAccessExpr(ArrayAccessExpression expr);
+            R VisitArrayExpr(ArrayDeclarationExpr expr);
+            R VisitArrayAccessExpr(ArrayAccessExpr expr);
         }
 
-        internal abstract R Accept<R>(Expression.IVisitor<R> visitor);
+        internal abstract R Accept<R>(Expr.IVisitor<R> visitor);
 
         private Lexeme? expressionLexeme;
         internal Lexeme? initializerContextVariableName;
@@ -37,11 +37,11 @@ namespace JukaCompiler.Expressions
         {
             get => this.expressionLexeme?.ToString()!;
         }
-        internal class Assign : Expression
+        internal class Assign : Expr
         {
-            internal readonly Expression value;
+            internal readonly Expr value;
 
-            internal Assign(Lexeme ExpressionLexeme, Expression value)
+            internal Assign(Lexeme ExpressionLexeme, Expr value)
             {
                 this.expressionLexeme = ExpressionLexeme;
                 this.value = value;
@@ -52,7 +52,7 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitAssignExpr(this);
             }
         }
-        internal class Variable : Expression
+        internal class Variable : Expr
         {
             internal Int64 lexemeType;
 
@@ -66,13 +66,13 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitVariableExpr(this);
             }
         }
-        internal class Binary : Expression
+        internal class Binary : Expr
         {
-            internal Expression? left;
+            internal Expr? left;
             internal Lexeme? op;
-            internal Expression? right;
+            internal Expr? right;
 
-            internal Binary(Expression expr, Lexeme op, Expression right)
+            internal Binary(Expr expr, Lexeme op, Expr right)
             {
                 this.left = expr;
                 this.op = op;
@@ -91,18 +91,18 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitBinaryExpr(this);
             }
         }
-        internal class ArrayDeclarationExpression : Expression
+        internal class ArrayDeclarationExpr : Expr
         {
             internal int ArraySize { get; }
             internal Lexeme ArrayDeclarationName { get; }
 
-            internal ArrayDeclarationExpression(int size)
+            internal ArrayDeclarationExpr(int size)
             {
                 this.ArraySize = size;
                 this.ArrayDeclarationName = new Lexeme(0,0,0);
             }
 
-            internal ArrayDeclarationExpression(Lexeme arrayDeclarationName, Lexeme arraySize)
+            internal ArrayDeclarationExpr(Lexeme arrayDeclarationName, Lexeme arraySize)
             {
                 ArraySize = int.Parse(arraySize.ToString());
                 ExpressionLexeme = arrayDeclarationName;
@@ -114,12 +114,12 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitArrayExpr(this);
             }
         }
-        internal class ArrayAccessExpression : Expression
+        internal class ArrayAccessExpr : Expr
         {
             internal int ArraySize { get; }
             internal Lexeme ArrayVariableName { get; }
 
-            internal ArrayAccessExpression(Lexeme arrayVariableName, Lexeme arraySize)
+            internal ArrayAccessExpr(Lexeme arrayVariableName, Lexeme arraySize)
             {
                 ArraySize = int.Parse(arraySize.ToString());
                 ExpressionLexeme = ArrayVariableName = arrayVariableName;
@@ -130,13 +130,13 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitArrayAccessExpr(this);
             }
         }
-        internal class Call : Expression
+        internal class Call : Expr
         {
-            internal Expression callee;
-            internal List<Expression> arguments;
+            internal Expr callee;
+            internal List<Expr> arguments;
             internal bool isJukaCallable = false;
 
-            internal Call(Expression callee, bool isCallable, List<Expression> arguments)
+            internal Call(Expr callee, bool isCallable, List<Expr> arguments)
             {
                 this.callee = callee;
                 this.arguments = arguments;
@@ -147,10 +147,10 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitCallExpr(this);
             }
         }
-        internal class Get : Expression
+        internal class Get : Expr
         {
-            internal Expression expr;
-            internal Get(Expression expr, Lexeme lex)
+            internal Expr expr;
+            internal Get(Expr expr, Lexeme lex)
             {
                 this.expr = expr;
                 this.ExpressionLexeme = lex;
@@ -161,9 +161,9 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitGetExpr(this);
             }
         }
-        internal class Unary : Expression
+        internal class Unary : Expr
         {
-            internal Unary(Expression expr, Lexeme lex, Expression right)
+            internal Unary(Expr expr, Lexeme lex, Expr right)
             {
             }
 
@@ -172,11 +172,11 @@ namespace JukaCompiler.Expressions
                 throw new NotImplementedException();
             }
         }
-        internal class Grouping : Expression
+        internal class Grouping : Expr
         {
-            internal Expression? expression;
+            internal Expr? expression;
 
-            internal Grouping(Expression expr)
+            internal Grouping(Expr expr)
             {
                 this.expression = expr;
             }
@@ -190,7 +190,7 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitGroupingExpr(this);
             }
         }
-        internal class Literal : Expression
+        internal class Literal : Expr
         {
             private readonly object? value;
             private readonly long type;
@@ -232,9 +232,9 @@ namespace JukaCompiler.Expressions
                 get { return type; }
             }
         }
-        internal class Logical : Expression
+        internal class Logical : Expr
         {
-            internal Logical(Expression expr, Lexeme lex, Expression right)
+            internal Logical(Expr expr, Lexeme lex, Expr right)
             {
             }
 
@@ -243,9 +243,9 @@ namespace JukaCompiler.Expressions
                 throw new NotImplementedException();
             }
         }
-        internal class Set : Expression
+        internal class Set : Expr
         {
-            internal Set(Expression expr, Lexeme lex, Expression right)
+            internal Set(Expr expr, Lexeme lex, Expr right)
             {
             }
 
@@ -254,9 +254,9 @@ namespace JukaCompiler.Expressions
                 throw new NotImplementedException();
             }
         }
-        internal class Super : Expression
+        internal class Super : Expr
         {
-            internal Super(Expression expr, Lexeme lex, Expression right)
+            internal Super(Expr expr, Lexeme lex, Expr right)
             {
 
             }
@@ -266,9 +266,9 @@ namespace JukaCompiler.Expressions
                 throw new NotImplementedException();
             }
         }
-        internal class This : Expression
+        internal class This : Expr
         {
-            internal This(Expression expr, Lexeme lex, Expression right)
+            internal This(Expr expr, Lexeme lex, Expr right)
             {
             }
 
@@ -277,16 +277,16 @@ namespace JukaCompiler.Expressions
                 throw new NotImplementedException();
             }
         }
-        internal class DefaultExpression : Expression
+        internal class DefaultExpr : Expr
         {
-            internal DefaultExpression()
+            internal DefaultExpr()
             { }
             internal override R Accept<R>(IVisitor<R> visitor)
             {
                 throw new NotImplementedException();
             }
         }
-        internal class LexemeTypeLiteral : Expression
+        internal class LexemeTypeLiteral : Expr
         {
             internal long lexemeType;
             internal object? literal;
