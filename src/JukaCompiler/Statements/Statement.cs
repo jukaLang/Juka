@@ -213,8 +213,8 @@ namespace JukaCompiler.Statements
             {
                 return vistor.VisitVarStmt(this);
             }
-
         }
+
         internal class While : Stmt
         {
             internal Expr condition;
@@ -234,12 +234,12 @@ namespace JukaCompiler.Statements
 
         internal class For : Stmt
         {
-            private Expr init;
+            private Stmt.Var init;
             private Expr breakExpr;
             private Expr incExpr;
             private Stmt forBody;
 
-            internal For(Expr init, Expr breakExpr, Expr incExpr, Stmt forBody)
+            internal For(Stmt.Var init, Expr breakExpr, Expr incExpr, Stmt forBody)
             {
                 this.init = init;
                 this.breakExpr = breakExpr;
@@ -247,7 +247,7 @@ namespace JukaCompiler.Statements
                 this.forBody = forBody;
             }
 
-            internal Expr Init => init;
+            internal Stmt.Var Init => init;
             internal Expr BreakExpr => breakExpr;
             internal Expr IncExpr => incExpr;
             internal Stmt ForBody => forBody;

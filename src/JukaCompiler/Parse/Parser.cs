@@ -56,10 +56,19 @@ namespace JukaCompiler.Parse
             return tokens[current];
         }
 
-
         private Lexeme Previous()
         {
             return tokens[current - 1]; 
+        }
+
+        private Lexeme Peek(int lookAhead)
+        {
+            if (current + lookAhead > tokens.Count)
+            {
+                throw new JRuntimeException("Looked pass");
+            }
+
+            return tokens[current + lookAhead];
         }
 
         private Lexeme Advance()
@@ -183,25 +192,29 @@ namespace JukaCompiler.Parse
         private Stmt ForStatement()
         {
             Consume(LexemeType.LEFT_PAREN, Previous());
-
-            var initCondition = Expr();
-            Consume(LexemeType.SEMICOLON, Previous());
-            var breakCondition = Expr();
-            Consume(LexemeType.SEMICOLON, Previous());
-            var incrementCondition = Expr();
-            Consume(LexemeType.SEMICOLON, Previous());
-
-            Consume(LexemeType.RIGHT_PAREN, Previous());
-
-            Stmt forBody = null!;
-            if (Match(LexemeType.LEFT_BRACE))
+            if (MatchKeyWord())
             {
-                forBody = Statement();
+                Stmt.Var initCondition = VariableDeclaration();
+
+                Expr.Binary breakCondition = (Expr.Binary)Equality();
+                Consume(LexemeType.SEMICOLON, Previous());
+                
+                var incrementCondition = Unary();
+
+                Consume(LexemeType.RIGHT_PAREN, Previous());
+
+                Stmt forBody = null!;
+                if (Match(LexemeType.LEFT_BRACE))
+                {
+                    forBody = Statement();
+                }
+
+                Consume(LexemeType.RIGHT_BRACE, Peek());
+
+                return new Stmt.For(initCondition, breakCondition, incrementCondition, forBody);
             }
 
-            Consume(LexemeType.RIGHT_BRACE, Peek());
-
-            return new Stmt.For(initCondition, breakCondition, incrementCondition, forBody);
+            throw new JRuntimeException("no valid variable");
         }
 
         private Stmt BreakStatement()
@@ -435,7 +448,7 @@ namespace JukaCompiler.Parse
             return stmts;
         }
 
-        private Stmt VariableDeclaration()
+        private Stmt.Var VariableDeclaration()
         {
             Lexeme name = Consume(LexemeType.IDENTIFIER, Peek());
             Expr? initalizedState = null;
@@ -608,6 +621,20 @@ namespace JukaCompiler.Parse
                 //******* return new Expr.Unary(op, right);
             }
 
+            Lexeme idLexeme = Peek();
+            if (idLexeme.LexemeType == LexemeType.IDENTIFIER)
+            {
+                Lexeme isPlus = Peek(1);
+                Lexeme isPlusPlus = Peek(2);
+                if (isPlus.LexemeType == LexemeType.PLUS && isPlusPlus.LexemeType == LexemeType.PLUS)
+                {
+                    Match(LexemeType.IDENTIFIER);
+                    Match(LexemeType.PLUS);
+                    Match(LexemeType.PLUS);
+                    Match(LexemeType.SEMICOLON);
+                    return new Expr.Unary(idLexeme, LexemeType.PLUSPLUS);
+                }
+            }
 
             return Call();
         }

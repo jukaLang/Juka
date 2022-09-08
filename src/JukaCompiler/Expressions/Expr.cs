@@ -91,6 +91,24 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitBinaryExpr(this);
             }
         }
+
+        internal class Increment : Expr
+        {
+            internal Lexeme variable;
+            internal Lexeme opLexeme;
+
+            internal Increment(Lexeme variable, Lexeme opLexeme)
+            {
+                this.variable = variable;
+                this.opLexeme = opLexeme;
+            }
+
+            internal override R Accept<R>(IVisitor<R> visitor)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         internal class ArrayDeclarationExpr : Expr
         {
             internal int ArraySize { get; }
@@ -163,14 +181,19 @@ namespace JukaCompiler.Expressions
         }
         internal class Unary : Expr
         {
-            internal Unary(Expr expr, Lexeme lex, Expr right)
+            private long lexemeType;
+            internal Unary(Lexeme lex, long lexemeType)
             {
+                expressionLexeme = lex;
+                this.lexemeType = lexemeType;
             }
 
             internal override R Accept<R>(IVisitor<R> visitor)
             {
-                throw new NotImplementedException();
+                return visitor.VisitUnaryExpr(this);
             }
+
+            public long LexemeType => lexemeType;
         }
         internal class Grouping : Expr
         {

@@ -284,16 +284,18 @@ namespace JukaCompiler.Interpreter
 
         public Stmt VisitForStmt(Stmt.For stmt)
         {
-            var init = Evaluate(stmt.Init);
-            environment.Define(stmt.Init.ExpressionLexemeName,init);
+            var init = stmt.Init.Accept(this);
 
-            while (IsTrue(Evaluate(stmt.IncExpr)))
+            var breakExpression = Evaluate(stmt.BreakExpr);
+            var isTrue = stmt.IncExpr.Accept(this);
+            while (IsTrue(breakExpression))
             {
-                var breakExpression = Evaluate(stmt.BreakExpr);
                 if (!IsTrue(breakExpression))
                 {
                     Execute(stmt.ForBody);
                 }
+
+                isTrue = stmt.IncExpr.Accept(this);
             }
 
             return new Stmt.DefaultStatement();
@@ -692,7 +694,25 @@ namespace JukaCompiler.Interpreter
 
         public object VisitUnaryExpr(Expr.Unary expr)
         {
-            throw new NotImplementedException();
+            if (expr.ExpressionLexeme != null)
+            {
+                StackVariableState?  lookUp = (StackVariableState)LookUpVariable(expr.ExpressionLexeme, expr)!;
+                if (((Unary)expr).LexemeType == LexemeType.PLUSPLUS)
+                {
+                    object value = Convert.ToInt64(lookUp.expressionContext.ExpressionLexemeName) + 1;
+                    var stackVariableState = new StackVariableState
+                    {
+                        Name = expr.ExpressionLexeme?.ToString()!,
+                        Value = value,
+                        type = expr.GetType(),
+                        expressionContext = expr,
+                    };
+
+                    frames.Peek().UpdateVariable(expr.ExpressionLexeme?.ToString() ?? string.Empty, stackVariableState);
+                }
+            }
+
+            return new Stmt.DefaultStatement(); 
         }
 
         public object VisitVariableExpr(Expr.Variable expr)
