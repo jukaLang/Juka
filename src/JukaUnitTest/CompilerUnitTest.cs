@@ -337,7 +337,7 @@ namespace JukaUnitTest
             sourceAsString += @"
                 func test_func() = 
                 {
-                    for(var i = 0; i<10; i+1;)
+                    for(var i = 0; i<10; i++;)
                     {
                         print(i);
                     }
