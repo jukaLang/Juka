@@ -314,10 +314,17 @@ namespace JukaCompiler.Expressions
             internal long lexemeType;
             internal object? literal;
 
-            internal new Object Literal => this.literal ?? string.Empty;
+            internal new object Literal
+            {
+                get => literal ?? string.Empty;
+                set => literal = value;
+            }
 
             internal long LexemeType
-            { get { return this.lexemeType;} }
+            {
+                get => this.lexemeType;
+                set => this.lexemeType = value;
+            }
 
             internal override R Accept<R>(IVisitor<R> visitor)
             {

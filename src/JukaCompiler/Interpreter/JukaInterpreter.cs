@@ -284,18 +284,14 @@ namespace JukaCompiler.Interpreter
 
         public Stmt VisitForStmt(Stmt.For stmt)
         {
-            var init = stmt.Init.Accept(this);
+            stmt.Init.Accept(this);
 
             var breakExpression = Evaluate(stmt.BreakExpr);
-            var isTrue = stmt.IncExpr.Accept(this);
             while (IsTrue(breakExpression))
             {
-                if (!IsTrue(breakExpression))
-                {
-                    Execute(stmt.ForBody);
-                }
-
-                isTrue = stmt.IncExpr.Accept(this);
+                Execute(stmt.ForBody);
+                stmt.IncExpr.Accept(this);
+                breakExpression = Evaluate(stmt.BreakExpr);
             }
 
             return new Stmt.DefaultStatement();
@@ -415,6 +411,8 @@ namespace JukaCompiler.Interpreter
                 case "==":
                         return IsEqual(leftValue, rightValue);
                 case ">":
+                    return IsGreaterThan(leftValueType, rightValueType, leftValue, rightValue);
+                case "<":
                     return IsLessThan(leftValueType, rightValueType, leftValue, rightValue);
                 case "/":
                     return DivideTypes(leftValueType, rightValueType, leftValue, rightValue);
@@ -424,7 +422,7 @@ namespace JukaCompiler.Interpreter
                     return SubtractTypes(leftValueType, rightValueType, leftValue, rightValue);
                 case "+":
                     return AddTypes(leftValueType, rightValueType, leftValue, rightValue);
-                //case "<":
+
                 //case "<=":
                 //case ">=":
             }
@@ -437,6 +435,24 @@ namespace JukaCompiler.Interpreter
             {
                 var literal = new Expr.LexemeTypeLiteral();
                 literal.literal = Convert.ToInt32(leftValue) < Convert.ToInt32(rightValue);
+                literal.lexemeType = LexemeType.BOOL;
+                return literal;
+            }
+
+            if (leftValueType == LexemeType.STRING || rightValueType == LexemeType.STRING)
+            {
+                throw new ArgumentException("can't apply less than operator to strings");
+            }
+
+            throw new ArgumentException("Can't compare types");
+        }
+
+        private static object IsGreaterThan(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        {
+            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            {
+                var literal = new Expr.LexemeTypeLiteral();
+                literal.literal = Convert.ToInt32(leftValue) > Convert.ToInt32(rightValue);
                 literal.lexemeType = LexemeType.BOOL;
                 return literal;
             }
@@ -696,23 +712,40 @@ namespace JukaCompiler.Interpreter
         {
             if (expr.ExpressionLexeme != null)
             {
-                StackVariableState?  lookUp = (StackVariableState)LookUpVariable(expr.ExpressionLexeme, expr)!;
+                StackVariableState? stackVariableState = (StackVariableState)LookUpVariable(expr.ExpressionLexeme, expr)!;
+
+                if (stackVariableState?.expressionContext is Literal context && ((Unary)expr).LexemeType == LexemeType.PLUSPLUS)
+                {
+                    var literal = context;
+                    Int64 unaryUpdate = Convert.ToInt64(context.ExpressionLexeme.ToString()) + 1;
+
+                    var lexeme = new Lexeme(LexemeType.NUMBER, 0, 0);
+                    lexeme.AddToken(unaryUpdate.ToString());
+
+                    var newLiteral = new Literal(lexeme, lexeme.LexemeType);
+
+                    stackVariableState.expressionContext = newLiteral;
+
+                    var lexemeTypeLiteral = new LexemeTypeLiteral();
+                    lexemeTypeLiteral.LexemeType = lexeme.LexemeType;
+                    lexemeTypeLiteral.ExpressionLexeme = lexeme;
+                    lexemeTypeLiteral.literal = lexeme.Literal();
+
+                    stackVariableState.Value = lexemeTypeLiteral;
+
+                    return new Stmt.DefaultStatement();
+                }
+
                 if (((Unary)expr).LexemeType == LexemeType.PLUSPLUS)
                 {
-                    object value = Convert.ToInt64(lookUp.expressionContext.ExpressionLexemeName) + 1;
-                    var stackVariableState = new StackVariableState
-                    {
-                        Name = expr.ExpressionLexeme?.ToString()!,
-                        Value = value,
-                        type = expr.GetType(),
-                        expressionContext = expr,
-                    };
-
+                    object value = Convert.ToInt64(((Expr.LexemeTypeLiteral)stackVariableState.Value).Literal) + 1;
+                    ((Expr.LexemeTypeLiteral)stackVariableState.Value).Literal = value;
                     frames.Peek().UpdateVariable(expr.ExpressionLexeme?.ToString() ?? string.Empty, stackVariableState);
+                    return new Stmt.DefaultStatement();
                 }
             }
 
-            return new Stmt.DefaultStatement(); 
+            throw new JRuntimeException("bad unary expression");
         }
 
         public object VisitVariableExpr(Expr.Variable expr)
@@ -785,6 +818,15 @@ namespace JukaCompiler.Interpreter
             if (o is bool)
             {
                 return (bool)o;
+            }
+
+            if (o is LexemeTypeLiteral)
+            {
+                var boolValue = ((Expr.LexemeTypeLiteral) o).Literal;
+                if (boolValue is bool)
+                {
+                    return IsTrue(boolValue);
+                }
             }
 
             return true;
