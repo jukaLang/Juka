@@ -337,14 +337,16 @@ namespace JukaUnitTest
             sourceAsString += @"
                 func test_func() = 
                 {
-                    for(var i = 0; i<10; i++;)
+                    for(var i = 0; i<3; i++;)
                     {
                         print(i);
                     }
                 }";
 
             var runValue = Go();
-            Assert.AreSame("0123456789", runValue);
+            string expectedValue = "012";
+
+            Assert.AreEqual(expectedValue, runValue);
         }
     }
 }
