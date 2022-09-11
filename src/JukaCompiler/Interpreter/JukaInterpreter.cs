@@ -2,13 +2,11 @@
 using JukaCompiler.Exceptions;
 using JukaCompiler.Expressions;
 using JukaCompiler.Lexer;
-using JukaCompiler.Parse;
 using JukaCompiler.Statements;
 using JukaCompiler.SystemCalls;
 using Microsoft.Extensions.DependencyInjection;
 using static JukaCompiler.Interpreter.StackFrame;
 using static JukaCompiler.Expressions.Expr;
-
 
 namespace JukaCompiler.Interpreter
 {
@@ -377,11 +375,11 @@ namespace JukaCompiler.Interpreter
                 if (stackVariableState?.expressionContext is Assign assign)
                 {
                     var literal = (Literal)assign.value;
-                    var lexemType = assign.ExpressionLexeme!.LexemeType;
+                    var lexemeType = assign.ExpressionLexeme!.LexemeType;
 
                     return (
                         literal, 
-                        lexemType);
+                        lexemeType);
                 }
             }
 
@@ -646,17 +644,15 @@ namespace JukaCompiler.Interpreter
                     return sce;
                 }
             }
-            else
-            {
-                object? callee = Evaluate(expr.callee);
-                IJukaCallable? function = (IJukaCallable)callee!;
-                if (arguments.Count != function.Arity())
-                {
-                    throw new ArgumentException("Wrong number of arguments");
-                }
 
-                return function?.Call(expr.callee.ExpressionLexeme.ToString(),this, arguments);
+            object? callee = Evaluate(expr.callee);
+            IJukaCallable? function = (IJukaCallable)callee!;
+            if (arguments.Count != function.Arity())
+            {
+                throw new ArgumentException("Wrong number of arguments");
             }
+
+            return function?.Call(expr.callee.ExpressionLexeme.ToString(),this, arguments);
         }
 
         public object VisitGetExpr(Expr.Get expr)
@@ -716,8 +712,7 @@ namespace JukaCompiler.Interpreter
 
                 if (stackVariableState?.expressionContext is Literal context && ((Unary)expr).LexemeType == LexemeType.PLUSPLUS)
                 {
-                    var literal = context;
-                    Int64 unaryUpdate = Convert.ToInt64(context.ExpressionLexeme.ToString()) + 1;
+                    var unaryUpdate = Convert.ToInt64(context.ExpressionLexeme?.ToString()) + 1;
 
                     var lexeme = new Lexeme(LexemeType.NUMBER, 0, 0);
                     lexeme.AddToken(unaryUpdate.ToString());
@@ -726,21 +721,14 @@ namespace JukaCompiler.Interpreter
 
                     stackVariableState.expressionContext = newLiteral;
 
-                    var lexemeTypeLiteral = new LexemeTypeLiteral();
-                    lexemeTypeLiteral.LexemeType = lexeme.LexemeType;
-                    lexemeTypeLiteral.ExpressionLexeme = lexeme;
-                    lexemeTypeLiteral.literal = lexeme.Literal();
+                    var lexemeTypeLiteral = new LexemeTypeLiteral
+                    {
+                        LexemeType = lexeme.LexemeType,
+                        ExpressionLexeme = lexeme,
+                        literal = lexeme.Literal()
+                    };
 
                     stackVariableState.Value = lexemeTypeLiteral;
-
-                    return new Stmt.DefaultStatement();
-                }
-
-                if (((Unary)expr).LexemeType == LexemeType.PLUSPLUS)
-                {
-                    object value = Convert.ToInt64(((Expr.LexemeTypeLiteral)stackVariableState.Value).Literal) + 1;
-                    ((Expr.LexemeTypeLiteral)stackVariableState.Value).Literal = value;
-                    frames.Peek().UpdateVariable(expr.ExpressionLexeme?.ToString() ?? string.Empty, stackVariableState);
                     return new Stmt.DefaultStatement();
                 }
             }
