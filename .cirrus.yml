@@ -37,7 +37,7 @@ task:
     - apt-get install -y wget curl libc6:i386 libncurses5:i386 libstdc++6:i386 libicu-dev:i386 libssl-dev:i386 zlib1g:i386 
     - mkdir /usr/share/dotnet
     - wget https://github.com/Servarr/dotnet-linux-x86/releases/download/v6.0.8-52/dotnet-runtime-6.0.8-linux-x86.tar.gz
-    - tar xf dotnet-sdk-6.0.401-linux-x86.tar.gz -C /usr/share/dotnet/
+    - tar xf dotnet-runtime-6.0.8-linux-x86.tar.gz -C /usr/share/dotnet/
     - wget https://github.com/Servarr/dotnet-linux-x86/releases/download/v6.0.8-52/Microsoft.AspNetCore.App.Runtime.linux-x86.6.0.8.nupkg
     - wget https://github.com/Servarr/dotnet-linux-x86/releases/download/v6.0.8-52/Microsoft.NETCore.App.Runtime.linux-x86.6.0.8.nupkg
     - mv *.nupkg /usr/share/dotnet/
