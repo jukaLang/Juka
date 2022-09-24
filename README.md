@@ -1,4 +1,4 @@
-# [![Juka Programming Language](./logo.png)](https://jukalang.com) Juka - Programming Language
+# [![Juka Programming Language](https://user-images.githubusercontent.com/11934545/192074923-24c8cfb9-12fc-48c4-8faa-2bbc4c187d83.png)](https://jukalang.com) Juka - Programming Language
 
 Official Website: https://jukalang.com
 

@@ -220,7 +220,6 @@ namespace JukaUnitTest
                     print(z);
                  }";
 
-            var value = Go();
             Assert.AreEqual("65" , Go());
         }
 
@@ -268,9 +267,6 @@ namespace JukaUnitTest
         public void TestSourceAsFile()
         {
             Compiler compiler = new Compiler();
-
-            var currentDirectory = System.IO.Directory.GetCurrentDirectory();
-            
 
             var outputValue = compiler.Go(@"../../../../../examples/test2.juk");
             if (compiler.HasErrors())
