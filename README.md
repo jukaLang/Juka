@@ -13,7 +13,7 @@ CirrusCI (FreeBSD/Linux(x86)): [![Cirrus CI - Base Branch Build Status](https://
 
 Appveyor (Visual Studio Builds): [![Build status](https://ci.appveyor.com/api/projects/status/nmjmm04xhryx8p54?svg=true)](https://ci.appveyor.com/project/TheAndreiM/juka)
 
-![RunJuka](https://user-images.githubusercontent.com/11934545/178172864-433ab5eb-5b76-4240-a98c-192c76f3b2f5.gif)
+![RunJuka](https://user-images.githubusercontent.com/11934545/192074454-cbcf94d9-1f39-4198-991d-c4f941840395.gif)
 
 ## Introduction
 
