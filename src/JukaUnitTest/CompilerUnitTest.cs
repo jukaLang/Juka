@@ -123,7 +123,7 @@ namespace JukaUnitTest
                 }";
 
             var value = Go();
-            Assert.AreEqual("print\r\n", value);
+            Assert.AreEqual("print" + Environment.NewLine, value);
         }
 
         [TestMethod]
@@ -272,7 +272,7 @@ namespace JukaUnitTest
             var currentDirectory = System.IO.Directory.GetCurrentDirectory();
             
 
-            var outputValue = compiler.Go(@"..\..\..\..\..\examples\test2.juk");
+            var outputValue = compiler.Go(@"../../../../../examples/test2.juk");
             if (compiler.HasErrors())
             {
                 var errors = compiler.ListErrors();

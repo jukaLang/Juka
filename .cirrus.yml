@@ -2,12 +2,12 @@ task:
   matrix:
   - name: FreeBSD Build
     freebsd_instance:
-      image_family: freebsd-13-0
+      image_family: freebsd-13-1
     environment:
       - GITHUB_TOKEN: ENCRYPTED[38a5a4b83d9859dccc98655bdc993fb9da11ad43d0c787473b692f45732505f167335e45564474e9f3a1cbe7a883b3ae]
       - JUKA_TOKEN: Unix_Amd64
     setup_script:
-    - pkg install -y wget bash libunwind icu libuv emby-server
+    - pkg install -y wget bash libunwind icu libuv boost-libs gdb libffi wget bash encodings glib gnutls libarchive libuv
     - sudo mkdir /dotnet
     - wget https://github.com/sec/dotnet-core-freebsd-source-build/releases/download/6.0.400/dotnet-sdk-6.0.400-freebsd-x64.tar.gz
     - sudo tar xf dotnet-sdk-6.0.400-freebsd-x64.tar.gz -C /dotnet/
