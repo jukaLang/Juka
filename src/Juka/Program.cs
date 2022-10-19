@@ -1,38 +1,35 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.IO.Compression;
 using System.Reflection;
 using System.Text;
 using JukaCompiler;
 using Newtonsoft.Json.Linq;
 string? assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
-
+if (assemblyVersion == "0.0.0.1")
+{
+    assemblyVersion = "DEBUG";
+}
 
 bool isFuncOrClass = false;
-string prompt = "Juka >";
+string prompt = "Juka("+assemblyVersion+")>";
 
 if (args.Length == 0)
 {
+
     Console.Title = "Juka Compiler";
     Console.BackgroundColor = ConsoleColor.Black;
     Console.ForegroundColor = ConsoleColor.White;
     Console.OutputEncoding = Encoding.UTF8;
-    if (assemblyVersion == "0.0.0.1")
-    {
-        assemblyVersion = "DEBUG BUILD";
-    }
-    Console.WriteLine("🍲 Welcome to Juka Compiler 🍲 Version: " + assemblyVersion+". If you need to run a file, pass it as an argument");
-    Console.WriteLine("class and func should be terminated with single '}' on a new line");
+
+    Console.WriteLine("🍲 Welcome to Juka Compiler 🍲! For info visit https://jukalang.com");
     Compiler compiler = new Compiler();
-
-
 
     string dataStart = "func main() = {";
     string dataEnd = "}";
 
     List<string> funcData = new List<string>();
-
-
     Console.Write(prompt);
+    
     while (true)
     {
         string? readLine = Console.ReadLine();
@@ -104,9 +101,7 @@ if (args.Length == 0)
             try
             {
                 Trace.WriteLine(codeToExecute);
-                Console.Write(prompt);
                 Console.Write(compiler.Go(codeToExecute, isFile: false));
-                continue;
             }
             catch (Exception e)
             {
