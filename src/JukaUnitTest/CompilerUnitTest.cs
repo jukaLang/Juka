@@ -114,38 +114,51 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
-        public void PrintLiteral()
+        [DataRow("print","print")]
+        [DataRow(3,"3")]
+        [DataRow(-1,"-1")]
+        [DataRow(0,"0")]
+        [DataRow(3.1234,"3.1234")]
+        public void PrintLiteral(var value, string expected)
         {
             sourceAsString +=
                 @"func test_func() = 
                 {
-                    printLine(""print""); 
+                    printLine("+value+@"); 
                 }";
-
-            var value = Go();
-            Assert.AreEqual("print" + Environment.NewLine, value);
+            Assert.AreEqual(expected + Environment.NewLine,  Go());
         }
 
         [TestMethod]
-        public void PrintVariable()
+        [DataRow("print","print")]
+        [DataRow(3,"3")]
+        [DataRow(-1,"-1")]
+        [DataRow(0,"0")]
+        [DataRow(3.1234,"3.1234")]
+        public void PrintVariable(var value, string expected)
         {
             sourceAsString +=
                 @"func test_func() = 
                 {
-                    var x = ""print"";
+                    var x = value;
                     print(x); 
                 }";
 
-            Assert.AreEqual("print", Go());
+            Assert.AreEqual(expected, Go());
         }
 
         [TestMethod]
-        public void PassVariable()
+        [DataRow("print","print")]
+        [DataRow(3,"3")]
+        [DataRow(-1,"-1")]
+        [DataRow(0,"0")]
+        [DataRow(3.1234,"3.1234")]
+        public void PassVariable(var value, string expected)
         {
             sourceAsString +=
                 @"func test_func() = 
                 {
-                    var x = ""print"";
+                    var x = "+value+@"
                     varpass(x);
                 }
                 
@@ -154,17 +167,21 @@ namespace JukaUnitTest
                     print(x); 
                 }";
 
-            var value = Go();
-            Assert.AreEqual("print", value);
+            Assert.AreEqual(expected, Go());
         }
 
         [TestMethod]
-        public void PrintThreeLevelsNesting()
+        [DataRow("print","print")]
+        [DataRow(3,"3")]
+        [DataRow(-1,"-1")]
+        [DataRow(0,"0")]
+        [DataRow(3.1234,"3.1234")]
+        public void PrintThreeLevelsNesting(var value, string expected)
         {
             sourceAsString +=
                 @"func test_func() = 
                 {
-                    var y = ""one two three"";
+                    var y = "+value+@";
                     nest1(y);
                 }
                 
@@ -178,89 +195,107 @@ namespace JukaUnitTest
                     print(z);
                 }";
 
-            var value = Go();
-            Assert.AreEqual("one two three", value);
+            Assert.AreEqual(expected, Go());
         }
 
         [TestMethod]
-        public void EmptyComment()
+        [DataRow("print")]
+        [DataRow(3)]
+        [DataRow(-1)]
+        [DataRow(0)]
+        [DataRow(3.1234)]
+        public void EmptyComment(var value)
         {
             sourceAsString += @"func test_func() =
                 {
-                    var y = ""one two three"";
-                    /*nest1(y);*/
+                    var y = "+value+@";
+                    /*print(y);*/
+                    //printLine(y);
+                    // /*print(y);*/
+                    /*nest(3)*/
                 }";
 
             Assert.AreEqual("", Go());
         }
 
         [TestMethod]
-        public void MultipleVariables()
+        [DataRow("print","print")]
+        [DataRow(3,"3")]
+        [DataRow(-1,"-1")]
+        [DataRow(0,"0")]
+        [DataRow(3.1234,"3.1234")]
+        public void MultipleVariables(var value, string expected)
         {
             sourceAsString += @"
                 func test_func() = 
                 {
                     var z = 3;
-                    var x=""a""; 
+                    var x="+value+@"; 
                     print(x);
                     print(z);
                 }";
 
-            Assert.AreEqual("a3" , Go());
+            Assert.AreEqual(expected+"3" , Go());
         }
 
         [TestMethod]
-        public void Add()
+        [DataRow(32,33,"55")]
+        [DataRow(-5,-5,"-10")]
+        public void Add(var a, var b, string expected)
         {
             sourceAsString += @"
                 func test_func() = {
-                    var x=32; 
-                    var y=33; 
+                    var x="+a+@";
+                    var y="+b+@";
                     var z=x+y;
                     print(z);
                  }";
 
-            Assert.AreEqual("65" , Go());
+            Assert.AreEqual(expected , Go());
         }
 
         [TestMethod]
-        public void Subtract()
+        [DataRow(32,33,"-1")]
+        [DataRow(-5,-5,"0")]
+        public void Subtract(var a, var b, string expected)
         {
             sourceAsString += @"func test_func() = {
-                var x=32; var y=33; var z=x-y;
+                var x="+a+@"; var y="+b+@"; var z=x-y;
                 print(z);
             }";
-
-            var x = Go();
-            Assert.AreEqual("-1", x);
+            Assert.AreEqual(expected, Go());
         }
 
         [TestMethod]
-        public void Divide()
+        [DataRow(5,5,"1")]
+        [DataRow(-5,-5,"1")]
+        public void Divide(var a, var b, string expected)
         {
             sourceAsString += @"func test_func() =
             {
-                var x=10; 
-                var y=3;
+                var x="+a+@"
+                var y="+b+@";
                 var z=x/y;
                 print(z);
             }";
 
-            Assert.AreEqual("3", Go());
+            Assert.AreEqual(expected, Go());
         }
 
         [TestMethod]
-        public void Multiply()
+        [DataRow(5,5,"25")]
+        [DataRow(-5,-5,"25")]
+        public void Multiply(var a, var b, string expected)
         {
             sourceAsString += @"func test_func() = 
             {
-                var x=3;
-                var y=3;
+                var x="+a+@";
+                var y="+b+@";
                 var z=x*y;
                 print(z);
             }";
 
-            Assert.AreEqual("9" , Go());
+            Assert.AreEqual(expected , Go());
         }
 
         [TestMethod]
@@ -310,39 +345,40 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
-        public void Primitives()
+        [DataRow("getAvailableMemory()","0")]
+        public void Primitives(string primitive, string expected)
         {
             sourceAsString += @"
                 func test_func() = 
                 {
-                    availableMemory();
+                    testme();
                 }
 
-                func availableMemory() = 
+                func testme() = 
                 {
-                    var v = getAvailableMemory();
+                    var v = "+primitive+@";
                     print(v);
                 }";
 
-            Assert.AreNotEqual(0, Go());
+            Assert.AreNotEqual(expected, Go());
         }
 
         [TestMethod]
-        public void ForLoop()
+        [DataRow(3,"012")]
+        [DataRow(-1,"")]
+        [DataRow(0,"")]
+        public void ForLoop(var loops, string expected)
         {
             sourceAsString += @"
                 func test_func() = 
                 {
-                    for(var i = 0; i<3; i++;)
+                    for(var i = 0; i<"+expected+@"; i++;)
                     {
                         print(i);
                     }
                 }";
 
-            var runValue = Go();
-            string expectedValue = "012";
-
-            Assert.AreEqual(expectedValue, runValue);
+            Assert.AreEqual(expected, Go());
         }
     }
 }
