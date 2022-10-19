@@ -43,6 +43,7 @@ if (args.Length == 0)
         {
             Console.Clear();
             compiler = new Compiler();
+            isFuncOrClass = false;
             funcData.Clear();
             Console.Write(prompt);
             continue;
@@ -101,14 +102,15 @@ if (args.Length == 0)
             try
             {
                 Trace.WriteLine(codeToExecute);
-                Console.Write(compiler.Go(codeToExecute, isFile: false));
+                Console.WriteLine(compiler.Go(codeToExecute, isFile: false));
             }
             catch (Exception e)
             {
-                Console.Write(e.ToString());
+                Console.WriteLine(e.ToString());
             }
 
             Console.Write(prompt);
+            continue;
         }
     }
 }
