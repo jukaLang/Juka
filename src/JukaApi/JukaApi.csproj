@@ -11,13 +11,13 @@
     <PublishSingleFile>true</PublishSingleFile>
     <PublishTrimmed>true</PublishTrimmed>
     <PublishAot>true</PublishAot>
-    <ApplicationIcon>..\juka.ico</ApplicationIcon>
+    <ApplicationIcon>..\jukaapi.ico</ApplicationIcon>
     <DebugType>None</DebugType>
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="..\juka.ico" />
+    <Content Include="..\jukaapi.ico" />
   </ItemGroup>
 
   <ItemGroup>
