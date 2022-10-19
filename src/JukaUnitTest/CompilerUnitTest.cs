@@ -119,7 +119,7 @@ namespace JukaUnitTest
         [DataRow(-1,"-1")]
         [DataRow(0,"0")]
         [DataRow(3.1234,"3.1234")]
-        public void PrintLiteral(var value, string expected)
+        public void PrintLiteral(dynamic value, string expected)
         {
             sourceAsString +=
                 @"func test_func() = 
@@ -130,17 +130,16 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
-        [DataRow("print","print")]
         [DataRow(3,"3")]
         [DataRow(-1,"-1")]
         [DataRow(0,"0")]
         [DataRow(3.1234,"3.1234")]
-        public void PrintVariable(var value, string expected)
+        public void PrintVariable(dynamic value, string expected)
         {
             sourceAsString +=
                 @"func test_func() = 
                 {
-                    var x = value;
+                    var x = "+value+@";
                     print(x); 
                 }";
 
@@ -153,7 +152,7 @@ namespace JukaUnitTest
         [DataRow(-1,"-1")]
         [DataRow(0,"0")]
         [DataRow(3.1234,"3.1234")]
-        public void PassVariable(var value, string expected)
+        public void PassVariable(dynamic value, string expected)
         {
             sourceAsString +=
                 @"func test_func() = 
@@ -176,7 +175,7 @@ namespace JukaUnitTest
         [DataRow(-1,"-1")]
         [DataRow(0,"0")]
         [DataRow(3.1234,"3.1234")]
-        public void PrintThreeLevelsNesting(var value, string expected)
+        public void PrintThreeLevelsNesting(dynamic value, string expected)
         {
             sourceAsString +=
                 @"func test_func() = 
@@ -204,7 +203,7 @@ namespace JukaUnitTest
         [DataRow(-1)]
         [DataRow(0)]
         [DataRow(3.1234)]
-        public void EmptyComment(var value)
+        public void EmptyComment(dynamic value)
         {
             sourceAsString += @"func test_func() =
                 {
@@ -224,7 +223,7 @@ namespace JukaUnitTest
         [DataRow(-1,"-1")]
         [DataRow(0,"0")]
         [DataRow(3.1234,"3.1234")]
-        public void MultipleVariables(var value, string expected)
+        public void MultipleVariables(dynamic value, string expected)
         {
             sourceAsString += @"
                 func test_func() = 
@@ -239,9 +238,9 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
-        [DataRow(32,33,"55")]
+        [DataRow(32,33,"65")]
         [DataRow(-5,-5,"-10")]
-        public void Add(var a, var b, string expected)
+        public void Add(dynamic a, dynamic b, string expected)
         {
             sourceAsString += @"
                 func test_func() = {
@@ -257,7 +256,7 @@ namespace JukaUnitTest
         [TestMethod]
         [DataRow(32,33,"-1")]
         [DataRow(-5,-5,"0")]
-        public void Subtract(var a, var b, string expected)
+        public void Subtract(dynamic a, dynamic b, string expected)
         {
             sourceAsString += @"func test_func() = {
                 var x="+a+@"; var y="+b+@"; var z=x-y;
@@ -269,11 +268,11 @@ namespace JukaUnitTest
         [TestMethod]
         [DataRow(5,5,"1")]
         [DataRow(-5,-5,"1")]
-        public void Divide(var a, var b, string expected)
+        public void Divide(dynamic a, dynamic b, string expected)
         {
             sourceAsString += @"func test_func() =
             {
-                var x="+a+@"
+                var x="+a+@";
                 var y="+b+@";
                 var z=x/y;
                 print(z);
@@ -285,7 +284,7 @@ namespace JukaUnitTest
         [TestMethod]
         [DataRow(5,5,"25")]
         [DataRow(-5,-5,"25")]
-        public void Multiply(var a, var b, string expected)
+        public void Multiply(dynamic a, dynamic b, string expected)
         {
             sourceAsString += @"func test_func() = 
             {
@@ -367,12 +366,12 @@ namespace JukaUnitTest
         [DataRow(3,"012")]
         [DataRow(-1,"")]
         [DataRow(0,"")]
-        public void ForLoop(var loops, string expected)
+        public void ForLoop(dynamic loops, string expected)
         {
             sourceAsString += @"
                 func test_func() = 
                 {
-                    for(var i = 0; i<"+expected+@"; i++;)
+                    for(var i = 0; i<"+loops+@"; i++;)
                     {
                         print(i);
                     }
