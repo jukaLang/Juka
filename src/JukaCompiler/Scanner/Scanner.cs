@@ -1,8 +1,9 @@
-﻿using JukaCompiler.Lexer;
-using static System.Char;
-using System.Text;
+﻿using System.Diagnostics;
 using JukaCompiler.Exceptions;
+using JukaCompiler.Lexer;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text;
+using static System.Char;
 
 namespace JukaCompiler.Scan
 {
@@ -118,7 +119,6 @@ namespace JukaCompiler.Scan
                     case '}': AddSymbol( t, LexemeType.RIGHT_BRACE); break;
                     case ',': AddSymbol( t, LexemeType.COMMA); break;
                     case '.': AddSymbol( t, LexemeType.DOT); break;
-                    case '-': AddSymbol( t, LexemeType.MINUS); break;
                     case '+': AddSymbol( t, LexemeType.PLUS); break;
                     case ';': AddSymbol( t, LexemeType.SEMICOLON); break;
                     case '*': AddSymbol( t, LexemeType.STAR); break;
@@ -136,6 +136,25 @@ namespace JukaCompiler.Scan
                         if (Peek() == ']')
                         {
                             AddSymbol(Peek(), LexemeType.RIGHT_BRACE);
+                        }
+
+                        break;
+                    }
+                    case '-':
+                    {
+                        if (IsDigit(Peek()) || IsNumber(Peek()))
+                        {
+                            //Debug.WriteLine("TEST");
+                            //Debug.WriteLine(Peek());
+                            Number();
+                            //Debug.WriteLine(Peek());
+                            //Debug.WriteLine("TRACED+1");
+                        } else
+                        {
+                            AddSymbol(t, LexemeType.MINUS);
+                            //Debug.WriteLine("TEST2");
+                            //Debug.WriteLine(Peek());
+                            //Debug.WriteLine("TRACED+SYMBOL");
                         }
 
                         break;
@@ -311,6 +330,7 @@ namespace JukaCompiler.Scan
             number.AddToken(svalue);
             this.lexemes.Add(number);
         }
+
 
         private void String()
         {

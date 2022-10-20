@@ -114,11 +114,9 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
-        [DataRow("print","print")]
         [DataRow(3,"3")]
         [DataRow(-1,"-1")]
         [DataRow(0,"0")]
-        [DataRow(3.1234,"3.1234")]
         public void PrintLiteral(dynamic value, string expected)
         {
             sourceAsString +=
@@ -133,7 +131,6 @@ namespace JukaUnitTest
         [DataRow(3,"3")]
         [DataRow(-1,"-1")]
         [DataRow(0,"0")]
-        [DataRow(3.1234,"3.1234")]
         public void PrintVariable(dynamic value, string expected)
         {
             sourceAsString +=
@@ -147,17 +144,15 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
-        [DataRow("print","print")]
         [DataRow(3,"3")]
         [DataRow(-1,"-1")]
         [DataRow(0,"0")]
-        [DataRow(3.1234,"3.1234")]
         public void PassVariable(dynamic value, string expected)
         {
             sourceAsString +=
                 @"func test_func() = 
                 {
-                    var x = "+value+@"
+                    var x = "+value+@";
                     varpass(x);
                 }
                 
@@ -170,11 +165,9 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
-        [DataRow("print","print")]
         [DataRow(3,"3")]
         [DataRow(-1,"-1")]
         [DataRow(0,"0")]
-        [DataRow(3.1234,"3.1234")]
         public void PrintThreeLevelsNesting(dynamic value, string expected)
         {
             sourceAsString +=
@@ -198,11 +191,9 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
-        [DataRow("print")]
         [DataRow(3)]
         [DataRow(-1)]
         [DataRow(0)]
-        [DataRow(3.1234)]
         public void EmptyComment(dynamic value)
         {
             sourceAsString += @"func test_func() =
@@ -218,11 +209,9 @@ namespace JukaUnitTest
         }
 
         [TestMethod]
-        [DataRow("print","print")]
         [DataRow(3,"3")]
         [DataRow(-1,"-1")]
         [DataRow(0,"0")]
-        [DataRow(3.1234,"3.1234")]
         public void MultipleVariables(dynamic value, string expected)
         {
             sourceAsString += @"
