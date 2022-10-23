@@ -113,7 +113,26 @@ namespace JukaCompiler.Scan
             {
                 switch(t)
                 {
-                    case '(': AddSymbol( t, LexemeType.LEFT_PAREN); break;
+                    case '(':
+                    {
+                        AddSymbol( t, LexemeType.LEFT_PAREN);
+                       
+                        if (IsDigit(Peek()) || IsNumber(Peek()))
+                        {
+                            // HACK
+                            start++;
+                            // HACK
+                            Number();
+                            if (Peek() == ')')
+                            {
+                                AddSymbol(t, LexemeType.RIGHT_PAREN);
+                            }
+                        }
+
+                        
+
+                        break;
+                    }
                     case ')': AddSymbol( t, LexemeType.RIGHT_PAREN); break;
                     case '{': AddSymbol(t, LexemeType.LEFT_BRACE); break;
                     case '}': AddSymbol( t, LexemeType.RIGHT_BRACE); break;
@@ -241,10 +260,11 @@ namespace JukaCompiler.Scan
                 position++;
                 */
                     case '"' : String(); break;
+                    default:
+                        //Lox.error(line, "Unexpected character.");
+                        break;
                 }
             }
-
-
 
             IsWhiteSpace();
         }
