@@ -2,6 +2,7 @@
 using JukaCompiler.Interpreter;
 using System.Diagnostics;
 using JukaCompiler.Expressions;
+using System.Runtime.InteropServices;
 
 namespace JukaCompiler.SystemCalls
 {
@@ -40,6 +41,12 @@ namespace JukaCompiler.SystemCalls
             
             Process proc = Process.GetCurrentProcess();
             memory = Math.Round((decimal)proc.PrivateMemorySize64 / (1024 * 1024), 2);
+
+            if (memory == 0 && RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD))
+            {
+                memory = Math.Round((decimal)proc.VirtualMemorySize64 / (1024 * 1024), 2);
+            }
+
             proc.Dispose();
 
             Expr.LexemeTypeLiteral? lexemeTypeLiteral = new();
