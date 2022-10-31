@@ -22,13 +22,25 @@ Juka's main goal is to be a portable, easy to use, universal programming languag
 Juka's philosophy is code once, run everywhere.
 
 __What are main advantages of Juka?__
-- Portable - Juka doesn't need to be installed. That means you can run Juka in environments where you don't have admin priviledges or in environments
-- Small - Juka is fairly small in size ~ 30 mb (depending on the OS). This means you can put Juka on your thumb/flash drive. In fact, why not put all versions of Juka on your thumb/flash drive? It won't take much space anyways.
-- API - Juka comes with it's own easy to use API. Why not dust off an old machine and run Juka on it? or put Juka in the cloud! We natively support Microsoft Azure's serverless functions.
-- Universal - We are trying to support all systems including lesser known ones such as FreeBSD and TempleOS. We also support ARM processors and 32-bit systems such as Linux (x86). Why not install Juka on your Raspberry Pi?
-- Jupyter Support - We know a lot of people love Jupyter. We've added an easy way to run Juka (kernel) in Jupyter. Create awesome 
-- Runs inside browser/mobile - We've compiled Juka to web assembly and created a progressive app out of it. That means you can just go to https://wasm.jukalang.com and click "add to home screen" which will download and install a Juka version that you can run offline on your mobile device. You can also do it the same on your desktop computer for those that love Chrome/Chromium apps.
-- Community Support - Our community is fairly small but we are all very friendly. We welcome everyone with the open arms. Please join our awesome discord channel!
+- Portable - Juka doesn't need to be installed! That means you can run Juka in environments where you don't have admin priviledges or in environments where you don't have access to a hard drive. Juka is standalone and doesn't require any other application to be installed. Run it on your Flash/Thumb Drive!
+- Small in Size - Juka is fairly small in size ~ 30 mb (depending on the OS). This means that you can put Juka on your Thumb/Flash Drive. In fact, why not put all versions of Juka on your Thumb/Flash Drive? It won't take much space anyways.
+- Works on "All" Operating Systems - We are trying to support all systems including lesser known ones such as FreeBSD and TempleOS. We also support ARM processors and 32-bit systems such as Linux (x86). Why not install Juka on your Raspberry Pi or run it in ChromeOS Flex? 
+- Universal - Juka can be used for all types of projects including server side coding, client side coding, native coding, web development, API development, data science, network security, and quantum computing. Our goal is to create a programming language that can run on any platform and we mean any!
+- Cloud Friendly - We created JukaAPI so that you can run it on any cloud server. This will allow one to use REST API to run code. Feel free to test it at https://api.jukalang.com. You can also run Juka on Microsoft's Azure Server by using Juka's Azure serverless function. Compile the code quickly, or let the others run the code. Download latest Azure Function from https://jukalang.com/download.
+NOTE: you need an active Microsoft Azure account to host.
+- Jupyter Support - We know a lot of people love to use Jupyter Notebook/Lab. We've added an easy way to run Juka (kernel) in Jupyter. Do your data analysis in the software that you are used to!
+- Runs inside a Web Browser - Run Juka inside a Web Browser! Visit https://wasm.jukalang.com and install the App. On Mobile, it's simply adding the website to your home screen!
+- Easy to Use Package Manager - All of the packages are hosted on GitHub. That's right! We made it simple to install and contribute to the package development. Our hope is that by hosting all packages on Github, security issues in the packages can be fixed quickly by the community. The packages contain a simple config file, making it simple for anyone to develop Juka packages.
+- Community Support - Join our ever growing Juka community (https://discord.gg/MsKWsErzfp). We use "Discord" for managing the community as it provides an easy way to stay connected. In order to join the community, you should click our invitation link and register a Discord account. If you already have an account, just join the "JukaLang" group. It's public and anyone can join!
+- Contribute to the Source - Juka is built by the community, for the community. Please consider contributing to the Juka GitHub repository at https://github.com/jukaLang When you create new features or modify the existing ones, please follow the guidelines specified in the project documentation.
+
+
+Follow us on:
+Facebook: https://www.facebook.com/jukalang/
+Instagram: https://www.instagram.com/jukalanguage/
+Twitter: https://twitter.com/jukaLang
+YouTube: https://www.youtube.com/channel/UCRkKqD0fnuVAJLJe9p4ZiKQ
+Discord: https://discord.gg/MsKWsErzfp
 
 __Current Supported Device:__
 - Windows (x86/x64)
@@ -83,7 +95,9 @@ Special thanks to mogenius for hosting our API:
 https://api.jukalang.com
 
 If you would like to help improve the api, feel free to deploy a container at:
+
 [![Develop on Okteto](https://okteto.com/develop-okteto.svg)](https://cloud.okteto.com/deploy?repository=https://github.com/jukalang/juka&branch=master)
+
 
 ## Running Juka
 

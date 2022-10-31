@@ -30,7 +30,7 @@ namespace JukaCompiler.Interpreter
                 }
             }
 
-            throw new JRuntimeException("unable to bind");
+            throw new JRuntimeException("Unable to bind");
         }
 
         internal Stmt.Function? Declaration => declaration;
@@ -64,7 +64,7 @@ namespace JukaCompiler.Interpreter
                             string? name = parameterNameExpressionLexeme.ToString();
                             if (string.IsNullOrEmpty(name))
                             {
-                                throw new ArgumentException("unable to call function");
+                                throw new ArgumentException("Unable to call function");
                             }
 
                             object? value = arguments[i];
