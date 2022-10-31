@@ -89,7 +89,7 @@ namespace JukaCompiler
                 }
             }
 
-            throw new JRuntimeException("service provider is not created");
+            throw new JRuntimeException("Service provider is not created");
         }
 
         private static void SetupMainMethodRuntimeHook(List<Stmt> statements, Resolver resolver)
@@ -107,7 +107,7 @@ namespace JukaCompiler
                     continue;
                 }
 
-                throw new Exception("No main function defined");
+                throw new Exception("No main function is defined");
             }
 
             Lexeme? lexeme = new(LexemeType.IDENTIFIER, 0, 0);

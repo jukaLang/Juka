@@ -673,7 +673,7 @@ namespace JukaCompiler.Interpreter
         {
             if (expr == null || expr.expression == null)
             {
-                throw new ArgumentNullException("expr or expr == null");
+                throw new ArgumentNullException("Expr or expr == null");
             }
 
             return Evaluate(expr.expression) ?? throw new JRuntimeException("Grouping is null");
@@ -681,7 +681,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitLiteralExpr(Expr.Literal expr)
         {
-            return expr.LiteralValue() ?? throw new JRuntimeException("literal is null");
+            return expr.LiteralValue() ?? throw new JRuntimeException("Literal is null");
         }
 
         public object VisitLogicalExpr(Expr.Logical expr)
@@ -733,7 +733,7 @@ namespace JukaCompiler.Interpreter
                 }
             }
 
-            throw new JRuntimeException("bad unary expression");
+            throw new JRuntimeException("Bad unary expression");
         }
 
         public object VisitVariableExpr(Expr.Variable expr)
@@ -743,13 +743,13 @@ namespace JukaCompiler.Interpreter
                 var lookUp = LookUpVariable(expr.ExpressionLexeme, expr);
                 if (lookUp == null)
                 {
-                    throw new("variable is null");
+                    throw new("Variable is null");
                 }
 
                 return lookUp;
             }
 
-            throw new JRuntimeException("visit variable returned null");
+            throw new JRuntimeException("Visit variable returned null");
         }
 
         public object VisitArrayExpr(Expr.ArrayDeclarationExpr expr)

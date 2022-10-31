@@ -11,7 +11,7 @@ if (assemblyVersion == "0.0.0.1")
 }
 
 bool isFuncOrClass = false;
-string prompt = "Juka("+assemblyVersion+")>";
+string prompt = "Juka("+assemblyVersion+")> ";
 
 if (args.Length == 0)
 {
