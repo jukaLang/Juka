@@ -13,7 +13,7 @@ CirrusCI (FreeBSD/Linux(x86)): [![Cirrus CI - Base Branch Build Status](https://
 
 Appveyor (Visual Studio Builds): [![Build status](https://ci.appveyor.com/api/projects/status/nmjmm04xhryx8p54?svg=true)](https://ci.appveyor.com/project/TheAndreiM/juka)
 
-![RunJuka](https://user-images.githubusercontent.com/11934545/192074454-cbcf94d9-1f39-4198-991d-c4f941840395.gif)
+![RunJuka](https://user-images.githubusercontent.com/11934545/199847330-f60367a9-dc6d-44b4-8161-9f241ca93735.png)
 
 ## Introduction
 
@@ -35,12 +35,12 @@ NOTE: you need an active Microsoft Azure account to host.
 - Contribute to the Source - Juka is built by the community, for the community. Please consider contributing to the Juka GitHub repository at https://github.com/jukaLang When you create new features or modify the existing ones, please follow the guidelines specified in the project documentation.
 
 
-Follow us on:
-Facebook: https://www.facebook.com/jukalang/
-Instagram: https://www.instagram.com/jukalanguage/
-Twitter: https://twitter.com/jukaLang
-YouTube: https://www.youtube.com/channel/UCRkKqD0fnuVAJLJe9p4ZiKQ
-Discord: https://discord.gg/MsKWsErzfp
+__Follow us on:__
+- Facebook: https://www.facebook.com/jukalang/
+- Instagram: https://www.instagram.com/jukalanguage/
+- Twitter: https://twitter.com/jukaLang
+- YouTube: https://www.youtube.com/channel/UCRkKqD0fnuVAJLJe9p4ZiKQ
+- Discord: https://discord.gg/MsKWsErzfp
 
 __Current Supported Device:__
 - Windows (x86/x64)

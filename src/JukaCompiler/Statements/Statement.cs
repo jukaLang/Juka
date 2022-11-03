@@ -7,7 +7,7 @@ namespace JukaCompiler.Statements
 {
     internal abstract class Stmt
     {
-        internal interface Visitor<R>
+        internal interface IVisitor<R>
         { 
             R VisitBlockStmt(Block stmt);
             R VisitFunctionStmt(Function stmt);
@@ -23,7 +23,7 @@ namespace JukaCompiler.Statements
 
             R VisitForStmt(For stmt);
         }
-        internal abstract R Accept<R>(Stmt.Visitor<R> vistor);
+        internal abstract R Accept<R>(Stmt.IVisitor<R> vistor);
         private Lexeme stmtLexeme = new Lexeme();
 
         internal Lexeme StmtLexeme
@@ -45,7 +45,7 @@ namespace JukaCompiler.Statements
             }
 
             internal List<Stmt> statements;
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                return vistor.VisitBlockStmt(this);
             }
@@ -72,7 +72,7 @@ namespace JukaCompiler.Statements
                 this.body = body;
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 return vistor.VisitFunctionStmt(this);
             }
@@ -102,7 +102,7 @@ namespace JukaCompiler.Statements
                 this.superClass = null;
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 return vistor.VisitClassStmt(this);
             }
@@ -116,7 +116,7 @@ namespace JukaCompiler.Statements
                 this.Expr = expr;
             }
 
-             internal override R Accept<R>(Visitor<R> vistor)
+             internal override R Accept<R>(IVisitor<R> vistor)
              {
                  return vistor.VisitExpressionStmt(this);
              }
@@ -134,7 +134,7 @@ namespace JukaCompiler.Statements
                 this.elseBranch = elseBranch;
             }
 
-            internal override R Accept<R>(Visitor<R> visitor)
+            internal override R Accept<R>(IVisitor<R> visitor)
             {
                 return visitor.VisitIfStmt(this);
             }
@@ -153,7 +153,7 @@ namespace JukaCompiler.Statements
             {
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 return vistor.VisitPrintLine(this);
             }
@@ -171,7 +171,7 @@ namespace JukaCompiler.Statements
             {
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 return vistor.VisitPrint(this);
             }
@@ -209,7 +209,7 @@ namespace JukaCompiler.Statements
             {
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 return vistor.VisitVarStmt(this);
             }
@@ -226,7 +226,7 @@ namespace JukaCompiler.Statements
                 this.whileBlock = whileBlock;
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 return vistor.VisitWhileStmt(this);
             }
@@ -252,7 +252,7 @@ namespace JukaCompiler.Statements
             internal Expr IncExpr => incExpr;
             internal Stmt ForBody => forBody;
 
-            internal override R Accept<R>(Visitor<R> visitor)
+            internal override R Accept<R>(IVisitor<R> visitor)
             {
                 return visitor.VisitForStmt(this);
             }
@@ -271,7 +271,7 @@ namespace JukaCompiler.Statements
             {
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 return vistor.VisitReturnStmt(this);
             }
@@ -285,7 +285,7 @@ namespace JukaCompiler.Statements
                 this.expr = expr;
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 return vistor.VisitBreakStmt(this);
             }
@@ -293,7 +293,7 @@ namespace JukaCompiler.Statements
         internal class DefaultStatement : Stmt
         {
             // Does nothing used for return values;
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 throw new NotImplementedException();
             }
@@ -308,7 +308,7 @@ namespace JukaCompiler.Statements
                 this.ltl = lexemeTypeLiteral;
             }
 
-            internal override R Accept<R>(Visitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> vistor)
             {
                 throw new NotImplementedException();
             }

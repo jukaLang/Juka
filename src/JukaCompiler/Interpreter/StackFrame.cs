@@ -1,19 +1,17 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using JukaCompiler.Exceptions;
+﻿using JukaCompiler.Exceptions;
 using JukaCompiler.Expressions;
 using JukaCompiler.Lexer;
-using JukaCompiler.Parse;
 using JukaCompiler.Statements;
 
 namespace JukaCompiler.Interpreter
 {
     internal class StackFrame
     {
-        private Dictionary<string, Lexeme> frameVariables = new Dictionary<string, Lexeme>();
+        private Dictionary<string, Lexeme> frameVariables = new();
         private string frameName;
-        private Dictionary<string, object?> variables = new Dictionary<string, object?>();
-        private Dictionary<string, StackVariableState> variableAndKind = new Dictionary<string, StackVariableState>();
-        private Dictionary<string, ArrayImplementation?> stackArrayImplementations = new Dictionary<string, ArrayImplementation?>();
+        private Dictionary<string, object?> variables = new();
+        private Dictionary<string, StackVariableState> variableAndKind = new();
+        private Dictionary<string, ArrayImplementation?> stackArrayImplementations = new();
 
         internal StackFrame(string name)
         {

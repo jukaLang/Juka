@@ -10,7 +10,7 @@ using static JukaCompiler.Expressions.Expr;
 
 namespace JukaCompiler.Interpreter
 {
-    internal class JukaInterpreter : Stmt.Visitor<Stmt>, Expr.IVisitor<object>
+    internal class JukaInterpreter : Stmt.IVisitor<Stmt>, Expr.IVisitor<object>
     {
         private readonly ServiceProvider serviceProvider;
         private readonly JukaEnvironment globals;
@@ -80,19 +80,19 @@ namespace JukaCompiler.Interpreter
                 this.environment = previous;
             }
         }
-        Stmt Stmt.Visitor<Stmt>.VisitBlockStmt(Stmt.Block stmt)
+        Stmt Stmt.IVisitor<Stmt>.VisitBlockStmt(Stmt.Block stmt)
         {
             ExecuteBlock(stmt.statements, new(this.environment));
             return new Stmt.DefaultStatement();
         }
 
-        Stmt Stmt.Visitor<Stmt>.VisitFunctionStmt(Stmt.Function stmt)
+        Stmt Stmt.IVisitor<Stmt>.VisitFunctionStmt(Stmt.Function stmt)
         {
             JukaFunction? functionCallable = new(stmt, this.environment, false);
             environment.Define(stmt.StmtLexemeName, functionCallable);
             return new Stmt.DefaultStatement();
         }
-        Stmt Stmt.Visitor<Stmt>.VisitClassStmt(Stmt.Class stmt)
+        Stmt Stmt.IVisitor<Stmt>.VisitClassStmt(Stmt.Class stmt)
         {
             object? superclass = null;
             if (stmt.superClass != null)
@@ -386,7 +386,9 @@ namespace JukaCompiler.Interpreter
                 return ((Literal)expr, ((Literal)expr).Type);
             }
 
-            throw new JRuntimeException("Can't get literal data");
+            //return VisitBinaryExpr(expr);
+
+            throw new JRuntimeException("Can't get literal data" +expr.ToString());
 
         }
 
