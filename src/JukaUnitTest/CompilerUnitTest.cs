@@ -28,19 +28,34 @@ namespace JukaUnitTest
             return outputValue;
         }
 
-        [TestMethod]
+        /*[TestMethod]
         public void ArrayTest()
         {
             sourceAsString +=
                 @"func test_func() = 
                 {
                     var x = array[3];
-                    //x[1] = ""test"";
-                    print(x[0]); 
+                    x[1] = ""test"";
+                    print(x[1]); 
                 }";
 
             var value = Go();
-            Assert.AreEqual("System.Object", value);
+            Assert.AreEqual("test", value);
+        }*/
+
+        [TestMethod]
+        public void VariablesPrint()
+        {
+            sourceAsString +=
+                @"func test_func() = 
+                {
+                    var x = 32;
+                    var z = x + 5;
+                    var m = z + z;
+                    print(z);
+                }";
+
+            Assert.AreEqual("37", Go());
         }
 
         [TestMethod]

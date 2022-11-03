@@ -7,7 +7,7 @@ using static JukaCompiler.Expressions.Expr;
 
 namespace JukaCompiler.Interpreter
 {
-    internal class Resolver : Stmt.Visitor<object>, Expr.IVisitor<object>
+    internal class Resolver : Stmt.IVisitor<object>, Expr.IVisitor<object>
     {
         private JukaInterpreter interpreter;
         private FunctionType currentFunction = FunctionType.NONE;

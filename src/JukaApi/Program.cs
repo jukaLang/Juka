@@ -36,7 +36,7 @@ Func<string, IResult> executeCode = (string src) =>
     if (compiler.HasErrors())
     {
         string errors = string.Join(Environment.NewLine, compiler.ListErrors());
-        return Results.Json(new { errors = errors, original = decoded });
+        return Results.Json(new { errors, original = decoded });
     }
     return Results.Json(new { output = outputValue, original = decoded });
 };
