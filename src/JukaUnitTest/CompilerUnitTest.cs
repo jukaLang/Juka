@@ -43,7 +43,7 @@ namespace JukaUnitTest
             Assert.AreEqual("test", value);
         }*/
 
-        [TestMethod]
+        /*[TestMethod]
         public void VariablesPrint()
         {
             sourceAsString +=
@@ -56,7 +56,7 @@ namespace JukaUnitTest
                 }";
 
             Assert.AreEqual("37", Go());
-        }
+        }*/
 
         [TestMethod]
         public void WhileBoolean()

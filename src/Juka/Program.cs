@@ -4,6 +4,9 @@ using System.Reflection;
 using System.Text;
 using JukaCompiler;
 using Newtonsoft.Json.Linq;
+using Spectre.Console;
+using Color = Spectre.Console.Color;
+
 string? assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
 if (assemblyVersion == "0.0.0.1")
 {
@@ -13,15 +16,78 @@ if (assemblyVersion == "0.0.0.1")
 bool isFuncOrClass = false;
 string prompt = "Juka("+assemblyVersion+")> ";
 
+
 if (args.Length == 0)
 {
 
-    Console.Title = "Juka Compiler";
+    Console.Title = "Juka Programming Language";
     Console.BackgroundColor = ConsoleColor.Black;
     Console.ForegroundColor = ConsoleColor.White;
     Console.OutputEncoding = Encoding.UTF8;
 
-    Console.WriteLine("🍲 Welcome to Juka Compiler 🍲! For info visit https://jukalang.com");
+    /*var canvas = new Canvas(16, 16);
+
+    canvas.SetPixel(6, 0, Color.White);
+    canvas.SetPixel(7, 0, Color.White);
+    canvas.SetPixel(8, 0, Color.White);
+    canvas.SetPixel(9, 0, Color.White);
+    canvas.SetPixel(10, 0, Color.White);
+
+    canvas.SetPixel(3, 1, Color.White);
+    canvas.SetPixel(4, 1, Color.White);
+    canvas.SetPixel(5, 1, Color.White);
+    canvas.SetPixel(6, 1, Color.White);
+    canvas.SetPixel(10, 1, Color.White);
+    canvas.SetPixel(11, 1, Color.White);
+    canvas.SetPixel(12, 1, Color.White);
+
+    canvas.SetPixel(2, 2, Color.White);
+    canvas.SetPixel(3, 2, Color.White);
+    canvas.SetPixel(9, 2, Color.White);
+    canvas.SetPixel(12, 2, Color.White);
+
+    canvas.SetPixel(2, 3, Color.White);
+    canvas.SetPixel(9, 3, Color.White);
+    canvas.SetPixel(13, 3, Color.White);
+
+    for (var i = 4; i <= 11; i++)
+    {
+        canvas.SetPixel(1, i, Color.White);
+        canvas.SetPixel(9, i, Color.White);
+        canvas.SetPixel(13, i, Color.White);
+    }
+
+    canvas.SetPixel(6, 15, Color.White);
+    canvas.SetPixel(7, 15, Color.White);
+    canvas.SetPixel(8, 15, Color.White);
+    canvas.SetPixel(9, 15, Color.White);
+    canvas.SetPixel(10, 15, Color.White);
+
+    canvas.SetPixel(3, 14, Color.White);
+    canvas.SetPixel(4, 14, Color.White);
+    canvas.SetPixel(5, 14, Color.White);
+    canvas.SetPixel(6, 14, Color.White);
+    canvas.SetPixel(10, 14, Color.White);
+    canvas.SetPixel(11, 14, Color.White);
+    canvas.SetPixel(12, 14, Color.White);
+
+    canvas.SetPixel(2, 13, Color.White);
+    canvas.SetPixel(3, 13, Color.White);
+    canvas.SetPixel(7, 13, Color.White);
+    canvas.SetPixel(12, 13, Color.White);
+
+    canvas.SetPixel(2, 12, Color.White);
+    canvas.SetPixel(8, 12, Color.White);
+    canvas.SetPixel(13, 12, Color.White);
+
+    AnsiConsole.Write(canvas);*/
+
+    AnsiConsole.Write(
+        new FigletText("Juka")
+            .LeftAligned().Color(Color.Purple));
+
+    AnsiConsole.MarkupLine("[bold yellow]Hello[/] and [bold red]Welcome to 🍲 Juka Programming Language![/] For info visit [link blue]https://jukalang.com[/]");
+
     Compiler compiler = new();
 
     string dataStart = "func main() = {";
