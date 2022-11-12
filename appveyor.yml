@@ -131,6 +131,8 @@ deploy:
     # Deploy to GitHub Releases
   - provider: GitHub
     artifact: /.*\.zip/
+    release: "Juka v$(APPVEYOR_BUILD_VERSION)"
+    description: "## 🍂 Changelog \r\n {{commitMessage}} \r\n {{commitMessageExtended}}"
     auth_token:
       secure: XCqLJKrsMnRCCEEcsPL53Emba/2GrP172INtXx86eu5XBbed614ug/2dcx8MZwmr
     draft: false
