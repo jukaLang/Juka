@@ -32,11 +32,10 @@ dotnet_csproj:
 
 before_build: 
  - ps: |
-        if ($(APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED))
+        $env:MY_XT= $env:APPVEYOR_REPO_COMMIT_MESSAGE
+        if ($env:APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED)
         {
-        $env:MY_XT="\n $(APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED)"
-        } else{
-        $env:MY_XT=""
+        $env:MY_XT="$($env:APPVEYOR_REPO_COMMIT_MESSAGE) \n $($env:APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED)"
         }
  - cd src
  - dotnet test
@@ -140,7 +139,7 @@ deploy:
     artifact: /.*\.zip/
     tag: '$(APPVEYOR_BUILD_VERSION)'
     release: 'Juka v$(APPVEYOR_BUILD_VERSION)'
-    description: '## 🍂 Changelog \n $(APPVEYOR_REPO_COMMIT_MESSAGE) $(env:MY_XT) '
+    description: "## 🍂 Changelog \n $(MY_XT)"
     auth_token:
       secure: XCqLJKrsMnRCCEEcsPL53Emba/2GrP172INtXx86eu5XBbed614ug/2dcx8MZwmr
     draft: false
