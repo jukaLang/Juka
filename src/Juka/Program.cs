@@ -14,7 +14,7 @@ if (assemblyVersion == "0.0.0.1")
 }
 
 bool isFuncOrClass = false;
-string prompt = "Juka("+assemblyVersion+")> ";
+string prompt = "[bold green]Juka[/]([red]" + assemblyVersion+"[/])> ";
 
 
 if (args.Length == 0)
@@ -24,63 +24,8 @@ if (args.Length == 0)
     Console.BackgroundColor = ConsoleColor.Black;
     Console.ForegroundColor = ConsoleColor.White;
     Console.OutputEncoding = Encoding.UTF8;
-
-    /*var canvas = new Canvas(16, 16);
-
-    canvas.SetPixel(6, 0, Color.White);
-    canvas.SetPixel(7, 0, Color.White);
-    canvas.SetPixel(8, 0, Color.White);
-    canvas.SetPixel(9, 0, Color.White);
-    canvas.SetPixel(10, 0, Color.White);
-
-    canvas.SetPixel(3, 1, Color.White);
-    canvas.SetPixel(4, 1, Color.White);
-    canvas.SetPixel(5, 1, Color.White);
-    canvas.SetPixel(6, 1, Color.White);
-    canvas.SetPixel(10, 1, Color.White);
-    canvas.SetPixel(11, 1, Color.White);
-    canvas.SetPixel(12, 1, Color.White);
-
-    canvas.SetPixel(2, 2, Color.White);
-    canvas.SetPixel(3, 2, Color.White);
-    canvas.SetPixel(9, 2, Color.White);
-    canvas.SetPixel(12, 2, Color.White);
-
-    canvas.SetPixel(2, 3, Color.White);
-    canvas.SetPixel(9, 3, Color.White);
-    canvas.SetPixel(13, 3, Color.White);
-
-    for (var i = 4; i <= 11; i++)
-    {
-        canvas.SetPixel(1, i, Color.White);
-        canvas.SetPixel(9, i, Color.White);
-        canvas.SetPixel(13, i, Color.White);
-    }
-
-    canvas.SetPixel(6, 15, Color.White);
-    canvas.SetPixel(7, 15, Color.White);
-    canvas.SetPixel(8, 15, Color.White);
-    canvas.SetPixel(9, 15, Color.White);
-    canvas.SetPixel(10, 15, Color.White);
-
-    canvas.SetPixel(3, 14, Color.White);
-    canvas.SetPixel(4, 14, Color.White);
-    canvas.SetPixel(5, 14, Color.White);
-    canvas.SetPixel(6, 14, Color.White);
-    canvas.SetPixel(10, 14, Color.White);
-    canvas.SetPixel(11, 14, Color.White);
-    canvas.SetPixel(12, 14, Color.White);
-
-    canvas.SetPixel(2, 13, Color.White);
-    canvas.SetPixel(3, 13, Color.White);
-    canvas.SetPixel(7, 13, Color.White);
-    canvas.SetPixel(12, 13, Color.White);
-
-    canvas.SetPixel(2, 12, Color.White);
-    canvas.SetPixel(8, 12, Color.White);
-    canvas.SetPixel(13, 12, Color.White);
-
-    AnsiConsole.Write(canvas);*/
+    
+    
 
     AnsiConsole.Write(
         new FigletText("Juka")
@@ -94,14 +39,14 @@ if (args.Length == 0)
     string dataEnd = "}";
 
     List<string> funcData = new();
-    Console.Write(prompt);
+    AnsiConsole.Markup(prompt);
     
     while (true)
     {
         string? readLine = Console.ReadLine();
         if (string.IsNullOrEmpty(readLine))
         {
-            Console.Write(prompt);
+            AnsiConsole.Markup(prompt);
             continue;
         }
 
@@ -113,7 +58,7 @@ if (args.Length == 0)
             funcData.Clear();
             dataStart = "";
             dataEnd = "";
-            Console.Write(prompt);
+            AnsiConsole.Markup(prompt);
             continue;
         }
 
@@ -123,8 +68,8 @@ if (args.Length == 0)
             {
                 Console.WriteLine(data);
             }
-            
-            Console.Write(prompt);
+
+            AnsiConsole.Markup(prompt);
             continue;
         }
 
@@ -148,7 +93,7 @@ if (args.Length == 0)
 
                 dataEnd += userDataToExecute;
                 isFuncOrClass = false;
-                Console.Write(prompt);
+                AnsiConsole.Markup(prompt);
             }
             else
             {
@@ -177,7 +122,7 @@ if (args.Length == 0)
                 Console.WriteLine(e.ToString());
             }
 
-            Console.Write(prompt);
+            AnsiConsole.Markup(prompt);
         }
     }
 }
