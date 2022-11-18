@@ -131,11 +131,14 @@ switch (args.Length)
                 try
                 {
                     Trace.WriteLine(codeToExecute);
-                    Console.WriteLine(compiler.Go(codeToExecute, isFile: false));
+                    string output = compiler.Go(codeToExecute, isFile: false);
+                    Console.WriteLine(output);
                 }
                 catch (Exception e)
                 {
+                    Trace.WriteLine(e.ToString());
                     Console.WriteLine(e.ToString());
+                    Console.WriteLine("Something went wrong! Please restart the application");
                 }
 
                 AnsiConsole.Markup(prompt);
