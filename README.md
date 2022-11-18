@@ -10,7 +10,7 @@ Official Website: https://jukalang.com
 Build Status: [![Cirrus CI - Base Branch Build Status](https://img.shields.io/cirrus/github/jukaLang/Juka)](https://cirrus-ci.com/github/jukaLang/Juka)
 [![Build status](https://ci.appveyor.com/api/projects/status/nmjmm04xhryx8p54?svg=true)](https://ci.appveyor.com/project/TheAndreiM/juka)
 
-![RunJuka](https://user-images.githubusercontent.com/11934545/201482507-54ab0358-1f3b-4b76-9698-baae47b0aac5.png)
+![RunJuka](https://user-images.githubusercontent.com/11934545/202621333-61526d4d-2bdf-409b-8358-d00b7a0aa74b.png)
 
 Main Git Repository: https://github.com/jukaLang/juka
 
@@ -26,8 +26,9 @@ __Follow us on:__
 
 ## 🤝 Donate
 
-Bitcoin Address: 3MqJ2pwcuqh2W5mUPZUcKMVzxgTKcjD8ET
-Ethereum (Ethereum Network) Address: 0xB56F6aff7a84935E5AF9D93b6d7db0e4F4F26B39
+__Bitcoin Address:__ 3MqJ2pwcuqh2W5mUPZUcKMVzxgTKcjD8ET
+
+__Ethereum (Ethereum Network) Address:__ 0xB56F6aff7a84935E5AF9D93b6d7db0e4F4F26B39
 
 ## 💭 Introduction
 
@@ -70,7 +71,7 @@ __Current Supported Device:__
 - Discord Bot
 - Telegram Bot
 
-**__Coming Soon:__**
+__Coming Soon:__
 - Ethereum Network
 - Android App (PlayStore version)
 - iOS App (iPhone/iPad AppStore version)
@@ -92,7 +93,7 @@ __Potential Future Support:__
 - [x] Basic Operations
 - [x] Functions
 - [x] Classes
-- [-] Loops
+- [x] Loops
     - [x] While Statement
     - [x] For Statement
 - [x] Native Functions

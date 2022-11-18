@@ -68,7 +68,7 @@ namespace JukaCompiler
         {
             if (serviceProvider != null)
             {
-                var interpreter = new Interpreter.JukaInterpreter(serviceProvider);
+                var interpreter = new JukaInterpreter(serviceProvider);
                 Resolver? resolver = new(interpreter);
                 resolver.Resolve(statements);
 
@@ -76,16 +76,20 @@ namespace JukaCompiler
 
                 var currentOut = Console.Out;
 
-
-                using (StringWriter stringWriter = new StringWriter())
+                try
                 {
+                    using StringWriter stringWriter = new();
                     Console.SetOut(stringWriter);
                     interpreter.Interpret(statements);
 
-                    String ConsoleOutput = stringWriter.ToString();
+                    string consoleOutput = stringWriter.ToString();
                     Console.SetOut(currentOut);
-
-                    return ConsoleOutput;
+                    return consoleOutput;
+                }
+                catch (Exception e)
+                {
+                    Console.SetOut(currentOut);
+                    return e.ToString();
                 }
             }
 

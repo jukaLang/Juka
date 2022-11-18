@@ -27,7 +27,7 @@ namespace JukaCompiler.Interpreter
 
             if (serviceProvider == null)
             {
-                throw new ArgumentNullException("serviceProvider");
+                throw new ArgumentNullException(nameof(services));
             }
             globals.Define("clock", serviceProvider.GetService<ISystemClock>());
             globals.Define("fileOpen", services.GetService<IFileOpen>());
@@ -348,7 +348,16 @@ namespace JukaCompiler.Interpreter
                 expressionContext = expr,
             };
 
-            frames.Peek().UpdateVariable(expr.ExpressionLexeme?.ToString() ?? string.Empty, stackVariableState);
+            var stackFrame = frames.Peek();
+
+            if (!stackFrame.UpdateVariable(expr.ExpressionLexeme?.ToString() ?? string.Empty, stackVariableState))
+            {
+                if (expr.ExpressionLexeme != null)
+                {
+                    var newVar = new Stmt.Var(expr.ExpressionLexeme, expr);
+                    stackFrame.AddVariable(newVar, this);
+                }
+            }
 
             Debug.Assert(value != null, nameof(value) + " != null");
             return value;
@@ -381,15 +390,10 @@ namespace JukaCompiler.Interpreter
                 }
             }
 
-            if (expr is Literal)
-            {
-                return ((Literal)expr, ((Literal)expr).Type);
-            }
+            if (expr is Literal expr1) return (expr1, expr1.Type);
+            throw new JRuntimeException("Can't get literal data" + expr);
 
             //return VisitBinaryExpr(expr);
-
-            throw new JRuntimeException("Can't get literal data" +expr.ToString());
-
         }
 
         public object VisitBinaryExpr(Expr.Binary expr)
@@ -476,7 +480,7 @@ namespace JukaCompiler.Interpreter
                 return literalStringSum;
             }
 
-            throw new ArgumentNullException("Can't add types");
+            throw new ArgumentNullException(nameof(leftValueType));
         }
         private static object SubtractTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
         {
@@ -495,7 +499,7 @@ namespace JukaCompiler.Interpreter
                 throw new ArgumentException("Can't subtract strings");
             }
 
-            throw new ArgumentNullException("Can't subtract types");
+            throw new ArgumentNullException(nameof(leftValueType));
         }
 
         private static object MultiplyTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
@@ -565,17 +569,22 @@ namespace JukaCompiler.Interpreter
                 throw new("VisitCallExpr - runtime exception interperter");
             }
 
-            if (expr.callee is Expr.Get)
+            switch (expr.callee)
             {
-                var instanceMethod = expr.callee.Accept(this);
-                var declaration = ((JukaFunction)instanceMethod).Declaration;
-                if (declaration != null)
+                case Get:
                 {
-                    var instanceStackFrame = new StackFrame(declaration.StmtLexemeName);
-                    frames.Push(instanceStackFrame);
-                    var instanceMethodReturn = ((JukaFunction)instanceMethod).Call(declaration.StmtLexemeName, this, null!);
-                    frames.Pop();
-                    return instanceMethodReturn;
+                    var instanceMethod = expr.callee.Accept(this);
+                    var declaration = ((JukaFunction)instanceMethod).Declaration;
+                    if (declaration != null)
+                    {
+                        var instanceStackFrame = new StackFrame(declaration.StmtLexemeName);
+                        frames.Push(instanceStackFrame);
+                        var instanceMethodReturn = ((JukaFunction)instanceMethod).Call(declaration.StmtLexemeName, this, null!);
+                        frames.Pop();
+                        return instanceMethodReturn;
+                    }
+
+                    break;
                 }
             }
 
@@ -587,41 +596,44 @@ namespace JukaCompiler.Interpreter
 
             foreach (Expr argument in expr.arguments)
             {
-                if (argument is Expr.Variable)
+                switch (argument)
                 {
-                    var lexeme = (Expr.Variable)argument;
-                    if (lexeme.ExpressionLexeme != null)
+                    case Variable lexeme when lexeme.ExpressionLexeme != null:
                     {
                         object? variable = environment.Get(lexeme.ExpressionLexeme);
                         arguments.Add(variable);
                         argumentsMap.Add(lexeme.ExpressionLexeme.ToString(), variable);
+                        break;
                     }
-                }
-
-                if (argument is Literal)
-                {
-                    Literal literal = (Literal)argument;
-                    arguments.Add(literal.LiteralValue);
-                    argumentsMap.Add(literal.ExpressionLexeme?.ToString()!, literal);
+                    case Literal literal1:
+                    {
+                        Literal literal = literal1;
+                        arguments.Add(literal.LiteralValue);
+                        argumentsMap.Add(literal.ExpressionLexeme?.ToString()!, literal);
+                        break;
+                    }
                 }
             }
             
-            if (argumentsMap.Count > 0)
+            switch (argumentsMap.Count)
             {
-                currentStackFrame.AddVariables(argumentsMap, this);
+                case > 0:
+                    currentStackFrame.AddVariables(argumentsMap, this);
+                    break;
             }
 
-            if (expr.isJukaCallable)
+            switch (expr.isJukaCallable)
             {
-                try
-                { 
-                    var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IJukaCallable));
-                    return jukacall.Call(methodName: expr.callee.ExpressionLexeme.ToString(), this, arguments);
-                }
-                catch(SystemCallException? sce)
-                {
-                    return sce;
-                }
+                case true:
+                    try
+                    { 
+                        var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IJukaCallable));
+                        return jukacall.Call(methodName: expr.callee.ExpressionLexeme.ToString(), this, arguments);
+                    }
+                    catch(SystemCallException? sce)
+                    {
+                        return sce;
+                    }
             }
 
             object? callee = Evaluate(expr.callee);
@@ -777,22 +789,21 @@ namespace JukaCompiler.Interpreter
 
         private bool IsTrue(object? o)
         {
-            if (o == null)
+            switch (o)
             {
-                return false;
-            }
-
-            if (o is bool)
-            {
-                return (bool)o;
-            }
-
-            if (o is LexemeTypeLiteral)
-            {
-                var boolValue = ((Expr.LexemeTypeLiteral) o).Literal;
-                if (boolValue is bool)
+                case null:
+                    return false;
+                case bool b:
+                    return b;
+                case LexemeTypeLiteral literal:
                 {
-                    return IsTrue(boolValue);
+                    var boolValue = literal.Literal;
+                    if (boolValue is bool)
+                    {
+                        return IsTrue(boolValue);
+                    }
+
+                    break;
                 }
             }
 
