@@ -6,7 +6,7 @@ namespace JukaUnitTest
     public class SystemCallsUnitTest : UnitTestStructure
     {
         [TestMethod]
-        [DataRow("getAvailableMemory()", "0")]
+        [DataRow("getAvailableMemory()", "")]
         public void Primitives(string primitive, string expected)
         {
             sourceAsString += @"

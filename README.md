@@ -24,6 +24,11 @@ __Follow us on:__
 [![YouTube](https://img.shields.io/badge/@jukaLang-red?logo=YouTube)](https://www.youtube.com/channel/@jukaLang)
 [![Discord](https://img.shields.io/badge/jukaLang-white?logo=Discord)](https://discord.gg/MsKWsErzfp)
 
+## 🤝 Donate
+
+Bitcoin Address: 3MqJ2pwcuqh2W5mUPZUcKMVzxgTKcjD8ET
+Ethereum (Ethereum Network) Address: 0xB56F6aff7a84935E5AF9D93b6d7db0e4F4F26B39
+
 ## 💭 Introduction
 
 Juka's main goal is to be a portable, easy to use, universal programming language that can run on any platform including mobile devices, IOT, and cloud.
@@ -62,11 +67,11 @@ __Current Supported Device:__
 - [Virtual Box Image (JukaVM)](https://github.com/jukaLang/jukaVM)
 - [Windows App (Windows 10+)](https://github.com/jukaLang/JukaApp)
 - Android App (Can be sideloaded https://jukalang.com/download, but not in PlayStore yet)
-- Slack Bot
 - Discord Bot
 - Telegram Bot
 
 **__Coming Soon:__**
+- Ethereum Network
 - Android App (PlayStore version)
 - iOS App (iPhone/iPad AppStore version)
 - Tizen (Samsung)
@@ -79,6 +84,26 @@ __Potential Future Support:__
 - Amazon Web Service (Native Support)
 - Google Cloud (Native Support)
 - Arduino
+
+## 📜 To Do
+
+- [x] Print/PrintLine
+- [x] Variable Declaration
+- [x] Basic Operations
+- [x] Functions
+- [x] Classes
+- [-] Loops
+    - [x] While Statement
+    - [x] For Statement
+- [x] Native Functions
+    - [x] GetAvailableMemory
+    - [x] SystemClock
+- [ ] Tail Recursion
+- [ ] Array
+- [ ] Dynamic List
+- [ ] Get (for importing files)
+- [ ] Try and Catch
+
 
 ## 📚 Documentation
 - Dynamic: https://jukalang.com/docs
