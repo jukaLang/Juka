@@ -338,9 +338,12 @@ namespace JukaCompiler.Scan
         }
         internal void Number()
         {
-            while(IsNumber(Peek()))
+            char temp = Peek();
+
+            while (IsNumber(temp) || temp.Equals('.'))
             {
                 Advance();
+                temp = Peek();
             }
 
             var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start, current));

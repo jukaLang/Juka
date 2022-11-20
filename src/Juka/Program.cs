@@ -72,8 +72,8 @@ switch (args.Length)
                 compiler = new Compiler();
                 isFuncOrClass = false;
                 funcData.Clear();
-                dataStart = "";
-                dataEnd = "";
+                dataStart = "func main() = {";
+                dataEnd = "}";
                 AnsiConsole.Markup(prompt);
                 continue;
             }

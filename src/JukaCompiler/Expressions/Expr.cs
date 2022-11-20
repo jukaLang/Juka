@@ -54,7 +54,7 @@ namespace JukaCompiler.Expressions
         }
         internal class Variable : Expr
         {
-            internal Int64 lexemeType;
+            internal Decimal lexemeType;
 
             internal Variable(Lexeme ExpressionLexeme)
             {
