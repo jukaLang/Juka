@@ -13,9 +13,9 @@ namespace JukaCompiler.Interpreter
         private FunctionType currentFunction = FunctionType.NONE;
         private ClassType currentClass = ClassType.NONE;
         private ServiceProvider? ServiceProvider;
-        private Stack<Dictionary<string, bool>> scopes = new Stack<Dictionary<string, bool>>();
-        Dictionary<string, BlockScope?> processScope = new Dictionary<string, BlockScope?>();
-        private Stack<string> blockScope = new Stack<string>();
+        private Stack<Dictionary<string, bool>> scopes = new();
+        Dictionary<string, BlockScope?> processScope = new();
+        private Stack<string> blockScope = new();
         private ICompilerError? compilerError;
         private string errorMessage = "Resolver error - message:{0}";
 
@@ -467,7 +467,7 @@ namespace JukaCompiler.Interpreter
 
     internal class BlockScope
     {
-        internal Dictionary<string, Dictionary<string, Expr>> processScope = new Dictionary<string, Dictionary<string, Expr>>();
-        internal Dictionary<string, Lexeme> lexemeScope = new Dictionary<string, Lexeme>();
+        internal Dictionary<string, Dictionary<string, Expr>> processScope = new();
+        internal Dictionary<string, Lexeme> lexemeScope = new();
     }
 }
