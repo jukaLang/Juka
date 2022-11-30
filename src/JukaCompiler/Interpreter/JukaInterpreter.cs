@@ -573,13 +573,13 @@ namespace JukaCompiler.Interpreter
             {
                 case Get:
                 {
-                    var instanceMethod = expr.callee.Accept(this);
-                    var declaration = ((JukaFunction)instanceMethod).Declaration;
+                    object instanceMethod = expr.callee.Accept(this);
+                    Stmt.Function? declaration = ((JukaFunction)instanceMethod).Declaration;
                     if (declaration != null)
                     {
-                        var instanceStackFrame = new StackFrame(declaration.StmtLexemeName);
+                        StackFrame instanceStackFrame = new(declaration.StmtLexemeName);
                         frames.Push(instanceStackFrame);
-                        var instanceMethodReturn = ((JukaFunction)instanceMethod).Call(declaration.StmtLexemeName, this, null!);
+                        object? instanceMethodReturn = ((JukaFunction)instanceMethod).Call(declaration.StmtLexemeName, this, null!);
                         frames.Pop();
                         return instanceMethodReturn;
                     }
@@ -588,10 +588,10 @@ namespace JukaCompiler.Interpreter
                 }
             }
 
-            var currentStackFrame = new StackFrame(expr.callee.ExpressionLexeme.ToString());
+            StackFrame currentStackFrame = new(expr.callee.ExpressionLexeme.ToString());
             frames.Push(currentStackFrame);
 
-            var arguments = new List<object?>();
+            List<object?> arguments = new();
             Dictionary<string, object?> argumentsMap = new();
 
             foreach (Expr argument in expr.arguments)
@@ -627,7 +627,7 @@ namespace JukaCompiler.Interpreter
                 case true:
                     try
                     { 
-                        var jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IJukaCallable));
+                        IJukaCallable? jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IJukaCallable));
                         return jukacall.Call(methodName: expr.callee.ExpressionLexeme.ToString(), this, arguments);
                     }
                     catch(SystemCallException? sce)

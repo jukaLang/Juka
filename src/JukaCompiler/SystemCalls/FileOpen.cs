@@ -25,7 +25,7 @@ namespace JukaCompiler.SystemCalls
 
     internal class JukaSystemCalls : IJukaCallable
     {
-        public static readonly Dictionary<string, Type> kv = new Dictionary<string, Type>()
+        public static readonly Dictionary<string, Type> kv = new()
         {
             {"FileOpen", typeof(IFileOpen)},
         };
@@ -60,10 +60,10 @@ namespace JukaCompiler.SystemCalls
             { 
                 foreach(var argument in arguments)
                 {
-                    if (argument is Expr.LexemeTypeLiteral)
+                    if (argument is Expr.LexemeTypeLiteral literal)
                     {
-                        byte[] bytes = File.ReadAllBytes( ((Expr.LexemeTypeLiteral)argument).literal?.ToString() ?? string.Empty);
-                        Console.Out.WriteLine(((Expr.LexemeTypeLiteral)argument));
+                        byte[] bytes = File.ReadAllBytes( literal.literal?.ToString() ?? string.Empty);
+                        Console.Out.WriteLine(literal);
                         return bytes;
                     }
                 }
@@ -73,7 +73,7 @@ namespace JukaCompiler.SystemCalls
                 throw new SystemCallException(ex);
             }
 
-            return new byte[0];
+            return Array.Empty<byte>();
         }
     }
 }

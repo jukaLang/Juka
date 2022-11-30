@@ -21,7 +21,7 @@ __Follow us on:__
 [![Facebook](https://img.shields.io/badge/JukaLang-white?logo=Facebook)](https://www.facebook.com/jukaLang/)
 [![Instagram](https://img.shields.io/badge/jukalanguage-white?logo=Instagram)](https://www.instagram.com/jukalanguage/)
 [![Twitter](https://img.shields.io/badge/@jukaLang-white?logo=Twitter)](https://twitter.com/jukaLang/)
-[![YouTube](https://img.shields.io/badge/@jukaLang-red?logo=YouTube)](https://www.youtube.com/channel/@jukaLang)
+[![YouTube](https://img.shields.io/badge/@jukaLang-red?logo=YouTube)](https://www.youtube.com/@jukaLang)
 [![Discord](https://img.shields.io/badge/jukaLang-white?logo=Discord)](https://discord.gg/MsKWsErzfp)
 
 ## 🤝 Donate

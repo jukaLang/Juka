@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System.IO.Compression;
 using System.Reflection;
 using System.Text;
+using Spectre.Console;
 
 namespace Juka
 {
@@ -28,13 +29,13 @@ namespace Juka
                     }
 
                     if (currentVersion == "0.0.0.1") currentVersion = "DEBUG BUILD";
-                    Console.WriteLine($"Current Version: {currentVersion}");
+                    AnsiConsole.MarkupLine($"[bold yellow]Current Version:[/] {currentVersion}");
                     break;
                 }
                 case "-su":
                 case "--self-update":
                 {
-                    Console.WriteLine("Updating Juka Programming Language...");
+                    AnsiConsole.MarkupLine("[bold yellow]Updating Juka Programming Language...[/]");
                     string currentVersion = "0.0.0.1";
                     Version? curVer = Assembly.GetExecutingAssembly().GetName().Version;
                     if (curVer != null)
@@ -44,11 +45,11 @@ namespace Juka
 
                     if (currentVersion == "0.0.0.1")
                     {
-                        Console.WriteLine("Current Version: DEBUG BUILD");
+                        AnsiConsole.MarkupLine("Current Version: DEBUG BUILD");
                     }
                     else
                     {
-                        Console.WriteLine($"Current Version: {currentVersion}");
+                        AnsiConsole.MarkupLine($"[bold yellow]Current Version:[/] {currentVersion}");
                     }
 
                     HttpClient client = new()
