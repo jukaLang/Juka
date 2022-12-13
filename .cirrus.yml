@@ -6,7 +6,7 @@ task:
       image_family: freebsd-13-1
     environment:
       - GITHUB_TOKEN: ENCRYPTED[38a5a4b83d9859dccc98655bdc993fb9da11ad43d0c787473b692f45732505f167335e45564474e9f3a1cbe7a883b3ae]
-      - JUKA_TOKEN: Unix_Amd64
+      - JUKA_TOKEN: Unix_X64
     setup_script:
     - pkg install -y wget bash libunwind libinotify icu libuv gdb libffi wget bash glib gnutls libarchive libuv openssl sqlite3 libiconv ca_root_nss
     - sudo mkdir /dotnet
@@ -22,8 +22,8 @@ task:
     - /dotnet/dotnet test
     package_script:
     - /dotnet/dotnet publish /tmp/cirrus-ci-build/src/Juka.sln -c release --self-contained true -a "" /p:Version=${CIRRUS_TAG}
-    - tar -czf Juka_Unix_Amd64_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/Juka/bin/Release/net6.0/freebsd-x64/publish .
-    - tar -czf JukaAPI_Unix_Amd64_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/JukaApi/bin/Release/net6.0/freebsd-x64/publish .
+    - tar -czf Juka_Unix_X64_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/Juka/bin/Release/net6.0/freebsd-x64/publish .
+    - tar -czf JukaAPI_Unix_X64_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/JukaApi/bin/Release/net6.0/freebsd-x64/publish .
     - chmod 777 *.sh
     - ./publish.sh
   - name: Linux Build
