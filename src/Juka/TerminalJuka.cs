@@ -70,7 +70,7 @@ namespace Juka
                     Console.WriteLine($"Latest Version: {latestVersion}");
                     if (String.Compare(currentVersion, latestVersion, StringComparison.Ordinal) < 0)
                     {
-                        string processor = Assembly.GetExecutingAssembly().GetName().ProcessorArchitecture.ToString();
+                        string processor = System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture.ToString();
 
                         PlatformID pid = Environment.OSVersion.Platform;
                         string platform = pid switch
@@ -85,8 +85,8 @@ namespace Juka
                             PlatformID.Other => "Linux",
                             _ => "Linux"
                         };
-                        Console.WriteLine($"Your Juka Assembly Version: {processor}");
-                        Console.WriteLine($"Your Operating System: {platform} ");
+                        AnsiConsole.MarkupLine($"[bold orange]Your Operating System:[/] [green]{platform}[/]");
+                        AnsiConsole.MarkupLine($"[bold orange]Your Juka Assembly Version:[/] [green]{processor}[/]");
                         string dir = AppDomain.CurrentDomain.BaseDirectory;
                         string? name = Assembly.GetExecutingAssembly().GetName().Name;
 
@@ -118,9 +118,10 @@ namespace Juka
 
                         switch (processor)
                         {
-                            case "Amd64":
+                            case "X64":
                             case "X86":
                             case "Arm":
+                            case "Arm64":
                             {
                                 string url = "https://github.com/jukaLang/Juka/releases/download/" + latestVersion + "/Juka_" +
                                              platform + "_" + processor + "_" + latestVersion + zipext;
@@ -178,21 +179,21 @@ namespace Juka
                                         memStr.Seek(offset, SeekOrigin.Current);
                                     }
                                 }
-                                Console.WriteLine("Updated to version: " + latestVersion);
+                                AnsiConsole.MarkupLine("[green]Updated to version: " + latestVersion +"[/]");
                                 break;
                             }
                             case "MSIL":
-                                Console.WriteLine("You seem to be using a debug version of Juka. Can't update!");
+                                AnsiConsole.MarkupLine("[yellow]You seem to be using a debug version of Juka. Can't update![/]");
                                 break;
                             default:
-                                Console.WriteLine("Something went wrong! Please post this on Juka's issues page");
+                                AnsiConsole.MarkupLine("[red]Something went wrong! We cannot determine your processor...If you see this, please post it on the Issues Page![/]");
                                 break;
                         }
 
                     }
                     else
                     {
-                        Console.WriteLine("No need to update. You are using the latest version!");
+                        AnsiConsole.MarkupLine("[green]You are using the latest version![/] No need to update!");
                     }
 
                     break;
