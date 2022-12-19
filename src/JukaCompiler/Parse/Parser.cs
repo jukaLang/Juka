@@ -707,9 +707,14 @@ namespace JukaCompiler.Parse
                 Lexeme identifierName = Previous();
                 if (Match(LexemeType.LEFT_BRACE))
                 {
-                    var size = Consume(LexemeType.NUMBER, Peek());
+                    var index = Consume(LexemeType.NUMBER, Peek());
                     Consume(LexemeType.RIGHT_BRACE, Peek());
-                    return new Expr.ArrayAccessExpr(identifierName, size);
+                    if (Match(LexemeType.EQUAL))
+                    {
+                        return new Expr.ArrayAccessExpr(identifierName, index, Expr());
+                    }
+
+                    return new Expr.ArrayAccessExpr(identifierName, index);
                 }
 
                 return new Expr.Variable(identifierName);

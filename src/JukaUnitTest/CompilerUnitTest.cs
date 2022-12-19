@@ -47,10 +47,13 @@ namespace JukaUnitTest
                 @"func test_func() = 
                 {
                     var x = array[3];
-                    print(""y"");
+                    x[1] = ""test"";
+                    x[0] = ""foo"";
+                    x[2] = 3;
+                    print(x[1]);
                 }";
 
-            Assert.AreEqual("y", Go());
+            Assert.AreEqual("test", Go());
         }
 
 
