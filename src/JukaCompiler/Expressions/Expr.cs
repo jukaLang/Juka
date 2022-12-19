@@ -136,11 +136,22 @@ namespace JukaCompiler.Expressions
         {
             internal int ArraySize { get; }
             internal Lexeme ArrayVariableName { get; }
+            internal Expr LvalueExpr { get; }
+            internal bool HasInitalizer { get; }
 
             internal ArrayAccessExpr(Lexeme arrayVariableName, Lexeme arraySize)
             {
                 ArraySize = int.Parse(arraySize.ToString());
                 ExpressionLexeme = ArrayVariableName = arrayVariableName;
+                HasInitalizer = false;
+            }
+
+            internal ArrayAccessExpr(Lexeme arrayVariableName, Lexeme arraySize, Expr expr)
+            {
+                ArraySize = int.Parse(arraySize.ToString());
+                ExpressionLexeme = ArrayVariableName = arrayVariableName;
+                LvalueExpr = expr;
+                HasInitalizer = true;
             }
 
             internal override R Accept<R>(IVisitor<R> visitor)
