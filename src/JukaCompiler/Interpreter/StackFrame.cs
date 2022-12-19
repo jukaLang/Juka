@@ -11,7 +11,6 @@ namespace JukaCompiler.Interpreter
         private string frameName;
         private Dictionary<string, object?> variables = new();
         private Dictionary<string, StackVariableState> variableAndKind = new();
-        private Dictionary<string, ArrayImplementation?> stackArrayImplementations = new();
 
         internal StackFrame(string name)
         {
@@ -95,31 +94,13 @@ namespace JukaCompiler.Interpreter
             return false;
         }
 
-        internal bool TryGetStackArrayVariableByName(string name, out ArrayImplementation? arrayImplementation)
-        {
-            arrayImplementation = null;
-            if (this.stackArrayImplementations.ContainsKey(name))
-            {
-                arrayImplementation = stackArrayImplementations[name];
-                return true;
-            }
-
-            return false;
-        }
-
-        internal void AddStackArray(Lexeme name, int size)
-        {
-            var arrayName = name.ToString();
-            ArrayImplementation? arrayImplementation = new ArrayImplementation(arrayName, size);
-            this.stackArrayImplementations.Add(arrayName, arrayImplementation);
-        }
-
         internal class StackVariableState
         {
             internal string Name = null!;
             internal object? Value;
             internal Type? type;
             internal Expr? expressionContext;
+            internal object[] arrayValues;
         }
     }
 }

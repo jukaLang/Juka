@@ -172,17 +172,7 @@ namespace JukaCompiler.Interpreter
         {
             if (expr != null)
             {
-                if (expr is Expr.Literal || expr is Expr.LexemeTypeLiteral)
-                {
-                    var lexemeTypeLiteral = Evaluate(expr) as Expr.LexemeTypeLiteral;
-                    if (lexemeTypeLiteral?.Literal != null)
-                    {
-                        if (lexemeTypeLiteral?.Literal != null)
-                        {
-                            printAction(lexemeTypeLiteral?.Literal!);
-                        }
-                    }
-                }
+                PrintLiteralExpr(expr, printAction);
 
                 if (expr is Variable)
                 {
@@ -197,19 +187,43 @@ namespace JukaCompiler.Interpreter
                     var variableExpression = expr as ArrayAccessExpr;
                     var variableName = variableExpression?.ArrayVariableName.ToString();
 
-                    if (variableName != null && frames.Peek().TryGetStackArrayVariableByName(variableName, out ArrayImplementation? arrayImplementation))
+                    if (variableName != null && frames.Peek().TryGetStackVariableByName(variableName, out StackVariableState stackVariableState))
                     {
-                        if (frames.Peek()
-                            .TryGetStackVariableByName(variableName, out var variableState))
+                        var arrayData = stackVariableState.arrayValues[variableExpression.ArraySize];
+                        if (arrayData is Expr.Literal)
                         {
-                            int arrayIndex = (int)variableState?.Value!;
-                            printAction(arrayImplementation?.GetAt(arrayIndex)!);
+                            PrintLiteral((Expr.Literal)arrayData, printAction);
                         }
                     }
                 }
             }
 
             return new();
+        }
+
+        private void PrintLiteralExpr(Expr expr, Action<object> printAction)
+        {
+            if (expr is Expr.Literal || expr is Expr.LexemeTypeLiteral)
+            {
+                var lexemeTypeLiteral = Evaluate(expr) as Expr.LexemeTypeLiteral;
+                PrintLiteral(lexemeTypeLiteral, printAction);
+            }
+        }
+
+        private void PrintLiteral(Expr.Literal expr, Action<object> printAction)
+        {
+            printAction(expr.ExpressionLexemeName);
+        }
+
+        private void PrintLiteral(Expr.LexemeTypeLiteral expr, Action<object> printAction)
+        {
+            if (expr?.Literal != null)
+            {
+                if (expr?.Literal != null)
+                {
+                    printAction(expr?.Literal!);
+                }
+            }
         }
 
         private bool PrintVariableLookUp(Expr.Variable expr, Action<object> printTypeAction)
@@ -746,13 +760,27 @@ namespace JukaCompiler.Interpreter
         public object VisitArrayExpr(Expr.ArrayDeclarationExpr expr)
         {
             var currentFrame = frames.Peek();
-            if (expr.initializerContextVariableName != null)
-                currentFrame.AddStackArray(expr.initializerContextVariableName, expr.ArraySize);
+            //if (expr.initializerContextVariableName != null)
+            //    currentFrame.AddStackArray(expr.initializerContextVariableName, expr.ArraySize);
             return expr.ArraySize;
         }
 
         public object VisitArrayAccessExpr(ArrayAccessExpr expr)
         {
+            var stackVariableState = LookUpVariable(expr.ArrayVariableName, expr) as StackVariableState;
+
+            if (expr.ArraySize > (int)stackVariableState.Value)
+            {
+                throw new JRuntimeException("Array index out of bounds");
+            }
+
+            if (stackVariableState.arrayValues == null)
+            {
+                stackVariableState.arrayValues = new object[(int)stackVariableState.Value];
+            }
+
+            stackVariableState.arrayValues[expr.ArraySize] = expr.LvalueExpr;
+
             return new Stmt.DefaultStatement();
         }
 
