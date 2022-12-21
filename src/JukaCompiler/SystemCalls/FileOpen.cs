@@ -39,8 +39,8 @@ namespace JukaCompiler.SystemCalls
         {
             if(JukaSystemCalls.kv.TryGetValue(methodName, out var theType))
             { 
-                var jukacall = (IJukaCallable)interpreter.ServiceProvider.GetService(theType);
-                return jukacall.Call(methodName, interpreter, arguments);
+                var jukacall = (IJukaCallable)interpreter.ServiceProvider.GetService(theType)!;
+                return jukacall?.Call(methodName, interpreter, arguments);
             }
 
             throw new Exception("");

@@ -58,6 +58,7 @@ namespace JukaCompiler.Lexer
         internal static Int64 BREAK                 = 0x8000000000000;
         internal static Int64 ARRAY                 = 0x10000000000000;
         internal static Int64 PLUSPLUS              = 0x20000000000000;
+        internal static Int64 NEW                   = 0x40000000000000;
     }
     internal class Lexeme
     {

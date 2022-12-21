@@ -294,6 +294,11 @@ namespace JukaCompiler.Interpreter
             return new Stmt.DefaultStatement();
         }
 
+        public object VisitNewExpr(NewDeclarationExpr expr)
+        {
+            return new Stmt.DefaultStatement();
+        }
+
         public object VisitArrayAccessExpr(ArrayAccessExpr expr)
         {
             return new Stmt.DefaultStatement();
