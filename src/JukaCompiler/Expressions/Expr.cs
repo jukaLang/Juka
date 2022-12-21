@@ -20,6 +20,7 @@ namespace JukaCompiler.Expressions
             R VisitVariableExpr(Variable expr);
             R VisitLexemeTypeLiteral(LexemeTypeLiteral expr);
             R VisitArrayExpr(ArrayDeclarationExpr expr);
+            R VisitNewExpr(NewDeclarationExpr expr);
             R VisitArrayAccessExpr(ArrayAccessExpr expr);
         }
 
@@ -109,6 +110,19 @@ namespace JukaCompiler.Expressions
             }
         }
 
+        internal class NewDeclarationExpr : Expr
+        {
+            private Expr newDeclarationExprInit;
+
+            internal NewDeclarationExpr(Expr expr)
+            {
+                this.newDeclarationExprInit = expr;
+            }
+            internal override R Accept<R>(IVisitor<R> visitor)
+            {
+                return visitor.VisitNewExpr(this);
+            }
+        }
         internal class ArrayDeclarationExpr : Expr
         {
             internal int ArraySize { get; }
@@ -144,6 +158,7 @@ namespace JukaCompiler.Expressions
                 ArraySize = int.Parse(arraySize.ToString());
                 ExpressionLexeme = ArrayVariableName = arrayVariableName;
                 HasInitalizer = false;
+                LvalueExpr = new DefaultExpr();
             }
 
             internal ArrayAccessExpr(Lexeme arrayVariableName, Lexeme arraySize, Expr expr)
@@ -184,7 +199,6 @@ namespace JukaCompiler.Expressions
                 this.expr = expr;
                 this.ExpressionLexeme = lex;
             }
-
             internal override R Accept<R>(IVisitor<R> visitor)
             {
                 return visitor.VisitGetExpr(this);
@@ -198,7 +212,6 @@ namespace JukaCompiler.Expressions
                 expressionLexeme = lex;
                 this.lexemeType = lexemeType;
             }
-
             internal override R Accept<R>(IVisitor<R> visitor)
             {
                 return visitor.VisitUnaryExpr(this);
@@ -238,7 +251,6 @@ namespace JukaCompiler.Expressions
             internal Literal()
             {
             }
-
             internal override R Accept<R>(IVisitor<R> visitor)
             {
                 return visitor.VisitLiteralExpr(this);
@@ -292,7 +304,6 @@ namespace JukaCompiler.Expressions
         {
             internal Super(Expr expr, Lexeme lex, Expr right)
             {
-
             }
 
             internal override R Accept<R>(IVisitor<R> visitor)
