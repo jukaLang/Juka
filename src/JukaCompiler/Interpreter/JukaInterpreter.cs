@@ -187,12 +187,15 @@ namespace JukaCompiler.Interpreter
                     var variableExpression = expr as ArrayAccessExpr;
                     var variableName = variableExpression?.ArrayVariableName.ToString();
 
-                    if (variableName != null && frames.Peek().TryGetStackVariableByName(variableName, out StackVariableState stackVariableState))
+                    if (variableName != null && frames.Peek().TryGetStackVariableByName(variableName, out StackVariableState? stackVariableState))
                     {
-                        var arrayData = stackVariableState.arrayValues[variableExpression.ArraySize];
-                        if (arrayData is Expr.Literal)
+                        if (variableExpression != null)
                         {
-                            PrintLiteral((Expr.Literal)arrayData, printAction);
+                            var arrayData = stackVariableState?.arrayValues[variableExpression.ArraySize];
+                            if (arrayData is Expr.Literal)
+                            {
+                                PrintLiteral((Expr.Literal)arrayData, printAction);
+                            }
                         }
                     }
                 }
@@ -205,8 +208,10 @@ namespace JukaCompiler.Interpreter
         {
             if (expr is Expr.Literal || expr is Expr.LexemeTypeLiteral)
             {
-                var lexemeTypeLiteral = Evaluate(expr) as Expr.LexemeTypeLiteral;
-                PrintLiteral(lexemeTypeLiteral, printAction);
+                if (Evaluate(expr) is LexemeTypeLiteral lexemeTypeLiteral)
+                {
+                    PrintLiteral(lexemeTypeLiteral, printAction);
+                }
             }
         }
 
@@ -641,7 +646,7 @@ namespace JukaCompiler.Interpreter
                 case true:
                     try
                     { 
-                        IJukaCallable? jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IJukaCallable));
+                        IJukaCallable? jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IJukaCallable))!;
                         return jukacall.Call(methodName: expr.callee.ExpressionLexeme.ToString(), this, arguments);
                     }
                     catch(SystemCallException? sce)
@@ -765,18 +770,23 @@ namespace JukaCompiler.Interpreter
             return expr.ArraySize;
         }
 
+        public object VisitNewExpr(NewDeclarationExpr expr)
+        {
+            throw new NotImplementedException("The new keyword has not been implemented. I need to have a model for allocating and dealocating objects. Potentially a garbage collection model.");
+        }
+
         public object VisitArrayAccessExpr(ArrayAccessExpr expr)
         {
             var stackVariableState = LookUpVariable(expr.ArrayVariableName, expr) as StackVariableState;
 
-            if (expr.ArraySize > (int)stackVariableState.Value)
+            if (expr.ArraySize > (int)(stackVariableState?.Value ?? 0))
             {
                 throw new JRuntimeException("Array index out of bounds");
             }
 
-            if (stackVariableState.arrayValues == null)
+            if (stackVariableState?.arrayValues == null)
             {
-                stackVariableState.arrayValues = new object[(int)stackVariableState.Value];
+                stackVariableState!.arrayValues = new object[(int)(stackVariableState.Value ?? 0)];
             }
 
             stackVariableState.arrayValues[expr.ArraySize] = expr.LvalueExpr;

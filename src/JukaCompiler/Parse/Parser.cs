@@ -5,6 +5,7 @@ using JukaCompiler.Scan;
 using JukaCompiler.Statements;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
+using static JukaCompiler.Expressions.Expr;
 
 namespace JukaCompiler.Parse
 {
@@ -451,11 +452,10 @@ namespace JukaCompiler.Parse
         private Stmt.Var VariableDeclaration()
         {
             Lexeme name = Consume(LexemeType.IDENTIFIER, Peek());
-            Expr? initalizedState = null;
 
             if (Match(LexemeType.EQUAL))
             {
-                initalizedState = Expr();
+                var initalizedState = Expr();
                 Consume(LexemeType.SEMICOLON, Peek());
                 return new Stmt.Var(name, initalizedState);
             }
@@ -622,6 +622,12 @@ namespace JukaCompiler.Parse
             }
 
             Lexeme idLexeme = Peek();
+            if (idLexeme.LexemeType == LexemeType.NEW)
+            {
+                Match(LexemeType.NEW);
+                return new NewDeclarationExpr(Expr());
+            }
+
             if (idLexeme.LexemeType == LexemeType.IDENTIFIER)
             {
                 Lexeme isPlus = Peek(1);
@@ -637,20 +643,6 @@ namespace JukaCompiler.Parse
             }
 
             return Call();
-        }
-
-        private Expr Array()
-        {
-            if (Match(LexemeType.LEFT_BRACE))
-            {
-                Lexeme value = Consume(LexemeType.NUMBER, Peek());
-                if (Match(LexemeType.RIGHT_BRACE))
-                {
-                    return new Expr.ArrayDeclarationExpr(int.Parse(value.ToString()));
-                }
-            }
-
-            throw new JRuntimeException("Unable to Parse Array[]");
         }
 
         private Expr Call()
@@ -700,6 +692,11 @@ namespace JukaCompiler.Parse
                 var name = new Lexeme(LexemeType.ARRAY, 0, 0);
                 name.AddToken("array");
                 return new Expr.ArrayDeclarationExpr(name,size);
+            }
+
+            if (Match(LexemeType.NEW))
+            {
+                var expr = Expr();
             }
 
             if ( Match(LexemeType.IDENTIFIER))

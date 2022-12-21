@@ -41,7 +41,7 @@ namespace JukaUnitTest
 
 
         [TestMethod]
-        public void Fibonacci()
+        public void StackBasedArray()
         {
             sourceAsString +=
                 @"func test_func() = 
@@ -57,6 +57,21 @@ namespace JukaUnitTest
         }
 
 
+        [TestMethod]
+        public void HeapBasedArray()
+        {
+            sourceAsString +=
+                @"func test_func() = 
+                {
+                    var x = new array[3];
+                    x[1] = ""test"";
+                    x[0] = ""foo"";
+                    x[2] = 3;
+                    print(x[1]);
+                }";
+
+            Assert.AreEqual("test", Go());
+        }
 
 
 
