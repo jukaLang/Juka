@@ -22,6 +22,7 @@ namespace JukaCompiler.Expressions
             R VisitArrayExpr(ArrayDeclarationExpr expr);
             R VisitNewExpr(NewDeclarationExpr expr);
             R VisitArrayAccessExpr(ArrayAccessExpr expr);
+            R VisitDeleteExpr(DeleteDeclarationExpr expr);
         }
 
         internal abstract R Accept<R>(Expr.IVisitor<R> visitor);
@@ -55,7 +56,7 @@ namespace JukaCompiler.Expressions
         }
         internal class Variable : Expr
         {
-            internal Decimal lexemeType;
+            internal LexemeType.Types lexemeType;
 
             internal Variable(Lexeme ExpressionLexeme)
             {
@@ -112,17 +113,33 @@ namespace JukaCompiler.Expressions
 
         internal class NewDeclarationExpr : Expr
         {
-            private Expr newDeclarationExprInit;
+            public Expr NewDeclarationExprInit { get; }
 
             internal NewDeclarationExpr(Expr expr)
             {
-                this.newDeclarationExprInit = expr;
+                this.NewDeclarationExprInit = expr;
             }
             internal override R Accept<R>(IVisitor<R> visitor)
             {
                 return visitor.VisitNewExpr(this);
             }
         }
+
+        internal class DeleteDeclarationExpr : Expr
+        {
+            private Expr variable;
+
+            internal DeleteDeclarationExpr(Expr expr)
+            {
+                this.variable = expr;
+            }
+
+            internal override R Accept<R>(IVisitor<R> visitor)
+            {
+                return visitor.VisitDeleteExpr(this);
+            }
+        }
+
         internal class ArrayDeclarationExpr : Expr
         {
             internal int ArraySize { get; }
@@ -148,14 +165,14 @@ namespace JukaCompiler.Expressions
         }
         internal class ArrayAccessExpr : Expr
         {
-            internal int ArraySize { get; }
+            internal int ArrayIndex { get; }
             internal Lexeme ArrayVariableName { get; }
             internal Expr LvalueExpr { get; }
             internal bool HasInitalizer { get; }
 
             internal ArrayAccessExpr(Lexeme arrayVariableName, Lexeme arraySize)
             {
-                ArraySize = int.Parse(arraySize.ToString());
+                ArrayIndex = int.Parse(arraySize.ToString());
                 ExpressionLexeme = ArrayVariableName = arrayVariableName;
                 HasInitalizer = false;
                 LvalueExpr = new DefaultExpr();
@@ -163,7 +180,7 @@ namespace JukaCompiler.Expressions
 
             internal ArrayAccessExpr(Lexeme arrayVariableName, Lexeme arraySize, Expr expr)
             {
-                ArraySize = int.Parse(arraySize.ToString());
+                ArrayIndex = int.Parse(arraySize.ToString());
                 ExpressionLexeme = ArrayVariableName = arrayVariableName;
                 LvalueExpr = expr;
                 HasInitalizer = true;
@@ -206,8 +223,8 @@ namespace JukaCompiler.Expressions
         }
         internal class Unary : Expr
         {
-            private long lexemeType;
-            internal Unary(Lexeme lex, long lexemeType)
+            private LexemeType.Types lexemeType;
+            internal Unary(Lexeme lex, LexemeType.Types lexemeType)
             {
                 expressionLexeme = lex;
                 this.lexemeType = lexemeType;
@@ -217,7 +234,7 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitUnaryExpr(this);
             }
 
-            public long LexemeType => lexemeType;
+            public LexemeType.Types LexemeType => lexemeType;
         }
         internal class Grouping : Expr
         {
@@ -240,9 +257,9 @@ namespace JukaCompiler.Expressions
         internal class Literal : Expr
         {
             private readonly object? value;
-            private readonly long type;
+            private readonly LexemeType.Types type;
 
-            internal Literal(Lexeme literal, long type)
+            internal Literal(Lexeme literal, LexemeType.Types type)
             {
                 this.ExpressionLexeme = literal;
                 this.value = literal;
@@ -273,7 +290,7 @@ namespace JukaCompiler.Expressions
                 //return literal;
             }
 
-            internal long Type
+            internal LexemeType.Types Type
             {
                 get { return type; }
             }
@@ -333,7 +350,7 @@ namespace JukaCompiler.Expressions
         }
         internal class LexemeTypeLiteral : Expr
         {
-            internal long lexemeType;
+            internal LexemeType.Types lexemeType;
             internal object? literal;
 
             internal new object Literal
@@ -342,7 +359,7 @@ namespace JukaCompiler.Expressions
                 set => literal = value;
             }
 
-            internal long LexemeType
+            internal LexemeType.Types LexemeType
             {
                 get => this.lexemeType;
                 set => this.lexemeType = value;

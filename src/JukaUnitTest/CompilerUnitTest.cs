@@ -65,9 +65,8 @@ namespace JukaUnitTest
                 {
                     var x = new array[3];
                     x[1] = ""test"";
-                    x[0] = ""foo"";
-                    x[2] = 3;
                     print(x[1]);
+                    delete x;
                 }";
 
             Assert.AreEqual("test", Go());
