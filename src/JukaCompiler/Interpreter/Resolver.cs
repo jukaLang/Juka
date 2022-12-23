@@ -304,6 +304,11 @@ namespace JukaCompiler.Interpreter
             return new Stmt.DefaultStatement();
         }
 
+        public object VisitDeleteExpr(DeleteDeclarationExpr expr)
+        {
+            return new Stmt.DefaultStatement();
+        }
+
         public object VisitSetExpr(Expr.Set expr)
         {
             throw new NotImplementedException("Resolver VisitSetExpr is not implemented");
