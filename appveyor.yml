@@ -162,7 +162,7 @@ after_deploy:
  - ps: $headers["Content-type"] = "application/json"
  - ps: $dbinar = @{}
  - ps: $dbinar["accountName"] = 'TheAndreiM'
- - ps: $dbinar["projectSlug"] = 'juka-webassembly'
+ - ps: $dbinar["projectSlug"] = 'jukaIDE'
  - ps: $dbinar["branch"] = 'main'
  - ps: $dbinar["environmentVariables"] = @{}
  - ps: $bod = $dbinar | ConvertTo-json
