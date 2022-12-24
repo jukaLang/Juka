@@ -50,7 +50,7 @@ namespace JukaCompiler.Interpreter
                 }
             }
 
-            Lexeme? lexeme = new(LexemeType.IDENTIFIER, 0, 0);
+            Lexeme? lexeme = new(LexemeType.Types.IDENTIFIER, 0, 0);
             lexeme.AddToken("main");
             Expr.Variable functionName = new(lexeme);
             Expr.Call call = new(functionName, false, new());
@@ -70,10 +70,14 @@ namespace JukaCompiler.Interpreter
             try
             {
                 this.environment = env;
-                foreach(Stmt statement in statements)
+                foreach (Stmt statement in statements)
                 {
                     Execute(statement);
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
             }
             finally
             {
@@ -187,12 +191,15 @@ namespace JukaCompiler.Interpreter
                     var variableExpression = expr as ArrayAccessExpr;
                     var variableName = variableExpression?.ArrayVariableName.ToString();
 
-                    if (variableName != null && frames.Peek().TryGetStackVariableByName(variableName, out StackVariableState stackVariableState))
+                    if (variableName != null && frames.Peek().TryGetStackVariableByName(variableName, out StackVariableState? stackVariableState))
                     {
-                        var arrayData = stackVariableState.arrayValues[variableExpression.ArraySize];
-                        if (arrayData is Expr.Literal)
+                        if (variableExpression != null)
                         {
-                            PrintLiteral((Expr.Literal)arrayData, printAction);
+                            var arrayData = stackVariableState?.arrayValues[variableExpression.ArrayIndex];
+                            if (arrayData is Expr.Literal)
+                            {
+                                PrintLiteral((Expr.Literal)arrayData, printAction);
+                            }
                         }
                     }
                 }
@@ -205,8 +212,10 @@ namespace JukaCompiler.Interpreter
         {
             if (expr is Expr.Literal || expr is Expr.LexemeTypeLiteral)
             {
-                var lexemeTypeLiteral = Evaluate(expr) as Expr.LexemeTypeLiteral;
-                PrintLiteral(lexemeTypeLiteral, printAction);
+                if (Evaluate(expr) is LexemeTypeLiteral lexemeTypeLiteral)
+                {
+                    PrintLiteral(lexemeTypeLiteral, printAction);
+                }
             }
         }
 
@@ -377,7 +386,7 @@ namespace JukaCompiler.Interpreter
             return value;
         }
 
-        private (Literal LiteralValue, long LiteralType) GetLiteralData(Expr expr)
+        private (Literal LiteralValue, LexemeType.Types LiteralType) GetLiteralData(Expr expr)
         {
             if (expr is Variable)
             {
@@ -431,19 +440,19 @@ namespace JukaCompiler.Interpreter
                 _ => new Expr.LexemeTypeLiteral()
             };
         }
-        private static object IsLessThan(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        private static object IsLessThan(LexemeType.Types leftValueType, LexemeType.Types rightValueType, object leftValue, object rightValue)
         {
-            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            if (leftValueType == LexemeType.Types.NUMBER && rightValueType == LexemeType.Types.NUMBER)
             {
                 var literal = new Expr.LexemeTypeLiteral
                 {
                     literal = Convert.ToInt32(leftValue) < Convert.ToInt32(rightValue),
-                    lexemeType = LexemeType.BOOL
+                    lexemeType = LexemeType.Types.BOOL
                 };
                 return literal;
             }
 
-            if (leftValueType == LexemeType.STRING || rightValueType == LexemeType.STRING)
+            if (leftValueType == LexemeType.Types.STRING || rightValueType == LexemeType.Types.STRING)
             {
                 throw new ArgumentException("can't apply less than operator to strings");
             }
@@ -451,19 +460,19 @@ namespace JukaCompiler.Interpreter
             throw new ArgumentException("Can't compare types");
         }
 
-        private static object IsGreaterThan(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        private static object IsGreaterThan(LexemeType.Types leftValueType, LexemeType.Types rightValueType, object leftValue, object rightValue)
         {
-            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            if (leftValueType == LexemeType.Types.NUMBER && rightValueType == LexemeType.Types.NUMBER)
             {
                 var literal = new Expr.LexemeTypeLiteral
                 {
                     literal = Convert.ToInt32(leftValue) > Convert.ToInt32(rightValue),
-                    lexemeType = LexemeType.BOOL
+                    lexemeType = LexemeType.Types.BOOL
                 };
                 return literal;
             }
 
-            if (leftValueType == LexemeType.STRING || rightValueType == LexemeType.STRING)
+            if (leftValueType == LexemeType.Types.STRING || rightValueType == LexemeType.Types.STRING)
             {
                 throw new ArgumentException("can't apply less than operator to strings");
             }
@@ -471,24 +480,24 @@ namespace JukaCompiler.Interpreter
             throw new ArgumentException("Can't compare types");
         }
 
-        private static object AddTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        private static object AddTypes(LexemeType.Types leftValueType, LexemeType.Types rightValueType, object leftValue, object rightValue)
         {
-            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            if (leftValueType == LexemeType.Types.NUMBER && rightValueType == LexemeType.Types.NUMBER)
             {
                 var literalSum = new Expr.LexemeTypeLiteral
                 {
                     literal = Convert.ToInt32(leftValue) + Convert.ToInt32(rightValue),
-                    lexemeType = LexemeType.NUMBER
+                    lexemeType = LexemeType.Types.NUMBER
                 };
                 return literalSum;
             }
 
-            if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
+            if (leftValueType == LexemeType.Types.STRING && rightValueType == LexemeType.Types.STRING)
             {
                 var literalStringSum = new Expr.LexemeTypeLiteral
                 {
                     literal = Convert.ToString(leftValue) + Convert.ToString(rightValue),
-                    lexemeType = LexemeType.STRING
+                    lexemeType = LexemeType.Types.STRING
                 };
 
                 return literalStringSum;
@@ -496,19 +505,19 @@ namespace JukaCompiler.Interpreter
 
             throw new ArgumentNullException(nameof(leftValueType));
         }
-        private static object SubtractTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        private static object SubtractTypes(LexemeType.Types leftValueType, LexemeType.Types rightValueType, object leftValue, object rightValue)
         {
-            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            if (leftValueType == LexemeType.Types.NUMBER && rightValueType == LexemeType.Types.NUMBER)
             {
                 var literalSum = new Expr.LexemeTypeLiteral
                 {
                     literal = Convert.ToInt32(leftValue) - Convert.ToInt32(rightValue),
-                    lexemeType = LexemeType.NUMBER
+                    lexemeType = LexemeType.Types.NUMBER
                 };
                 return literalSum;
             }
 
-            if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
+            if (leftValueType == LexemeType.Types.STRING && rightValueType == LexemeType.Types.STRING)
             {
                 throw new ArgumentException("Can't subtract strings");
             }
@@ -516,28 +525,28 @@ namespace JukaCompiler.Interpreter
             throw new ArgumentNullException(nameof(leftValueType));
         }
 
-        private static object MultiplyTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        private static object MultiplyTypes(LexemeType.Types leftValueType, LexemeType.Types rightValueType, object leftValue, object rightValue)
         {
-            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            if (leftValueType == LexemeType.Types.NUMBER && rightValueType == LexemeType.Types.NUMBER)
             {
                 var literalProduction = new Expr.LexemeTypeLiteral
                 {
                     literal = Convert.ToInt32(leftValue) * Convert.ToInt32(rightValue),
-                    lexemeType = LexemeType.NUMBER
+                    lexemeType = LexemeType.Types.NUMBER
                 };
                 return literalProduction;
             }
 
-            if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
+            if (leftValueType == LexemeType.Types.STRING && rightValueType == LexemeType.Types.STRING)
             {
                 throw new ArgumentException("Can't multiply strings");
             }
 
             throw new ArgumentNullException(nameof(leftValueType));
         }
-        private static object DivideTypes(long leftValueType, long rightValueType, object leftValue, object rightValue)
+        private static object DivideTypes(LexemeType.Types leftValueType, LexemeType.Types rightValueType, object leftValue, object rightValue)
         {
-            if (leftValueType == LexemeType.NUMBER && rightValueType == LexemeType.NUMBER)
+            if (leftValueType == LexemeType.Types.NUMBER && rightValueType == LexemeType.Types.NUMBER)
             {
                 var literalProduction = new Expr.LexemeTypeLiteral();
                 int divident = Convert.ToInt32(rightValue);
@@ -548,11 +557,11 @@ namespace JukaCompiler.Interpreter
 
                 }
                 literalProduction.literal = Convert.ToInt32(leftValue) / Convert.ToInt32(rightValue);
-                literalProduction.lexemeType = LexemeType.NUMBER;
+                literalProduction.lexemeType = LexemeType.Types.NUMBER;
                 return literalProduction;
             }
 
-            if (leftValueType == LexemeType.STRING && rightValueType == LexemeType.STRING)
+            if (leftValueType == LexemeType.Types.STRING && rightValueType == LexemeType.Types.STRING)
             {
                 throw new ArgumentException("can't divide strings");
             }
@@ -641,7 +650,7 @@ namespace JukaCompiler.Interpreter
                 case true:
                     try
                     { 
-                        IJukaCallable? jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IJukaCallable));
+                        IJukaCallable? jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IJukaCallable))!;
                         return jukacall.Call(methodName: expr.callee.ExpressionLexeme.ToString(), this, arguments);
                     }
                     catch(SystemCallException? sce)
@@ -715,11 +724,11 @@ namespace JukaCompiler.Interpreter
             {
                 StackVariableState? stackVariableState = (StackVariableState)LookUpVariable(expr.ExpressionLexeme, expr)!;
 
-                if (stackVariableState?.expressionContext is Literal context && ((Unary)expr).LexemeType == LexemeType.PLUSPLUS)
+                if (stackVariableState?.expressionContext is Literal context && ((Unary)expr).LexemeType == LexemeType.Types.PLUSPLUS)
                 {
                     var unaryUpdate = Convert.ToInt64(context.ExpressionLexeme?.ToString()) + 1;
 
-                    var lexeme = new Lexeme(LexemeType.NUMBER, 0, 0);
+                    var lexeme = new Lexeme(LexemeType.Types.NUMBER, 0, 0);
                     lexeme.AddToken(unaryUpdate.ToString());
 
                     var newLiteral = new Literal(lexeme, lexeme.LexemeType);
@@ -761,27 +770,48 @@ namespace JukaCompiler.Interpreter
         {
             var currentFrame = frames.Peek();
             //if (expr.initializerContextVariableName != null)
-            //    currentFrame.AddStackArray(expr.initializerContextVariableName, expr.ArraySize);
+            //    currentFrame.AddStackArray(expr.initializerContextVariableName, expr.ArrayIndex);
             return expr.ArraySize;
+        }
+
+        public object VisitNewExpr(NewDeclarationExpr expr)
+        {
+            //throw new NotImplementedException("The new keyword has not been implemented. I need to have a model for allocating and dealocating objects. Potentially a garbage collection model.");
+            return new DefaultExpr();
         }
 
         public object VisitArrayAccessExpr(ArrayAccessExpr expr)
         {
             var stackVariableState = LookUpVariable(expr.ArrayVariableName, expr) as StackVariableState;
 
-            if (expr.ArraySize > (int)stackVariableState.Value)
+            int arraySize = 0;
+            if (stackVariableState?.expressionContext is ArrayDeclarationExpr arrayContext)
             {
-                throw new JRuntimeException("Array index out of bounds");
+                arraySize = (int) (stackVariableState?.Value)!;
+            }
+            else if (stackVariableState?.expressionContext is NewDeclarationExpr context)
+            {
+                arraySize = ((ArrayDeclarationExpr) context.NewDeclarationExprInit).ArraySize;
             }
 
-            if (stackVariableState.arrayValues == null)
+            if (expr.ArrayIndex > arraySize)
             {
-                stackVariableState.arrayValues = new object[(int)stackVariableState.Value];
+                throw new JRuntimeException("JArray index out of bounds");
             }
 
-            stackVariableState.arrayValues[expr.ArraySize] = expr.LvalueExpr;
+            if (stackVariableState?.arrayValues == null)
+            {
+                stackVariableState!.arrayValues = new object[arraySize];
+            }
+
+            stackVariableState.arrayValues[expr.ArrayIndex] = expr.LvalueExpr;
 
             return new Stmt.DefaultStatement();
+        }
+
+        public object VisitDeleteExpr(DeleteDeclarationExpr expr)
+        {
+            throw new NotImplementedException("Deleted yet not implemented in runtime");
         }
 
         internal object? LookUpVariable(Lexeme name, Expr expr)

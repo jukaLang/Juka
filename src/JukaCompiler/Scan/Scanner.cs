@@ -16,34 +16,36 @@ namespace JukaCompiler.Scan
         private readonly List<Lexeme?> lexemes = new();
         private ICompilerError compilerError;
 
-        private static readonly Dictionary<string, Int64> keywordsDictionary = new()
+        private static readonly Dictionary<string, LexemeType.Types> keywordsDictionary = new()
         {
-            { "and",    LexemeType.AND },
-            { "class",  LexemeType.CLASS },
-            { "else",   LexemeType.ELSE },
-            { "func",   LexemeType.FUNC },
-            { "for",    LexemeType.FOR },
-            { "if",     LexemeType.IF },
-            { "null",   LexemeType.NULL },
-            { "or",     LexemeType.OR },
-            { "return", LexemeType.RETURN },
-            { "super",  LexemeType.SUPER },
-            { "this",   LexemeType.THIS },
-            { "false",  LexemeType.FALSE },
-            { "true",   LexemeType.TRUE },
-            { "var",    LexemeType.VAR },
-            { "while",  LexemeType.WHILE },
-            { "int",    LexemeType.INT },
-            { "char",   LexemeType.CHAR },
-            { "string", LexemeType.STRING },
-            { "break",  LexemeType.BREAK },
-            { "array", LexemeType.ARRAY},
+            { "and",    LexemeType.Types.AND },
+            { "class",  LexemeType.Types.CLASS },
+            { "else",   LexemeType.Types.ELSE },
+            { "func",   LexemeType.Types.FUNC },
+            { "for",    LexemeType.Types.FOR },
+            { "if",     LexemeType.Types.IF },
+            { "null",   LexemeType.Types.NULL },
+            { "or",     LexemeType.Types.OR },
+            { "return", LexemeType.Types.RETURN },
+            { "super",  LexemeType.Types.SUPER },
+            { "this",   LexemeType.Types.THIS },
+            { "false",  LexemeType.Types.FALSE },
+            { "true",   LexemeType.Types.TRUE },
+            { "var",    LexemeType.Types.VAR },
+            { "while",  LexemeType.Types.WHILE },
+            { "int",    LexemeType.Types.INT },
+            { "char",   LexemeType.Types.CHAR },
+            { "string", LexemeType.Types.STRING },
+            { "break",  LexemeType.Types.BREAK },
+            { "array",  LexemeType.Types.ARRAY},
+            { "new"  ,  LexemeType.Types.NEW},
+            { "delete", LexemeType.Types.DELETE}
         };
 
-        private static readonly Dictionary<string, Int64> internalFunctionsList = new()
+        private static readonly Dictionary<string, LexemeType.Types> internalFunctionsList = new()
         {
-            {"print", LexemeType.PRINT},
-            {"printLine", LexemeType.PRINTLINE}
+            {"print", LexemeType.Types.PRINT},
+            {"printLine", LexemeType.Types.PRINTLINE}
         };
 
         internal Scanner(string data, IServiceProvider serviceProvider, bool isFile = true)
@@ -114,7 +116,7 @@ namespace JukaCompiler.Scan
                 {
                     case '(':
                     {
-                        AddSymbol( t, LexemeType.LEFT_PAREN);
+                        AddSymbol( t, LexemeType.Types.LEFT_PAREN);
                        
                         if (IsDigit(Peek()) || IsNumber(Peek()))
                         {
@@ -124,7 +126,7 @@ namespace JukaCompiler.Scan
                             Number();
                             /*if (Peek() == ')')
                             {
-                                AddSymbol(t, LexemeType.RIGHT_PAREN);
+                                AddSymbol(t, LexemeType.Types.RIGHT_PAREN);
                             }*/
                         }
 
@@ -132,17 +134,17 @@ namespace JukaCompiler.Scan
 
                         break;
                     }
-                    case ')': AddSymbol( t, LexemeType.RIGHT_PAREN); break;
-                    case '{': AddSymbol(t, LexemeType.LEFT_BRACE); break;
-                    case '}': AddSymbol( t, LexemeType.RIGHT_BRACE); break;
-                    case ',': AddSymbol( t, LexemeType.COMMA); break;
-                    case '.': AddSymbol( t, LexemeType.DOT); break;
-                    case '+': AddSymbol( t, LexemeType.PLUS); break;
-                    case ';': AddSymbol( t, LexemeType.SEMICOLON); break;
-                    case '*': AddSymbol( t, LexemeType.STAR); break;
+                    case ')': AddSymbol( t, LexemeType.Types.RIGHT_PAREN); break;
+                    case '{': AddSymbol(t, LexemeType.Types.LEFT_BRACE); break;
+                    case '}': AddSymbol( t, LexemeType.Types.RIGHT_BRACE); break;
+                    case ',': AddSymbol( t, LexemeType.Types.COMMA); break;
+                    case '.': AddSymbol( t, LexemeType.Types.DOT); break;
+                    case '+': AddSymbol( t, LexemeType.Types.PLUS); break;
+                    case ';': AddSymbol( t, LexemeType.Types.SEMICOLON); break;
+                    case '*': AddSymbol( t, LexemeType.Types.STAR); break;
                     case '[':
                     {
-                        AddSymbol(t, LexemeType.LEFT_BRACE);
+                        AddSymbol(t, LexemeType.Types.LEFT_BRACE);
                         if (IsDigit(Peek()) || IsNumber(Peek()))
                         {
                             // HACK
@@ -153,7 +155,7 @@ namespace JukaCompiler.Scan
 
                         if (Peek() == ']')
                         {
-                            AddSymbol(Peek(), LexemeType.RIGHT_BRACE);
+                            AddSymbol(Peek(), LexemeType.Types.RIGHT_BRACE);
                         }
 
                         break;
@@ -169,7 +171,7 @@ namespace JukaCompiler.Scan
                             //Debug.WriteLine("TRACED+1");
                         } else
                         {
-                            AddSymbol(t, LexemeType.MINUS);
+                            AddSymbol(t, LexemeType.Types.MINUS);
                             //Debug.WriteLine("TEST2");
                             //Debug.WriteLine(Peek());
                             //Debug.WriteLine("TRACED+SYMBOL");
@@ -202,7 +204,7 @@ namespace JukaCompiler.Scan
                         }
                         else
                         {
-                            AddSymbol(t, LexemeType.SLASH);
+                            AddSymbol(t, LexemeType.Types.SLASH);
                         }
                         break;
 
@@ -211,11 +213,11 @@ namespace JukaCompiler.Scan
                         {
                             if( Peek() == '=') 
                             {
-                                AddSymbol( t ,LexemeType.EQUAL_EQUAL);
+                                AddSymbol( t ,LexemeType.Types.EQUAL_EQUAL);
                                 break;
                             }
 
-                            AddSymbol(t ,LexemeType.EQUAL);
+                            AddSymbol(t ,LexemeType.Types.EQUAL);
                             break;
                         }
 
@@ -223,11 +225,11 @@ namespace JukaCompiler.Scan
                         {
                             if (Peek() == '=')
                             {
-                                AddSymbol(t, LexemeType.LESS_EQUAL);
+                                AddSymbol(t, LexemeType.Types.LESS_EQUAL);
                                 break;
                             }
 
-                            AddSymbol(t, LexemeType.LESS); 
+                            AddSymbol(t, LexemeType.Types.LESS); 
                             break;
                         }
 
@@ -235,11 +237,11 @@ namespace JukaCompiler.Scan
                         {
                             if (Peek() == '=')
                             {
-                                AddSymbol(t, LexemeType.GREATER_EQUAL);
+                                AddSymbol(t, LexemeType.Types.GREATER_EQUAL);
                                 break;
                             }
 
-                            AddSymbol(t, LexemeType.GREATER);
+                            AddSymbol(t, LexemeType.Types.GREATER);
                             break;
                         }
 
@@ -249,11 +251,11 @@ namespace JukaCompiler.Scan
                         { 
                             if (Match('='))
                             { 
-                                kind = LexemeType.BANG_EQUAL;
+                                kind = LexemeType.Types.BANG_EQUAL;
                                 break;
                             }
 
-                            kind = LexemeType.BANG;
+                            kind = LexemeType.Types.BANG;
                             break;
                         }
                 position++;
@@ -268,7 +270,7 @@ namespace JukaCompiler.Scan
             IsWhiteSpace();
         }
 
-        internal void AddSymbol(char symbol, Int64 type)
+        internal void AddSymbol(char symbol, LexemeType.Types type)
         {
             var lex = new Lexeme(type, this.line, this.column);
             lex.AddToken(symbol);
@@ -293,7 +295,7 @@ namespace JukaCompiler.Scan
                 if (lex != null)
                 {
                     lex.LexemeType = internalFunctionsList[lex.ToString()];
-                    lex.LexemeType |= LexemeType.INTERNALFUNCTION;
+                    lex.LexemeType |= LexemeType.Types.INTERNALFUNCTION;
                 }
             }
 
@@ -329,7 +331,7 @@ namespace JukaCompiler.Scan
             }
 
             var svalue = Encoding.Default.GetString(Memcopy(fileData, start, current));
-            Lexeme? identifier = new(LexemeType.IDENTIFIER, this.line, this.column);
+            Lexeme? identifier = new(LexemeType.Types.IDENTIFIER, this.line, this.column);
             
             identifier.AddToken(svalue);
 
@@ -347,7 +349,7 @@ namespace JukaCompiler.Scan
             }
 
             var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start, current));
-            Lexeme? number = new(LexemeType.NUMBER, this.line, this.column);
+            Lexeme? number = new(LexemeType.Types.NUMBER, this.line, this.column);
 
             number.AddToken(svalue);
             this.lexemes.Add(number);
@@ -373,7 +375,7 @@ namespace JukaCompiler.Scan
             }
 
             var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start + 1, current - 1));
-            Lexeme? s = new(LexemeType.STRING, this.line, this.column);
+            Lexeme? s = new(LexemeType.Types.STRING, this.line, this.column);
             s.AddToken(svalue.ToString());
             this.lexemes.Add(s);
             Advance();
