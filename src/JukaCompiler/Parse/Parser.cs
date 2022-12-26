@@ -3,7 +3,6 @@ using JukaCompiler.Expressions;
 using JukaCompiler.Lexer;
 using JukaCompiler.Scan;
 using JukaCompiler.Statements;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.DependencyInjection;
 using static JukaCompiler.Expressions.Expr;
 
@@ -304,7 +303,7 @@ namespace JukaCompiler.Parse
                 return Advance();
             }
 
-            compilerError.AddError($"Error trying to parse '{currentLexeme.ToString()}' not valid at line:{currentLexeme.LineNumber} column:{currentLexeme.ColumnNumber} ");
+            compilerError.AddError($"Error trying to parse '{currentLexeme}' not valid at line:{currentLexeme.LineNumber} column:{currentLexeme.ColumnNumber} ");
 
             return new Lexeme(LexemeType.Types.UNDEFINED, 0, 0);
         }
@@ -407,8 +406,8 @@ namespace JukaCompiler.Parse
             Lexeme name = Consume(LexemeType.Types.IDENTIFIER, Peek());
             Consume(LexemeType.Types.EQUAL, Peek());
             Consume(LexemeType.Types.LEFT_BRACE, Peek());
-            List<Stmt.Function> functions = new List<Stmt.Function>();
-            List<Stmt> variableDeclarations = new List<Stmt>();
+            List<Stmt.Function> functions = new();
+            List<Stmt> variableDeclarations = new();
 
             if(!Check(LexemeType.Types.RIGHT_BRACE))
             {

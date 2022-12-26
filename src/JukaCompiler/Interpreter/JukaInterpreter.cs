@@ -811,7 +811,13 @@ namespace JukaCompiler.Interpreter
 
         public object VisitDeleteExpr(DeleteDeclarationExpr expr)
         {
-            throw new NotImplementedException("Deleted yet not implemented in runtime");
+
+            var currentFrame = frames.Peek();
+            currentFrame.DeleteVariable(expr.variable.ExpressionLexemeName);
+
+            Console.WriteLine(currentFrame);
+
+            return new Stmt.DefaultStatement();
         }
 
         internal object? LookUpVariable(Lexeme name, Expr expr)

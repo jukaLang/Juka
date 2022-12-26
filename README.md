@@ -16,7 +16,7 @@ Main Git Repository: https://github.com/jukaLang/juka
 
 Mirror Git Repository: https://codeberg.org/JukaLang/Juka
 
-__Follow us on:__
+**Follow us on:**
 
 [![Facebook](https://img.shields.io/badge/JukaLang-white?logo=Facebook)](https://www.facebook.com/jukaLang/)
 [![Instagram](https://img.shields.io/badge/jukalanguage-white?logo=Instagram)](https://www.instagram.com/jukalanguage/)
@@ -26,9 +26,9 @@ __Follow us on:__
 
 ## 🤝 Donate
 
-__Bitcoin Address:__ 3MqJ2pwcuqh2W5mUPZUcKMVzxgTKcjD8ET
+**Bitcoin Address:** 3MqJ2pwcuqh2W5mUPZUcKMVzxgTKcjD8ET
 
-__Ethereum (Ethereum Network) Address:__ 0xB56F6aff7a84935E5AF9D93b6d7db0e4F4F26B39
+**Ethereum (Ethereum Network) Address:** 0xB56F6aff7a84935E5AF9D93b6d7db0e4F4F26B39
 
 ## 💭 Introduction
 
@@ -36,22 +36,24 @@ Juka's main goal is to be a portable, easy to use, universal programming languag
 
 Juka's philosophy is code once, run everywhere.
 
-__What are main advantages of Juka?__
+**What are main advantages of Juka?**
+
 - **Portable** - Juka doesn't need to be installed! That means you can run Juka in environments where you don't have admin priviledges or in environments where you don't have access to a hard drive. Juka is standalone and doesn't require any other application to be installed. Run it on your Flash/Thumb Drive!
 - **Small in Size** - Juka is fairly small in size ~ 30 mb (depending on the OS). This means that you can put Juka on your Thumb/Flash Drive. In fact, why not put all versions of Juka on your Thumb/Flash Drive? It won't take much space anyways.
-- **Works on "All" Operating Systems** - We are trying to support all systems including lesser known ones such as FreeBSD and TempleOS. We also support ARM processors and 32-bit systems such as Linux (x86). Why not install Juka on your Raspberry Pi or run it in ChromeOS Flex? 
+- **Works on "All" Operating Systems** - We are trying to support all systems including lesser known ones such as FreeBSD and TempleOS. We also support ARM processors and 32-bit systems such as Linux (x86). Why not install Juka on your Raspberry Pi or run it in ChromeOS Flex?
 - **Universal** - Juka can be used for all types of projects including server side coding, client side coding, native coding, web development, API development, data science, network security, and quantum computing. Our goal is to create a programming language that can run on any platform and we mean any!
 - **Cloud Friendly** - We created JukaAPI so that you can run it on any cloud server. This will allow one to use REST API to run code. Feel free to test it at https://api.jukalang.com. You can also run Juka on Microsoft's Azure Server by using Juka's Azure serverless function. Compile the code quickly, or let the others run the code. Download latest Azure Function from https://jukalang.com/download.
-NOTE: you need an active Microsoft Azure account to host.
+  NOTE: you need an active Microsoft Azure account to host.
 - **Jupyter Support** - We know a lot of people love to use Jupyter Notebook/Lab. We've added an easy way to run Juka (kernel) in Jupyter. Do your data analysis in the software that you are used to!
 - **Runs inside a Web Browser** - Run Juka inside a Web Browser! Visit https://wasm.jukalang.com and install the App. On Mobile, it's simply adding the website to your home screen!
 - **Easy to Use Package Manager** - All of the packages are hosted on GitHub. That's right! We made it simple to install and contribute to the package development. Our hope is that by hosting all packages on Github, security issues in the packages can be fixed quickly by the community. The packages contain a simple config file, making it simple for anyone to develop Juka packages.
 - **Community Support** - Join our ever growing Juka community (https://discord.gg/MsKWsErzfp). We use "Discord" for managing the community as it provides an easy way to stay connected. In order to join the community, you should click our invitation link and register a Discord account. If you already have an account, just join the "JukaLang" group. It's public and anyone can join!
 - **Contribute to the Source** - Juka is built by the community, for the community. Please consider contributing to the Juka GitHub repository at https://github.com/jukaLang When you create new features or modify the existing ones, please follow the guidelines specified in the project documentation.
 
-
 ## 💻 Supported Systems
-__Current Supported Device:__
+
+**Current Supported Device:**
+
 - Windows (x86/x64)
 - Windows ARM (ARM64)
 - Linux (x86/x64) (CentOS, Debian, Fedora, Ubuntu, TinyCore, and almost any other type of Linux)
@@ -63,7 +65,7 @@ __Current Supported Device:__
 - Docker (JukaAPI)
 - Unity Game Engine (via NuGet.org)
 - [Web Assembly (CDN/Browser/HTML server)](https://github.com/jukaLang/juka-webassembly)
-- ChromeOS* (see Web Assembly)
+- ChromeOS\* (see Web Assembly)
 - [Jupyter via juka-kernel](https://github.com/jukaLang/juka-kernel)
 - [Virtual Box Image (JukaVM)](https://github.com/jukaLang/jukaVM)
 - [Windows App (Windows 10+)](https://github.com/jukaLang/JukaApp)
@@ -71,7 +73,8 @@ __Current Supported Device:__
 - Discord Bot
 - Telegram Bot
 
-__Coming Soon:__
+**Coming Soon:**
+
 - Ethereum Network
 - Android App (PlayStore version)
 - iOS App (iPhone/iPad AppStore version)
@@ -80,7 +83,8 @@ __Coming Soon:__
 - TempleOS
   Send us a message or tweet at us to let us know what other systems you want to see!
 
-__Potential Future Support:__
+**Potential Future Support:**
+
 - AndroidTV App (PlayStore version)
 - Amazon Web Service (Native Support)
 - Google Cloud (Native Support)
@@ -94,19 +98,19 @@ __Potential Future Support:__
 - [x] Functions
 - [x] Classes
 - [x] Loops
-    - [x] While Statement
-    - [x] For Statement
+  - [x] While Statement
+  - [x] For Statement
 - [x] Native Functions
-    - [x] GetAvailableMemory
-    - [x] SystemClock
+  - [x] GetAvailableMemory
+  - [x] SystemClock
 - [ ] Tail Recursion
 - [ ] Array
 - [ ] Dynamic List
 - [ ] Get (for importing files)
 - [ ] Try and Catch
 
-
 ## 📚 Documentation
+
 - Dynamic: https://jukalang.com/docs
 - PDF: https://github.com/jukaLang/juka-website/releases/download/JukaLang/jukadocs.pdf
 
@@ -115,13 +119,11 @@ __Potential Future Support:__
 Please download the latest version of Juka from https://jukalang.com/download
 
 If you are an advanced user and wants to download other versions of Juka, visit https://github.com/jukaLang/juka/releases
-and select appropriate version. 
+and select appropriate version.
 Find the version that you want and download it to your device.
 The files should be self-contained (you are not required to download any other files)
 
-
 ## ⌛ Running Juka
-
 
 ### Microsoft/Linux/MacOS/FreeBSD
 
@@ -130,6 +132,7 @@ On some systems you can just double click Juka and it will launch an interactive
 If that doesn't work, open a Terminal/Power Shell/Command Prompt and navigate to the location of where Juka is located.
 
 Once you are inside the directory, run the following command to start Juka in REPL mode:
+
 ```jsx
 ./juka
 ```
@@ -139,7 +142,6 @@ If you have a file with Juka code, you can run it with the following command (su
 ```jsx
 ./juka HelloWorld.juk
 ```
-
 
 ### Juka API
 
@@ -168,13 +170,13 @@ Once you install Juka via NuGet: Install-Package JukaCompiler
 You can pass your code as a string to Juka:
 
 ```jsx
-new JukaCompiler.Compiler().Go(codeAsString,isFile:false);
+new JukaCompiler.Compiler().Go(codeAsString, (isFile: false));
 ```
 
 If you want to pass a filename instead of a string, you can run the following command
+
 ```jsx
-new JukaCompiler.Compiler().Go(fileName,isFile:true);
+new JukaCompiler.Compiler().Go(fileName, (isFile: true));
 ```
 
 We welcome any contribution! Thank you so much for checking out Juka!
-

@@ -127,7 +127,7 @@ namespace JukaCompiler.Expressions
 
         internal class DeleteDeclarationExpr : Expr
         {
-            private Expr variable;
+            public Expr variable;
 
             internal DeleteDeclarationExpr(Expr expr)
             {

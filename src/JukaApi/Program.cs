@@ -21,6 +21,11 @@ app.UseHttpsRedirection();
 app.UseCors("AllowAnyOrigin");
 
 string? assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
+if (assemblyVersion == "0.0.0.1")
+{
+    assemblyVersion = "DEBUG";
+}
+
 app.MapGet("/", () => 
     "Welcome to JukaAPI version "+ assemblyVersion + "! To execute a program, send a GET or a POST request to \"/code_you_want_to_execute\". You can also send a POST request to '/' to execute code embedded in body (raw).");
 
