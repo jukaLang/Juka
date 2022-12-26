@@ -81,6 +81,17 @@ namespace JukaCompiler.Interpreter
             return false;
         }
 
+        internal bool DeleteVariable(string name)
+        {
+            if (variables.ContainsKey(name))
+            {
+                variables.Remove(name);
+                return true;
+            }
+
+            return false;
+        }
+
         internal bool TryGetStackVariableByName(string name, out StackVariableState? variable)
         {
             variable = null;

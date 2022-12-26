@@ -41,7 +41,7 @@ namespace JukaCompiler
         }
 
         // Run the Compiler (Step: 3)
-        public string Go(String data, bool isFile = true)
+        public string Go(String data, bool isFile = true, int debug = 0)
         {
             try
             {

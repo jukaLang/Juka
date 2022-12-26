@@ -22,6 +22,11 @@ namespace JukaAzureFunction
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             code ??= data?.code;
 
+            if (code == "")
+            {
+                return new OkObjectResult(new { output = "\"Welcome to Juka Azure Function version \"+ assemblyVersion + \"! To execute a program, send a GET or a POST request to \\\"/code_you_want_to_execute\\\". You can also send a POST request to '/' to execute code embedded in body (raw).\");\r\n\r\n" });
+            }
+
             log.LogInformation("Running code: " + code);
 
             JukaCompiler.Compiler compiler = new();

@@ -1,6 +1,7 @@
 ﻿using JukaCompiler;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Security.Cryptography;
 
 namespace JukaUnitTest
 {
@@ -63,10 +64,10 @@ namespace JukaUnitTest
             sourceAsString +=
                 @"func test_func() = 
                 {
-                    var x = new array[3];
-                    x[1] = ""test"";
-                    print(x[1]);
-                    delete x;
+                    var y = ""te"";
+                    print(y);
+                    //delete y;
+                    print(""st"");
                 }";
 
             Assert.AreEqual("test", Go());
