@@ -1,10 +1,38 @@
+using Microsoft.OpenApi.Models;
 using System.Reflection;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+string? assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
+if (assemblyVersion == "0.0.0.1")
+{
+    assemblyVersion = "DEBUG";
+}
+
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Juka Programming Language API",
+        Description = "Welcome to JukaAPI version "+ assemblyVersion + "! To execute a program, send a GET or a POST request to \\\"/code_you_want_to_execute\\\". You can also send a POST request to '/' to execute code embedded in body (raw).",
+        TermsOfService = new Uri("https://jukalang.com/"),
+        Contact = new OpenApiContact
+        {
+            Name = "Contact Juka Language Team",
+            Url = new Uri("https://jukalang.com/contact")
+        },
+        License = new OpenApiLicense
+        {
+            Name = "AGPL GNU License",
+            Url = new Uri("https://jukalang.com/license")
+        }
+    });
+});
 builder.Services.AddCors(o => o.AddPolicy("AllowAnyOrigin",
                       policyBuilder =>
                       {
@@ -17,17 +45,20 @@ builder.Services.AddCors(o => o.AddPolicy("AllowAnyOrigin",
 
 WebApplication app = builder.Build();
 
+// Configure the HTTP request pipeline.
+app.UseSwagger(c =>
+{
+    c.RouteTemplate = "{documentname}/swagger.json";
+});
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/v1/swagger.json", "v1");
+    options.RoutePrefix = string.Empty;
+});
+
 app.UseHttpsRedirection();
 app.UseCors("AllowAnyOrigin");
 
-string? assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
-if (assemblyVersion == "0.0.0.1")
-{
-    assemblyVersion = "DEBUG";
-}
-
-app.MapGet("/", () => 
-    "Welcome to JukaAPI version "+ assemblyVersion + "! To execute a program, send a GET or a POST request to \"/code_you_want_to_execute\". You can also send a POST request to '/' to execute code embedded in body (raw).");
 
 
 IResult ExecuteCode(string src)
@@ -47,9 +78,9 @@ IResult ExecuteCode(string src)
     return Results.Json(new { output = outputValue, original = decoded});
 }
 
-app.MapGet("/{*src}", ExecuteCode);
+app.MapGet("/{*src}", ExecuteCode).WithName("Run Juka (Short)");
 
-app.MapPost("/{*src}", ExecuteCode);
+app.MapPost("/{*src}", ExecuteCode).WithName("Run Juka (Long)");
 
 app.MapPost("/", async (HttpRequest request) =>
 {
