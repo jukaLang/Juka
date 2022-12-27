@@ -78,7 +78,7 @@ IResult ExecuteCode(string src)
     return Results.Json(new { output = outputValue, original = decoded});
 }
 
-app.MapGet("/{*src}", ExecuteCode).WithName("Run Juka (Short)");
+app.MapGet("/{name:regex(^(?!index\\.html|swagger-ui\\.css|swagger-ui-bundle\\.js|swagger-ui-standalone-preset\\.js))}", ExecuteCode).WithName("Run Juka (Short)");
 
 app.MapPost("/{*src}", ExecuteCode).WithName("Run Juka (Long)");
 
