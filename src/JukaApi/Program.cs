@@ -3,7 +3,7 @@ using System.Reflection;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-string? assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
+string assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "DEBUG";
 if (assemblyVersion == "0.0.0.1")
 {
     assemblyVersion = "DEBUG";
@@ -78,15 +78,15 @@ IResult ExecuteCode(string src)
     return Results.Json(new { output = outputValue, original = decoded});
 }
 
-app.MapGet("/{name:regex(^(?!index\\.html|swagger-ui\\.css|swagger-ui-bundle\\.js|swagger-ui-standalone-preset\\.js))}", ExecuteCode).WithName("Run Juka (Short)");
+app.MapGet("/{code:regex(^(?!index\\.html|swagger-ui\\.css|swagger-ui-bundle\\.js|swagger-ui-standalone-preset\\.js))}", ExecuteCode).WithName("Run Juka (Short)");
 
-app.MapPost("/{*src}", ExecuteCode).WithName("Run Juka (Long)");
+app.MapPost("/{*code}", ExecuteCode).WithName("Run Juka POST");
 
 app.MapPost("/", async (HttpRequest request) =>
 {
     StreamReader stream = new(request.Body);
     string src = await stream.ReadToEndAsync();
     return ExecuteCode(src);
-});
+}).WithName("Run Juka POST (Long)");
 
 app.Run();
