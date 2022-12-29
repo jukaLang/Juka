@@ -1,25 +1,41 @@
 using System;
 using System.IO;
+using System.Net;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Enums;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
-using System.Reflection;
-using AzureFunctions.Extensions.Swashbuckle.Attribute;
-using AzureFunctions.Extensions.Swashbuckle;
-using System.Net.Http;
+
 
 namespace JukaAzureFunction
 {
-    public static class JukaAzureFunction
+    public class JukaAzureFunction
     {
-        [FunctionName("JukaAzureFunction")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req, ILogger log)
+        private readonly ILogger<JukaAzureFunction> _logger;
+
+        public JukaAzureFunction(ILogger<JukaAzureFunction> log)
         {
+            _logger = log;
+        }
+
+
+        [FunctionName("JukaAzureFunction")]
+        [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
+        [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "Pass Code as Get or Post", In = OpenApiSecurityLocationType.Query)]
+        [OpenApiParameter(name: "code", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "The **Code** parameter")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]
+        public async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req)
+        {
+            _logger.LogInformation("JukaAzureFunction trigger is running.");
+
             string code = req.Query["code"];
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
@@ -27,15 +43,18 @@ namespace JukaAzureFunction
             code ??= data?.code;
 
             string assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "DEBUG";
-            if (assemblyVersion == "0.0.0.1") assemblyVersion = "DEBUG";
+            if (assemblyVersion == "0.0.0.1")
+            {
+                assemblyVersion = "DEBUG";
+            }
           
 
-            if (code == null || code == "")
+            if (string.IsNullOrEmpty(code))
             {
-                return new OkObjectResult(new { output = "\"Welcome to Juka Azure Function version \"+ assemblyVersion + \"! To execute a program, send a GET or a POST request to \\\"/api/JukaAzureFunction/code=func main()={}\\\" \");\r\n\r\n" });
+                return new OkObjectResult(new { output = "\"Welcome to Juka Azure Function version "+ assemblyVersion + "! To execute a program, send a GET or a POST request to \\\"/api/JukaAzureFunction/code=func main()={}\\\" \");\r\n\r\n" });
             }
 
-            log.LogInformation("Running code: " + code);
+            _logger.LogInformation("Running code: " + code);
 
             JukaCompiler.Compiler compiler = new();
 
@@ -47,26 +66,6 @@ namespace JukaAzureFunction
                 return new OkObjectResult(new { errors, original = code });
             }
             return new OkObjectResult(new { output = outputValue, original = code });
-        }
-    }
-
-    public static class SwaggerFunctions
-    {
-        [SwaggerIgnore]
-        [FunctionName("Swagger")]
-        public static Task<HttpResponseMessage> Swagger(
-                [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "swagger/json")] HttpRequestMessage req,
-                [SwashBuckleClient] ISwashBuckleClient swasBuckleClient)
-        {
-            return Task.FromResult(swasBuckleClient.CreateSwaggerJsonDocumentResponse(req));
-        }
-        [SwaggerIgnore]
-        [FunctionName("SwaggerUI")]
-        public static Task<HttpResponseMessage> SwaggerUI(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "swagger/ui")] HttpRequestMessage req,
-        [SwashBuckleClient] ISwashBuckleClient swasBuckleClient)
-        {
-            return Task.FromResult(swasBuckleClient.CreateSwaggerUIResponse(req, "swagger/json"));
         }
     }
 }
