@@ -61,7 +61,7 @@ app.UseCors("AllowAnyOrigin");
 
 
 
-IResult ExecuteCode(string src)
+static IResult ExecuteCode(string src)
 {
     JukaCompiler.Compiler compiler = new();
     string decoded = Uri.UnescapeDataString(src);

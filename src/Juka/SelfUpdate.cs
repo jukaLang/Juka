@@ -116,16 +116,25 @@ namespace Juka
             {
                 IDictionary<string, string> info = Info();
 
-                if (File.Exists(info["dir"] + "JukaCompiler.pdb")) File.Delete(info["dir"] + "JukaCompiler.pdb");
+                if (File.Exists(info["dir"] + "JukaCompiler.pdb"))
+                {
+                    File.Delete(info["dir"] + "JukaCompiler.pdb");
+                }
 
                 string jukaexepath = info["dir"] + info["name"] + info["extension"];
 
 
-                if (File.Exists(jukaexepath + ".backup")) File.Delete(jukaexepath + ".backup");
+                if (File.Exists(jukaexepath + ".backup"))
+                {
+                    File.Delete(jukaexepath + ".backup");
+                }
                 File.Move(jukaexepath, jukaexepath +".backup");
 
                 string zipext = ".zip";
-                if (info["platform"] == "Unix" || (info["platform"] == "Linux" && info["architecture"] == "X86")) zipext = ".tar.gz";
+                if (info["platform"] == "Unix" || (info["platform"] == "Linux" && info["architecture"] == "X86"))
+                {
+                    zipext = ".tar.gz";
+                }
                 
                 switch (info["architecture"])
                 {
@@ -152,16 +161,17 @@ namespace Juka
                             }
                             else
                             {
-                                await using GZipStream gzip = new(streamToReadFrom, CompressionMode.Decompress);
+                                await using var gzip = new GZipStream(streamToReadFrom, CompressionMode.Decompress);
                                 const int chunk = 4096;
-                                using MemoryStream memStr = new();
+                                using var memStr = new MemoryStream();
                                 int read;
-                                byte[] buffer = new byte[chunk];
+                                var buffer = new byte[chunk];
                                 do
                                 {
                                     read = gzip.Read(buffer, 0, chunk);
                                     memStr.Write(buffer, 0, read);
                                 } while (read == chunk);
+
                                 memStr.Seek(0, SeekOrigin.Begin);
 
                                 buffer = new byte[100];
@@ -170,29 +180,41 @@ namespace Juka
                                     memStr.Read(buffer, 0, 100);
                                     string fname = Encoding.ASCII.GetString(buffer).Trim('\0');
                                     if (String.IsNullOrWhiteSpace(fname))
+                                    {
                                         break;
+                                    }
+
                                     memStr.Seek(24, SeekOrigin.Current);
                                     memStr.Read(buffer, 0, 12);
-                                    long size = Convert.ToInt64(Encoding.UTF8.GetString(buffer, 0, 12).Trim('\0').Trim(), 8);
+                                    long size = Convert.ToInt64(
+                                        Encoding.UTF8.GetString(buffer, 0, 12).Trim('\0').Trim(), 8);
 
                                     memStr.Seek(376L, SeekOrigin.Current);
 
                                     string output = Path.Combine(info["dir"], fname);
                                     if (!Directory.Exists(Path.GetDirectoryName(output)))
-                                        Directory.CreateDirectory(Path.GetDirectoryName(output) ?? throw new Exception("output path is invalid"));
+                                    {
+                                        Directory.CreateDirectory(Path.GetDirectoryName(output) ??
+                                                                  throw new Exception(
+                                                                      "output path is invalid"));
+                                    }
+
                                     if (!fname.Equals("./", StringComparison.InvariantCulture))
                                     {
-                                        using FileStream str = File.Open(output, FileMode.OpenOrCreate, FileAccess.Write);
+                                        await using FileStream str = File.Open(output, FileMode.OpenOrCreate,
+                                            FileAccess.Write);
                                         byte[] buf = new byte[size];
                                         memStr.Read(buf, 0, buf.Length);
                                         str.Write(buf, 0, buf.Length);
                                     }
 
-                                    long pos = memStr.Position;
+                                    var pos = memStr.Position;
 
                                     long offset = 512 - (pos % 512);
                                     if (offset == 512)
+                                    {
                                         offset = 0;
+                                    }
 
                                     memStr.Seek(offset, SeekOrigin.Current);
                                 }

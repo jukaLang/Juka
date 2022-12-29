@@ -7,7 +7,7 @@ namespace Juka
 {
     public class REPL
     {
-        public static async Task RunREPL()
+        public static async Task RunRepl()
         {
             Console.Title = "Juka Programming Language";
             Console.BackgroundColor = ConsoleColor.Black;
@@ -26,14 +26,14 @@ namespace Juka
                     .LeftAligned().Color(Color.Purple));
 
             AnsiConsole.MarkupLine(
-                "[bold yellow]Hello[/] and [bold red]Welcome to 🍲 Juka Programming Language![/] For info visit [link blue]https://jukalang.com[/]. Type [bold palegreen1]menu[/] to see options");
+                "[bold yellow]Hello[/] and [bold red]Welcome to 🍲 Juka Programming Language![/] For info visit [link blue]https://jukalang.com[/]. Type [bold palegreen1]!menu[/] to see options");
 
             Compiler compiler = new();
 
             string dataStart = "func main() = {";
             string dataEnd = "}";
 
-            List<string> funcData = new();
+            Stack<string> funcData = new();
             AnsiConsole.Markup(prompt);
 
             while (true)
@@ -46,7 +46,7 @@ namespace Juka
                 }
 
 
-                if (readLine.Equals("menu", StringComparison.OrdinalIgnoreCase))
+                if (readLine.Equals("!menu", StringComparison.OrdinalIgnoreCase))
                 {
                     var table = new Table();
 
@@ -55,14 +55,15 @@ namespace Juka
                     table.AddColumn(new TableColumn("Description"));
 
                     // Add some rows
-                    table.AddRow("list", "[red]Lists the current code[/]");
-                    table.AddRow("clear", "[green]Clears The REPL[/]");
+                    table.AddRow("!list", "[red]Lists the current code[/]");
+                    table.AddRow("!clear", "[green]Clears The REPL[/]");
+                    table.AddRow("!undo", "[blue]Undoes last entered command[/]");
                     AnsiConsole.Write(table);
                     AnsiConsole.Markup(prompt);
                     continue;
                 }
 
-                if (readLine.Equals("clear", StringComparison.OrdinalIgnoreCase))
+                if (readLine.Equals("!clear", StringComparison.OrdinalIgnoreCase))
                 {
                     Console.Clear();
                     compiler = new Compiler();
@@ -74,9 +75,9 @@ namespace Juka
                     continue;
                 }
 
-                if (readLine.Equals("list", StringComparison.OrdinalIgnoreCase))
+                if (readLine.Equals("!list", StringComparison.OrdinalIgnoreCase))
                 {
-                    foreach (var data in funcData)
+                    foreach (var data in funcData.Reverse())
                     {
                         Console.WriteLine(data);
                     }
@@ -85,20 +86,28 @@ namespace Juka
                     continue;
                 }
 
+                if (readLine.Equals("!undo", StringComparison.OrdinalIgnoreCase))
+                {
+                    var templine = funcData.Pop();
+                    AnsiConsole.MarkupLine("[bold red]Removed: [/]" + templine);
+                    AnsiConsole.Markup(prompt);
+                    continue;
+                }
+
                 if (readLine.StartsWith("func") || readLine.StartsWith("class"))
                 {
                     isFuncOrClass = true;
-                    funcData.Add(readLine);
+                    funcData.Push(readLine);
                     Trace.WriteLine("Starting Func: " + readLine);
                 }
                 else if (isFuncOrClass)
                 {
-                    if (readLine.StartsWith("}"))
+                    if (readLine.StartsWith("}", StringComparison.OrdinalIgnoreCase))
                     {
-                        funcData.Add(readLine);
+                        funcData.Push(readLine);
                         Trace.WriteLine("Ending Func: " + readLine);
                         string userDataToExecute = string.Empty;
-                        foreach (string item in funcData)
+                        foreach (string item in funcData.Reverse())
                         {
                             userDataToExecute += item;
                         }
@@ -110,7 +119,7 @@ namespace Juka
                     else
                     {
                         Trace.WriteLine("Reading Func: " + readLine);
-                        funcData.Add(readLine);
+                        funcData.Push(readLine);
                     }
                 }
                 else
@@ -121,7 +130,7 @@ namespace Juka
                         readLine = "";
                     }
 
-                    funcData.Add(readLine);
+                    funcData.Push(readLine);
 
                     string codeToExecute = dataStart + readLine + dataEnd;
                     try

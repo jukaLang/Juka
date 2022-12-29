@@ -139,7 +139,7 @@ deploy:
     artifact: /.*\.zip/
     tag: '$(APPVEYOR_BUILD_VERSION)'
     release: '📦 Juka v$(APPVEYOR_BUILD_VERSION)'
-    description: "## 🍂 Changelog \n $(MY_XT)"
+    description: "## 🍂 Changelog \n $(MY_XT) \n Changes made by $(APPVEYOR_REPO_COMMIT_AUTHOR)"
     auth_token:
       secure: XCqLJKrsMnRCCEEcsPL53Emba/2GrP172INtXx86eu5XBbed614ug/2dcx8MZwmr
     draft: false

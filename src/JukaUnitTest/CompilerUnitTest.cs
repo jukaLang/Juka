@@ -1,7 +1,5 @@
-﻿using JukaCompiler;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Security.Cryptography;
 
 namespace JukaUnitTest
 {

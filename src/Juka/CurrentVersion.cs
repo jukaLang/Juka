@@ -7,7 +7,10 @@ namespace Juka
         public static string Get()
         {
             string assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "DEBUG";
-            if (assemblyVersion == "0.0.0.1") assemblyVersion = "DEBUG";
+            if (assemblyVersion == "0.0.0.1")
+            {
+                assemblyVersion = "DEBUG";
+            }
             return assemblyVersion;
         }
     }
