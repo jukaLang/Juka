@@ -36,7 +36,9 @@ namespace Juka
             Stack<string> funcData = new();
             AnsiConsole.Markup(prompt);
 
-            while (true)
+            bool inloop = true;
+
+            while (inloop)
             {
                 string? readLine = Console.ReadLine();
                 if (string.IsNullOrEmpty(readLine))
@@ -97,7 +99,8 @@ namespace Juka
 
                 if (readLine.Equals("!exit", StringComparison.OrdinalIgnoreCase))
                 {
-                    break;
+                    inloop = false;
+                    continue;
                 }
 
                 if (readLine.StartsWith("func") || readLine.StartsWith("class"))

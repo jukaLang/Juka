@@ -37,7 +37,7 @@ before_build:
         {
         $env:MY_XT="$($env:APPVEYOR_REPO_COMMIT_MESSAGE) \n $($env:APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED)"
         }
- - $env:MY_USERNAME=(Invoke-WebRequest -URI "https://api.github.com/repos/JukaLang/juka/commits/master" -UseBasicParsing | ConvertFrom-Json).author.login
+ - ps: $env:MY_USERNAME=(Invoke-WebRequest -URI "https://api.github.com/repos/JukaLang/juka/commits/master" -UseBasicParsing | ConvertFrom-Json).author.login
  - cd src
  - dotnet test
 

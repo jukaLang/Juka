@@ -14,17 +14,24 @@ permissions:
   contents: read
 jobs:
   Trigger_EthicalCheck:
+    name: Check
+    runs-on: ubuntu-latest
     permissions:
-      security-events: write
       actions: read
+      contents: read
+      security-events: write
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: EthicalCheck  Free & Automated API Security Testing Service
         uses: apisec-inc/ethicalcheck-action@main
         with:
           oas-url: https://api.jukalang.com/v1/swagger.json
           email: sec@jukalang.com
           sarif-result-file: ethicalcheck-results.sarif
+
       - name: Upload sarif file to repository
         uses: github/codeql-action/upload-sarif@v2
         with:
