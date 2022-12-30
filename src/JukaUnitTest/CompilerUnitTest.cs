@@ -6,43 +6,10 @@ namespace JukaUnitTest
     [TestClass]
     public class CompilerUnitTest : UnitTestStructure
     {
-        
-        /*[TestMethod]
-        public void ArrayTest()
-        {
-            sourceAsString +=
-                @"func test_func() = 
-                {
-                    var x = array[3];
-                    x[1] = ""test"";
-                    print(x[1]); 
-                }";
-
-            var value = Go();
-            Assert.AreEqual("test", value);
-        }*/
-
-        /*[TestMethod]
-        public void VariablesPrint()
-        {
-            sourceAsString +=
-                @"func test_func() = 
-                {
-                    var x = 32;
-                    var z = x + 5;
-                    var m = z + z;
-                    print(z);
-                }";
-
-            Assert.AreEqual("37", Go());
-        }*/
-
-
-
         [TestMethod]
         public void StackBasedArray()
         {
-            sourceAsString +=
+            SourceAsString +=
                 @"func test_func() = 
                 {
                     var x = array[3];
@@ -59,7 +26,7 @@ namespace JukaUnitTest
         [TestMethod]
         public void HeapBasedArray()
         {
-            sourceAsString +=
+            SourceAsString +=
                 @"func test_func() = 
                 {
                     var y = ""te"";
@@ -79,7 +46,7 @@ namespace JukaUnitTest
         [DataRow(0,"0")]
         public void PrintLiteral(dynamic value, string expected)
         {
-            sourceAsString +=
+            SourceAsString +=
                 @"func test_func() = 
                 {
                     printLine("+value+@"); 
@@ -93,7 +60,7 @@ namespace JukaUnitTest
         [DataRow(0,"0")]
         public void PrintVariable(dynamic value, string expected)
         {
-            sourceAsString +=
+            SourceAsString +=
                 @"func test_func() = 
                 {
                     var x = "+value+@";
@@ -109,7 +76,7 @@ namespace JukaUnitTest
         [DataRow(0,"0")]
         public void PassVariable(dynamic value, string expected)
         {
-            sourceAsString +=
+            SourceAsString +=
                 @"func test_func() = 
                 {
                     var x = "+value+@";
@@ -130,7 +97,7 @@ namespace JukaUnitTest
         [DataRow(0,"0")]
         public void PrintThreeLevelsNesting(dynamic value, string expected)
         {
-            sourceAsString +=
+            SourceAsString +=
                 @"func test_func() = 
                 {
                     var y = "+value+@";
@@ -158,7 +125,7 @@ namespace JukaUnitTest
         [DataRow(0,"0")]
         public void MultipleVariables(dynamic value, string expected)
         {
-            sourceAsString += @"
+            SourceAsString += @"
                 func test_func() = 
                 {
                     var z = 3;

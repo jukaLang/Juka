@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Juka
 {
-    public class REPL
+    public class Repl
     {
         public static async Task RunRepl()
         {
@@ -58,6 +58,7 @@ namespace Juka
                     table.AddRow("!list", "[red]Lists the current code[/]");
                     table.AddRow("!clear", "[green]Clears The REPL[/]");
                     table.AddRow("!undo", "[blue]Undoes last entered command[/]");
+                    table.AddRow("!exit", "[darkred_1]Exits REPL[/]");
                     AnsiConsole.Write(table);
                     AnsiConsole.Markup(prompt);
                     continue;
@@ -92,6 +93,11 @@ namespace Juka
                     AnsiConsole.MarkupLine("[bold red]Removed: [/]" + templine);
                     AnsiConsole.Markup(prompt);
                     continue;
+                }
+
+                if (readLine.Equals("!exit", StringComparison.OrdinalIgnoreCase))
+                {
+                    break;
                 }
 
                 if (readLine.StartsWith("func") || readLine.StartsWith("class"))

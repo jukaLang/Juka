@@ -79,36 +79,6 @@ namespace Juka
                 { "extension", extension }
             };
         }
-
-        /*public static async Task InteractiveUpdate()
-        {
-            var items = new[] {
-                ("Updating Juka")
-            };
-            await AnsiConsole.Progress()
-                .Columns(new ProgressColumn[]
-                {
-                    new TaskDescriptionColumn(),
-                    new ProgressBarColumn(),
-                    new PercentageColumn(),
-                    new RemainingTimeColumn(),
-                    new SpinnerColumn(),
-                })
-                .StartAsync(async ctx =>
-                {
-
-                    await Task.WhenAll(items.Select(async item =>
-                    {
-                        var task = ctx.AddTask("[green]Updating Juka...[/]", new ProgressTaskSettings
-                        {
-                            AutoStart = false
-                        });
-
-                        await SelfUpdate.Update(task);
-                    }));
-                });
-        }*/
-
         public static async Task Update()
         {
             string latestVersion = await Check();

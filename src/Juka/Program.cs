@@ -2,8 +2,9 @@ using Juka;
 
 if (args.Length == 0)
 {
-    await REPL.RunRepl();
+    await Repl.RunRepl();
 }
-
-
-await TerminalJuka.Perform(args);
+else
+{
+    await TerminalJuka.Perform(args);
+}

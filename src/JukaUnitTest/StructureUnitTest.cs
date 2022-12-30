@@ -8,7 +8,7 @@ namespace JukaUnitTest
         [TestMethod]
         public void Class()
         {
-            sourceAsString += @"
+            SourceAsString += @"
                 class x = 
                 {
                     func xmethod() = 
