@@ -85,120 +85,144 @@ namespace Juka
             {
                 IDictionary<string, string> info = Info();
 
-                if (File.Exists(info["dir"] + "JukaCompiler.pdb"))
+                try
                 {
-                    File.Delete(info["dir"] + "JukaCompiler.pdb");
+                    if (File.Exists(info["dir"] + "JukaCompiler.pdb"))
+                    {
+                        File.Delete(info["dir"] + "JukaCompiler.pdb");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
                 }
 
                 string jukaexepath = info["dir"] + info["name"] + info["extension"];
 
-
-                if (File.Exists(jukaexepath + ".backup"))
+                try
                 {
-                    File.Delete(jukaexepath + ".backup");
+                    if (File.Exists(jukaexepath + ".backup"))
+                    {
+                        File.Delete(jukaexepath + ".backup");
+                    }
+
+                    File.Move(jukaexepath, jukaexepath + ".backup");
                 }
-                File.Move(jukaexepath, jukaexepath +".backup");
-                
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+
+                AnsiConsole.MarkupLine(info["architecture"]);
+                AnsiConsole.MarkupLine(latestVersion);
+
                 switch (info["architecture"])
                 {
                     case "X64":
                     case "X86":
                     case "Arm":
                     case "Arm64":
-                        DownloadJuka(info,latestVersion);
+                    {
+                        AnsiConsole.MarkupLine("[bold green] Downloading...[/]" + latestVersion);
+                        string zipext = ".zip";
+                        if (info["platform"] == "Unix" || (info["platform"] == "Linux" && info["architecture"] == "X86"))
+                        {
+                            zipext = ".tar.gz";
+                        }
+
+
+                        try
+                        {
+                            string url = "https://github.com/jukaLang/Juka/releases/download/" + latestVersion +
+                                         "/Juka_" +
+                                         info["platform"] + "_" + info["architecture"] + "_" + latestVersion + zipext;
+                            using HttpResponseMessage response2 = await new HttpClient().GetAsync(url);
+                            await using Stream streamToReadFrom = await response2.Content.ReadAsStreamAsync();
+
+
+                            if (zipext == ".zip")
+                            {
+                                using ZipArchive zip = new(streamToReadFrom);
+                                zip.ExtractToDirectory(info["dir"]);
+                            }
+                            else
+                            {
+                                await using var gzip = new GZipStream(streamToReadFrom, CompressionMode.Decompress);
+                                const int chunk = 4096;
+                                using var memStr = new MemoryStream();
+                                int read;
+                                var buffer = new byte[chunk];
+                                do
+                                {
+                                    read = gzip.Read(buffer, 0, chunk);
+                                    memStr.Write(buffer, 0, read);
+                                } while (read == chunk);
+
+                                memStr.Seek(0, SeekOrigin.Begin);
+
+                                buffer = new byte[100];
+                                while (true)
+                                {
+                                    memStr.Read(buffer, 0, 100);
+                                    string fname = Encoding.ASCII.GetString(buffer).Trim('\0');
+                                    if (String.IsNullOrWhiteSpace(fname))
+                                    {
+                                        break;
+                                    }
+
+                                    memStr.Seek(24, SeekOrigin.Current);
+                                    memStr.Read(buffer, 0, 12);
+                                    long size = Convert.ToInt64(
+                                        Encoding.UTF8.GetString(buffer, 0, 12).Trim('\0').Trim(), 8);
+
+                                    memStr.Seek(376L, SeekOrigin.Current);
+
+                                    string output = Path.Combine(info["dir"], fname);
+                                    if (!Directory.Exists(Path.GetDirectoryName(output)))
+                                    {
+                                        Directory.CreateDirectory(Path.GetDirectoryName(output) ??
+                                                                  throw new Exception(
+                                                                      "output path is invalid"));
+                                    }
+
+                                    if (!fname.Equals("./", StringComparison.InvariantCulture))
+                                    {
+                                        await using FileStream str = File.Open(output, FileMode.OpenOrCreate,
+                                            FileAccess.Write);
+                                        byte[] buf = new byte[size];
+                                        memStr.Read(buf, 0, buf.Length);
+                                        str.Write(buf, 0, buf.Length);
+                                    }
+
+                                    var pos = memStr.Position;
+
+                                    long offset = 512 - (pos % 512);
+                                    if (offset == 512)
+                                    {
+                                        offset = 0;
+                                    }
+
+                                    memStr.Seek(offset, SeekOrigin.Current);
+                                }
+                            }
+
+                            AnsiConsole.MarkupLine("[green]Updated to version: " + latestVersion + "[/]");
+                        }
+                        catch (Exception ex)
+                        {
+                            AnsiConsole.WriteLine("[bold red]Something went wrong downloading latest version of Juka...Download from Official Website [/][link]https://jukalang.com[/]");
+                        }
+
                         break;
+                    }
                     case "MSIL":
                         AnsiConsole.MarkupLine("[yellow]You seem to be using a DEBUG version of Juka. Can't update![/]");
                         break;
                     default:
-                        AnsiConsole.MarkupLine("[red]Something went wrong! We cannot determine your processor...If you see this, please post it on the Issues Page![/]");
+                        AnsiConsole.MarkupLine("[red]Something went wrong! We cannot determine your processor...If you see this, please post it on the Issues Page![/][link]https://github.com/jukaLang/juka/issues/ [/]");
                         break;
                 }
             }
-        }
-
-        private static async Task DownloadJuka(IDictionary<string,string> info, string latestVersion)
-        {
-
-            string zipext = ".zip";
-            if (info["platform"] == "Unix" || (info["platform"] == "Linux" && info["architecture"] == "X86"))
-            {
-                zipext = ".tar.gz";
-            }
-
-            string url = "https://github.com/jukaLang/Juka/releases/download/" + latestVersion + "/Juka_" +
-                                         info["platform"] + "_" + info["architecture"] + "_" + latestVersion + zipext;
-            using HttpResponseMessage response2 = await new HttpClient().GetAsync(url);
-            
-            await using Stream streamToReadFrom = await response2.Content.ReadAsStreamAsync();
-
-            
-            if (zipext == ".zip")
-            {
-                using ZipArchive zip = new(streamToReadFrom);
-                zip.ExtractToDirectory(info["dir"]);
-            }
-            else
-            {
-                await using var gzip = new GZipStream(streamToReadFrom, CompressionMode.Decompress);
-                const int chunk = 4096;
-                using var memStr = new MemoryStream();
-                int read;
-                var buffer = new byte[chunk];
-                do
-                {
-                    read = gzip.Read(buffer, 0, chunk);
-                    memStr.Write(buffer, 0, read);
-                } while (read == chunk);
-
-                memStr.Seek(0, SeekOrigin.Begin);
-
-                buffer = new byte[100];
-                while (true)
-                {
-                    memStr.Read(buffer, 0, 100);
-                    string fname = Encoding.ASCII.GetString(buffer).Trim('\0');
-                    if (String.IsNullOrWhiteSpace(fname))
-                    {
-                        break;
-                    }
-
-                    memStr.Seek(24, SeekOrigin.Current);
-                    memStr.Read(buffer, 0, 12);
-                    long size = Convert.ToInt64(
-                        Encoding.UTF8.GetString(buffer, 0, 12).Trim('\0').Trim(), 8);
-
-                    memStr.Seek(376L, SeekOrigin.Current);
-
-                    string output = Path.Combine(info["dir"], fname);
-                    if (!Directory.Exists(Path.GetDirectoryName(output)))
-                    {
-                        Directory.CreateDirectory(Path.GetDirectoryName(output) ??
-                                                  throw new Exception(
-                                                      "output path is invalid"));
-                    }
-
-                    if (!fname.Equals("./", StringComparison.InvariantCulture))
-                    {
-                        await using FileStream str = File.Open(output, FileMode.OpenOrCreate,
-                            FileAccess.Write);
-                        byte[] buf = new byte[size];
-                        memStr.Read(buf, 0, buf.Length);
-                        str.Write(buf, 0, buf.Length);
-                    }
-
-                    var pos = memStr.Position;
-
-                    long offset = 512 - (pos % 512);
-                    if (offset == 512)
-                    {
-                        offset = 0;
-                    }
-
-                    memStr.Seek(offset, SeekOrigin.Current);
-                }
-            }
-            AnsiConsole.MarkupLine("[green]Updated to version: " + latestVersion + "[/]");
         }
     }
 }
