@@ -115,13 +115,14 @@ namespace Juka
                     {
                         funcData.Push(readLine);
                         Trace.WriteLine("Ending Func: " + readLine);
-                        string userDataToExecute = string.Empty;
+
+                        StringBuilder userDataToExecute = new StringBuilder();
                         foreach (string item in funcData.Reverse())
                         {
-                            userDataToExecute += item;
+                            userDataToExecute.Append(item);
                         }
 
-                        dataEnd += userDataToExecute;
+                        dataEnd += userDataToExecute.ToString();
                         isFuncOrClass = false;
                         AnsiConsole.Markup(prompt);
                     }

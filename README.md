@@ -1,6 +1,6 @@
 # [![Juka Programming Language](https://user-images.githubusercontent.com/11934545/192074923-24c8cfb9-12fc-48c4-8faa-2bbc4c187d83.png)](https://jukalang.com) Juka - Programming Language
 
-Official Website: [https://jukalang.com]
+Official Website: <https://jukalang.com>
 
 [![Twitter](https://img.shields.io/twitter/follow/jukaLang.svg?style=social)](https://twitter.com/jukaLang)
 [![Discord](https://img.shields.io/discord/975787212954275910)](https://discord.gg/MsKWsErzfp)
@@ -12,9 +12,9 @@ Build Status: [![Cirrus CI - Base Branch Build Status](https://img.shields.io/ci
 
 ![RunJuka](https://user-images.githubusercontent.com/11934545/202621333-61526d4d-2bdf-409b-8358-d00b7a0aa74b.png)
 
-Main Git Repository: [https://github.com/jukaLang/juka]
+Main Git Repository: <https://github.com/jukaLang/juka>
 
-Mirror Git Repository: [https://codeberg.org/JukaLang/Juka]
+Mirror Git Repository: <https://codeberg.org/JukaLang/Juka>
 
 **Follow us on:**
 
