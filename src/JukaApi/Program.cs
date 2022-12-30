@@ -61,10 +61,10 @@ app.UseCors("AllowAnyOrigin");
 
 
 
-static IResult ExecuteCode(string src)
+static IResult ExecuteCode(string code)
 {
     JukaCompiler.Compiler compiler = new();
-    string decoded = Uri.UnescapeDataString(src);
+    string decoded = Uri.UnescapeDataString(code);
     string outputValue = compiler.Go(decoded, isFile:false);
 
     if (compiler.HasErrors())
@@ -78,15 +78,15 @@ static IResult ExecuteCode(string src)
     return Results.Json(new { output = outputValue, original = decoded});
 }
 
-app.MapGet("/{code:regex(^(?!index\\.html|swagger-ui\\.css|swagger-ui-bundle\\.js|swagger-ui-standalone-preset\\.js))}", ExecuteCode).WithName("Run Juka (Short)");
+app.MapGet("/{*code:regex(^(?!index\\.html|swagger-ui\\.css|swagger-ui-bundle\\.js|swagger-ui-standalone-preset\\.js|favicon-32x32\\.png))}", ExecuteCode).WithName("Run Juka (Short)");
 
 app.MapPost("/{*code}", ExecuteCode).WithName("Run Juka POST");
 
 app.MapPost("/", async (HttpRequest request) =>
 {
     StreamReader stream = new(request.Body);
-    string src = await stream.ReadToEndAsync();
-    return ExecuteCode(src);
+    string code = await stream.ReadToEndAsync();
+    return ExecuteCode(code);
 }).WithName("Run Juka POST (Long)");
 
 app.Run();

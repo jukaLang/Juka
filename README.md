@@ -63,7 +63,7 @@ Juka's philosophy is code once, run everywhere.
 - Azure (Microsoft Azure Function)
 - HTTPS/API (JukaAPI server)
 - Docker (JukaAPI)
-- Unity Game Engine (via NuGet.org)
+- Unity Game Engine ([via NuGet.org](https://www.nuget.org/packages/JukaCompiler))
 - [Web Assembly (CDN/Browser/HTML server)](https://github.com/jukaLang/juka-webassembly)
 - ChromeOS\* (see Web Assembly)
 - [Jupyter via juka-kernel](https://github.com/jukaLang/juka-kernel)
@@ -72,6 +72,7 @@ Juka's philosophy is code once, run everywhere.
 - Android App (Can be sideloaded <https://jukalang.com/download>, but not in PlayStore yet)
 - Discord Bot
 - Telegram Bot
+- Amazon Fire (HD) (Can be sideloaded <https://jukalang.com/download>, but not in PlayStore yet)
 
 **Coming Soon:**
 
