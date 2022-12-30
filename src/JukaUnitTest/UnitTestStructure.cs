@@ -21,7 +21,7 @@ namespace JukaUnitTest
             var outputValue = compiler.Go(SourceAsString, false);
             if (compiler.HasErrors())
             {
-                throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
+                throw new ArgumentNullException("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));
             }
 
             return outputValue;

@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Spectre.Console;
 using System.IO.Compression;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -57,7 +56,7 @@ namespace Juka
                 _ => "Linux"
             };
             string dir = AppDomain.CurrentDomain.BaseDirectory;
-            string name = Assembly.GetExecutingAssembly().GetName().Name ?? "";
+            string name = typeof(SelfUpdate).Assembly.GetName().Name ?? "";
 
             string extension = "";
             if (platform == "Windows")
@@ -65,11 +64,11 @@ namespace Juka
                 extension = ".exe";
             }
 
-            AnsiConsole.MarkupLine($"[bold orange]Your Operating System:[/] [green]{platform}[/]");
-            AnsiConsole.MarkupLine($"[bold orange]Current Directory:[/] [green]{dir}[/]");
-            AnsiConsole.MarkupLine($"[bold orange]Your Juka Assembly Architecture:[/] [green]{architecture}[/]");
-            AnsiConsole.MarkupLine($"[bold orange]Your Juka Assembly Name:[/] [green]{name}[/]");
-            AnsiConsole.MarkupLine($"[bold orange]Your Juka Assembly Extension:[/] [green]{extension}[/]");
+            AnsiConsole.MarkupLine($"[bold blue]Your Operating System:[/] [green]{platform}[/]");
+            AnsiConsole.MarkupLine($"[bold blue]Current Directory:[/] [green]{dir}[/]");
+            AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Architecture:[/] [green]{architecture}[/]");
+            AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Name:[/] [green]{name}[/]");
+            AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Extension:[/] [green]{extension}[/]");
             return new Dictionary<string, string>
             {
                 { "platform", platform },
@@ -118,7 +117,7 @@ namespace Juka
             }
         }
 
-        private static async void DownloadJuka(IDictionary<string,string> info, string latestVersion)
+        private static async Task DownloadJuka(IDictionary<string,string> info, string latestVersion)
         {
 
             string zipext = ".zip";
