@@ -14,4 +14,5 @@ Please open an issue for any vulnerability found.
 Report a vulnerability by going to https://github.com/jukaLang/Juka/issues and creating an "issue"
 Going to Discord (https://discord.gg/MsKWsErzfp) and posting an issue.
 
-Code is provided "as is". We do not gurantee any fixes, although we try to make updates on a daily basis.
+We do not gurantee any fixes. 
+We try to make updates on a daily basis.
