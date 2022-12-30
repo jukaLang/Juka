@@ -9,7 +9,7 @@ namespace JukaUnitTest
         [TestMethod]
         public void IfBoolean()
         {
-            sourceAsString +=
+            SourceAsString +=
                 @"func test_func() = 
                 {
                     var x = true;
@@ -29,7 +29,7 @@ namespace JukaUnitTest
         [TestMethod]
         public void IfBooleanElseBranch()
         {
-            sourceAsString +=
+            SourceAsString +=
                 @"func test_func() = 
                 {
                     var x = false;
@@ -49,7 +49,7 @@ namespace JukaUnitTest
         [TestMethod]
         public void WhileBoolean()
         {
-            sourceAsString +=
+            SourceAsString +=
                 @"func test_func() = 
                 {
                     var x = true;
@@ -71,7 +71,7 @@ namespace JukaUnitTest
         [DataRow(0, "")]
         public void ForLoop(dynamic loops, string expected)
         {
-            sourceAsString += @"
+            SourceAsString += @"
                 func test_func() = 
                 {
                     for(var i = 0; i<" + loops + @"; i++;)

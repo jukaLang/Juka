@@ -9,7 +9,7 @@ namespace JukaUnitTest
         [DataRow("getAvailableMemory()", "")]
         public void Primitives(string primitive, string expected)
         {
-            sourceAsString += @"
+            SourceAsString += @"
                 func test_func() = 
                 {
                     testme();

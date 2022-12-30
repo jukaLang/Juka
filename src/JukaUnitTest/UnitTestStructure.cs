@@ -8,7 +8,7 @@ namespace JukaUnitTest
         /// <summary>
         /// Default main function calls hard code test func"
         /// </summary>
-        public string sourceAsString =
+        public string SourceAsString { get; set; } =
             @"func main() = 
                 {
                     test_func();
@@ -17,8 +17,8 @@ namespace JukaUnitTest
 
         public string Go()
         {
-            Compiler compiler = new Compiler();
-            var outputValue = compiler.Go(sourceAsString, false);
+            Compiler compiler = new();
+            var outputValue = compiler.Go(SourceAsString, false);
             if (compiler.HasErrors())
             {
                 throw new Exception("Parser exceptions:\r\n" + String.Join("\r\n", compiler.ListErrors()));

@@ -10,7 +10,7 @@ namespace JukaUnitTest
         [DataRow(-5, -5, "-10")]
         public void Add(dynamic a, dynamic b, string expected)
         {
-            sourceAsString += @"
+            SourceAsString += @"
                 func test_func() = {
                     var x=" + a + @";
                     var y=" + b + @";
@@ -26,7 +26,7 @@ namespace JukaUnitTest
         [DataRow(-5, -5, "0")]
         public void Subtract(dynamic a, dynamic b, string expected)
         {
-            sourceAsString += @"func test_func() = {
+            SourceAsString += @"func test_func() = {
                 var x=" + a + @"; var y=" + b + @"; var z=x-y;
                 print(z);
             }";
@@ -38,7 +38,7 @@ namespace JukaUnitTest
         [DataRow(-5, -5, "1")]
         public void Divide(dynamic a, dynamic b, string expected)
         {
-            sourceAsString += @"func test_func() =
+            SourceAsString += @"func test_func() =
             {
                 var x=" + a + @";
                 var y=" + b + @";
@@ -54,7 +54,7 @@ namespace JukaUnitTest
         [DataRow(-5, -5, "25")]
         public void Multiply(dynamic a, dynamic b, string expected)
         {
-            sourceAsString += @"func test_func() = 
+            SourceAsString += @"func test_func() = 
             {
                 var x=" + a + @";
                 var y=" + b + @";

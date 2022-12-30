@@ -11,7 +11,7 @@ namespace JukaUnitTest
         [DataRow(0)]
         public void EmptyComment(dynamic value)
         {
-            sourceAsString += @"func test_func() =
+            SourceAsString += @"func test_func() =
                 {
                     var y = " + value + @";
                     /*print(y);*/
