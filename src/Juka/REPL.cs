@@ -22,8 +22,7 @@ namespace Juka
             string prompt = "[bold green]Juka[/]([red]" + CurrentVersion.Get() + "[/])> ";
 
             AnsiConsole.Write(
-                new FigletText("Juka")
-                    .LeftAligned().Color(Color.Purple));
+                new FigletText("Juka").Color(Color.Purple));
 
             AnsiConsole.MarkupLine(
                 "[bold yellow]Hello[/] and [bold red]Welcome to 🍲 Juka Programming Language![/] For info visit [link blue]https://jukalang.com[/]. Type [bold palegreen1]!menu[/] to see options");
