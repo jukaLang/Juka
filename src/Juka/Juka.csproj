@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageVersion>$(PackageVersion)</PackageVersion>
     <PublishSingleFile>true</PublishSingleFile>
     <PublishTrimmed>true</PublishTrimmed>
-    <PublishAot>false</PublishAot>
+    <PublishAot>true</PublishAot>
     <ApplicationIcon>..\juka.ico</ApplicationIcon>
     <DebugType>None</DebugType>
     <DebugSymbols>false</DebugSymbols>
@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
-    <PackageReference Include="Spectre.Console" Version="0.45.0" />
+    <PackageReference Include="Spectre.Console" Version="0.46.0" />
   </ItemGroup>
 
   <ItemGroup>

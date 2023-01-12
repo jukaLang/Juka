@@ -8,10 +8,16 @@ namespace Juka
 {
     class SelfUpdate
     {
+        private static string currentversion = CurrentVersion.Get();
         public static async Task<string> Check()
         {
+            if (currentversion == "DEBUG")
+            {
+                AnsiConsole.MarkupLine("[yellow]You seem to be using a DEBUG version of Juka. Can't update![/]");
+                return "";
+            }
             AnsiConsole.MarkupLine("[bold yellow]Checking for updates for Juka Programming Language...[/]");
-            AnsiConsole.MarkupLine($"[bold red]Current Version:[/] [red]{CurrentVersion.Get()}[/]");
+            AnsiConsole.MarkupLine($"[bold red]Current Version:[/] [red]{currentversion}[/]");
 
 
             HttpClient client = new()
@@ -28,7 +34,7 @@ namespace Juka
             string responseBody = await response.Content.ReadAsStringAsync();
             string latestVersion = (string?)JObject.Parse(responseBody).SelectToken("tag_name") ?? "";
             AnsiConsole.MarkupLine($"[bold blue]Latest Version: {latestVersion}[/]");
-            if (string.Compare(CurrentVersion.Get(), latestVersion, StringComparison.Ordinal) < 0)
+            if (string.Compare(currentversion, latestVersion, StringComparison.Ordinal) < 0)
             {
                 AnsiConsole.MarkupLine("[red]New version of Juka is available![/]");
                 return latestVersion;
@@ -81,6 +87,7 @@ namespace Juka
         public static async Task Update()
         {
             string latestVersion = await Check();
+
             if (latestVersion != "")
             {
                 IDictionary<string, string> info = Info();
@@ -207,7 +214,14 @@ namespace Juka
                             }
 
                             AnsiConsole.MarkupLine("[green]Updated to version: " + latestVersion + "[/]");
-                        }
+
+                            //Start process, friendly name is something like MyApp.exe (from current bin directory)
+                            System.Diagnostics.Process.Start(jukaexepath);
+
+                            //Close the current process
+                            Environment.Exit(0);
+
+                            }
                         catch (Exception ex)
                         {
                             AnsiConsole.WriteLine("[bold red]Something went wrong downloading latest version of Juka...Download from Official Website [/][link]https://jukalang.com[/]");
