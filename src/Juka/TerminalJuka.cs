@@ -27,6 +27,12 @@ class TerminalJuka
                 await SelfUpdate.Update();
                 break;
             }
+            case "-i":
+            case "--inline":
+            {
+                Console.WriteLine(new Compiler().Go(userInput, isFile: false, debug: 0));
+                break;
+            }
             default:
                 Console.WriteLine(new Compiler().Go(userInput, isFile: true,debug:0));
                 break;
