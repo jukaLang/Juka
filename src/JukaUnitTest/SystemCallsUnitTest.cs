@@ -1,15 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace JukaUnitTest
+namespace JukaUnitTest;
+
+[TestClass]
+public class SystemCallsUnitTest : UnitTestStructure
 {
-    [TestClass]
-    public class SystemCallsUnitTest : UnitTestStructure
+    [TestMethod]
+    [DataRow("getAvailableMemory()", "")]
+    public void Primitives(string primitive, string expected)
     {
-        [TestMethod]
-        [DataRow("getAvailableMemory()", "")]
-        public void Primitives(string primitive, string expected)
-        {
-            SourceAsString += @"
+        SourceAsString += @"
                 func test_func() = 
                 {
                     testme();
@@ -21,7 +21,6 @@ namespace JukaUnitTest
                     print(v);
                 }";
 
-            Assert.AreNotEqual(expected, Go());
-        }
+        Assert.AreNotEqual(expected, Go());
     }
 }

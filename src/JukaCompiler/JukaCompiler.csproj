@@ -14,7 +14,7 @@
 	  <PackageIcon>logo.png</PackageIcon>
 	  <Copyright>Juka 2022</Copyright>
 	  <RepositoryTpe>git</RepositoryTpe>
-	  <Authors>AndreiM; Don Reamy</Authors>
+	  <Authors>JukaLang</Authors>
   </PropertyGroup>
 
   <ItemGroup>

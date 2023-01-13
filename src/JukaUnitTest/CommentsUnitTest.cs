@@ -1,17 +1,17 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace JukaUnitTest
+namespace JukaUnitTest;
+
+[TestClass]
+public class CommentsUnitTest : UnitTestStructure
 {
-    [TestClass]
-    public class CommentsUnitTest : UnitTestStructure
+    [TestMethod]
+    [DataRow(3)]
+    [DataRow(-1)]
+    [DataRow(0)]
+    public void EmptyComment(dynamic value)
     {
-        [TestMethod]
-        [DataRow(3)]
-        [DataRow(-1)]
-        [DataRow(0)]
-        public void EmptyComment(dynamic value)
-        {
-            SourceAsString += @"func test_func() =
+        SourceAsString += @"func test_func() =
                 {
                     var y = " + value + @";
                     /*print(y);*/
@@ -20,7 +20,6 @@ namespace JukaUnitTest
                     /*nest(3)*/
                 }";
 
-            Assert.AreEqual("", Go());
-        }
+        Assert.AreEqual("", Go());
     }
 }
