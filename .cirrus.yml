@@ -10,10 +10,10 @@ task:
     setup_script:
     - pkg install -y wget bash libunwind libinotify icu libuv gdb libffi wget bash glib gnutls libarchive libuv openssl sqlite3 libiconv ca_root_nss
     - sudo mkdir /dotnet
-    - wget https://github.com/jukaLang/JukaPortLibraries/releases/download/JukaLibs/dotnet-sdk-6.0.402-freebsd-x64.tar.gz
-    - sudo tar xf dotnet-sdk-6.0.402-freebsd-x64.tar.gz -C /dotnet/
-    - wget https://github.com/jukaLang/JukaPortLibraries/releases/download/JukaLibs/Microsoft.AspNetCore.App.Runtime.freebsd-x64.6.0.10.nupkg
-    - wget https://github.com/jukaLang/JukaPortLibraries/releases/download/JukaLibs/Microsoft.NETCore.App.Runtime.freebsd-x64.6.0.10.nupkg
+    - wget https://github.com/jukaLang/JukaPortLibraries/releases/download/JukaLibs/dotnet-sdk-7.0.101-freebsd-x64.tar.gz
+    - sudo tar xf dotnet-sdk-7.0.101-freebsd-x64.tar.gz -C /dotnet/
+    - wget https://github.com/jukaLang/JukaPortLibraries/releases/download/JukaLibs/Microsoft.AspNetCore.App.Runtime.freebsd-x64.7.0.1.nupkg
+    - wget https://github.com/jukaLang/JukaPortLibraries/releases/download/JukaLibs/Microsoft.NETCore.App.Runtime.freebsd-x64.7.0.1.nupkg
     - sudo mv *.nupkg /dotnet/
     script:
     - cd src
@@ -22,8 +22,8 @@ task:
     - /dotnet/dotnet test
     package_script:
     - /dotnet/dotnet publish /tmp/cirrus-ci-build/src/Juka.sln -c release --self-contained true -a "" /p:Version=${CIRRUS_TAG}
-    - tar -czf Juka_Unix_X64_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/Juka/bin/Release/net6.0/freebsd-x64/publish .
-    - tar -czf JukaAPI_Unix_X64_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/JukaApi/bin/Release/net6.0/freebsd-x64/publish .
+    - tar -czf Juka_Unix_X64_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/Juka/bin/Release/net7.0/freebsd-x64/publish .
+    - tar -czf JukaAPI_Unix_X64_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/JukaApi/bin/Release/net7.0/freebsd-x64/publish .
     - chmod 777 *.sh
     - ./publish.sh
   - name: Linux Build
@@ -37,10 +37,10 @@ task:
     - apt-get update
     - apt-get install -y wget curl libc6:i386 libncurses5:i386 libstdc++6:i386 libicu-dev:i386 libssl-dev:i386 zlib1g:i386 
     - mkdir /usr/share/dotnet
-    - wget https://github.com/jukaLang/JukaPortLibraries/releases/download/JukaLibs/dotnet-sdk-6.0.401-linux-x86.tar.gz
-    - tar xf dotnet-sdk-6.0.401-linux-x86.tar.gz -C /usr/share/dotnet/
-    - wget https://github.com/jukaLang/JukaPortLibraries/releases/download/JukaLibs/Microsoft.AspNetCore.App.Runtime.linux-x86.6.0.9.nupkg
-    - wget https://github.com/jukaLang/JukaPortLibraries/releases/download/JukaLibs/Microsoft.NETCore.App.Runtime.linux-x86.6.0.9.nupkg
+    - wget https://github.com/jukaLang/JukaPortLibraries/releases/download/JukaLibs/dotnet-sdk-7.0.100-preview.3.22179.4-linux-x86.tar.gz
+    - tar xf dotnet-sdk-7.0.100-preview.3.22179.4-linux-x86.tar.gz -C /usr/share/dotnet/
+    - wget https://github.com/jukaLang/JukaPortLibraries/releases/download/JukaLibs/Microsoft.AspNetCore.App.Runtime.linux-x86.7.0.0-preview.3.22178.4.nupkg
+    - wget https://github.com/jukaLang/JukaPortLibraries/releases/download/JukaLibs/Microsoft.NETCore.App.Runtime.linux-x86.7.0.0-preview.3.22175.4.nupkg
     - mv *.nupkg /usr/share/dotnet/
     script:
     - cd src
@@ -49,8 +49,8 @@ task:
     - /usr/share/dotnet/dotnet test
     package_script:
     - /usr/share/dotnet/dotnet publish /tmp/cirrus-ci-build/src/Juka.sln -c release --self-contained true --runtime linux-x86 /p:Version=${CIRRUS_TAG}
-    - tar -czf Juka_Linux_X86_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/Juka/bin/Release/net6.0/linux-x86/publish .
-    - tar -czf JukaAPI_Linux_X86_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/JukaApi/bin/Release/net6.0/linux-x86/publish .
+    - tar -czf Juka_Linux_X86_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/Juka/bin/Release/net7.0/linux-x86/publish .
+    - tar -czf JukaAPI_Linux_X86_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/JukaApi/bin/Release/net7.0/linux-x86/publish .
     - pwd
     - chmod +x ./publish.sh
     - ./publish.sh

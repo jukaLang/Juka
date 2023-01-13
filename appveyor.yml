@@ -72,57 +72,57 @@ after_build:
 configuration: Release
 
 artifacts:
-- path: 'src\Juka\bin\Release\net6.0\win-x86\publish'
+- path: 'src\Juka\bin\Release\net7.0\win-x86\publish'
   name: Juka_Windows_X86_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\Juka\bin\Release\net6.0\win-x64\publish'
+- path: 'src\Juka\bin\Release\net7.0\win-x64\publish'
   name: Juka_Windows_X64_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\Juka\bin\Release\net6.0\win-arm64\publish'
+- path: 'src\Juka\bin\Release\net7.0\win-arm64\publish'
   name: Juka_Windows_Arm64_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
-- path: 'src\Juka\bin\Release\net6.0\osx-x64\publish'
+- path: 'src\Juka\bin\Release\net7.0\osx-x64\publish'
   name: Juka_MacOS_X64_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
-- path: 'src\Juka\bin\Release\net6.0\linux-x64\publish'
+- path: 'src\Juka\bin\Release\net7.0\linux-x64\publish'
   name: Juka_Linux_X64_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\Juka\bin\Release\net6.0\linux-arm\publish'
+- path: 'src\Juka\bin\Release\net7.0\linux-arm\publish'
   name: Juka_Linux_Arm_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\Juka\bin\Release\net6.0\linux-arm64\publish'
+- path: 'src\Juka\bin\Release\net7.0\linux-arm64\publish'
   name: Juka_Linux_Arm64_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
 
 
-- path: 'src\JukaApi\bin\Release\net6.0\win-x86\publish'
+- path: 'src\JukaApi\bin\Release\net7.0\win-x86\publish'
   name: JukaAPI_Windows_X86_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\JukaApi\bin\Release\net6.0\win-x64\publish'
+- path: 'src\JukaApi\bin\Release\net7.0\win-x64\publish'
   name: JukaAPI_Windows_X64_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\JukaApi\bin\Release\net6.0\win-arm64\publish'
+- path: 'src\JukaApi\bin\Release\net7.0\win-arm64\publish'
   name: JukaAPI_Windows_Arm64_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
-- path: 'src\JukaApi\bin\Release\net6.0\osx-x64\publish'
+- path: 'src\JukaApi\bin\Release\net7.0\osx-x64\publish'
   name: JukaAPI_MacOS_X64_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
-- path: 'src\JukaApi\bin\Release\net6.0\linux-x64\publish'
+- path: 'src\JukaApi\bin\Release\net7.0\linux-x64\publish'
   name: JukaAPI_Linux_X64_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\JukaApi\bin\Release\net6.0\linux-arm\publish'
+- path: 'src\JukaApi\bin\Release\net7.0\linux-arm\publish'
   name: JukaAPI_Linux_Arm_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\JukaApi\bin\Release\net6.0\linux-arm64\publish'
+- path: 'src\JukaApi\bin\Release\net7.0\linux-arm64\publish'
   name: JukaAPI_Linux_Arm64_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
-- path: 'src\JukaCompiler\bin\Release\net6.0\'
+- path: 'src\JukaCompiler\bin\Release\net7.0\'
   name: Juka_Compiler_dll_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
@@ -130,7 +130,7 @@ artifacts:
   name: Juka_Compiler
   type: NuGetPackage
 
-- path: 'src\JukaAzureFunction\bin\Release\net6.0\publish'
+- path: 'src\JukaAzureFunction\bin\Release\net7.0\publish'
   name: Juka_Azure_Function_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
