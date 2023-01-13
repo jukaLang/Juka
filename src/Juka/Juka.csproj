@@ -8,7 +8,7 @@
     <PackageVersion>$(PackageVersion)</PackageVersion>
     <PublishSingleFile>true</PublishSingleFile>
     <PublishTrimmed>true</PublishTrimmed>
-    <PublishAot>true</PublishAot>
+    <PublishAot>false</PublishAot>
     <ApplicationIcon>..\juka.ico</ApplicationIcon>
     <DebugType>None</DebugType>
     <DebugSymbols>false</DebugSymbols>
