@@ -1,16 +1,16 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace JukaUnitTest
+namespace JukaUnitTest;
+
+[TestClass]
+public class CompilerUnitTest : UnitTestStructure
 {
-    [TestClass]
-    public class CompilerUnitTest : UnitTestStructure
+    [TestMethod]
+    public void StackBasedArray()
     {
-        [TestMethod]
-        public void StackBasedArray()
-        {
-            SourceAsString +=
-                @"func test_func() = 
+        SourceAsString +=
+            @"func test_func() = 
                 {
                     var x = array[3];
                     x[1] = ""test"";
@@ -19,15 +19,15 @@ namespace JukaUnitTest
                     print(x[1]);
                 }";
 
-            Assert.AreEqual("test", Go());
-        }
+        Assert.AreEqual("test", Go());
+    }
 
 
-        [TestMethod]
-        public void HeapBasedArray()
-        {
-            SourceAsString +=
-                @"func test_func() = 
+    [TestMethod]
+    public void HeapBasedArray()
+    {
+        SourceAsString +=
+            @"func test_func() = 
                 {
                     var y = ""te"";
                     print(y);
@@ -35,49 +35,49 @@ namespace JukaUnitTest
                     print(""st"");
                 }";
 
-            Assert.AreEqual("test", Go());
-        }
+        Assert.AreEqual("test", Go());
+    }
 
 
 
-        [TestMethod]
-        [DataRow(3,"3")]
-        [DataRow(-1,"-1")]
-        [DataRow(0,"0")]
-        public void PrintLiteral(dynamic value, string expected)
-        {
-            SourceAsString +=
-                @"func test_func() = 
+    [TestMethod]
+    [DataRow(3,"3")]
+    [DataRow(-1,"-1")]
+    [DataRow(0,"0")]
+    public void PrintLiteral(dynamic value, string expected)
+    {
+        SourceAsString +=
+            @"func test_func() = 
                 {
                     printLine("+value+@"); 
                 }";
-            Assert.AreEqual(expected + Environment.NewLine,  Go());
-        }
+        Assert.AreEqual(expected + Environment.NewLine,  Go());
+    }
 
-        [TestMethod]
-        [DataRow(3,"3")]
-        [DataRow(-1,"-1")]
-        [DataRow(0,"0")]
-        public void PrintVariable(dynamic value, string expected)
-        {
-            SourceAsString +=
-                @"func test_func() = 
+    [TestMethod]
+    [DataRow(3,"3")]
+    [DataRow(-1,"-1")]
+    [DataRow(0,"0")]
+    public void PrintVariable(dynamic value, string expected)
+    {
+        SourceAsString +=
+            @"func test_func() = 
                 {
                     var x = "+value+@";
                     print(x); 
                 }";
 
-            Assert.AreEqual(expected, Go());
-        }
+        Assert.AreEqual(expected, Go());
+    }
 
-        [TestMethod]
-        [DataRow(3,"3")]
-        [DataRow(-1,"-1")]
-        [DataRow(0,"0")]
-        public void PassVariable(dynamic value, string expected)
-        {
-            SourceAsString +=
-                @"func test_func() = 
+    [TestMethod]
+    [DataRow(3,"3")]
+    [DataRow(-1,"-1")]
+    [DataRow(0,"0")]
+    public void PassVariable(dynamic value, string expected)
+    {
+        SourceAsString +=
+            @"func test_func() = 
                 {
                     var x = "+value+@";
                     varpass(x);
@@ -88,17 +88,17 @@ namespace JukaUnitTest
                     print(x); 
                 }";
 
-            Assert.AreEqual(expected, Go());
-        }
+        Assert.AreEqual(expected, Go());
+    }
 
-        [TestMethod]
-        [DataRow(3,"3")]
-        [DataRow(-1,"-1")]
-        [DataRow(0,"0")]
-        public void PrintThreeLevelsNesting(dynamic value, string expected)
-        {
-            SourceAsString +=
-                @"func test_func() = 
+    [TestMethod]
+    [DataRow(3,"3")]
+    [DataRow(-1,"-1")]
+    [DataRow(0,"0")]
+    public void PrintThreeLevelsNesting(dynamic value, string expected)
+    {
+        SourceAsString +=
+            @"func test_func() = 
                 {
                     var y = "+value+@";
                     nest1(y);
@@ -114,18 +114,18 @@ namespace JukaUnitTest
                     print(z);
                 }";
 
-            Assert.AreEqual(expected, Go());
-        }
+        Assert.AreEqual(expected, Go());
+    }
 
         
 
-        [TestMethod]
-        [DataRow(3,"3")]
-        [DataRow(-1,"-1")]
-        [DataRow(0,"0")]
-        public void MultipleVariables(dynamic value, string expected)
-        {
-            SourceAsString += @"
+    [TestMethod]
+    [DataRow(3,"3")]
+    [DataRow(-1,"-1")]
+    [DataRow(0,"0")]
+    public void MultipleVariables(dynamic value, string expected)
+    {
+        SourceAsString += @"
                 func test_func() = 
                 {
                     var z = 3;
@@ -134,7 +134,6 @@ namespace JukaUnitTest
                     print(z);
                 }";
 
-            Assert.AreEqual(expected+"3" , Go());
-        }
+        Assert.AreEqual(expected+"3" , Go());
     }
 }

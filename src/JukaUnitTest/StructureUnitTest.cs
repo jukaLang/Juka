@@ -1,14 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace JukaUnitTest
+namespace JukaUnitTest;
+
+[TestClass]
+public class StructureUnitTest : UnitTestStructure
 {
-    [TestClass]
-    public class StructureUnitTest : UnitTestStructure
+    [TestMethod]
+    public void Class()
     {
-        [TestMethod]
-        public void Class()
-        {
-            SourceAsString += @"
+        SourceAsString += @"
                 class x = 
                 {
                     func xmethod() = 
@@ -29,7 +29,6 @@ namespace JukaUnitTest
                     v.zmethod();
                 }";
 
-            Assert.AreEqual("foobar", Go());
-        }
+        Assert.AreEqual("foobar", Go());
     }
 }

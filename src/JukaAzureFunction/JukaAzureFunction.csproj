@@ -8,11 +8,10 @@
 		<PackageVersion>$(PackageVersion)</PackageVersion>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="AzureFunctions.Extensions.Swashbuckle" Version="1.4.4" />
+		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.OpenApi" Version="1.5.0" />
+		<PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.7.0" OutputItemType="Analyzer" />
 		<PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.10.0" />
 		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
-		<PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.7.0" OutputItemType="Analyzer" />
-		<PackageReference Include="Microsoft.Azure.WebJobs.Extensions.OpenApi" Version="1.5.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\JukaCompiler\JukaCompiler.csproj" />

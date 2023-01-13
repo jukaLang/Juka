@@ -1,16 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace JukaUnitTest
-{
+namespace JukaUnitTest;
 
-    [TestClass]
-    public class IfWhileUnitTest : UnitTestStructure
+[TestClass]
+public class IfWhileUnitTest : UnitTestStructure
+{
+    [TestMethod]
+    public void IfBoolean()
     {
-        [TestMethod]
-        public void IfBoolean()
-        {
-            SourceAsString +=
-                @"func test_func() = 
+        SourceAsString +=
+            @"func test_func() = 
                 {
                     var x = true;
                     if ( x == true)
@@ -23,14 +22,14 @@ namespace JukaUnitTest
                     }
                 }";
 
-            Assert.AreEqual("x", Go());
-        }
+        Assert.AreEqual("x", Go());
+    }
 
-        [TestMethod]
-        public void IfBooleanElseBranch()
-        {
-            SourceAsString +=
-                @"func test_func() = 
+    [TestMethod]
+    public void IfBooleanElseBranch()
+    {
+        SourceAsString +=
+            @"func test_func() = 
                 {
                     var x = false;
                     if ( x == true)
@@ -43,14 +42,14 @@ namespace JukaUnitTest
                     }
                 }";
 
-            Assert.AreEqual("y", Go());
-        }
+        Assert.AreEqual("y", Go());
+    }
 
-        [TestMethod]
-        public void WhileBoolean()
-        {
-            SourceAsString +=
-                @"func test_func() = 
+    [TestMethod]
+    public void WhileBoolean()
+    {
+        SourceAsString +=
+            @"func test_func() = 
                 {
                     var x = true;
                     while(x == true)
@@ -60,18 +59,18 @@ namespace JukaUnitTest
                     }
                 }";
 
-            Assert.AreEqual("y", Go());
-        }
+        Assert.AreEqual("y", Go());
+    }
 
 
 
-        [TestMethod]
-        [DataRow(3, "012")]
-        [DataRow(-1, "")]
-        [DataRow(0, "")]
-        public void ForLoop(dynamic loops, string expected)
-        {
-            SourceAsString += @"
+    [TestMethod]
+    [DataRow(3, "012")]
+    [DataRow(-1, "")]
+    [DataRow(0, "")]
+    public void ForLoop(dynamic loops, string expected)
+    {
+        SourceAsString += @"
                 func test_func() = 
                 {
                     for(var i = 0; i<" + loops + @"; i++;)
@@ -80,7 +79,6 @@ namespace JukaUnitTest
                     }
                 }";
 
-            Assert.AreEqual(expected, Go());
-        }
+        Assert.AreEqual(expected, Go());
     }
 }

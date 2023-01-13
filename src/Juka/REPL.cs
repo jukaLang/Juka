@@ -3,162 +3,161 @@ using Spectre.Console;
 using System.Diagnostics;
 using System.Text;
 
-namespace Juka
+namespace Juka;
+
+public class Repl
 {
-    public class Repl
+    public static async Task RunRepl()
     {
-        public static async Task RunRepl()
+        Console.Title = "Juka Programming Language";
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.OutputEncoding = Encoding.UTF8;
+
+        await SelfUpdate.Update();
+
+
+
+        bool isFuncOrClass = false;
+        string prompt = "[bold green]Juka[/]([red]" + CurrentVersion.Get() + "[/])> ";
+
+        AnsiConsole.Write(
+            new FigletText("Juka").Color(Color.Purple));
+
+        AnsiConsole.MarkupLine(
+            "[bold yellow]Hello[/] and [bold red]Welcome to 🍲 Juka Programming Language![/] For info visit [link blue]https://jukalang.com[/]. Type [bold palegreen1]!menu[/] to see options");
+
+        Compiler compiler = new();
+
+        string dataStart = "func main() = {";
+        string dataEnd = "}";
+
+        Stack<string> funcData = new();
+        AnsiConsole.Markup(prompt);
+
+        bool inloop = true;
+
+        while (inloop)
         {
-            Console.Title = "Juka Programming Language";
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.OutputEncoding = Encoding.UTF8;
-
-            await SelfUpdate.Update();
-
-
-
-            bool isFuncOrClass = false;
-            string prompt = "[bold green]Juka[/]([red]" + CurrentVersion.Get() + "[/])> ";
-
-            AnsiConsole.Write(
-                new FigletText("Juka").Color(Color.Purple));
-
-            AnsiConsole.MarkupLine(
-                "[bold yellow]Hello[/] and [bold red]Welcome to 🍲 Juka Programming Language![/] For info visit [link blue]https://jukalang.com[/]. Type [bold palegreen1]!menu[/] to see options");
-
-            Compiler compiler = new();
-
-            string dataStart = "func main() = {";
-            string dataEnd = "}";
-
-            Stack<string> funcData = new();
-            AnsiConsole.Markup(prompt);
-
-            bool inloop = true;
-
-            while (inloop)
+            string? readLine = Console.ReadLine();
+            if (string.IsNullOrEmpty(readLine))
             {
-                string? readLine = Console.ReadLine();
-                if (string.IsNullOrEmpty(readLine))
+                AnsiConsole.Markup(prompt);
+                continue;
+            }
+
+
+            if (readLine.Equals("!menu", StringComparison.OrdinalIgnoreCase))
+            {
+                var table = new Table();
+
+                // Add some columns
+                table.AddColumn("Command");
+                table.AddColumn(new TableColumn("Description"));
+
+                // Add some rows
+                table.AddRow("!list", "[red]Lists the current code[/]");
+                table.AddRow("!clear", "[green]Clears The REPL[/]");
+                table.AddRow("!undo", "[blue]Undoes last entered command[/]");
+                table.AddRow("!exit", "[darkred_1]Exits REPL[/]");
+                AnsiConsole.Write(table);
+                AnsiConsole.Markup(prompt);
+                continue;
+            }
+
+            if (readLine.Equals("!clear", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.Clear();
+                compiler = new Compiler();
+                isFuncOrClass = false;
+                funcData.Clear();
+                dataStart = "func main() = {";
+                dataEnd = "}";
+                AnsiConsole.Markup(prompt);
+                continue;
+            }
+
+            if (readLine.Equals("!list", StringComparison.OrdinalIgnoreCase))
+            {
+                foreach (var data in funcData.Reverse())
                 {
-                    AnsiConsole.Markup(prompt);
-                    continue;
+                    Console.WriteLine(data);
                 }
 
+                AnsiConsole.Markup(prompt);
+                continue;
+            }
 
-                if (readLine.Equals("!menu", StringComparison.OrdinalIgnoreCase))
+            if (readLine.Equals("!undo", StringComparison.OrdinalIgnoreCase))
+            {
+                var templine = funcData.Pop();
+                AnsiConsole.MarkupLine("[bold red]Removed: [/]" + templine);
+                AnsiConsole.Markup(prompt);
+                continue;
+            }
+
+            if (readLine.Equals("!exit", StringComparison.OrdinalIgnoreCase))
+            {
+                inloop = false;
+                continue;
+            }
+
+            if (readLine.StartsWith("func") || readLine.StartsWith("class"))
+            {
+                isFuncOrClass = true;
+                funcData.Push(readLine);
+                Trace.WriteLine("Starting Func: " + readLine);
+            }
+            else if (isFuncOrClass)
+            {
+                if (readLine.StartsWith("}", StringComparison.OrdinalIgnoreCase))
                 {
-                    var table = new Table();
-
-                    // Add some columns
-                    table.AddColumn("Command");
-                    table.AddColumn(new TableColumn("Description"));
-
-                    // Add some rows
-                    table.AddRow("!list", "[red]Lists the current code[/]");
-                    table.AddRow("!clear", "[green]Clears The REPL[/]");
-                    table.AddRow("!undo", "[blue]Undoes last entered command[/]");
-                    table.AddRow("!exit", "[darkred_1]Exits REPL[/]");
-                    AnsiConsole.Write(table);
-                    AnsiConsole.Markup(prompt);
-                    continue;
-                }
-
-                if (readLine.Equals("!clear", StringComparison.OrdinalIgnoreCase))
-                {
-                    Console.Clear();
-                    compiler = new Compiler();
-                    isFuncOrClass = false;
-                    funcData.Clear();
-                    dataStart = "func main() = {";
-                    dataEnd = "}";
-                    AnsiConsole.Markup(prompt);
-                    continue;
-                }
-
-                if (readLine.Equals("!list", StringComparison.OrdinalIgnoreCase))
-                {
-                    foreach (var data in funcData.Reverse())
-                    {
-                        Console.WriteLine(data);
-                    }
-
-                    AnsiConsole.Markup(prompt);
-                    continue;
-                }
-
-                if (readLine.Equals("!undo", StringComparison.OrdinalIgnoreCase))
-                {
-                    var templine = funcData.Pop();
-                    AnsiConsole.MarkupLine("[bold red]Removed: [/]" + templine);
-                    AnsiConsole.Markup(prompt);
-                    continue;
-                }
-
-                if (readLine.Equals("!exit", StringComparison.OrdinalIgnoreCase))
-                {
-                    inloop = false;
-                    continue;
-                }
-
-                if (readLine.StartsWith("func") || readLine.StartsWith("class"))
-                {
-                    isFuncOrClass = true;
                     funcData.Push(readLine);
-                    Trace.WriteLine("Starting Func: " + readLine);
-                }
-                else if (isFuncOrClass)
-                {
-                    if (readLine.StartsWith("}", StringComparison.OrdinalIgnoreCase))
-                    {
-                        funcData.Push(readLine);
-                        Trace.WriteLine("Ending Func: " + readLine);
+                    Trace.WriteLine("Ending Func: " + readLine);
 
-                        StringBuilder userDataToExecute = new StringBuilder();
-                        foreach (string item in funcData.Reverse())
-                        {
-                            userDataToExecute.Append(item);
-                        }
-
-                        dataEnd += userDataToExecute.ToString();
-                        isFuncOrClass = false;
-                        AnsiConsole.Markup(prompt);
-                    }
-                    else
+                    StringBuilder userDataToExecute = new StringBuilder();
+                    foreach (string item in funcData.Reverse())
                     {
-                        Trace.WriteLine("Reading Func: " + readLine);
-                        funcData.Push(readLine);
+                        userDataToExecute.Append(item);
                     }
+
+                    dataEnd += userDataToExecute.ToString();
+                    isFuncOrClass = false;
+                    AnsiConsole.Markup(prompt);
                 }
                 else
                 {
-                    if (readLine.StartsWith("var"))
-                    {
-                        dataStart += readLine;
-                        readLine = "";
-                    }
-
+                    Trace.WriteLine("Reading Func: " + readLine);
                     funcData.Push(readLine);
-
-                    string codeToExecute = dataStart + readLine + dataEnd;
-                    try
-                    {
-                        Trace.WriteLine(codeToExecute);
-                        string output = compiler.Go(codeToExecute, isFile: false,debug:1);
-                        Console.WriteLine(output);
-                    }
-                    catch (Exception e)
-                    {
-                        Trace.WriteLine(e.ToString());
-                        AnsiConsole.WriteException(e);
-                        Console.WriteLine("Something went wrong! Please restart the application");
-                    }
-
-                    AnsiConsole.Markup(prompt);
                 }
             }
-        }
+            else
+            {
+                if (readLine.StartsWith("var"))
+                {
+                    dataStart += readLine;
+                    readLine = "";
+                }
 
+                funcData.Push(readLine);
+
+                string codeToExecute = dataStart + readLine + dataEnd;
+                try
+                {
+                    Trace.WriteLine(codeToExecute);
+                    string output = compiler.Go(codeToExecute, isFile: false,debug:1);
+                    Console.WriteLine(output);
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine(e.ToString());
+                    AnsiConsole.WriteException(e);
+                    Console.WriteLine("Something went wrong! Please restart the application");
+                }
+
+                AnsiConsole.Markup(prompt);
+            }
+        }
     }
+
 }

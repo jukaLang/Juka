@@ -10,7 +10,7 @@ Official Website: <https://jukalang.com>
 Build Status: [![Cirrus CI - Base Branch Build Status](https://img.shields.io/cirrus/github/jukaLang/Juka)](https://cirrus-ci.com/github/jukaLang/Juka)
 [![Build status](https://ci.appveyor.com/api/projects/status/nmjmm04xhryx8p54?svg=true)](https://ci.appveyor.com/project/TheAndreiM/juka)
 
-![RunJuka](https://user-images.githubusercontent.com/11934545/202621333-61526d4d-2bdf-409b-8358-d00b7a0aa74b.png)
+![RunJuka](https://user-images.githubusercontent.com/11934545/212342916-bc9b61b9-59f2-46d1-b416-c51e1b83375a.png)
 
 Main Git Repository: <https://github.com/jukaLang/juka>
 
