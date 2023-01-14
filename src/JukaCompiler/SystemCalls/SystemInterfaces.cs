@@ -7,6 +7,10 @@ namespace JukaCompiler.SystemCalls
     {
     }
 
+    internal interface ICSharp : IJukaCallable
+    {
+    }
+
     internal interface ISystemClock : IJukaCallable
     {
     }

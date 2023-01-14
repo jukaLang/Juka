@@ -29,6 +29,7 @@ namespace JukaCompiler.Interpreter
             {
                 throw new ArgumentNullException(nameof(services));
             }
+            globals.Define("csharp", serviceProvider.GetService<ICSharp>());
             globals.Define("clock", serviceProvider.GetService<ISystemClock>());
             globals.Define("fileOpen", services.GetService<IFileOpen>());
             globals.Define("getAvailableMemory", services.GetService<IGetAvailableMemory>());
@@ -50,7 +51,7 @@ namespace JukaCompiler.Interpreter
                 }
             }
 
-            Lexeme? lexeme = new(LexemeType.Types.IDENTIFIER, 0, 0);
+            Lexeme lexeme = new(LexemeType.Types.IDENTIFIER, 0, 0);
             lexeme.AddToken("main");
             Expr.Variable functionName = new(lexeme);
             Expr.Call call = new(functionName, false, new());
