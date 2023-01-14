@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using JukaCompiler.Expressions;
 using JukaCompiler.Interpreter;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
 
 namespace JukaCompiler.SystemCalls
 {
@@ -8,6 +9,7 @@ namespace JukaCompiler.SystemCalls
     {
         GetAvailableMemory,
         FileOpen,
+        CSharp
     }
 
     /// <summary>
@@ -28,6 +30,7 @@ namespace JukaCompiler.SystemCalls
         public static readonly Dictionary<string, Type> kv = new()
         {
             {"FileOpen", typeof(IFileOpen)},
+            {"CSharp", typeof(ICSharp)},
         };
 
         public int Arity()
@@ -74,6 +77,39 @@ namespace JukaCompiler.SystemCalls
             }
 
             return Array.Empty<byte>();
+        }
+    }
+
+    internal class CSharp : ICSharp, IJukaCallable
+    {
+        public int Arity()
+        {
+            return 1;
+        }
+
+        public object? Call(string methodName, JukaInterpreter interpreter, List<object?> arguments)
+        {
+            try
+            {
+                foreach (var argument in arguments)
+                {
+                    if (argument is Expr.LexemeTypeLiteral literal)
+                    {
+                        var csharp = literal.literal?.ToString() ?? string.Empty;
+
+                        var task = CSharpScript.EvaluateAsync(csharp);
+                        string result = task.GetAwaiter().GetResult().ToString() ?? "";
+
+                        return  result;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new SystemCallException(ex);
+            }
+
+            return "";
         }
     }
 }

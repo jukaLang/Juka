@@ -8,6 +8,7 @@ using JukaCompiler.Exceptions;
 using JukaCompiler.Expressions;
 using JukaCompiler.SystemCalls;
 using JukaCompiler.Lexer;
+using System;
 
 
 namespace JukaCompiler
@@ -33,6 +34,7 @@ namespace JukaCompiler
                 services.AddSingleton<ICompilerError,CompilerError>();
                 services.AddSingleton<IJukaCallable, JukaSystemCalls>();
                 services.AddSingleton<IFileOpen, FileOpen>();
+                services.AddSingleton<ICSharp, CSharp>();
                 services.AddSingleton<ISystemClock, SystemClock>();
                 services.AddSingleton<IGetAvailableMemory, GetAvailableMemory>();
                 this.serviceProvider = services.BuildServiceProvider();
@@ -114,7 +116,7 @@ namespace JukaCompiler
                 throw new Exception("No main function is defined");
             }
 
-            Lexeme? lexeme = new(LexemeType.Types.IDENTIFIER, 0, 0);
+            Lexeme lexeme = new(LexemeType.Types.IDENTIFIER, 0, 0);
             lexeme.AddToken("main");
             Expr.Variable functionName = new(lexeme);
             Expr.Call call = new(functionName, false, new List<Expr>());

@@ -22,8 +22,19 @@ namespace JukaCompiler.Interpreter
             foreach (var variable in variables)
             {
                 string name = variable.Key;
-                object? value = ((Expr.LexemeTypeLiteral) variable.Value!)?.literal;
-                AddVariable(name, value, variable.Value?.GetType(), null);
+
+                object? value = null;
+                if (variable.Value is Expr.Literal)
+                {
+                    value = variable.Value;
+                }
+                else
+                {
+                    value = ((Expr.LexemeTypeLiteral)variable.Value).literal;
+                }
+
+                //
+                AddVariable(name, value, variable.Value.GetType(), null);
             }
         }
 
