@@ -2,6 +2,7 @@
 using JukaCompiler.Expressions;
 using JukaCompiler.Interpreter;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
 
 namespace JukaCompiler.SystemCalls
 {
@@ -100,7 +101,7 @@ namespace JukaCompiler.SystemCalls
                         string result = "";
                         try
                         {
-                            var task = CSharpScript.EvaluateAsync(csharp);
+                            var task = CSharpScript.EvaluateAsync(csharp, ScriptOptions.Default.WithImports(new List<string> { "System.IO", "System.Math" }));
                             var taskCompleted = task.GetAwaiter();
                             if (taskCompleted.GetResult() != null)
                             {
