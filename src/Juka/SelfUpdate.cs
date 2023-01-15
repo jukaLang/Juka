@@ -8,16 +8,16 @@ namespace Juka;
 
 class SelfUpdate
 {
-    private static string currentversion = CurrentVersion.Get();
+    private static readonly string CurrentVersion = Juka.CurrentVersion.Get();
     public static async Task<string> Check()
     {
-        if (currentversion == "DEBUG")
+        if (CurrentVersion == "DEBUG")
         {
             AnsiConsole.MarkupLine("[yellow]You seem to be using a DEBUG version of Juka. Can't update![/]");
             return "";
         }
         AnsiConsole.MarkupLine("[bold yellow]Checking for updates for Juka Programming Language...[/]");
-        AnsiConsole.MarkupLine($"[bold red]Current Version:[/] [red]{currentversion}[/]");
+        AnsiConsole.MarkupLine($"[bold red]Current Version:[/] [red]{CurrentVersion}[/]");
 
 
         HttpClient client = new()
@@ -34,7 +34,7 @@ class SelfUpdate
         string responseBody = await response.Content.ReadAsStringAsync();
         string latestVersion = (string?)JObject.Parse(responseBody).SelectToken("tag_name") ?? "";
         AnsiConsole.MarkupLine($"[bold blue]Latest Version: {latestVersion}[/]");
-        if (string.Compare(currentversion, latestVersion, StringComparison.Ordinal) < 0)
+        if (string.Compare(CurrentVersion, latestVersion, StringComparison.Ordinal) < 0)
         {
             AnsiConsole.MarkupLine("[red]New version of Juka is available![/]");
             return latestVersion;
