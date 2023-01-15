@@ -97,8 +97,20 @@ namespace JukaCompiler.SystemCalls
                     {
                         var csharp = literal.literal?.ToString() ?? string.Empty;
 
-                        var task = CSharpScript.EvaluateAsync(csharp);
-                        string result = task.GetAwaiter().GetResult().ToString() ?? "";
+                        string result = "";
+                        try
+                        {
+                            var task = CSharpScript.EvaluateAsync(csharp);
+                            var taskCompleted = task.GetAwaiter();
+                            if (taskCompleted.GetResult() != null)
+                            {
+                                result = taskCompleted.GetResult().ToString() ?? "";
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            result = string.Empty;
+                        }
 
                         return  result;
                     }
