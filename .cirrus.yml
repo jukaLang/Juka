@@ -22,8 +22,8 @@ task:
     - /dotnet/dotnet test
     package_script:
     - /dotnet/dotnet publish /tmp/cirrus-ci-build/src/Juka.sln -c release --self-contained true -a "" /p:Version=${CIRRUS_TAG} /p:AssemblyVersion=${CIRRUS_TAG}
-    - tar -czf Juka_Unix_X64_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/Juka/bin/Release/net7.0/freebsd-x64/publish . -s '!^\./!!'
-    - tar -czf JukaAPI_Unix_X64_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/JukaApi/bin/Release/net7.0/freebsd-x64/publish . -s '!^\./!!'
+    - tar -czf Juka_Unix_X64_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/Juka/bin/Release/net7.0/freebsd-x64/publish -s '!^\./!!' . 
+    - tar -czf JukaAPI_Unix_X64_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/JukaApi/bin/Release/net7.0/freebsd-x64/publish -s '!^\./!!' . 
     - chmod 777 *.sh
     - ./publish.sh
   - name: Linux Build
