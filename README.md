@@ -10,7 +10,7 @@ Official Website: <https://jukalang.com>
 Build Status: [![Cirrus CI - Base Branch Build Status](https://img.shields.io/cirrus/github/jukaLang/Juka)](https://cirrus-ci.com/github/jukaLang/Juka)
 [![Build status](https://ci.appveyor.com/api/projects/status/nmjmm04xhryx8p54?svg=true)](https://ci.appveyor.com/project/TheAndreiM/juka)
 
-![RunJuka](https://user-images.githubusercontent.com/11934545/212342916-bc9b61b9-59f2-46d1-b416-c51e1b83375a.png)
+[![RunJuka](https://user-images.githubusercontent.com/11934545/212342916-bc9b61b9-59f2-46d1-b416-c51e1b83375a.png)](https://jukalang.com)
 
 Main Git Repository: <https://github.com/jukaLang/juka>
 
@@ -104,6 +104,7 @@ Juka's philosophy is code once, run everywhere.
 - [x] Native Functions
   - [x] GetAvailableMemory
   - [x] SystemClock
+- [x] csharp() command (execute C# code)
 - [ ] Tail Recursion
 - [ ] Array
 - [ ] Dynamic List
