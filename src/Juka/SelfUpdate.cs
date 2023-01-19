@@ -46,8 +46,7 @@ class SelfUpdate
         }
         catch (Exception)
         {
-            AnsiConsole.MarkupLine(
-           "[bold yellow] Cannot Update! Can't access the Network![/]");
+            AnsiConsole.MarkupLine("[bold yellow]Cannot Update! Can't access the Network![/]");
         }
         return "";
     }
