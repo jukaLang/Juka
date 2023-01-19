@@ -19,29 +19,37 @@ class SelfUpdate
         AnsiConsole.MarkupLine("[bold yellow]Checking for updates for Juka Programming Language...[/]");
         AnsiConsole.MarkupLine($"[bold red]Current Version:[/] [red]{CurrentVersion}[/]");
 
+        try
+        {
 
-        HttpClient client = new()
-        {
-            BaseAddress = null,
-            DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrLower
-        };
-        client.DefaultRequestHeaders.Accept.Clear();
-        client.DefaultRequestHeaders.Accept.Add(
-            new("application/json"));
-        client.DefaultRequestHeaders.Add("User-Agent", "Juka HTTPClient");
-        HttpResponseMessage response = await client.GetAsync("https://api.github.com/repos/JukaLang/juka/releases/latest");
-        response.EnsureSuccessStatusCode();
-        string responseBody = await response.Content.ReadAsStringAsync();
-        string latestVersion = (string?)JObject.Parse(responseBody).SelectToken("tag_name") ?? "";
-        AnsiConsole.MarkupLine($"[bold blue]Latest Version: {latestVersion}[/]");
-        if (string.Compare(CurrentVersion, latestVersion, StringComparison.Ordinal) < 0)
-        {
-            AnsiConsole.MarkupLine("[red]New version of Juka is available![/]");
-            return latestVersion;
+            HttpClient client = new()
+            {
+                BaseAddress = null,
+                DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrLower
+            };
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new("application/json"));
+            client.DefaultRequestHeaders.Add("User-Agent", "Juka HTTPClient");
+            HttpResponseMessage response = await client.GetAsync("https://api.github.com/repos/JukaLang/juka/releases/latest");
+            response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync();
+            string latestVersion = (string?)JObject.Parse(responseBody).SelectToken("tag_name") ?? "";
+            AnsiConsole.MarkupLine($"[bold blue]Latest Version: {latestVersion}[/]");
+            if (string.Compare(CurrentVersion, latestVersion, StringComparison.Ordinal) < 0)
+            {
+                AnsiConsole.MarkupLine("[red]New version of Juka is available![/]");
+                return latestVersion;
+            }
+            AnsiConsole.MarkupLine("[green]You are using the latest version![/] No need to update!");
+            return "";
         }
-        AnsiConsole.MarkupLine("[green]You are using the latest version![/] No need to update!");
+        catch (Exception)
+        {
+            AnsiConsole.MarkupLine(
+           "[bold yellow] Cannot Update! Can't access the Network![/]");
+        }
         return "";
-
     }
 
     public static Dictionary<string,string> Info()
