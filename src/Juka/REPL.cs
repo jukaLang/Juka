@@ -59,6 +59,7 @@ public class Repl
                 table.AddRow("!list", "[red]Lists the current code[/]");
                 table.AddRow("!clear", "[green]Clears The REPL[/]");
                 table.AddRow("!undo", "[blue]Undoes last entered command[/]");
+                table.AddRow("!get", "[aqua]Get List of Libraries for Juka[/]");
                 table.AddRow("!exit", "[darkred_1]Exits REPL[/]");
                 AnsiConsole.Write(table);
                 AnsiConsole.Markup(prompt);
@@ -88,6 +89,17 @@ public class Repl
                 continue;
             }
 
+            if (readLine.Equals("!get", StringComparison.OrdinalIgnoreCase))
+            {
+                foreach (var data in funcData.Reverse())
+                {
+                    Console.WriteLine(data);
+                }
+
+                AnsiConsole.Markup(prompt);
+                continue;
+            }
+
             if (readLine.Equals("!undo", StringComparison.OrdinalIgnoreCase))
             {
                 var templine = funcData.Pop();
@@ -98,8 +110,7 @@ public class Repl
 
             if (readLine.Equals("!exit", StringComparison.OrdinalIgnoreCase))
             {
-                inloop = false;
-                continue;
+                break;
             }
 
             if (readLine.StartsWith("func") || readLine.StartsWith("class"))
@@ -142,19 +153,23 @@ public class Repl
                 funcData.Push(readLine);
 
                 string codeToExecute = dataStart + readLine + dataEnd;
-                try
-                {
-                    Trace.WriteLine(codeToExecute);
-                    string output = compiler.Go(codeToExecute, isFile: false,debug:1);
-                    Console.WriteLine(output);
-                }
-                catch (Exception e)
-                {
-                    Trace.WriteLine(e.ToString());
-                    AnsiConsole.WriteException(e);
-                    Console.WriteLine("Something went wrong! Please restart the application");
-                }
 
+                Trace.WriteLine(codeToExecute);
+                string output = "Something went wrong! Please restart the application";
+                
+                await AnsiConsole.Status().Spinner(Spinner.Known.Star).StartAsync("Computing...", async ctx =>
+                {
+                    try
+                    {
+                        output = compiler.Go(codeToExecute, isFile: false, debug: 1);
+                    }
+                    catch (Exception e)
+                    {
+                        Trace.WriteLine(e);
+                    }
+                });
+
+                AnsiConsole.Markup(output);
                 AnsiConsole.Markup(prompt);
             }
         }
