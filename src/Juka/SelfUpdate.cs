@@ -38,7 +38,7 @@ class SelfUpdate
             AnsiConsole.MarkupLine($"[bold blue]Latest Version: {latestVersion}[/]");
             if (string.Compare(CurrentVersion, latestVersion, StringComparison.Ordinal) < 0)
             {
-                AnsiConsole.MarkupLine("[red]New version of Juka is available![/]");
+                AnsiConsole.MarkupLine("[red]New version of Juka is available! Please update![/]");
                 return latestVersion;
             }
             AnsiConsole.MarkupLine("[green]You are using the latest version![/] No need to update!");

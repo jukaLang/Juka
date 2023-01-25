@@ -14,9 +14,7 @@ public class Repl
         Console.ForegroundColor = ConsoleColor.White;
         Console.OutputEncoding = Encoding.UTF8;
 
-        await SelfUpdate.Update();
-
-
+        await SelfUpdate.Check();
 
         bool isFuncOrClass = false;
         string prompt = "[bold green]Juka[/]([red]" + CurrentVersion.Get() + "[/])> ";
@@ -34,6 +32,8 @@ public class Repl
 
         Stack<string> funcData = new();
         AnsiConsole.Markup(prompt);
+
+        Stack<string> operations = new();
 
         bool inloop = true;
 
@@ -59,6 +59,7 @@ public class Repl
                 table.AddRow("!list", "[red]Lists the current code[/]");
                 table.AddRow("!clear", "[green]Clears The REPL[/]");
                 table.AddRow("!undo", "[blue]Undoes last entered command[/]");
+                table.AddRow("!update", "[yellow]Update Juka to latest version[/]");
                 table.AddRow("!get", "[aqua]Get List of Libraries for Juka[/]");
                 table.AddRow("!exit", "[darkred_1]Exits REPL[/]");
                 AnsiConsole.Write(table);
@@ -108,6 +109,14 @@ public class Repl
                 continue;
             }
 
+            if(readLine.Equals("!update", StringComparison.OrdinalIgnoreCase))
+            {
+                await SelfUpdate.Update();
+                AnsiConsole.Markup(prompt);
+                continue;
+            }
+
+            // Exit Juka
             if (readLine.Equals("!exit", StringComparison.OrdinalIgnoreCase))
             {
                 break;
@@ -118,6 +127,7 @@ public class Repl
                 isFuncOrClass = true;
                 funcData.Push(readLine);
                 Trace.WriteLine("Starting Func: " + readLine);
+                continue;
             }
             else if (isFuncOrClass)
             {
@@ -161,6 +171,8 @@ public class Repl
                 {
                     try
                     {
+                        //Console.WriteLine(codeToExecute);
+                        compiler = new Compiler(); // Clear OLD params -- In future, we don't need to do this
                         output = compiler.Go(codeToExecute, isFile: false, debug: 1);
                     }
                     catch (Exception e)
@@ -169,7 +181,7 @@ public class Repl
                     }
                 });
 
-                AnsiConsole.Markup(output);
+                Console.WriteLine(output);
                 AnsiConsole.Markup(prompt);
             }
         }
