@@ -26,7 +26,7 @@ namespace JukaCompiler.Interpreter
                 return method;//.Bind(this);
             }
 
-            throw new ArgumentException("Undefined property" + name.ToString());
+            throw new ArgumentException("Undefined property" + name);
         }
 
         internal void Set(Lexeme name, object value)

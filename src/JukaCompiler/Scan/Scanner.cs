@@ -117,21 +117,6 @@ namespace JukaCompiler.Scan
                     case '(':
                     {
                         AddSymbol( t, LexemeType.Types.LEFT_PAREN);
-                       
-                        if (IsDigit(Peek()) || IsNumber(Peek()))
-                        {
-                            // HACK
-                            start++;
-                            // HACK
-                            Number();
-                            /*if (Peek() == ')')
-                            {
-                                AddSymbol(t, LexemeType.Types.RIGHT_PAREN);
-                            }*/
-                        }
-
-                        
-
                         break;
                     }
                     case ')': AddSymbol( t, LexemeType.Types.RIGHT_PAREN); break;
@@ -164,17 +149,10 @@ namespace JukaCompiler.Scan
                     {
                         if (IsDigit(Peek()) || IsNumber(Peek()))
                         {
-                            //Debug.WriteLine("TEST");
-                            //Debug.WriteLine(Peek());
                             Number();
-                            //Debug.WriteLine(Peek());
-                            //Debug.WriteLine("TRACED+1");
                         } else
                         {
                             AddSymbol(t, LexemeType.Types.MINUS);
-                            //Debug.WriteLine("TEST2");
-                            //Debug.WriteLine(Peek());
-                            //Debug.WriteLine("TRACED+SYMBOL");
                         }
 
                         break;

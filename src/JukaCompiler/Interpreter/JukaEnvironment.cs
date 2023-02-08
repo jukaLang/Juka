@@ -54,7 +54,7 @@ namespace JukaCompiler.Interpreter
                 return;
             }
 
-            throw new ArgumentException("JukaEnvironment.Assign() has an undefined variable ('" + name.ToString() + "') undefined variable");
+            throw new ArgumentException("JukaEnvironment.Assign() has an undefined variable ('" + name + "') undefined variable");
         }
 
         internal void Define(string name, object? value)
@@ -88,7 +88,7 @@ namespace JukaCompiler.Interpreter
             string result = values.ToString()!;
             if (enclosing != null)
             {
-                result += " -> " + enclosing.ToString();
+                result += " -> " + enclosing;
             }
 
             return result;

@@ -13,6 +13,8 @@ version: '0.0.{build}'
 environment:
   token:
     secure: YPPyzDbCboQKYOfAl/4XahyYfDiWOsyjoL2WjyNOxH4=
+  gitfetch:
+    secure: qyX487nW4MwDcJxLWXDC1mRG4sAJjVsvxC4TCVRB9N6FW8bIxNo0wTGGjrQepLVD+d9iycEZwZAPwIyjQsMMQ6abJ78Za1XRiGILh0ygKYR28RUB4DeavNpJAKrxr2Pe
 
 assembly_info:
   patch: true
@@ -37,7 +39,12 @@ before_build:
         {
         $env:MY_XT="$($env:APPVEYOR_REPO_COMMIT_MESSAGE) \n $($env:APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED)"
         }
- - ps: $env:MY_USERNAME=(Invoke-WebRequest -URI "https://api.github.com/repos/JukaLang/juka/commits/master" -UseBasicParsing | ConvertFrom-Json).author.login
+ - ps: |
+        $headers = @{}
+        $headers['Authorization'] = "Bearer $env:gitfetch"
+        $headers['User-Agent'] = "Juka Builder"
+        $headers["Content-type"] = "application/json"
+        $env:MY_USERNAME=(Invoke-WebRequest -URI "https://api.github.com/repos/JukaLang/juka/commits/master" -Headers $headers -UseBasicParsing | ConvertFrom-Json).author.login
  - cd src
  - dotnet test
 

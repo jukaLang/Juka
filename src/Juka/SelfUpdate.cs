@@ -3,6 +3,8 @@ using Spectre.Console;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Text;
+using ICSharpCode.SharpZipLib.GZip;
+using ICSharpCode.SharpZipLib.Tar;
 
 namespace Juka;
 
@@ -161,64 +163,11 @@ class SelfUpdate
                         }
                         else
                         {
-                            await using var gzip = new GZipStream(streamToReadFrom, CompressionMode.Decompress);
-                            const int chunk = 4096;
-                            using var memStr = new MemoryStream();
-                            int read;
-                            var buffer = new byte[chunk];
-                            do
-                            {
-                                read = gzip.Read(buffer, 0, chunk);
-                                memStr.Write(buffer, 0, read);
-                            } while (read == chunk);
-
-                            memStr.Seek(0, SeekOrigin.Begin);
-
-                            buffer = new byte[100];
-                            while (true)
-                            {
-                                memStr.Read(buffer, 0, 100);
-                                string fname = Encoding.ASCII.GetString(buffer).Trim('\0');
-                                if (String.IsNullOrWhiteSpace(fname))
-                                {
-                                    break;
-                                }
-
-                                memStr.Seek(24, SeekOrigin.Current);
-                                memStr.Read(buffer, 0, 12);
-                                long size = Convert.ToInt64(
-                                    Encoding.UTF8.GetString(buffer, 0, 12).Trim('\0').Trim(), 8);
-
-                                memStr.Seek(376L, SeekOrigin.Current);
-
-                                string output = Path.Combine(info["dir"], fname);
-                                if (!Directory.Exists(Path.GetDirectoryName(output)))
-                                {
-                                    Directory.CreateDirectory(Path.GetDirectoryName(output) ??
-                                                              throw new Exception(
-                                                                  "output path is invalid"));
-                                }
-
-                                if (!fname.Equals("./", StringComparison.InvariantCulture))
-                                {
-                                    await using FileStream str = File.Open(output, FileMode.OpenOrCreate,
-                                        FileAccess.Write);
-                                    byte[] buf = new byte[size];
-                                    memStr.Read(buf, 0, buf.Length);
-                                    str.Write(buf, 0, buf.Length);
-                                }
-
-                                var pos = memStr.Position;
-
-                                long offset = 512 - (pos % 512);
-                                if (offset == 512)
-                                {
-                                    offset = 0;
-                                }
-
-                                memStr.Seek(offset, SeekOrigin.Current);
-                            }
+                            var tarArchive = TarArchive.CreateInputTarArchive(streamToReadFrom);
+                            tarArchive.ExtractContents(info["dir"]);
+                            tarArchive.Close();
                         }
+                        streamToReadFrom.Close();
 
                         AnsiConsole.MarkupLine("[green]Updated to version: " + latestVersion + "[/]");
 
