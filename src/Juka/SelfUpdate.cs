@@ -176,8 +176,10 @@ class SelfUpdate
                         Environment.Exit(0);
                     }
                     catch (Exception)
+                    catch (Exception ex)
                     {
-                        AnsiConsole.WriteLine("[bold red]Something went wrong downloading latest version of Juka...Download from Official Website [/][link]https://jukalang.com[/]");
+                        AnsiConsole.MarkupLine("[bold red]Something went wrong downloading latest version of Juka...Download from Official Website [/][link]https://jukalang.com[/]");
+                            AnsiConsole.WriteException(ex);
                     }
 
                     break;
