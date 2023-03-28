@@ -142,6 +142,8 @@ public class Repl
                         userDataToExecute.Append(item);
                     }
 
+                    funcData = new();
+
                     dataEnd += userDataToExecute.ToString();
                     isFuncOrClass = false;
                     AnsiConsole.Markup(prompt);

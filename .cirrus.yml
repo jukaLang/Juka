@@ -22,7 +22,7 @@ task:
     - /dotnet/dotnet test
     package_script:
     - /dotnet/dotnet publish /tmp/cirrus-ci-build/src/Juka.sln -c release --self-contained true -a "" /p:Version=${CIRRUS_TAG} /p:AssemblyVersion=${CIRRUS_TAG}
-    - tar -czf Juka_Unix_X64_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/Juka/bin/Release/net7.0/freebsd-x64/publish -s '!^\./!!' . 
+    - tar -czf Juka_Unix_X64_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/Juka/bin/Release/net7.0/freebsd-x64/publish Juka JukaCompiler.pdb
     - tar -czf JukaAPI_Unix_X64_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/JukaApi/bin/Release/net7.0/freebsd-x64/publish -s '!^\./!!' . 
     - chmod 777 *.sh
     - ./publish.sh
@@ -49,7 +49,7 @@ task:
     - /usr/share/dotnet/dotnet test
     package_script:
     - /usr/share/dotnet/dotnet publish /tmp/cirrus-ci-build/src/Juka.sln -c release --self-contained true --runtime linux-x86 /p:Version=${CIRRUS_TAG} /p:AssemblyVersion=${CIRRUS_TAG}
-    - tar -czf Juka_Linux_X86_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/Juka/bin/Release/net7.0/linux-x86/publish . --xform='s!^\./!!'
+    - tar -czf Juka_Linux_X86_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/Juka/bin/Release/net7.0/linux-x86/publish Juka JukaCompiler.pdb
     - tar -czf JukaAPI_Linux_X86_${CIRRUS_TAG}.tar.gz -C /tmp/cirrus-ci-build/src/JukaApi/bin/Release/net7.0/linux-x86/publish . --xform='s!^\./!!'
     - pwd
     - chmod +x ./publish.sh
