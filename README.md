@@ -70,9 +70,9 @@ Juka's philosophy is code once, run everywhere.
 - [Virtual Box Image (JukaVM)](https://github.com/jukaLang/jukaVM)
 - [Windows App (Windows 10+)](https://github.com/jukaLang/JukaApp)
 - Android App (Can be sideloaded <https://jukalang.com/download>, but not in PlayStore yet)
-- Discord Bot
-- Telegram Bot
-- Amazon Fire (HD) (Can be sideloaded <https://jukalang.com/download>, but not in PlayStore yet)
+- Discord Bot  (Working, but is not currently hosted)
+- Telegram Bot  (Working, but is not currently hosted)
+- Amazon Fire (HD) (Can be sideloaded <https://jukalang.com/download>, but not in Amazon AppStore yet)
 
 **Coming Soon:**
 
@@ -82,7 +82,8 @@ Juka's philosophy is code once, run everywhere.
 - Tizen (Samsung)
 - MacOS App (AppStore version)
 - TempleOS
-  Send us a message or tweet at us to let us know what other systems you want to see!
+ 
+Send us a message or Tweet at us to let us know what other systems you want to see!
 
 **Potential Future Support:**
 
