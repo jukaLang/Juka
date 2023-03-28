@@ -175,7 +175,6 @@ class SelfUpdate
                         //Close the current process
                         Environment.Exit(0);
                     }
-                    catch (Exception)
                     catch (Exception ex)
                     {
                         AnsiConsole.MarkupLine("[bold red]Something went wrong downloading latest version of Juka...Download from Official Website [/][link]https://jukalang.com[/]");
