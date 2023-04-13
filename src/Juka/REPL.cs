@@ -60,6 +60,7 @@ public class Repl
                 table.AddRow("!clear", "[green]Clears The REPL[/]");
                 table.AddRow("!undo", "[blue]Undoes last entered command[/]");
                 table.AddRow("!update", "[yellow]Update Juka to latest version[/]");
+                table.AddRow("!restart", "[fuchsia]Restart Application[/]");
                 table.AddRow("!get", "[aqua]Get List of Libraries for Juka[/]");
                 table.AddRow("!exit", "[darkred_1]Exits REPL[/]");
                 AnsiConsole.Write(table);
@@ -113,6 +114,14 @@ public class Repl
             {
                 await SelfUpdate.Update();
                 AnsiConsole.Markup(prompt);
+                continue;
+            }
+
+            if (readLine.Equals("!restart", StringComparison.OrdinalIgnoreCase))
+            {
+                IDictionary<string, string> info = SelfUpdate.Info();
+                string jukaexepath = info["dir"] + info["name"] + info["extension"];
+                SelfUpdate.restart(jukaexepath);
                 continue;
             }
 

@@ -169,11 +169,7 @@ class SelfUpdate
 
                         AnsiConsole.MarkupLine("[green]Updated to version: " + latestVersion + "[/]");
 
-                        //Start process, friendly name is something like MyApp.exe (from current bin directory)
-                        System.Diagnostics.Process.Start(jukaexepath);
-
-                        //Close the current process
-                        Environment.Exit(0);
+                        restart(jukaexepath);
                     }
                     catch (Exception ex)
                     {
@@ -191,5 +187,13 @@ class SelfUpdate
                     break;
             }
         }
+    }
+    public static void restart(string jukaexepath)
+    {
+        //Start process, friendly name is something like MyApp.exe (from current bin directory)
+        System.Diagnostics.Process.Start(jukaexepath);
+
+        //Close the current process
+        Environment.Exit(0);
     }
 }
