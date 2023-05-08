@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
 		<AzureFunctionsVersion>v4</AzureFunctionsVersion>
@@ -10,7 +10,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.OpenApi" Version="1.5.1" />
 		<PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.9.0" OutputItemType="Analyzer" />
-		<PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.13.0" />
+		<PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.14.1" />
 		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
 	</ItemGroup>
 	<ItemGroup>
