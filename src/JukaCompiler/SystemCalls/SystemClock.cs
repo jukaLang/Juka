@@ -1,5 +1,4 @@
-﻿using JukaCompiler.Parse;
-using JukaCompiler.Interpreter;
+﻿using JukaCompiler.Interpreter;
 using System.Diagnostics;
 using JukaCompiler.Expressions;
 using System.Runtime.InteropServices;

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Juka
+﻿namespace Juka
 {
     public class Commands
     {

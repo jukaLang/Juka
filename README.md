@@ -10,7 +10,7 @@ Official Website: <https://jukalang.com>
 Build Status: [![Cirrus CI - Base Branch Build Status](https://img.shields.io/cirrus/github/jukaLang/Juka)](https://cirrus-ci.com/github/jukaLang/Juka)
 [![Build status](https://ci.appveyor.com/api/projects/status/nmjmm04xhryx8p54?svg=true)](https://ci.appveyor.com/project/TheAndreiM/juka)
 
-[![RunJuka](https://user-images.githubusercontent.com/11934545/212342916-bc9b61b9-59f2-46d1-b416-c51e1b83375a.png)](https://jukalang.com)
+[![RunJuka](https://github.com/jukaLang/Juka/assets/11934545/fff8c2c3-e89a-4262-99c0-acc98d3ac6a2)](https://jukalang.com)
 
 Main Git Repository: <https://github.com/jukaLang/juka>
 
@@ -64,7 +64,7 @@ Juka's philosophy is code once, run everywhere.
 - HTTPS/API (JukaAPI server)
 - Docker (JukaAPI)
 - Unity Game Engine ([via NuGet.org](https://www.nuget.org/packages/JukaCompiler))
-- [Web Assembly (CDN/Browser/HTML server)](https://github.com/jukaLang/juka-webassembly)
+- [Web Assembly (CDN/Browser/HTML server/AndroidTV)](https://github.com/jukaLang/juka-webassembly)
 - ChromeOS\* (see Web Assembly)
 - [Jupyter via juka-kernel](https://github.com/jukaLang/juka-kernel)
 - [Virtual Box Image (JukaVM)](https://github.com/jukaLang/jukaVM)
@@ -77,7 +77,7 @@ Juka's philosophy is code once, run everywhere.
 **Coming Soon:**
 
 - Ethereum Network
-- Android App (PlayStore version)
+- Android App (Google Play version)
 - iOS App (iPhone/iPad AppStore version)
 - Tizen (Samsung)
 - MacOS App (AppStore version)
@@ -87,7 +87,7 @@ Send us a message or Tweet at us to let us know what other systems you want to s
 
 **Potential Future Support:**
 
-- AndroidTV App (PlayStore version)
+- AndroidTV App (Google Play version)
 - Amazon Web Service (Native Support)
 - Google Cloud (Native Support)
 - Arduino

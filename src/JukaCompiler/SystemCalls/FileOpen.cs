@@ -1,5 +1,4 @@
-﻿using System.Text;
-using JukaCompiler.Expressions;
+﻿using JukaCompiler.Expressions;
 using JukaCompiler.Interpreter;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;

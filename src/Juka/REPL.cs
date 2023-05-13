@@ -121,7 +121,7 @@ public class Repl
             {
                 IDictionary<string, string> info = SelfUpdate.Info();
                 string jukaexepath = info["dir"] + info["name"] + info["extension"];
-                SelfUpdate.restart(jukaexepath);
+                SelfUpdate.Restart(jukaexepath);
                 continue;
             }
 

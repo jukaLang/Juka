@@ -2,6 +2,7 @@
 using Spectre.Console;
 using System.IO.Compression;
 using System.Runtime.InteropServices;
+using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
 
 namespace Juka;
@@ -111,16 +112,16 @@ class SelfUpdate
                 Console.WriteLine(ex.ToString());
             }
 
-            string jukaexepath = info["dir"] + info["name"] + info["extension"];
+            string jukaExePath = info["dir"] + info["name"] + info["extension"];
 
             try
             {
-                if (File.Exists(jukaexepath + ".backup"))
+                if (File.Exists(jukaExePath + ".backup"))
                 {
-                    File.Delete(jukaexepath + ".backup");
+                    File.Delete(jukaExePath + ".backup");
                 }
 
-                File.Move(jukaexepath, jukaexepath + ".backup");
+                File.Move(jukaExePath, jukaExePath + ".backup");
             }
             catch (Exception ex)
             {
@@ -150,6 +151,7 @@ class SelfUpdate
                         string url = "https://github.com/jukaLang/Juka/releases/download/" + latestVersion +
                                      "/Juka_" +
                                      info["platform"] + "_" + info["architecture"] + "_" + latestVersion + zipext;
+                        AnsiConsole.MarkupLine("[yellow]Downloading from [/]"+url);
                         using HttpResponseMessage response2 = await new HttpClient().GetAsync(url);
                         await using Stream streamToReadFrom = await response2.Content.ReadAsStreamAsync();
 
@@ -161,20 +163,26 @@ class SelfUpdate
                         }
                         else
                         {
-                            var tarArchive = TarArchive.CreateInputTarArchive(streamToReadFrom);
+                            Stream gzipStream = new GZipInputStream(streamToReadFrom);
+                            TarArchive tarArchive = TarArchive.CreateInputTarArchive(gzipStream);
                             tarArchive.ExtractContents(info["dir"]);
                             tarArchive.Close();
+                            gzipStream.Close();
                         }
                         streamToReadFrom.Close();
 
                         AnsiConsole.MarkupLine("[green]Updated to version: " + latestVersion + "[/]");
 
-                        restart(jukaexepath);
+                        Restart(jukaExePath);
                     }
                     catch (Exception ex)
                     {
                         AnsiConsole.MarkupLine("[bold red]Something went wrong downloading latest version of Juka...Download from Official Website [/][link]https://jukalang.com[/]");
-                            AnsiConsole.WriteException(ex);
+                        AnsiConsole.WriteException(ex);
+                        if (File.Exists(jukaExePath + ".backup"))
+                        {
+                            File.Move(jukaExePath + ".backup", jukaExePath);
+                        }
                     }
 
                     break;
@@ -188,10 +196,10 @@ class SelfUpdate
             }
         }
     }
-    public static void restart(string jukaexepath)
+    public static void Restart(string jukaExePath)
     {
         //Start process, friendly name is something like MyApp.exe (from current bin directory)
-        System.Diagnostics.Process.Start(jukaexepath);
+        System.Diagnostics.Process.Start(jukaExePath);
 
         //Close the current process
         Environment.Exit(0);

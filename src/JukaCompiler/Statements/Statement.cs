@@ -1,7 +1,6 @@
 ﻿using JukaCompiler.Expressions;
 using JukaCompiler.Lexer;
 using JukaCompiler.Parse;
-using static JukaCompiler.Expressions.Expr;
 
 namespace JukaCompiler.Statements
 {

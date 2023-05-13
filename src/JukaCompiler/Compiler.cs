@@ -8,7 +8,6 @@ using JukaCompiler.Exceptions;
 using JukaCompiler.Expressions;
 using JukaCompiler.SystemCalls;
 using JukaCompiler.Lexer;
-using System;
 
 
 namespace JukaCompiler
