@@ -32,23 +32,20 @@ Mirror Git Repository: <https://codeberg.org/JukaLang/Juka>
 
 ## 💭 Introduction
 
-Juka's main goal is to be a portable, easy to use, universal programming language that can run on any platform including mobile devices, IOT, and cloud.
+Juka is a portable, easy-to-use, universal programming language that can run on any platform, including mobile devices, IoT devices, and the cloud. Its philosophy is "code once, run everywhere."
 
-Juka's philosophy is code once, run everywhere.
+### Advantages of Juka
 
-**What are main advantages of Juka?**
+* **Portability:** Juka is a self-contained language, which means that it does not need to be installed on your computer.
+* **Universality:** Juka is a general-purpose language, which means that it can be used for a wide variety of tasks.
+* **Cloud-friendly:** Juka is a cloud-native language, which means that it is designed to be used in the cloud.
+* **Jupyter support:** Juka has native support for Jupyter Notebooks.
+* **Web browser support:** Juka can be run in a web browser.
+* **Easy-to-use package manager:** Juka has an easy-to-use package manager.
+* **Community support:** Juka has a growing community of users and developers.
+* **Contribution to the source:** Juka is a community-driven project.
 
-- **Portable** - Juka doesn't need to be installed! That means you can run Juka in environments where you don't have admin priviledges or in environments where you don't have access to a hard drive. Juka is standalone and doesn't require any other application to be installed. Run it on your Flash/Thumb Drive!
-- **Small in Size** - Juka is fairly small in size ~ 30 mb (depending on the OS). This means that you can put Juka on your Thumb/Flash Drive. In fact, why not put all versions of Juka on your Thumb/Flash Drive? It won't take much space anyways.
-- **Works on "All" Operating Systems** - We are trying to support all systems including lesser known ones such as FreeBSD and TempleOS. We also support ARM processors and 32-bit systems such as Linux (x86). Why not install Juka on your Raspberry Pi or run it in ChromeOS Flex?
-- **Universal** - Juka can be used for all types of projects including server side coding, client side coding, native coding, web development, API development, data science, network security, and quantum computing. Our goal is to create a programming language that can run on any platform and we mean any!
-- **Cloud Friendly** - We created JukaAPI so that you can run it on any cloud server. This will allow one to use REST API to run code. Feel free to test it at <https://api.jukalang.com>. You can also run Juka on Microsoft's Azure Server by using Juka's Azure serverless function. Compile the code quickly, or let the others run the code. Download latest Azure Function from <https://jukalang.com/download>.
-  NOTE: you need an active Microsoft Azure account to host.
-- **Jupyter Support** - We know a lot of people love to use Jupyter Notebook/Lab. We've added an easy way to run Juka (kernel) in Jupyter. Do your data analysis in the software that you are used to!
-- **Runs inside a Web Browser** - Run Juka inside a Web Browser! Visit <https://ide.jukalang.com> and install the App. On Mobile, it's simply adding the website to your home screen!
-- **Easy to Use Package Manager** - All of the packages are hosted on GitHub. That's right! We made it simple to install and contribute to the package development. Our hope is that by hosting all packages on Github, security issues in the packages can be fixed quickly by the community. The packages contain a simple config file, making it simple for anyone to develop Juka packages.
-- **Community Support** - Join our ever growing Juka community (<https://discord.gg/MsKWsErzfp>). We use "Discord" for managing the community as it provides an easy way to stay connected. In order to join the community, you should click our invitation link and register a Discord account. If you already have an account, just join the "JukaLang" group. It's public and anyone can join!
-- **Contribute to the Source** - Juka is built by the community, for the community. Please consider contributing to the Juka GitHub repository at <https://github.com/jukaLang> When you create new features or modify the existing ones, please follow the guidelines specified in the project documentation.
+If you are looking for a powerful and versatile programming language, then Juka is a great option. It is still under development, but it has the potential to be a major player in the programming language landscape.
 
 ## 💻 Supported Systems
 
