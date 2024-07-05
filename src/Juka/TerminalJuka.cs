@@ -26,7 +26,7 @@ class TerminalJuka
                 {
                     destinationStream.Write(provider.IV, 0, provider.IV.Length);
                     await sourceStream.CopyToAsync(cryptoStream);
-                    var mykey = System.Convert.ToBase64String(provider.Key);
+                    var mykey = Convert.ToBase64String(provider.Key);
                     await File.WriteAllTextAsync(sourceFilename + ".key", mykey);
                     Console.WriteLine(mykey);
                 }
@@ -37,19 +37,17 @@ class TerminalJuka
 
                 var keyEncrypted = Convert.FromBase64String(await File.ReadAllTextAsync(encKeyfile));
 
-                string plainText = null;
+                string? plainText;
 
                 await using (var sourceStream = File.OpenRead(encFile))
                 using (var provider = Aes.Create())
                 {
                     var IV = new byte[provider.IV.Length];
                     sourceStream.Read(IV, 0, IV.Length);
-                    using (var cryptoTransform = provider.CreateDecryptor(keyEncrypted, IV))
-                    await using (var cryptoStream = new CryptoStream(sourceStream, cryptoTransform, CryptoStreamMode.Read))
-                    {
-                        using (StreamReader reader = new StreamReader(cryptoStream))
-                            plainText = await reader.ReadToEndAsync();
-                    }
+                    using var cryptoTransform = provider.CreateDecryptor(keyEncrypted, IV);
+                    await using var cryptoStream = new CryptoStream(sourceStream, cryptoTransform, CryptoStreamMode.Read);
+                    using StreamReader reader = new(cryptoStream);
+                    plainText = await reader.ReadToEndAsync();
                 }
                 Console.WriteLine(new Compiler().Go(plainText, isFile: false, debug: 0));
                 break;
@@ -67,11 +65,9 @@ class TerminalJuka
                 {
                     var IV = new byte[provider.IV.Length];
                     sourceStream.Read(IV, 0, IV.Length);
-                    using (var cryptoTransform = provider.CreateDecryptor(key, IV))
-                    await using (var cryptoStream = new CryptoStream(sourceStream, cryptoTransform, CryptoStreamMode.Read))
-                    {
-                        await cryptoStream.CopyToAsync(destinationStream);
-                    }
+                    using ICryptoTransform cryptoTransform = provider.CreateDecryptor(key, IV);
+                    await using var cryptoStream = new CryptoStream(sourceStream, cryptoTransform, CryptoStreamMode.Read);
+                    await cryptoStream.CopyToAsync(destinationStream);
                 }
                 break;
             case "-d":

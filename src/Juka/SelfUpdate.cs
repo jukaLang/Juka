@@ -14,7 +14,7 @@ class SelfUpdate
     {
         if (CurrentVersion == "DEBUG")
         {
-            AnsiConsole.MarkupLine("[yellow]You seem to be using a DEBUG version of Juka. Can't update![/]");
+            AnsiConsole.MarkupLine("[yellow]You seem to be using a DEBUG version of Juka. Can't update a debug version![/]");
             return "";
         }
         AnsiConsole.MarkupLine("[bold yellow]Checking for updates for Juka Programming Language...[/]");
@@ -31,6 +31,8 @@ class SelfUpdate
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(
                 new("application/json"));
+            //Do not use this header as GitHub might disable access to the api
+            //client.DefaultRequestHeaders.Add("User-Agent", "Juka HTTPClient");
             client.DefaultRequestHeaders.Add("User-Agent", "Juka HTTPClient");
             HttpResponseMessage response = await client.GetAsync("https://api.github.com/repos/JukaLang/juka/releases/latest");
             response.EnsureSuccessStatusCode();
