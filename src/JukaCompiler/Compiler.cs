@@ -9,7 +9,6 @@ using JukaCompiler.Expressions;
 using JukaCompiler.SystemCalls;
 using JukaCompiler.Lexer;
 
-
 namespace JukaCompiler
 {
     /*
@@ -42,7 +41,7 @@ namespace JukaCompiler
         }
 
         // Run the Compiler (Step: 3)
-        public string Go(String data, bool isFile = true, int debug = 0)
+        public string Go(String data, bool isFile = true)
         {
             try
             {
@@ -120,7 +119,7 @@ namespace JukaCompiler
             Expr.Variable functionName = new(lexeme);
             Expr.Call call = new(functionName, false, new List<Expr>());
             Stmt.Expression expression = new(call);
-            resolver.Resolve(new List<Stmt>() { expression });
+            resolver.Resolve([expression]);
         }
 
         public bool HasErrors()

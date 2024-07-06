@@ -15,7 +15,7 @@ namespace JukaCompiler.Interpreter
         private readonly ServiceProvider serviceProvider;
         private readonly JukaEnvironment globals;
         private JukaEnvironment environment;
-        private readonly Dictionary<Expr, int?> locals = new();
+        private readonly Dictionary<Expr, int?> locals = [];
         private readonly Stack<StackFrame> frames = new();
         private readonly string globalScope = "__global__scope__";
         private readonly int __max_stack_depth__ = 500;
@@ -113,7 +113,7 @@ namespace JukaCompiler.Interpreter
                 environment.Define("super", superclass);
             }
 
-            Dictionary<string, JukaFunction> functions = new();
+            Dictionary<string, JukaFunction> functions = [];
             foreach(var method in stmt.methods)
             {
                 JukaFunction jukaFunction = new(method, environment, false);
@@ -197,9 +197,9 @@ namespace JukaCompiler.Interpreter
                         if (variableExpression != null)
                         {
                             var arrayData = stackVariableState?.arrayValues[variableExpression.ArrayIndex];
-                            if (arrayData is Expr.Literal)
+                            if (arrayData is Expr.Literal literal)
                             {
-                                PrintLiteral((Expr.Literal)arrayData, printAction);
+                                PrintLiteral(literal, printAction);
                             }
                         }
                     }
@@ -632,10 +632,10 @@ namespace JukaCompiler.Interpreter
                     case Literal literal1:
                     {
                         Literal literal = literal1;
-                        arguments.Add(literal.LiteralValue);
-                        argumentsMap.Add(literal.ExpressionLexeme?.ToString()!, literal);
+                            arguments.Add(item: literal.LiteralValue);
+                            argumentsMap.Add(key: literal.ExpressionLexeme?.ToString()!, literal);
                         break;
-                    }
+                        }
                 }
             }
             
@@ -756,12 +756,7 @@ namespace JukaCompiler.Interpreter
             if (expr.ExpressionLexeme != null)
             {
                 var lookUp = LookUpVariable(expr.ExpressionLexeme, expr);
-                if (lookUp == null)
-                {
-                    throw new("Variable is null");
-                }
-
-                return lookUp;
+                return lookUp == null ? throw new("Variable is null") : lookUp;
             }
 
             throw new JRuntimeException("Visit variable returned null");
@@ -769,7 +764,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitArrayExpr(Expr.ArrayDeclarationExpr expr)
         {
-            var currentFrame = frames.Peek();
+            StackFrame currentFrame = frames.Peek();
             //if (expr.initializerContextVariableName != null)
             //    currentFrame.AddStackArray(expr.initializerContextVariableName, expr.ArrayIndex);
             return expr.ArraySize;

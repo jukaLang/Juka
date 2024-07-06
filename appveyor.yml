@@ -14,7 +14,7 @@ environment:
   token:
     secure: YPPyzDbCboQKYOfAl/4XahyYfDiWOsyjoL2WjyNOxH4=
   gitfetch:
-    secure: qyX487nW4MwDcJxLWXDC1mRG4sAJjVsvxC4TCVRB9N6FW8bIxNo0wTGGjrQepLVD+d9iycEZwZAPwIyjQsMMQ6abJ78Za1XRiGILh0ygKYR28RUB4DeavNpJAKrxr2Pe
+    secure: v/vwWedaFbZZt7xBtarpKXtoaub9EY/zbvwdUz9Yccsc0rykWiDaV1zYuMjDb8kn
 
 assembly_info:
   patch: true
@@ -79,57 +79,57 @@ after_build:
 configuration: Release
 
 artifacts:
-- path: 'src\Juka\bin\Release\net7.0\win-x86\publish'
+- path: 'src\Juka\bin\Release\net8.0\win-x86\publish'
   name: Juka_Windows_X86_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\Juka\bin\Release\net7.0\win-x64\publish'
+- path: 'src\Juka\bin\Release\net8.0\win-x64\publish'
   name: Juka_Windows_X64_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\Juka\bin\Release\net7.0\win-arm64\publish'
+- path: 'src\Juka\bin\Release\net8.0\win-arm64\publish'
   name: Juka_Windows_Arm64_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
-- path: 'src\Juka\bin\Release\net7.0\osx-x64\publish'
+- path: 'src\Juka\bin\Release\net8.0\osx-x64\publish'
   name: Juka_MacOS_X64_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
-- path: 'src\Juka\bin\Release\net7.0\linux-x64\publish'
+- path: 'src\Juka\bin\Release\net8.0\linux-x64\publish'
   name: Juka_Linux_X64_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\Juka\bin\Release\net7.0\linux-arm\publish'
+- path: 'src\Juka\bin\Release\net8.0\linux-arm\publish'
   name: Juka_Linux_Arm_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\Juka\bin\Release\net7.0\linux-arm64\publish'
+- path: 'src\Juka\bin\Release\net8.0\linux-arm64\publish'
   name: Juka_Linux_Arm64_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
 
 
-- path: 'src\JukaApi\bin\Release\net7.0\win-x86\publish'
+- path: 'src\JukaApi\bin\Release\net8.0\win-x86\publish'
   name: JukaAPI_Windows_X86_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\JukaApi\bin\Release\net7.0\win-x64\publish'
+- path: 'src\JukaApi\bin\Release\net8.0\win-x64\publish'
   name: JukaAPI_Windows_X64_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\JukaApi\bin\Release\net7.0\win-arm64\publish'
+- path: 'src\JukaApi\bin\Release\net8.0\win-arm64\publish'
   name: JukaAPI_Windows_Arm64_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
-- path: 'src\JukaApi\bin\Release\net7.0\osx-x64\publish'
+- path: 'src\JukaApi\bin\Release\net8.0\osx-x64\publish'
   name: JukaAPI_MacOS_X64_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
-- path: 'src\JukaApi\bin\Release\net7.0\linux-x64\publish'
+- path: 'src\JukaApi\bin\Release\net8.0\linux-x64\publish'
   name: JukaAPI_Linux_X64_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\JukaApi\bin\Release\net7.0\linux-arm\publish'
+- path: 'src\JukaApi\bin\Release\net8.0\linux-arm\publish'
   name: JukaAPI_Linux_Arm_$(APPVEYOR_BUILD_VERSION)
   type: zip
-- path: 'src\JukaApi\bin\Release\net7.0\linux-arm64\publish'
+- path: 'src\JukaApi\bin\Release\net8.0\linux-arm64\publish'
   name: JukaAPI_Linux_Arm64_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
-- path: 'src\JukaCompiler\bin\Release\net7.0\'
+- path: 'src\JukaCompiler\bin\Release\net8.0\'
   name: Juka_Compiler_dll_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
@@ -137,7 +137,7 @@ artifacts:
   name: Juka_Compiler
   type: NuGetPackage
 
-- path: 'src\JukaAzureFunction\bin\Release\net7.0\publish'
+- path: 'src\JukaAzureFunction\bin\Release\net8.0\publish'
   name: Juka_Azure_Function_$(APPVEYOR_BUILD_VERSION)
   type: zip
 
@@ -149,7 +149,7 @@ deploy:
     release: '📦 Juka v$(APPVEYOR_BUILD_VERSION)'
     description: "## 🍂 Changelog \n $(MY_XT) \n\n Changes made by @$(MY_USERNAME)"
     auth_token:
-      secure: XCqLJKrsMnRCCEEcsPL53Emba/2GrP172INtXx86eu5XBbed614ug/2dcx8MZwmr
+      secure: v/vwWedaFbZZt7xBtarpKXtoaub9EY/zbvwdUz9Yccsc0rykWiDaV1zYuMjDb8kn
     draft: false
     prerelease: false
     on:

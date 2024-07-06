@@ -2,23 +2,23 @@
 
 ## Supported Versions
 
-| Version    | Supported          |
-| ---------- | ------------------ |
-| latest | :white_check_mark: |
-| < latest  | :x:                |
+We are committed to fixing security issues in the latest version of our software. Older versions are not supported.
 
-### Reporting a Vulnerability
+| Version | Supported |
+| ------- | --------- |
+| latest  | ✅        |
+| < latest| ❌        |
 
-Please open an issue for any vulnerability found.
+## Reporting a Vulnerability
 
-Report a vulnerability by going to
-<https://github.com/jukaLang/Juka/issues>
- and creating an "issue".
+We take security issues seriously and appreciate your help in disclosing them responsibly.
 
-Alternatively,
-Go to Discord
-(<https://discord.gg/MsKWsErzfp>)
-and post an issue.
+If you discover a vulnerability, please follow these steps:
 
-We do not guarantee any fixes.
-We try to make updates on a daily basis.
+1. **Open an issue:** Report the vulnerability by creating a new issue in our GitHub repository. Please provide as much information as possible about the vulnerability so we can reproduce and fix it.
+
+2. **Discord:** Alternatively, you can report the issue on our Discord server. Please follow the same guidelines for reporting the issue.
+
+Please note that while we strive to address security issues as soon as possible, we do not guarantee a timeline for fixes. We aim to make updates on a daily basis.
+
+Thank you for helping us improve the security of our project!

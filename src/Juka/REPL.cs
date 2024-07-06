@@ -7,6 +7,7 @@ namespace Juka;
 
 public class Repl
 {
+
     public static async Task RunRepl()
     {
         Console.Title = "Juka Programming Language";
@@ -184,7 +185,8 @@ public class Repl
                     {
                         //Console.WriteLine(codeToExecute);
                         compiler = new Compiler(); // Clear OLD params -- In future, we don't need to do this
-                        output = compiler.Go(codeToExecute, isFile: false, debug: 1);
+                        DebugMe.Mydebug = 1;
+                        output = compiler.Go(codeToExecute, isFile: false);
                     }
                     catch (Exception e)
                     {

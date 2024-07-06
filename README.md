@@ -2,6 +2,8 @@
 
 Official Website: <https://jukalang.com>
 
+Welcome to the official repository of Juka, a portable, easy-to-use, and universal programming language that can run on any platform. Our philosophy is "code once, run everywhere."
+
 [![Twitter](https://img.shields.io/twitter/follow/jukaLang.svg?style=social)](https://twitter.com/jukaLang)
 [![Discord](https://img.shields.io/discord/975787212954275910)](https://discord.gg/MsKWsErzfp)
 [![PyPI - Wheel](https://img.shields.io/pypi/wheel/juka-kernel)](https://pypi.org/project/juka-kernel/)
@@ -12,11 +14,15 @@ Build Status: [![Cirrus CI - Base Branch Build Status](https://img.shields.io/ci
 
 [![RunJuka](https://github.com/jukaLang/Juka/assets/11934545/fff8c2c3-e89a-4262-99c0-acc98d3ac6a2)](https://jukalang.com)
 
-Main Git Repository: <https://github.com/jukaLang/juka>
 
-Mirror Git Repository: <https://codeberg.org/JukaLang/Juka>
+## 🌐 Quick Links
 
-**Follow us on:**
+- **Official Website:** jukalang.com
+- **Main Git Repository:** github.com/jukaLang/juka
+- **Mirror Git Repository:** codeberg.org/JukaLang/Juka
+
+
+## 📣 Follow Us On
 
 [![Facebook](https://img.shields.io/badge/JukaLang-white?logo=Facebook)](https://www.facebook.com/jukaLang/)
 [![Instagram](https://img.shields.io/badge/jukalanguage-white?logo=Instagram)](https://www.instagram.com/jukalanguage/)
@@ -24,28 +30,23 @@ Mirror Git Repository: <https://codeberg.org/JukaLang/Juka>
 [![YouTube](https://img.shields.io/badge/@jukaLang-red?logo=YouTube)](https://www.youtube.com/@jukaLang)
 [![Discord](https://img.shields.io/badge/jukaLang-white?logo=Discord)](https://discord.gg/MsKWsErzfp)
 
-## 🤝 Donate
+## 🤝 Support Us
 
-**Bitcoin Address:** 3MqJ2pwcuqh2W5mUPZUcKMVzxgTKcjD8ET
+We accept donations via Bitcoin and Ethereum:
 
-**Ethereum (Ethereum Network) Address:** 0xB56F6aff7a84935E5AF9D93b6d7db0e4F4F26B39
+- **Bitcoin Address:**
+3MqJ2pwcuqh2W5mUPZUcKMVzxgTKcjD8ET
+
+- **Ethereum (Ethereum Network) Address:**
+0xB56F6aff7a84935E5AF9D93b6d7db0e4F4F26B39
 
 ## 💭 Introduction
 
 Juka is a portable, easy-to-use, universal programming language that can run on any platform, including mobile devices, IoT devices, and the cloud. Its philosophy is "code once, run everywhere."
 
-### Advantages of Juka
+## 💭 About Juka
 
-* **Portability:** Juka is a self-contained language, which means that it does not need to be installed on your computer.
-* **Universality:** Juka is a general-purpose language, which means that it can be used for a wide variety of tasks.
-* **Cloud-friendly:** Juka is a cloud-native language, which means that it is designed to be used in the cloud.
-* **Jupyter support:** Juka has native support for Jupyter Notebooks.
-* **Web browser support:** Juka can be run in a web browser.
-* **Easy-to-use package manager:** Juka has an easy-to-use package manager.
-* **Community support:** Juka has a growing community of users and developers.
-* **Contribution to the source:** Juka is a community-driven project.
-
-If you are looking for a powerful and versatile programming language, then Juka is a great option. It is still under development, but it has the potential to be a major player in the programming language landscape.
+Juka is a general-purpose language designed to be used in a wide variety of tasks. It's cloud-native, has native support for Jupyter Notebooks, can be run in a web browser, and comes with an easy-to-use package manager. Juka is a community-driven project with a growing community of users and developers.
 
 ## 💻 Supported Systems
 
@@ -111,19 +112,20 @@ Send us a message or Tweet at us to let us know what other systems you want to s
 
 ## 📚 Documentation
 
-- Dynamic: <https://jukalang.com/docs>
-- PDF: <https://github.com/jukaLang/juka-website/releases/download/JukaLang/jukadocs.pdf>
+You can find our dynamic documentation at jukalang.com/docs <https://jukalang.com/docs>. 
+We also provide a PDF version of our documentation which can be downloaded at <https://github.com/jukaLang/juka-website/releases/download/JukaLang/jukadocs.pdf>
 
 ## 📦 Downloading Juka
 
-Please download the latest version of Juka from <https://jukalang.com/download>
+Please download the latest version of Juka from our official website: <https://jukalang.com/download>
 
-If you are an advanced user and wants to download other versions of Juka, visit <https://github.com/jukaLang/juka/releases>
-and select appropriate version.
-Find the version that you want and download it to your device.
-The files should be self-contained (you are not required to download any other files)
+If you are an advanced user and want to download other versions of Juka, visit our releases page <https://github.com/jukaLang/juka/releases>
+
 
 ## ⌛ Running Juka
+
+Juka can be run in various ways depending on your system. Detailed instructions can be found in our documentation.
+
 
 ### Microsoft/Linux/MacOS/FreeBSD
 

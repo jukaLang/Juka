@@ -21,6 +21,7 @@ namespace JukaCompiler.Statements
             R VisitBreakStmt(Break stmt);
 
             R VisitForStmt(For stmt);
+            object VisitArrayExpr(Expr.ArrayDeclarationExpr expr);
         }
         internal abstract R Accept<R>(Stmt.IVisitor<R> vistor);
         private Lexeme stmtLexeme = new Lexeme();
