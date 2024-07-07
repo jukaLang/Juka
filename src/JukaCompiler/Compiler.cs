@@ -8,26 +8,18 @@ using JukaCompiler.Exceptions;
 using JukaCompiler.Expressions;
 using JukaCompiler.SystemCalls;
 using JukaCompiler.Lexer;
-using System.Linq;
 
 namespace JukaCompiler
 {
-    /*
-     * Main entry point into the compiler responsible for setting up DI container 
-     * and calling parser and compiler (currently interpreter).
-     */
     public class Compiler
     {
-        private ServiceProvider? serviceProvider = null;
+        private ServiceProvider serviceProvider;
+        private readonly HostBuilder hostBuilder;
+
 
         public Compiler()
         {
-            Initialize();
-        }
-
-        internal void Initialize()
-        {
-            var hostBuilder = new HostBuilder();
+            hostBuilder = new HostBuilder();
             hostBuilder.ConfigureServices(services =>
             {
                 services.AddSingleton<ICompilerError, CompilerError>();
@@ -41,13 +33,10 @@ namespace JukaCompiler
             hostBuilder.Build();
         }
 
-        // Run the Compiler (Step: 3)
+
         public string Go(string data, bool isFile = true)
         {
-            if (serviceProvider == null)
-            {
-                throw new JRuntimeException("Service provider is not created");
-            }
+            CheckServiceProvider();
 
             try
             {
@@ -96,25 +85,35 @@ namespace JukaCompiler
             var mainFunction = statements.OfType<Stmt.Function>().FirstOrDefault(f => f.StmtLexemeName.Equals("main")) ?? throw new Exception("No main function is defined");
             Lexeme lexeme = new(LexemeType.Types.IDENTIFIER, 0, 0);
             lexeme.AddToken("main");
-            Expr.Variable functionName = new(lexeme);
-            Expr.Call call = new(functionName, false, []);
+            Expr.Variable subroutineName = new(lexeme);
+            Expr.Call call = new(subroutineName, false, []);
             Stmt.Expression expression = new(call);
             resolver.Resolve([expression]);
         }
 
         public bool HasErrors()
         {
-            return serviceProvider != null && serviceProvider.GetRequiredService<ICompilerError>().HasErrors();
+            CheckServiceProvider();
+            return serviceProvider.GetRequiredService<ICompilerError>().HasErrors();
         }
 
         public List<string> ListErrors()
         {
-            if (serviceProvider == null)
-            {
-                throw new JRuntimeException("Unable to initialize provider for errors");
-            }
-
+            CheckServiceProvider();
             return serviceProvider.GetRequiredService<ICompilerError>().ListErrors();
         }
+
+        private void CheckServiceProvider()
+        {
+            if (serviceProvider == null)
+            {
+                throw new JRuntimeException("Service provider is not created");
+            }
+        }
+    }
+    public class CompilerException(string message, Exception innerException) : Exception(message, innerException)
+    {
     }
 }
+
+

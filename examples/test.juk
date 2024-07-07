@@ -1,10 +1,10 @@
-func process() = 
+sub process() = 
 {
 	printLine("process");
 }
 
 
-func main() = 
+sub main() = 
 {
 	printLine("main");
 	process();

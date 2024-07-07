@@ -9,7 +9,7 @@ public abstract class UnitTestStructure
     /// The source code string to be tested. The default main function calls a test function.
     /// </summary>
     public string SourceAsString { get; set; } =
-        @"func main() = 
+        @"sub main() = 
                 {
                     test_func();
                 }";

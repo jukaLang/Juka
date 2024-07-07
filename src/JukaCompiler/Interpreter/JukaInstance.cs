@@ -4,8 +4,8 @@ namespace JukaCompiler.Interpreter
 {
     internal class JukaInstance
     {
-        private JukaClass Class;
-        private Dictionary<string,object> fields = new Dictionary<string,object>();
+        private readonly JukaClass Class;
+        private readonly Dictionary<string, object> fields = [];
 
         internal JukaInstance(JukaClass Class)
         {

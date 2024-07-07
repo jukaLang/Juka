@@ -11,7 +11,7 @@ public class CommentsUnitTest : UnitTestStructure
     [DataRow(0, "0")]
     public void EmptyComment(dynamic value, string expected)
     {
-        SourceAsString += @"func test_func() =
+        SourceAsString += @"sub test_func() =
                 {
                     var y = " + value + @";
                     print(y); // Uncommented this line

@@ -1,4 +1,4 @@
-func main() = {
+sub main() = {
     // Print Hello World
     printLine("Hello World");
 }

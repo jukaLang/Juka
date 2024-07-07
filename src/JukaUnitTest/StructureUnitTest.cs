@@ -11,18 +11,18 @@ public class StructureUnitTest : UnitTestStructure
         SourceAsString += @"
                 class x = 
                 {
-                    func xmethod() = 
+                    sub xmethod() = 
                     {
                         print(""foo"");
                     }
 
-                    func zmethod() = 
+                    sub zmethod() = 
                     {
                         print(""bar"");
                     }
                 }
 
-                func test_func() = 
+                sub test_func() = 
                 {
                     var v = x();
                     v.xmethod();

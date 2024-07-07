@@ -10,12 +10,12 @@ public class SystemCallsUnitTest : UnitTestStructure
     public void Primitives(string primitive)
     {
         SourceAsString += @"
-                func test_func() = 
+                sub test_func() = 
                 {
                     testme();
                 }
 
-                func testme() = 
+                sub testme() = 
                 {
                     var v = " + primitive + @";
                     print(v);

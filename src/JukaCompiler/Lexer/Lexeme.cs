@@ -39,6 +39,7 @@ namespace JukaCompiler.Lexer
             ELSE,
             FALSE,
             FUNC,
+            SUB,
             FOR,
             IF,
             NULL,
@@ -66,11 +67,11 @@ namespace JukaCompiler.Lexer
     }
     internal class Lexeme
     {
-        private StringBuilder tokenBuilder = new StringBuilder();
+        private readonly StringBuilder tokenBuilder = new();
         private bool isKeyWord = false;
         private Int64 typeOfKeyWord;
-        private int lineNumber;
-        private int columnNumber;
+        private readonly int lineNumber;
+        private readonly int columnNumber;
 
         internal LexemeType.Types LexemeType { get; set; }
 

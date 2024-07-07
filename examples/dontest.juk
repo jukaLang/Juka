@@ -1,23 +1,23 @@
-func main() = {
+sub main() = {
 	foo();
 	printLine("main");
 	var bb = testClass();
 }
 
-func process() = {
+sub process() = {
 	printLine("process");
 }
 
-func foo() = {
+sub foo() = {
 	process();
 	printLine("foo");
 }
 
 
 class testClass = {
-	func one() = {
+	sub one() = {
 	}
 
-	func two() = {
+	sub two() = {
 	}
 }

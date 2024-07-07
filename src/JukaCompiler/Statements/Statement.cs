@@ -23,7 +23,7 @@ namespace JukaCompiler.Statements
             R VisitForStmt(For stmt);
             object VisitArrayExpr(Expr.ArrayDeclarationExpr expr);
         }
-        internal abstract R Accept<R>(Stmt.IVisitor<R> vistor);
+        internal abstract R Accept<R>(IVisitor<R> vistor);
         private Lexeme stmtLexeme = new();
 
         internal Lexeme StmtLexeme
@@ -39,29 +39,20 @@ namespace JukaCompiler.Statements
 
         internal class Block : Stmt
         {
-            internal Block(List<Stmt> statements)
-            {
-                this.statements = statements;
-            }
+            internal Block(List<Stmt> statements) => this.statements = statements;
 
-            internal List<Stmt>? statements;
-            internal override R Accept<R>(IVisitor<R> vistor)
-            {
-               return vistor.VisitBlockStmt(this);
-            }
+            internal List<Stmt> statements;
+            internal override R Accept<R>(IVisitor<R> vistor) => vistor.VisitBlockStmt(this);
         }
         internal class Function : Stmt
         {
             internal List<Stmt>? body = [];
             internal List<TypeParameterMap> typeParameterMaps;
 
-            public override bool Equals(object? obj)
-            {
-                return this.StmtLexemeName.Equals(obj);
-            }
+            public override bool Equals(object? obj) => StmtLexemeName.Equals(obj);
             internal Function(Lexeme stmtLexeme, List<TypeParameterMap> parametersMap, List<Stmt> body)
             {
-                if (!(stmtLexeme.ToString().All(c => char.IsLetterOrDigit(c) || c == '_')))
+                if (!stmtLexeme.ToString().All(c => char.IsLetterOrDigit(c) || c == '_'))
                 {
                     throw new Exception("Function {ExpressionLexeme.ToString()} has an invalid ExpressionLexeme");
                 }
@@ -70,29 +61,20 @@ namespace JukaCompiler.Statements
                 this.body = body;
             }
 
-            internal override R Accept<R>(IVisitor<R> vistor)
-            {
-                return vistor.VisitFunctionStmt(this);
-            }
+            internal override R Accept<R>(IVisitor<R> vistor) => vistor.VisitFunctionStmt(this);
 
-            internal List<TypeParameterMap> Params
-            {
-                get { return this.typeParameterMaps; }
-            }
+            internal List<TypeParameterMap> Params => typeParameterMaps;
 
-            public override int GetHashCode()
-            {
-                return base.GetHashCode();
-            }
+            public override int GetHashCode() => base.GetHashCode();
         }
         internal class Class : Stmt
         {
-            internal Lexeme? name;
-            internal List<Stmt.Function>? methods;
-            internal List<Stmt>? variableDeclarations;
+            internal Lexeme name;
+            internal List<Function> methods;
+            internal List<Stmt> variableDeclarations;
             internal Expr.Variable? superClass;
 
-            internal Class(Lexeme name, List<Stmt.Function> methods, List<Stmt> variableDeclarations)
+            internal Class(Lexeme name, List<Function> methods, List<Stmt> variableDeclarations)
             {
                 this.name = name;
                 this.methods = methods;
@@ -107,11 +89,11 @@ namespace JukaCompiler.Statements
         }
         internal class Expression : Stmt
          {
-            internal Expr? Expr;
+            internal Expr Expr;
 
             internal Expression(Expr expr)
             {
-                this.Expr = expr;
+                Expr = expr;
             }
 
              internal override R Accept<R>(IVisitor<R> vistor)
@@ -121,9 +103,9 @@ namespace JukaCompiler.Statements
         }
         internal class If : Stmt
         {
-            internal Expr? condition;
-            internal Stmt? thenBranch;
-            internal Stmt? elseBranch;
+            internal Expr condition;
+            internal Stmt thenBranch;
+            internal Stmt elseBranch;
 
             internal If(Expr condition, Stmt thenBranch, Stmt elseBranch)
             {
@@ -149,6 +131,7 @@ namespace JukaCompiler.Statements
 
             internal PrintLine()
             {
+                this.expr = null;
             }
 
             internal override R Accept<R>(IVisitor<R> vistor)
@@ -167,6 +150,7 @@ namespace JukaCompiler.Statements
 
             internal Print()
             {
+                this.expr = null;
             }
 
             internal override R Accept<R>(IVisitor<R> vistor)
@@ -178,7 +162,7 @@ namespace JukaCompiler.Statements
         {
             internal Lexeme? name;
             internal Expr? exprInitializer;
-            internal bool? isInitalizedVar = false;
+            internal bool isInitalizedVar = false;
 
             internal Var(Lexeme name, Expr expr)
             {
@@ -215,8 +199,8 @@ namespace JukaCompiler.Statements
 
         internal class While : Stmt
         {
-            internal Expr? condition;
-            internal Stmt? whileBlock;
+            internal Expr condition;
+            internal Stmt whileBlock;
 
             internal While(Expr condition, Stmt whileBlock)
             {
@@ -232,10 +216,10 @@ namespace JukaCompiler.Statements
 
         internal class For : Stmt
         {
-            private Stmt.Var init;
-            private Expr breakExpr;
-            private Expr incExpr;
-            private Stmt forBody;
+            private readonly Var init;
+            private readonly Expr breakExpr;
+            private readonly Expr incExpr;
+            private readonly Stmt forBody;
 
             internal For(Stmt.Var init, Expr breakExpr, Expr incExpr, Stmt forBody)
             {
@@ -267,6 +251,8 @@ namespace JukaCompiler.Statements
 
             internal Return()
             {
+                this.expr = null;
+                this.keyword = null;
             }
 
             internal override R Accept<R>(IVisitor<R> vistor)
@@ -276,7 +262,7 @@ namespace JukaCompiler.Statements
         }
         internal class Break : Stmt
         {
-            internal Expr? expr;
+            internal Expr expr;
 
             internal Break(Expr expr)
             {
@@ -299,7 +285,7 @@ namespace JukaCompiler.Statements
 
         internal class LiteralLexemeExpression : Stmt
         {
-            internal Expr.LexemeTypeLiteral? ltl;
+            internal Expr.LexemeTypeLiteral ltl;
 
             internal LiteralLexemeExpression(Expr.LexemeTypeLiteral lexemeTypeLiteral)
             {

@@ -11,7 +11,7 @@ public class ArithmeticUnitTest : UnitTestStructure
     public void Add(dynamic a, dynamic b, string expected)
     {
         SourceAsString += @"
-                func test_func() = {
+                sub test_func() = {
                     var x=" + a + @";
                     var y=" + b + @";
                     var z=x+y;
@@ -26,7 +26,7 @@ public class ArithmeticUnitTest : UnitTestStructure
     [DataRow(-5, -5, "0")]
     public void Subtract(dynamic a, dynamic b, string expected)
     {
-        SourceAsString += @"func test_func() = {
+        SourceAsString += @"sub test_func() = {
                 var x=" + a + @"; var y=" + b + @"; var z=x-y;
                 print(z);
             }";
@@ -38,7 +38,7 @@ public class ArithmeticUnitTest : UnitTestStructure
     [DataRow(-5, -5, "1")] // Expected result should be "1.0" for division
     public void Divide(dynamic a, dynamic b, string expected)
     {
-        SourceAsString += @"func test_func() =
+        SourceAsString += @"sub test_func() =
             {
                 var x=" + a + @";
                 var y=" + b + @";
@@ -54,7 +54,7 @@ public class ArithmeticUnitTest : UnitTestStructure
     [DataRow(-5, -5, "25")]
     public void Multiply(dynamic a, dynamic b, string expected)
     {
-        SourceAsString += @"func test_func() = 
+        SourceAsString += @"sub test_func() = 
             {
                 var x=" + a + @";
                 var y=" + b + @";

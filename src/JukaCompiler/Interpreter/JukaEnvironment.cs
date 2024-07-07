@@ -6,7 +6,7 @@ namespace JukaCompiler.Interpreter
     internal class JukaEnvironment
     {
         private JukaEnvironment? enclosing;
-        private Dictionary<string, object?> values = new Dictionary<string, object?>();
+        private readonly Dictionary<string, object?> values = [];
         
         internal JukaEnvironment()
         {
@@ -40,7 +40,7 @@ namespace JukaCompiler.Interpreter
 
         internal void Assign(Lexeme? name, object? value)
         {
-            var nameAsString = name?.ToString() ?? throw new JRuntimeException("unable to get variable name");
+            var nameAsString = name?.ToString() ?? throw new JRuntimeException("unable to get variable name: "+name);
 
             if (values.ContainsKey(nameAsString))
             {

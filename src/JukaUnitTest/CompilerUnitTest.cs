@@ -10,7 +10,7 @@ public class CompilerUnitTest : UnitTestStructure
     public void StackBasedArray()
     {
         SourceAsString +=
-            @"func test_func() = 
+            @"sub test_func() = 
                 {
                     var x = array[3];
                     x[1] = ""test"";
@@ -27,7 +27,7 @@ public class CompilerUnitTest : UnitTestStructure
     public void HeapBasedArray()
     {
         SourceAsString +=
-            @"func test_func() = 
+            @"sub test_func() = 
                 {
                     var y = ""te"";
                     print(y);
@@ -47,7 +47,7 @@ public class CompilerUnitTest : UnitTestStructure
     public void PrintLiteral(dynamic value, string expected)
     {
         SourceAsString +=
-            @"func test_func() = 
+            @"sub test_func() = 
                 {
                     printLine("+value+@"); 
                 }";
@@ -61,7 +61,7 @@ public class CompilerUnitTest : UnitTestStructure
     public void PrintVariable(dynamic value, string expected)
     {
         SourceAsString +=
-            @"func test_func() = 
+            @"sub test_func() = 
                 {
                     var x = "+value+@";
                     print(x); 
@@ -77,13 +77,13 @@ public class CompilerUnitTest : UnitTestStructure
     public void PassVariable(dynamic value, string expected)
     {
         SourceAsString +=
-            @"func test_func() = 
+            @"sub test_func() = 
                 {
                     var x = "+value+@";
                     varpass(x);
                 }
                 
-                func varpass(var x) = 
+                sub varpass(var x) = 
                 {
                     print(x); 
                 }";
@@ -98,18 +98,18 @@ public class CompilerUnitTest : UnitTestStructure
     public void PrintThreeLevelsNesting(dynamic value, string expected)
     {
         SourceAsString +=
-            @"func test_func() = 
+            @"sub test_func() = 
                 {
                     var y = "+value+@";
                     nest1(y);
                 }
                 
-                func nest1(var y) = 
+                sub nest1(var y) = 
                 {
                     nest2(y);
                 }
 
-                func nest2(var z) = 
+                sub nest2(var z) = 
                 {
                     print(z);
                 }";
@@ -126,7 +126,7 @@ public class CompilerUnitTest : UnitTestStructure
     public void MultipleVariables(dynamic value, string expected)
     {
         SourceAsString += @"
-                func test_func() = 
+                sub test_func() = 
                 {
                     var z = 3;
                     var x="+value+@"; 

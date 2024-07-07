@@ -79,10 +79,10 @@ static IResult ExecuteCode(string code)
     if (compiler.HasErrors())
     {
         string errors = string.Join(Environment.NewLine, compiler.ListErrors());
-        return Results.Json(new { errors, original = decoded });
+        return Results.Ok(new { errors, original = decoded });
     }
 
-    return Results.Json(new { output = outputValue, original = decoded });
+    return Results.Ok(new { output = outputValue, original = decoded });
 }
 
 static async Task<IResult> ExecuteCodeFromBody(HttpRequest request)

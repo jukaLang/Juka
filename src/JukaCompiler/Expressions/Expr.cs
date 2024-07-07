@@ -25,7 +25,7 @@ namespace JukaCompiler.Expressions
             R VisitDeleteExpr(DeleteDeclarationExpr expr);
         }
 
-        internal abstract R Accept<R>(Expr.IVisitor<R> visitor);
+        internal abstract R Accept<R>(IVisitor<R> visitor);
 
         private Lexeme? expressionLexeme;
         internal Lexeme? initializerContextVariableName;
@@ -223,7 +223,7 @@ namespace JukaCompiler.Expressions
         }
         internal class Unary : Expr
         {
-            private LexemeType.Types lexemeType;
+            private readonly LexemeType.Types lexemeType;
             internal Unary(Lexeme lex, LexemeType.Types lexemeType)
             {
                 expressionLexeme = lex;

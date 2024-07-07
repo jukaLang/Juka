@@ -12,9 +12,9 @@ namespace JukaCompiler.Scan
         private int current = 0;
         private int line = 1;
         private int column = 0;
-        private byte[] fileData;
-        private readonly List<Lexeme?> lexemes = new();
-        private ICompilerError compilerError;
+        private readonly byte[] fileData;
+        private readonly List<Lexeme?> lexemes = [];
+        //private readonly ICompilerError compilerError;
 
         private static readonly Dictionary<string, LexemeType.Types> keywordsDictionary = new()
         {
@@ -22,6 +22,7 @@ namespace JukaCompiler.Scan
             { "class",  LexemeType.Types.CLASS },
             { "else",   LexemeType.Types.ELSE },
             { "func",   LexemeType.Types.FUNC },
+            { "sub",   LexemeType.Types.SUB },
             { "for",    LexemeType.Types.FOR },
             { "if",     LexemeType.Types.IF },
             { "null",   LexemeType.Types.NULL },
@@ -50,12 +51,12 @@ namespace JukaCompiler.Scan
 
         internal Scanner(string data, IServiceProvider serviceProvider, bool isFile = true)
         {
-            this.compilerError = serviceProvider.GetRequiredService<ICompilerError>();
+            //this.compilerError = serviceProvider.GetRequiredService<ICompilerError>();
             if (isFile)
             {
                 if (string.IsNullOrEmpty(data))
                 {
-                    throw new ArgumentNullException("The path is null");
+                    throw new ArgumentNullException("The path is null"+data);
                 }
 
                 if (!File.Exists(data))
@@ -255,7 +256,7 @@ namespace JukaCompiler.Scan
             this.lexemes.Add(lex);
         }
 
-        internal bool TryGetKeyWord(Lexeme? lex)
+        internal static bool TryGetKeyWord(Lexeme? lex)
         {
             bool isKeyword = false;
 
@@ -308,7 +309,7 @@ namespace JukaCompiler.Scan
                 Advance();
             }
 
-            var svalue = Encoding.Default.GetString(Memcopy(fileData, start, current));
+            var svalue = Encoding.Default.GetString(Memcopy(fileData, start));
             Lexeme? identifier = new(LexemeType.Types.IDENTIFIER, this.line, this.column);
             
             identifier.AddToken(svalue);
@@ -326,7 +327,7 @@ namespace JukaCompiler.Scan
                 temp = Peek();
             }
 
-            var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start, current));
+            var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start));
             Lexeme? number = new(LexemeType.Types.NUMBER, this.line, this.column);
 
             number.AddToken(svalue);
@@ -352,14 +353,14 @@ namespace JukaCompiler.Scan
                 return;
             }
 
-            var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start + 1, current - 1));
+            var svalue = Encoding.Default.GetString(Memcopy(fileData, start + 1));
             Lexeme? s = new(LexemeType.Types.STRING, this.line, this.column);
             s.AddToken(svalue.ToString());
             this.lexemes.Add(s);
             Advance();
         }
 
-        private byte[] Memcopy(byte[] from, int start, int size)
+        private byte[] Memcopy(byte[] from, int start)
         {
             byte [] to = new byte[current - start];
             for(int toIndex = 0, i = start; i < current; i++, toIndex++)

@@ -1,12 +1,12 @@
 class x(var initializer) = {
    var z = initializer;
 
-   func m() = {
+   sub m() = {
       return z;
    }
 }
 
-func y() = {
+sub y() = {
    var d = new x(32);
    printLine(d.m());
 }

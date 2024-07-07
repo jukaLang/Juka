@@ -8,10 +8,11 @@ namespace Juka
     public class Repl
     {
         private static Compiler? compiler;
-        private static Stack<string> funcData = new();
+        private static Stack<string> subData = new();
+        private static readonly Stack<string> redoStack = new();
         private static string? dataStart;
         private static string? dataEnd;
-        private static bool isFuncOrClass;
+        private static bool isSubOrClass;
 
         public static async Task RunRepl()
         {
@@ -46,11 +47,11 @@ namespace Juka
 
             await SelfUpdate.Check();
 
-            isFuncOrClass = false;
-            dataStart = "func main() = {";
+            isSubOrClass = false;
+            dataStart = "sub main() = {";
             dataEnd = "}";
 
-            funcData = new Stack<string>();
+            subData = new Stack<string>();
 
             AnsiConsole.Write(new FigletText("Juka").Color(Color.Purple));
             AnsiConsole.MarkupLine("[bold yellow]Hello[/] and [bold red]Welcome to 🍲 Juka Programming Language![/] For info visit [link blue]https://jukalang.com[/]. Type [bold palegreen1]!menu[/] to see options");
@@ -90,6 +91,9 @@ namespace Juka
                 case "!undo":
                     UndoLastCommand();
                     break;
+                case "!redo":
+                    RedoLastCommand();
+                    break;
                 case "!update":
                     await UpdateJuka();
                     break;
@@ -107,25 +111,25 @@ namespace Juka
 
         private static void HandleCode(string code)
         {
-            if (code.StartsWith("func") || code.StartsWith("class"))
+            if (code.StartsWith("sub") || code.StartsWith("class"))
             {
-                isFuncOrClass = true;
-                funcData.Push(code);
-                Trace.WriteLine("Starting Func: " + code);
+                isSubOrClass = true;
+                subData.Push(code);
+                Trace.WriteLine("Starting Subroutine: " + code);
             }
-            else if (isFuncOrClass)
+            else if (isSubOrClass)
             {
                 if (code.StartsWith("}", StringComparison.OrdinalIgnoreCase))
                 {
-                    funcData.Push(code);
-                    Trace.WriteLine("Ending Func: " + code);
-                    ExecuteFunction();
-                    isFuncOrClass = false;
+                    subData.Push(code);
+                    Trace.WriteLine("Ending Subroutine: " + code);
+                    ExecuteSub();
+                    isSubOrClass = false;
                 }
                 else
                 {
-                    Trace.WriteLine("Reading Func: " + code);
-                    funcData.Push(code);
+                    Trace.WriteLine("Reading Subroutine: " + code);
+                    subData.Push(code);
                 }
             }
             else
@@ -136,7 +140,7 @@ namespace Juka
                     code = "";
                 }
 
-                funcData.Push(code);
+                subData.Push(code);
                 ExecuteLine();
             }
         }
@@ -150,13 +154,16 @@ namespace Juka
             table.AddColumn(new TableColumn("Description"));
 
             // Add some rows
+            table.AddRow("!menu", "[yellow]Displays this menu[/]");
+            table.AddRow("!clear", "[green]Clears the REPL[/]");
             table.AddRow("!list", "[red]Lists the current code[/]");
-            table.AddRow("!clear", "[green]Clears The REPL[/]");
+            table.AddRow("!get", "[aqua]Get list of libraries for Juka[/]");
             table.AddRow("!undo", "[blue]Undoes last entered command[/]");
+            table.AddRow("!redo", "[red]Redoes the undone command[/]");
             table.AddRow("!update", "[yellow]Update Juka to latest version[/]");
-            table.AddRow("!restart", "[fuchsia]Restart Application[/]");
-            table.AddRow("!get", "[aqua]Get List of Libraries for Juka[/]");
-            table.AddRow("!exit", "[darkred_1]Exits REPL[/]");
+            table.AddRow("!restart", "[fuchsia]Restart application[/]");
+            
+            table.AddRow("!exit", "[yellow]Exits REPL[/]");
             AnsiConsole.Write(table);
             DisplayPrompt();
         }
@@ -165,16 +172,16 @@ namespace Juka
         {
             Console.Clear();
             compiler = new Compiler();
-            isFuncOrClass = false;
-            funcData.Clear();
-            dataStart = "func main() = {";
+            isSubOrClass = false;
+            subData.Clear();
+            dataStart = "sub main() = {";
             dataEnd = "}";
             DisplayPrompt();
         }
 
         private static void ListCode()
         {
-            foreach (var data in funcData.Reverse())
+            foreach (var data in subData.Reverse())
             {
                 Console.WriteLine(data);
             }
@@ -190,8 +197,17 @@ namespace Juka
 
         private static void UndoLastCommand()
         {
-            var templine = funcData.Pop();
+            var templine = subData.Pop();
+            redoStack.Push(templine);
             AnsiConsole.MarkupLine("[bold red]Removed: [/]" + templine);
+            DisplayPrompt();
+        }
+
+        private static void RedoLastCommand()
+        {
+            var templine = redoStack.Pop();
+            subData.Push(templine);
+            AnsiConsole.MarkupLine("[bold green]Added: [/]" + templine);
             DisplayPrompt();
         }
 
@@ -213,15 +229,15 @@ namespace Juka
             Environment.Exit(0);
         }
 
-        private static void ExecuteFunction()
+        private static void ExecuteSub()
         {
             StringBuilder userDataToExecute = new();
-            foreach (string item in funcData.Reverse())
+            foreach (string item in subData.Reverse())
             {
                 userDataToExecute.Append(item);
             }
 
-            funcData = new Stack<string>();
+            subData = new Stack<string>();
 
             dataEnd += userDataToExecute.ToString();
             DisplayPrompt();
@@ -229,7 +245,7 @@ namespace Juka
 
         private static void ExecuteLine()
         {
-            string codeToExecute = dataStart + funcData.Peek() + dataEnd;
+            string codeToExecute = dataStart + subData.Peek() + dataEnd;
 
             Trace.WriteLine(codeToExecute);
             string output = "Something went wrong! Please restart the application";

@@ -21,6 +21,7 @@
         While,
         Debugger,
         Func,
+        Sub,
         This,
         With,
         Default,
@@ -60,6 +61,7 @@
         public const string WHILE = "while";
         public const string DEBUGGER = "debugger";
         public const string FUNC = "func";
+        public const string SUB = "sub";
         public const string THIS = "this";
         public const string WITH = "with";
         public const string DEFAULT = "default";
@@ -80,10 +82,7 @@
 
         public const string LPAREN = "(";
         public const string RPAREN = ")";
-
-    
-
-        public static List<string> keyWordNames = new List<string>()
+        private static readonly List<string> list = new()
         {
             {"array"},
             {"break"},
@@ -104,6 +103,7 @@
             {"while"},
             {"debugger"},
             {"function"},
+            {"subroutine"},
             {"this"},
             {"with"},
             {"default"},
@@ -122,8 +122,9 @@
             {"class"},
             {"main"},
         };
+        public static List<string> keyWordNames = list;
 
-        public static Dictionary<string, KeyWordsEnum> keyValuePairs = new Dictionary<string, KeyWordsEnum>()
+        public static Dictionary<string, KeyWordsEnum> keyValuePairs = new()
         {
             { "array",      KeyWordsEnum.Array },
             { "break",      KeyWordsEnum.Break },
@@ -143,7 +144,8 @@
             { "switch",     KeyWordsEnum.Switch },       
             { "while",      KeyWordsEnum.While },        
             { "debugger",   KeyWordsEnum.Debugger },     
-            { "func",       KeyWordsEnum.Func },     
+            { "func",       KeyWordsEnum.Func },
+            { "sub",       KeyWordsEnum.Sub },
             { "this",       KeyWordsEnum.This },         
             { "with",       KeyWordsEnum.With },         
             { "default",    KeyWordsEnum.Default },      

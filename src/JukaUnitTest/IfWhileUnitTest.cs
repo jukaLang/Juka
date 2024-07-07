@@ -9,7 +9,7 @@ public class IfWhileUnitTest : UnitTestStructure
     public void IfBoolean()
     {
         SourceAsString +=
-            @"func test_func() = 
+            @"sub test_func() = 
                 {
                     var x = true;
                     if ( x == true)
@@ -29,7 +29,7 @@ public class IfWhileUnitTest : UnitTestStructure
     public void IfBooleanElseBranch()
     {
         SourceAsString +=
-            @"func test_func() = 
+            @"sub test_func() = 
                 {
                     var x = false;
                     if ( x == true)
@@ -49,7 +49,7 @@ public class IfWhileUnitTest : UnitTestStructure
     public void WhileBoolean()
     {
         SourceAsString +=
-            @"func test_func() = 
+            @"sub test_func() = 
                 {
                     var x = true;
                     while(x == true)
@@ -71,7 +71,7 @@ public class IfWhileUnitTest : UnitTestStructure
     public void ForLoop(dynamic loops, string expected)
     {
         SourceAsString += @"
-                func test_func() = 
+                sub test_func() = 
                 {
                     for(var i = 0; i<" + loops + @"; i++;)
                     {

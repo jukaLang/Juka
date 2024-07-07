@@ -2,9 +2,9 @@
 {
     internal class JukaClass : IJukaCallable
     {
-        private string name;
-        private JukaClass superClass;
-        private Dictionary<string, JukaFunction> methods;
+        private readonly string name;
+        private readonly JukaClass superClass;
+        private readonly Dictionary<string, JukaFunction> methods;
 
         internal JukaClass(string name, JukaClass superClass, Dictionary<string, JukaFunction> methods)
         {
@@ -28,12 +28,9 @@
         {
             // FIND METHOD is broken
             // Declaration is never set correctly.
-            JukaInstance? instance = new JukaInstance(this);
+            JukaInstance? instance = new(this);
             JukaFunction? initializer = FindMethod("main");
-            if (initializer != null)
-            {
-                initializer.Bind(instance).Call(methodName, interpreter, arguments);
-            }
+            initializer?.Bind(instance).Call(methodName, interpreter, arguments);
 
             return instance;
         }

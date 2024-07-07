@@ -1,14 +1,13 @@
 ﻿using JukaCompiler.Exceptions;
 using JukaCompiler.Statements;
-using System.Reflection;
 
 namespace JukaCompiler.Interpreter
 {
     internal class JukaFunction : IJukaCallable
     {
-        private Stmt.Function? declaration;
-        private JukaEnvironment? closure;
-        private bool isInitializer;
+        private readonly Stmt.Function declaration;
+        private readonly JukaEnvironment closure;
+        private readonly bool isInitializer;
 
         internal JukaFunction(Stmt.Function declaration, JukaEnvironment closure, bool isInitializer)
         {
@@ -61,10 +60,10 @@ namespace JukaCompiler.Interpreter
                         var parameterNameExpressionLexeme = declaration.Params[i].parameterName.ExpressionLexeme;
                         if (parameterNameExpressionLexeme != null)
                         {
-                            string? name = parameterNameExpressionLexeme.ToString();
+                            string name = parameterNameExpressionLexeme.ToString();
                             if (string.IsNullOrEmpty(name))
                             {
-                                throw new ArgumentException("Unable to call function");
+                                throw new ArgumentException("Unable to call function: "+methodName);
                             }
 
                             object? value = arguments[i];

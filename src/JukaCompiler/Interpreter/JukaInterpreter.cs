@@ -87,7 +87,7 @@ namespace JukaCompiler.Interpreter
         }
         Stmt Stmt.IVisitor<Stmt>.VisitBlockStmt(Stmt.Block stmt)
         {
-            ExecuteBlock(stmt.statements, new(this.environment));
+            ExecuteBlock(stmt.statements, new(environment));
             return new Stmt.DefaultStatement();
         }
 
@@ -220,10 +220,7 @@ namespace JukaCompiler.Interpreter
             }
         }
 
-        private void PrintLiteral(Expr.Literal expr, Action<object> printAction)
-        {
-            printAction(expr.ExpressionLexemeName);
-        }
+        private void PrintLiteral(Expr.Literal expr, Action<object> printAction) => printAction(expr.ExpressionLexemeName);
 
         private void PrintLiteral(Expr.LexemeTypeLiteral expr, Action<object> printAction)
         {
@@ -642,7 +639,7 @@ namespace JukaCompiler.Interpreter
             switch (argumentsMap.Count)
             {
                 case > 0:
-                    currentStackFrame.AddVariables(argumentsMap, this);
+                    currentStackFrame.AddVariables(argumentsMap);
                     break;
             }
 

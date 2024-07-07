@@ -1,7 +1,7 @@
-func testC_sharp() = {
+sub testC_sharp() = {
   printLine("AsdfA");
 }
 
-func main() = {
+sub main() = {
    testC_sharp();
 }
