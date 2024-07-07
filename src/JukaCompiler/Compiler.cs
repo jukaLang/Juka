@@ -8,12 +8,13 @@ using JukaCompiler.Exceptions;
 using JukaCompiler.Expressions;
 using JukaCompiler.SystemCalls;
 using JukaCompiler.Lexer;
+using System.Linq;
 
 namespace JukaCompiler
 {
     /*
-     * Maing entry point into the compiler responsible for setting up DI container 
-     * Calling parser and compiler (currently interpreter.
+     * Main entry point into the compiler responsible for setting up DI container 
+     * and calling parser and compiler (currently interpreter).
      */
     public class Compiler
     {
@@ -29,7 +30,7 @@ namespace JukaCompiler
             var hostBuilder = new HostBuilder();
             hostBuilder.ConfigureServices(services =>
             {
-                services.AddSingleton<ICompilerError,CompilerError>();
+                services.AddSingleton<ICompilerError, CompilerError>();
                 services.AddSingleton<IJukaCallable, JukaSystemCalls>();
                 services.AddSingleton<IFileOpen, FileOpen>();
                 services.AddSingleton<ICSharp, CSharp>();
@@ -41,76 +42,61 @@ namespace JukaCompiler
         }
 
         // Run the Compiler (Step: 3)
-        public string Go(String data, bool isFile = true)
+        public string Go(string data, bool isFile = true)
         {
+            if (serviceProvider == null)
+            {
+                throw new JRuntimeException("Service provider is not created");
+            }
+
             try
             {
-                var provider = this.serviceProvider;
-                if (provider != null)
-                {
-                    provider.GetRequiredService<ICompilerError>().SourceFileName(data);
+                serviceProvider.GetRequiredService<ICompilerError>().SourceFileName(data);
 
-                    Parser parser = new(new Scanner(data, provider, isFile), provider);
-                    List<Stmt> statements = parser.Parse();
+                Parser parser = new(new Scanner(data, serviceProvider, isFile), serviceProvider);
+                List<Stmt> statements = parser.Parse();
 
-                    return Compile(statements);
-                }
+                return Compile(statements);
             }
             catch (Exception ex)
             {
                 return $"Error compiling {ex.Message}";
             }
-
-            throw new Exception("unhandled errors");
         }
 
         private string Compile(List<Stmt> statements)
         {
-            if (serviceProvider != null)
+            var interpreter = new JukaInterpreter(serviceProvider);
+            Resolver resolver = new(interpreter);
+            resolver.Resolve(statements);
+
+            SetupMainMethodRuntimeHook(statements, resolver);
+
+            var currentOut = Console.Out;
+
+            try
             {
-                var interpreter = new JukaInterpreter(serviceProvider);
-                Resolver? resolver = new(interpreter);
-                resolver.Resolve(statements);
+                using StringWriter stringWriter = new();
+                Console.SetOut(stringWriter);
+                interpreter.Interpret(statements);
 
-                SetupMainMethodRuntimeHook(statements, resolver);
-
-                var currentOut = Console.Out;
-
-                try
-                {
-                    using StringWriter stringWriter = new();
-                    Console.SetOut(stringWriter);
-                    interpreter.Interpret(statements);
-
-                    string consoleOutput = stringWriter.ToString();
-                    Console.SetOut(currentOut);
-                    return consoleOutput;
-                }
-                catch (Exception e)
-                {
-                    Console.SetOut(currentOut);
-                    return e.ToString();
-                }
+                string consoleOutput = stringWriter.ToString();
+                Console.SetOut(currentOut);
+                return consoleOutput;
             }
-
-            throw new JRuntimeException("Service provider is not created");
+            catch (Exception e)
+            {
+                Console.SetOut(currentOut);
+                return e.ToString();
+            }
         }
 
         private static void SetupMainMethodRuntimeHook(List<Stmt> statements, Resolver resolver)
         {
-            var allFunctions = statements.Where(e => e is Stmt.Function == true).ToList();
+            var mainFunction = statements.OfType<Stmt.Function>().FirstOrDefault(f => f.StmtLexemeName.Equals("main"));
 
-            foreach (var m in allFunctions)
+            if (mainFunction == null)
             {
-                if (((Stmt.Function)m).StmtLexemeName.Equals("main"))
-                {
-                    break;
-                }
-                else
-                {
-                    continue;
-                }
-
                 throw new Exception("No main function is defined");
             }
 
@@ -119,26 +105,22 @@ namespace JukaCompiler
             Expr.Variable functionName = new(lexeme);
             Expr.Call call = new(functionName, false, new List<Expr>());
             Stmt.Expression expression = new(call);
-            resolver.Resolve([expression]);
+            resolver.Resolve(new List<Stmt> { expression });
         }
 
         public bool HasErrors()
         {
-            var provider = this.serviceProvider;
-            return provider != null && provider.GetRequiredService<ICompilerError>().HasErrors();
+            return serviceProvider != null && serviceProvider.GetRequiredService<ICompilerError>().HasErrors();
         }
 
-        public List<String> ListErrors()
+        public List<string> ListErrors()
         {
-            var provider = this.serviceProvider;
-            if (provider != null)
+            if (serviceProvider == null)
             {
-                return provider.GetRequiredService<ICompilerError>().ListErrors();
+                throw new JRuntimeException("Unable to initialize provider for errors");
             }
 
-            throw new JRuntimeException("unable to initialize provider for errors");
+            return serviceProvider.GetRequiredService<ICompilerError>().ListErrors();
         }
-
     }
 }
-

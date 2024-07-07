@@ -6,7 +6,7 @@ namespace JukaUnitTest;
 public abstract class UnitTestStructure
 {
     /// <summary>
-    /// Default main function calls hard code test func"
+    /// The source code string to be tested. The default main function calls a test function.
     /// </summary>
     public string SourceAsString { get; set; } =
         @"func main() = 
@@ -14,17 +14,26 @@ public abstract class UnitTestStructure
                     test_func();
                 }";
 
-
+    /// <summary>
+    /// Compiles and runs the source code string, and returns the output.
+    /// If there are any compilation errors, throws an exception with the error messages.
+    /// </summary>
     public string Go()
     {
+        // Create a new Compiler instance
         Compiler compiler = new();
+
+        // Compile and run the source code string
         var outputValue = compiler.Go(SourceAsString, false);
+
+        // If there are any compilation errors, throw an exception with the error messages
         if (compiler.HasErrors())
         {
-            throw new ArgumentNullException("Parser exceptions:\r\n" + string.Join("\r\n", compiler.ListErrors()));
+            var errorMessage = "Compilation errors:\r\n" + string.Join("\r\n", compiler.ListErrors());
+            throw new InvalidOperationException(errorMessage);
         }
 
+        // Return the output value
         return outputValue;
     }
-
 }

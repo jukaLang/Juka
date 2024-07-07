@@ -2,9 +2,15 @@
 {
     public static class DebugMe
     {
-        // Set debug mode to 1;
-        private static int mydebug = 1;
+        // The debug mode value. The default is 1.
+        private static int debugMode = 1;
 
-        public static int Mydebug { get => mydebug; set => mydebug = value; }
+        // Public property to get or set the debug mode.
+        // This allows external code to control the debug mode.
+        public static int DebugMode
+        {
+            get => debugMode;
+            set => debugMode = value;
+        }
     }
 }

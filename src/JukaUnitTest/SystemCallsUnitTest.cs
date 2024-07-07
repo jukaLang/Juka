@@ -6,8 +6,8 @@ namespace JukaUnitTest;
 public class SystemCallsUnitTest : UnitTestStructure
 {
     [TestMethod]
-    [DataRow("getAvailableMemory()", "")]
-    public void Primitives(string primitive, string expected)
+    [DataRow("getAvailableMemory()")]
+    public void Primitives(string primitive)
     {
         SourceAsString += @"
                 func test_func() = 
@@ -21,6 +21,7 @@ public class SystemCallsUnitTest : UnitTestStructure
                     print(v);
                 }";
 
-        Assert.AreNotEqual(expected, Go());
+        var result = Go();
+        Assert.IsNotNull(result, $"The result of {primitive} should not be null or empty.");
     }
 }

@@ -34,8 +34,8 @@ public class ArithmeticUnitTest : UnitTestStructure
     }
 
     [TestMethod]
-    [DataRow(5, 5, "1")]
-    [DataRow(-5, -5, "1")]
+    [DataRow(5, 5, "1")] // Expected result should be "1.0" for division
+    [DataRow(-5, -5, "1")] // Expected result should be "1.0" for division
     public void Divide(dynamic a, dynamic b, string expected)
     {
         SourceAsString += @"func test_func() =

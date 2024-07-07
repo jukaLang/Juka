@@ -2,6 +2,7 @@
 using JukaCompiler.Interpreter;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
+using System.Collections.Generic;
 
 namespace JukaCompiler.SystemCalls
 {
@@ -13,65 +14,60 @@ namespace JukaCompiler.SystemCalls
     }
 
     /// <summary>
-    /// Need a way to implement structured exception handling
-    /// All this does is catch an exception and returns an object.
+    /// Exception class for handling system call errors.
     /// </summary>
     internal class SystemCallException : Exception
     {
-        internal Exception internalException;
+        internal Exception InternalException { get; }
+
         internal SystemCallException(Exception ex)
         {
-            internalException = ex;
+            InternalException = ex;
         }
     }
 
     internal class JukaSystemCalls : IJukaCallable
     {
-        public static readonly Dictionary<string, Type> kv = new()
+        public static readonly Dictionary<string, Type> CallableTypes = new()
         {
             {"FileOpen", typeof(IFileOpen)},
             {"CSharp", typeof(ICSharp)},
         };
 
-        public int Arity()
-        {
-            throw new NotImplementedException();
-        }
+        public int Arity() => throw new NotImplementedException();
 
         public object? Call(string methodName, JukaInterpreter interpreter, List<object?> arguments)
         {
-            if(JukaSystemCalls.kv.TryGetValue(methodName, out var theType))
-            { 
-                var jukacall = (IJukaCallable)interpreter.ServiceProvider.GetService(theType)!;
-                return jukacall?.Call(methodName, interpreter, arguments);
+            if (CallableTypes.TryGetValue(methodName, out var callableType))
+            {
+                var jukaCallable = (IJukaCallable)interpreter.ServiceProvider.GetService(callableType);
+                return jukaCallable?.Call(methodName, interpreter, arguments);
             }
 
-            throw new Exception("");
+            throw new Exception($"Method {methodName} not found.");
         }
     }
 
     internal class FileOpen : IFileOpen, IJukaCallable
     {
-        public int Arity()
-        {
-            return 1;
-        }
+        public int Arity() => 1;
 
         public object? Call(string methodName, JukaInterpreter interpreter, List<object?> arguments)
         {
             try
-            { 
-                foreach(var argument in arguments)
+            {
+                foreach (var argument in arguments)
                 {
                     if (argument is Expr.LexemeTypeLiteral literal)
                     {
-                        byte[] bytes = File.ReadAllBytes( literal.literal?.ToString() ?? string.Empty);
+                        var filePath = literal.literal?.ToString() ?? string.Empty;
+                        byte[] fileBytes = File.ReadAllBytes(filePath);
                         Console.Out.WriteLine(literal);
-                        return bytes;
+                        return fileBytes;
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new SystemCallException(ex);
             }
@@ -82,10 +78,7 @@ namespace JukaCompiler.SystemCalls
 
     internal class CSharp : ICSharp, IJukaCallable
     {
-        public int Arity()
-        {
-            return 1;
-        }
+        public int Arity() => 1;
 
         public object? Call(string methodName, JukaInterpreter interpreter, List<object?> arguments)
         {
@@ -95,24 +88,21 @@ namespace JukaCompiler.SystemCalls
                 {
                     if (argument is Expr.LexemeTypeLiteral literal)
                     {
-                        var csharp = literal.literal?.ToString() ?? string.Empty;
+                        var csharpCode = literal.literal?.ToString() ?? string.Empty;
 
                         string result = "";
                         try
                         {
-                            var task = CSharpScript.EvaluateAsync(csharp, ScriptOptions.Default.WithImports(new List<string> { "System.IO", "System.Math" }));
-                            var taskCompleted = task.GetAwaiter();
-                            if (taskCompleted.GetResult() != null)
-                            {
-                                result = taskCompleted.GetResult().ToString() ?? "";
-                            }
+                            var evaluationTask = CSharpScript.EvaluateAsync(csharpCode, ScriptOptions.Default.WithImports("System.IO", "System.Math"));
+                            var taskResult = evaluationTask.GetAwaiter().GetResult();
+                            result = taskResult?.ToString() ?? "";
                         }
                         catch (Exception)
                         {
                             result = string.Empty;
                         }
 
-                        return  result;
+                        return result;
                     }
                 }
             }

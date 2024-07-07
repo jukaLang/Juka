@@ -18,7 +18,7 @@ public class Repl
         await SelfUpdate.Check();
 
         bool isFuncOrClass = false;
-        string prompt = "[bold green]Juka[/]([red]" + CurrentVersion.Get() + "[/])> ";
+        string prompt = "[bold green]Juka[/]([red]" + CurrentVersion.Get() + "[/]){" + DateTime.Now.ToString("HH:mm:ss")+"}> ";
 
         AnsiConsole.Write(
             new FigletText("Juka").Color(Color.Purple));
@@ -185,7 +185,7 @@ public class Repl
                     {
                         //Console.WriteLine(codeToExecute);
                         compiler = new Compiler(); // Clear OLD params -- In future, we don't need to do this
-                        DebugMe.Mydebug = 1;
+                        DebugMe.DebugMode = 1;
                         output = compiler.Go(codeToExecute, isFile: false);
                     }
                     catch (Exception e)

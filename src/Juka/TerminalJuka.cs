@@ -49,7 +49,7 @@ class TerminalJuka
                     using StreamReader reader = new(cryptoStream);
                     plainText = await reader.ReadToEndAsync();
                 }
-                DebugMe.Mydebug = 0;
+                DebugMe.DebugMode = 0;
                 Console.WriteLine(new Compiler().Go(plainText, isFile: false));
                 break;
             case "--decrypt":
@@ -73,7 +73,7 @@ class TerminalJuka
                 break;
             case "-d":
             case "--debug":
-                DebugMe.Mydebug = 1;
+                DebugMe.DebugMode = 1;
                 Console.WriteLine(new Compiler().Go(args[1], isFile: true));
                 break;
             case "-v":
@@ -91,12 +91,12 @@ class TerminalJuka
             case "-i":
             case "--inline":
             {
-                DebugMe.Mydebug = 0;
+                DebugMe.DebugMode = 0;
                 Console.WriteLine(new Compiler().Go(args[1], isFile: false));
                 break;
             }
             default:
-                DebugMe.Mydebug = 1;
+                DebugMe.DebugMode = 1;
                 Console.WriteLine(new Compiler().Go(args[0], isFile: true));
                 break;
         }

@@ -7,21 +7,32 @@ namespace JukaUnitTest;
 [TestClass]
 public class ExampleUnitTest : UnitTestStructure
 {
+    private Compiler compiler;
+
+    [TestInitialize]
+    public void TestSetup()
+    {
+        // Initialize the Compiler object before each test
+        compiler = new Compiler();
+    }
+
     [TestMethod]
     public void TestSourceAsFile()
     {
-        Compiler compiler = new Compiler();
-
+        // Use the Go method to compile and run the code
         var outputValue = compiler.Go(@"../../../../../examples/test2.juk");
+
+        // If there are any compilation errors, fail the test and report the errors
         if (compiler.HasErrors())
         {
             var errors = compiler.ListErrors();
             foreach (var error in errors)
             {
-                Assert.IsTrue(false, error);
+                Assert.Fail($"Compilation error: {error}");
             }
         }
 
+        // Check the output value
         Assert.AreEqual("AsdfA" + Environment.NewLine, outputValue);
     }
 }

@@ -157,7 +157,7 @@ deploy:
       APPVEYOR_REPO_TAG: false       # deploy on tag push only
   - provider: NuGet
     api_key:
-      secure: x/4PXOtHjSV0Js8178xYZ+smiBELpwlYbKOw13d8r4tFWt9HFG/ln+vGOLvTstE3
+      secure: czYx9YBF3XdX/ZtkeV/kiKuuW805tpw7YWVWKLL8zfyer3yoy79st/MISEZxERLf
     skip_symbols: false
     artifact: /.*(\.|\.s)nupkg/
     on:
