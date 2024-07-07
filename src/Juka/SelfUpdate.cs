@@ -4,12 +4,13 @@ using System.IO.Compression;
 using System.Runtime.InteropServices;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
+using System.Text;
 
 namespace Juka;
 
 class SelfUpdate
 {
-    private static readonly string CurrentVersion = Juka.CurrentVersion.Get();
+    private static readonly string? CurrentVersion = Juka.CurrentVersion.Get();
     public static async Task<string> Check()
     {
         if (CurrentVersion == "DEBUG")
@@ -23,7 +24,7 @@ class SelfUpdate
         try
         {
 
-            HttpClient client = new()
+            HttpClient? client = new()
             {
                 BaseAddress = null,
                 DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrLower
@@ -34,10 +35,10 @@ class SelfUpdate
             //Do not use this header as GitHub might disable access to the api
             //client.DefaultRequestHeaders.Add("User-Agent", "Juka HTTPClient");
             client.DefaultRequestHeaders.Add("User-Agent", "Juka HTTPClient");
-            HttpResponseMessage response = await client.GetAsync("https://api.github.com/repos/JukaLang/juka/releases/latest");
+            HttpResponseMessage? response = await client.GetAsync("https://api.github.com/repos/JukaLang/juka/releases/latest");
             response.EnsureSuccessStatusCode();
-            string responseBody = await response.Content.ReadAsStringAsync();
-            string latestVersion = (string?)JObject.Parse(responseBody).SelectToken("tag_name") ?? "";
+            string? responseBody = await response.Content.ReadAsStringAsync();
+            string? latestVersion = (string?)JObject.Parse(responseBody).SelectToken("tag_name") ?? "";
             AnsiConsole.MarkupLine($"[bold blue]Latest Version: {latestVersion}[/]");
             if (string.Compare(CurrentVersion, latestVersion, StringComparison.Ordinal) < 0)
             {
@@ -56,10 +57,10 @@ class SelfUpdate
 
     public static Dictionary<string,string> Info()
     {
-        string architecture = RuntimeInformation.ProcessArchitecture.ToString();
+        string? architecture = RuntimeInformation.ProcessArchitecture.ToString();
 
-        PlatformID pid = Environment.OSVersion.Platform;
-        string platform = pid switch
+        PlatformID? pid = Environment.OSVersion.Platform;
+        string? platform = pid switch
         {
             PlatformID.Win32NT => "Windows",
             PlatformID.Win32S => "Windows",
@@ -71,10 +72,10 @@ class SelfUpdate
             PlatformID.Other => "Linux",
             _ => "Linux"
         };
-        string dir = AppDomain.CurrentDomain.BaseDirectory;
-        string name = typeof(SelfUpdate).Assembly.GetName().Name ?? "";
+        string? dir = AppDomain.CurrentDomain.BaseDirectory;
+        string? name = typeof(SelfUpdate).Assembly.GetName().Name ?? "";
 
-        string extension = "";
+        string? extension = "";
         if (platform == "Windows")
         {
             extension = ".exe";
@@ -94,13 +95,14 @@ class SelfUpdate
             { "extension", extension }
         };
     }
+
     public static async Task Update()
     {
-        string latestVersion = await Check();
+        string? latestVersion = await Check();
 
         if (latestVersion != "")
         {
-            IDictionary<string, string> info = Info();
+            IDictionary<string, string>? info = Info();
 
             try
             {
@@ -114,7 +116,7 @@ class SelfUpdate
                 Console.WriteLine(ex.ToString());
             }
 
-            string jukaExePath = info["dir"] + info["name"] + info["extension"];
+            string? jukaExePath = info["dir"] + info["name"] + info["extension"];
 
             try
             {
@@ -141,7 +143,7 @@ class SelfUpdate
                 case "Arm64":
                 {
                     AnsiConsole.MarkupLine("[bold green] Downloading...[/]" + latestVersion);
-                    string zipext = ".zip";
+                    string? zipext = ".zip";
                     if (info["platform"] == "Unix" || (info["platform"] == "Linux" && info["architecture"] == "X86"))
                     {
                         zipext = ".tar.gz";
@@ -150,28 +152,31 @@ class SelfUpdate
 
                     try
                     {
-                        string url = "https://github.com/jukaLang/Juka/releases/download/" + latestVersion +
+                        string? url = "https://github.com/jukaLang/Juka/releases/download/" + latestVersion +
                                      "/Juka_" +
                                      info["platform"] + "_" + info["architecture"] + "_" + latestVersion + zipext;
                         AnsiConsole.MarkupLine("[yellow]Downloading from [/]"+url);
-                        using HttpResponseMessage response2 = await new HttpClient().GetAsync(url);
-                        await using Stream streamToReadFrom = await response2.Content.ReadAsStreamAsync();
+                        using HttpResponseMessage? response2 = await new HttpClient().GetAsync(url);
+                        await using Stream? streamToReadFrom = await response2.Content.ReadAsStreamAsync();
 
 
                         if (zipext == ".zip")
                         {
-                            using ZipArchive zip = new(streamToReadFrom);
+                            using ZipArchive? zip = new(streamToReadFrom);
                             zip.ExtractToDirectory(info["dir"]);
                         }
                         else
-                        {
-                            Stream gzipStream = new GZipInputStream(streamToReadFrom);
-                            TarArchive tarArchive = TarArchive.CreateInputTarArchive(gzipStream);
-                            tarArchive.ExtractContents(info["dir"]);
-                            tarArchive.Close();
-                            gzipStream.Close();
-                        }
-                        streamToReadFrom.Close();
+                            {
+                                Stream? gzipStream = new GZipInputStream(streamToReadFrom);
+                                using (TarArchive? tarArchive = TarArchive.CreateInputTarArchive(gzipStream, Encoding.UTF8))
+                                {
+                                    tarArchive.ExtractContents(info["dir"]);
+                                    tarArchive.Close();
+                                }
+
+                                gzipStream.Close();
+                            }
+                            streamToReadFrom.Close();
 
                         AnsiConsole.MarkupLine("[green]Updated to version: " + latestVersion + "[/]");
 

@@ -66,7 +66,7 @@ namespace JukaCompiler
 
         private string Compile(List<Stmt> statements)
         {
-            var interpreter = new JukaInterpreter(serviceProvider);
+            JukaInterpreter interpreter = new(services: serviceProvider);
             Resolver resolver = new(interpreter);
             resolver.Resolve(statements);
 
@@ -93,19 +93,13 @@ namespace JukaCompiler
 
         private static void SetupMainMethodRuntimeHook(List<Stmt> statements, Resolver resolver)
         {
-            var mainFunction = statements.OfType<Stmt.Function>().FirstOrDefault(f => f.StmtLexemeName.Equals("main"));
-
-            if (mainFunction == null)
-            {
-                throw new Exception("No main function is defined");
-            }
-
+            var mainFunction = statements.OfType<Stmt.Function>().FirstOrDefault(f => f.StmtLexemeName.Equals("main")) ?? throw new Exception("No main function is defined");
             Lexeme lexeme = new(LexemeType.Types.IDENTIFIER, 0, 0);
             lexeme.AddToken("main");
             Expr.Variable functionName = new(lexeme);
-            Expr.Call call = new(functionName, false, new List<Expr>());
+            Expr.Call call = new(functionName, false, []);
             Stmt.Expression expression = new(call);
-            resolver.Resolve(new List<Stmt> { expression });
+            resolver.Resolve([expression]);
         }
 
         public bool HasErrors()

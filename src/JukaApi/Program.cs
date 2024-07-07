@@ -70,7 +70,7 @@ void Configure(WebApplication app)
     app.MapPost("/", ExecuteCodeFromBody).WithName("Run Juka POST (Long)");
 }
 
-static async Task<IResult> ExecuteCode(string code)
+static IResult ExecuteCode(string code)
 {
     JukaCompiler.Compiler compiler = new();
     string decoded = Uri.UnescapeDataString(code);
@@ -89,5 +89,5 @@ static async Task<IResult> ExecuteCodeFromBody(HttpRequest request)
 {
     StreamReader stream = new(request.Body);
     string code = await stream.ReadToEndAsync();
-    return await ExecuteCode(code);
+    return ExecuteCode(code);
 }

@@ -40,7 +40,7 @@ namespace JukaCompiler.SystemCalls
         {
             if (CallableTypes.TryGetValue(methodName, out var callableType))
             {
-                var jukaCallable = (IJukaCallable)interpreter.ServiceProvider.GetService(callableType);
+                IJukaCallable? jukaCallable = interpreter.ServiceProvider.GetService(callableType) as IJukaCallable;
                 return jukaCallable?.Call(methodName, interpreter, arguments);
             }
 

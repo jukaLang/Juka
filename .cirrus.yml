@@ -34,6 +34,7 @@ task:
       - JUKA_TOKEN: Linux_X86
     setup_script:
     - dpkg --add-architecture i386
+    - sudo add-apt-repository universe
     - apt-get update
     - apt-get install -y wget curl libc6:i386 libncurses5:i386 libstdc++6:i386 libicu-dev:i386 libssl-dev:i386 zlib1g:i386 
     - mkdir /usr/share/dotnet

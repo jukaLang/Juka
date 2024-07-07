@@ -54,7 +54,7 @@ namespace JukaCompiler.Interpreter
             Lexeme lexeme = new(LexemeType.Types.IDENTIFIER, 0, 0);
             lexeme.AddToken("main");
             Expr.Variable functionName = new(lexeme);
-            Expr.Call call = new(functionName, false, new());
+            Expr.Call call = new(functionName, false, []);
             Stmt.Expression expression = new(call);
             Execute(expression);
         }
@@ -615,8 +615,8 @@ namespace JukaCompiler.Interpreter
             StackFrame currentStackFrame = new(expr.callee.ExpressionLexeme.ToString());
             frames.Push(currentStackFrame);
 
-            List<object?> arguments = new();
-            Dictionary<string, object?> argumentsMap = new();
+            List<object?> arguments = [];
+            Dictionary<string, object?> argumentsMap = [];
 
             foreach (Expr argument in expr.arguments)
             {
@@ -756,7 +756,7 @@ namespace JukaCompiler.Interpreter
             if (expr.ExpressionLexeme != null)
             {
                 var lookUp = LookUpVariable(expr.ExpressionLexeme, expr);
-                return lookUp == null ? throw new("Variable is null") : lookUp;
+                return lookUp ?? throw new("Variable is null");
             }
 
             throw new JRuntimeException("Visit variable returned null");
@@ -764,7 +764,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitArrayExpr(Expr.ArrayDeclarationExpr expr)
         {
-            StackFrame currentFrame = frames.Peek();
+            _ = frames.Peek();
             //if (expr.initializerContextVariableName != null)
             //    currentFrame.AddStackArray(expr.initializerContextVariableName, expr.ArrayIndex);
             return expr.ArraySize;
@@ -781,7 +781,7 @@ namespace JukaCompiler.Interpreter
             var stackVariableState = LookUpVariable(expr.ArrayVariableName, expr) as StackVariableState;
 
             int arraySize = 0;
-            if (stackVariableState?.expressionContext is ArrayDeclarationExpr arrayContext)
+            if (stackVariableState?.expressionContext is ArrayDeclarationExpr)
             {
                 arraySize = (int) (stackVariableState?.Value)!;
             }
