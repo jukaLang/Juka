@@ -15,7 +15,7 @@ namespace JukaCompiler.Interpreter
         private readonly ServiceProvider serviceProvider;
         private readonly JukaEnvironment globals;
         private JukaEnvironment environment;
-        private readonly Dictionary<Expr, int?> locals = [];
+        private readonly Dictionary<Expr, int?> locals = new();
         private readonly Stack<StackFrame> frames = new();
         private readonly string globalScope = "__global__scope__";
         private readonly int __max_stack_depth__ = 500;
@@ -54,7 +54,7 @@ namespace JukaCompiler.Interpreter
             Lexeme lexeme = new(LexemeType.Types.IDENTIFIER, 0, 0);
             lexeme.AddToken("main");
             Expr.Variable functionName = new(lexeme);
-            Expr.Call call = new(functionName, false, []);
+            Expr.Call call = new(functionName, false, new());
             Stmt.Expression expression = new(call);
             Execute(expression);
         }
@@ -87,7 +87,7 @@ namespace JukaCompiler.Interpreter
         }
         Stmt Stmt.IVisitor<Stmt>.VisitBlockStmt(Stmt.Block stmt)
         {
-            ExecuteBlock(stmt.statements, new(environment));
+            ExecuteBlock(stmt.statements, new(this.environment));
             return new Stmt.DefaultStatement();
         }
 
@@ -113,8 +113,8 @@ namespace JukaCompiler.Interpreter
                 environment.Define("super", superclass);
             }
 
-            Dictionary<string, JukaFunction> functions = [];
-            foreach(var method in stmt.methods)
+            Dictionary<string, JukaFunction> functions = new();
+            foreach (var method in stmt.methods)
             {
                 JukaFunction jukaFunction = new(method, environment, false);
                 functions.Add(method.StmtLexemeName, jukaFunction);
@@ -146,8 +146,8 @@ namespace JukaCompiler.Interpreter
             {
                 Execute(stmt.thenBranch);
             }
-            else if(stmt.elseBranch != null)
-            { 
+            else if (stmt.elseBranch != null)
+            {
                 Execute(stmt.elseBranch);
             }
 
@@ -197,9 +197,9 @@ namespace JukaCompiler.Interpreter
                         if (variableExpression != null)
                         {
                             var arrayData = stackVariableState?.arrayValues[variableExpression.ArrayIndex];
-                            if (arrayData is Expr.Literal literal)
+                            if (arrayData is Expr.Literal)
                             {
-                                PrintLiteral(literal, printAction);
+                                PrintLiteral((Expr.Literal)arrayData, printAction);
                             }
                         }
                     }
@@ -220,7 +220,10 @@ namespace JukaCompiler.Interpreter
             }
         }
 
-        private void PrintLiteral(Expr.Literal expr, Action<object> printAction) => printAction(expr.ExpressionLexemeName);
+        private void PrintLiteral(Expr.Literal expr, Action<object> printAction)
+        {
+            printAction(expr.ExpressionLexemeName);
+        }
 
         private void PrintLiteral(Expr.LexemeTypeLiteral expr, Action<object> printAction)
         {
@@ -249,7 +252,7 @@ namespace JukaCompiler.Interpreter
                             if (o != null)
                                 printTypeAction(o);
                         }
-                        
+
                         if (stackVariable.Value is Expr.Literal literal)
                         {
                             printTypeAction(literal.ExpressionLexeme?.ToString()!);
@@ -322,7 +325,7 @@ namespace JukaCompiler.Interpreter
             // in the stack frame of foo().
             // doing the check of the initializer allows the code
             // to put the variable in the callers stack.
-            object? value = frames.Peek().AddVariable(stmt,this);
+            object? value = frames.Peek().AddVariable(stmt, this);
             if (stmt.exprInitializer is Call)
             {
                 frames.Pop();
@@ -333,8 +336,8 @@ namespace JukaCompiler.Interpreter
                 //There could be issues when/if CTOR is implemented
             }
 
-            environment.Define(stmt.name?.ToString()! , value);
-            return new Stmt.DefaultStatement(); 
+            environment.Define(stmt.name?.ToString()!, value);
+            return new Stmt.DefaultStatement();
         }
         public Stmt VisitWhileStmt(Stmt.While stmt)
         {
@@ -393,7 +396,7 @@ namespace JukaCompiler.Interpreter
                 if (stackVariableState?.expressionContext is Literal context)
                 {
                     var literal = context;
-                    var lexemeType = ((LexemeTypeLiteral) stackVariableState.Value!)!.LexemeType;
+                    var lexemeType = ((LexemeTypeLiteral)stackVariableState.Value!)!.LexemeType;
 
                     return (
                         literal,
@@ -406,7 +409,7 @@ namespace JukaCompiler.Interpreter
                     var lexemeType = assign.ExpressionLexeme!.LexemeType;
 
                     return (
-                        literal, 
+                        literal,
                         lexemeType);
                 }
             }
@@ -593,53 +596,53 @@ namespace JukaCompiler.Interpreter
             switch (expr.callee)
             {
                 case Get:
-                {
-                    object instanceMethod = expr.callee.Accept(this);
-                    Stmt.Function? declaration = ((JukaFunction)instanceMethod).Declaration;
-                    if (declaration != null)
                     {
-                        StackFrame instanceStackFrame = new(declaration.StmtLexemeName);
-                        frames.Push(instanceStackFrame);
-                        object? instanceMethodReturn = ((JukaFunction)instanceMethod).Call(declaration.StmtLexemeName, this, null!);
-                        frames.Pop();
-                        return instanceMethodReturn;
-                    }
+                        object instanceMethod = expr.callee.Accept(this);
+                        Stmt.Function? declaration = ((JukaFunction)instanceMethod).Declaration;
+                        if (declaration != null)
+                        {
+                            StackFrame instanceStackFrame = new(declaration.StmtLexemeName);
+                            frames.Push(instanceStackFrame);
+                            object? instanceMethodReturn = ((JukaFunction)instanceMethod).Call(declaration.StmtLexemeName, this, null!);
+                            frames.Pop();
+                            return instanceMethodReturn;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
 
             StackFrame currentStackFrame = new(expr.callee.ExpressionLexeme.ToString());
             frames.Push(currentStackFrame);
 
-            List<object?> arguments = [];
-            Dictionary<string, object?> argumentsMap = [];
+            List<object?> arguments = new();
+            Dictionary<string, object?> argumentsMap = new();
 
             foreach (Expr argument in expr.arguments)
             {
                 switch (argument)
                 {
                     case Variable lexeme when lexeme.ExpressionLexeme != null:
-                    {
-                        object? variable = environment.Get(lexeme.ExpressionLexeme);
-                        arguments.Add(variable);
-                        argumentsMap.Add(lexeme.ExpressionLexeme.ToString(), variable);
-                        break;
-                    }
+                        {
+                            object? variable = environment.Get(lexeme.ExpressionLexeme);
+                            arguments.Add(variable);
+                            argumentsMap.Add(lexeme.ExpressionLexeme.ToString(), variable);
+                            break;
+                        }
                     case Literal literal1:
-                    {
-                        Literal literal = literal1;
-                            arguments.Add(item: literal.LiteralValue);
-                            argumentsMap.Add(key: literal.ExpressionLexeme?.ToString()!, literal);
-                        break;
+                        {
+                            Literal literal = literal1;
+                            arguments.Add(literal.LiteralValue);
+                            argumentsMap.Add(literal.ExpressionLexeme?.ToString()!, literal);
+                            break;
                         }
                 }
             }
-            
+
             switch (argumentsMap.Count)
             {
                 case > 0:
-                    currentStackFrame.AddVariables(argumentsMap);
+                    currentStackFrame.AddVariables(argumentsMap, this);
                     break;
             }
 
@@ -647,11 +650,11 @@ namespace JukaCompiler.Interpreter
             {
                 case true:
                     try
-                    { 
+                    {
                         IJukaCallable? jukacall = (IJukaCallable)this.ServiceProvider.GetService(typeof(IJukaCallable))!;
                         return jukacall.Call(methodName: expr.callee.ExpressionLexeme.ToString(), this, arguments);
                     }
-                    catch(SystemCallException? sce)
+                    catch (SystemCallException? sce)
                     {
                         return sce;
                     }
@@ -664,7 +667,7 @@ namespace JukaCompiler.Interpreter
                 throw new ArgumentException("Wrong number of arguments");
             }
 
-            return function?.Call(expr.callee.ExpressionLexeme.ToString(),this, arguments);
+            return function?.Call(expr.callee.ExpressionLexeme.ToString(), this, arguments);
         }
 
         public object VisitGetExpr(Expr.Get expr)
@@ -753,7 +756,12 @@ namespace JukaCompiler.Interpreter
             if (expr.ExpressionLexeme != null)
             {
                 var lookUp = LookUpVariable(expr.ExpressionLexeme, expr);
-                return lookUp ?? throw new("Variable is null");
+                if (lookUp == null)
+                {
+                    throw new("Variable is null");
+                }
+
+                return lookUp;
             }
 
             throw new JRuntimeException("Visit variable returned null");
@@ -761,7 +769,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitArrayExpr(Expr.ArrayDeclarationExpr expr)
         {
-            _ = frames.Peek();
+            var currentFrame = frames.Peek();
             //if (expr.initializerContextVariableName != null)
             //    currentFrame.AddStackArray(expr.initializerContextVariableName, expr.ArrayIndex);
             return expr.ArraySize;
@@ -778,13 +786,13 @@ namespace JukaCompiler.Interpreter
             var stackVariableState = LookUpVariable(expr.ArrayVariableName, expr) as StackVariableState;
 
             int arraySize = 0;
-            if (stackVariableState?.expressionContext is ArrayDeclarationExpr)
+            if (stackVariableState?.expressionContext is ArrayDeclarationExpr arrayContext)
             {
-                arraySize = (int) (stackVariableState?.Value)!;
+                arraySize = (int)(stackVariableState?.Value)!;
             }
             else if (stackVariableState?.expressionContext is NewDeclarationExpr context)
             {
-                arraySize = ((ArrayDeclarationExpr) context.NewDeclarationExprInit).ArraySize;
+                arraySize = ((ArrayDeclarationExpr)context.NewDeclarationExprInit).ArraySize;
             }
 
             if (expr.ArrayIndex > arraySize)
@@ -838,9 +846,9 @@ namespace JukaCompiler.Interpreter
 
         internal void Resolve(Expr expr, int depth)
         {
-            if (locals.Where( f => f.Key.ExpressionLexeme != null && expr.ExpressionLexeme != null && f.Key.ExpressionLexeme.ToString().Equals(expr.ExpressionLexeme.ToString()) ).Count() <= 1)
+            if (locals.Where(f => f.Key.ExpressionLexeme != null && expr.ExpressionLexeme != null && f.Key.ExpressionLexeme.ToString().Equals(expr.ExpressionLexeme.ToString())).Count() <= 1)
             {
-                locals.Add(expr,depth);
+                locals.Add(expr, depth);
             }
         }
 
@@ -853,15 +861,15 @@ namespace JukaCompiler.Interpreter
                 case bool b:
                     return b;
                 case LexemeTypeLiteral literal:
-                {
-                    var boolValue = literal.Literal;
-                    if (boolValue is bool)
                     {
-                        return IsTrue(boolValue);
-                    }
+                        var boolValue = literal.Literal;
+                        if (boolValue is bool)
+                        {
+                            return IsTrue(boolValue);
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
 
             return true;

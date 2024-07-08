@@ -7,33 +7,34 @@ namespace JukaCompiler.Interpreter
 {
     internal class StackFrame
     {
-        private readonly Dictionary<string, Lexeme> frameVariables = [];
-        private readonly string frameName;
-        private readonly Dictionary<string, object?> variables = [];
-        private readonly Dictionary<string, StackVariableState> variableAndKind = [];
+        private Dictionary<string, Lexeme> frameVariables = new();
+        private string frameName;
+        private Dictionary<string, object?> variables = new();
+        private Dictionary<string, StackVariableState> variableAndKind = new();
 
         internal StackFrame(string name)
         {
             this.frameName = name;
         }
 
-        internal void AddVariables(Dictionary<string, object?> variables)
+        internal void AddVariables(Dictionary<string, object?> variables, JukaInterpreter interpreter)
         {
             foreach (var variable in variables)
             {
                 string name = variable.Key;
 
-                object? value;
+                object? value = null;
                 if (variable.Value is Expr.Literal)
                 {
                     value = variable.Value;
-                    AddVariable(name, value, variable.Value.GetType(), null);
                 }
-                else if(variable.Value != null)
+                else
                 {
                     value = ((Expr.LexemeTypeLiteral)variable.Value).literal;
-                    AddVariable(name, value, variable.Value.GetType(), null);
                 }
+
+                //
+                AddVariable(name, value, variable.Value.GetType(), null);
             }
         }
 
@@ -41,17 +42,23 @@ namespace JukaCompiler.Interpreter
         {
             if (variable.exprInitializer != null)
             {
-                object? variableValue = interpreter.Evaluate(variable.exprInitializer) ?? throw new JRuntimeException("The value of the variable is null");
-                if (variable.exprInitializer is not Expr.Call)
+                object? variableValue = interpreter.Evaluate(variable.exprInitializer);
+
+                if (variableValue == null)
+                {
+                    throw new JRuntimeException("the value of the variable is null");
+                }
+
+                if (!(variable.exprInitializer is Expr.Call))
                 {
                     string variableName = variable.name?.ToString() ?? throw new JRuntimeException("variable name is missing");
-                    AddVariable(variableName, variableValue, variableValue.GetType(),variable.exprInitializer);
+                    AddVariable(variableName, variableValue, variableValue.GetType(), variable.exprInitializer);
                 }
 
                 return variableValue;
             }
 
-            throw new JRuntimeException("Unable to add variable to StackFrame");
+            throw new JRuntimeException("unable to add variable");
         }
 
         internal void AddVariable(string name, object? variableValue, Type? variableKind, Expr? expressionContext)
@@ -87,16 +94,22 @@ namespace JukaCompiler.Interpreter
 
         internal bool DeleteVariable(string name)
         {
-            return variables.Remove(name);
+            if (variables.ContainsKey(name))
+            {
+                variables.Remove(name);
+                return true;
+            }
+
+            return false;
         }
 
         internal bool TryGetStackVariableByName(string name, out StackVariableState? variable)
         {
             variable = null;
 
-            if(variables.ContainsKey(name))
+            if (variables.ContainsKey(name))
             {
-                variable = (StackVariableState?) this.variables[name];
+                variable = (StackVariableState?)this.variables[name];
                 return true;
             }
 
@@ -109,7 +122,7 @@ namespace JukaCompiler.Interpreter
             internal object? Value;
             internal Type? type;
             internal Expr? expressionContext;
-            internal object[] arrayValues = [];
+            internal object[] arrayValues;
         }
     }
 }
