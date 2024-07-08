@@ -2,9 +2,9 @@
 {
     internal class JukaClass : IJukaCallable
     {
-        private readonly string name;
-        private readonly JukaClass superClass;
-        private readonly Dictionary<string, JukaFunction> methods;
+        private string name;
+        private JukaClass superClass;
+        private Dictionary<string, JukaFunction> methods;
 
         internal JukaClass(string name, JukaClass superClass, Dictionary<string, JukaFunction> methods)
         {

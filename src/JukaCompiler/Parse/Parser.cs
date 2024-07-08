@@ -14,7 +14,7 @@ namespace JukaCompiler.Parse
         private int current = 0;
         private Scanner? scanner;
         public ServiceProvider Services { get; }
-        private readonly ICompilerError compilerError;
+        private ICompilerError compilerError;
 
         internal Parser(Scanner scanner, ServiceProvider services)
         {
@@ -104,12 +104,12 @@ namespace JukaCompiler.Parse
 
         private Stmt Statement()
         {
-            if (Match(LexemeType.Types.INTERNALFUNCTION | LexemeType.Types.PRINTLINE))
+            if (Match(LexemeType.Types.PRINTLINE))
             {
                 return PrintLine();
             }
 
-            if (Match(LexemeType.Types.INTERNALFUNCTION | LexemeType.Types.PRINT))
+            if (Match(LexemeType.Types.PRINT))
             {
                 return Print();
             }
@@ -373,16 +373,18 @@ namespace JukaCompiler.Parse
 
         private Stmt.Function Function(string kind)
         {
+
             Lexeme name = Consume(LexemeType.Types.IDENTIFIER, Peek());
+
             Consume(LexemeType.Types.LEFT_PAREN, Peek());
-            var typeMap = new List<TypeParameterMap>();
+            List<TypeParameterMap> typeMap = new List<TypeParameterMap>();
 
             if (!Check(LexemeType.Types.RIGHT_PAREN))
             {
                 do
                 {
-                    var parameterType = ConsumeKeyword();
-                    var varName = Expr();
+                    Lexeme parameterType = ConsumeKeyword();
+                    Expr varName = Expr();
                     if (parameterType.IsKeyWord)
                     {
                         typeMap.Add(new TypeParameterMap( parameterType,varName ));
@@ -397,7 +399,7 @@ namespace JukaCompiler.Parse
 
             List<Stmt> statements = Block();
 
-            var stmt = new Stmt.Function(name, typeMap, statements);
+            Stmt.Function stmt = new Stmt.Function(name, typeMap, statements);
             return stmt;
         }
 
@@ -413,7 +415,7 @@ namespace JukaCompiler.Parse
             {
                 while(true)
                 {
-                    var isFunc = Peek();
+                    Lexeme isFunc = Peek();
                     if (!isFunc.IsKeyWord)
                     {
                         break;
@@ -438,7 +440,7 @@ namespace JukaCompiler.Parse
 
         private List<Stmt> Block()
         {
-            var stmts = new List<Stmt>();
+            List<Stmt> stmts = new List<Stmt>();
             while(!Check(LexemeType.Types.RIGHT_BRACE) && !IsAtEnd())
             {
                 stmts.Add(Declaration());
@@ -454,7 +456,7 @@ namespace JukaCompiler.Parse
 
             if (Match(LexemeType.Types.EQUAL))
             {
-                var initalizedState = Expr();
+                Expr initalizedState = Expr();
                 Consume(LexemeType.Types.SEMICOLON, Peek());
                 return new Stmt.Var(name, initalizedState);
             }
@@ -635,8 +637,8 @@ namespace JukaCompiler.Parse
                 {
                     // If we get here then we have an identifier on the right hand side.
                     // the parent expression will need to validate that it is a variable.
-                    var lexeme = Consume(LexemeType.Types.IDENTIFIER, Peek());
-                    var variable = new Expr.Variable(lexeme);
+                    Lexeme lexeme = Consume(LexemeType.Types.IDENTIFIER, Peek());
+                    Variable variable = new Expr.Variable(lexeme);
                     return new DeleteDeclarationExpr(variable);
                 }
             }

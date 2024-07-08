@@ -14,7 +14,7 @@ namespace JukaCompiler
     public class Compiler
     {
         private ServiceProvider serviceProvider;
-        private readonly HostBuilder hostBuilder;
+        private HostBuilder hostBuilder;
 
 
         public Compiler()
@@ -61,7 +61,7 @@ namespace JukaCompiler
 
             SetupMainMethodRuntimeHook(statements, resolver);
 
-            var currentOut = Console.Out;
+            TextWriter currentOut = Console.Out;
 
             try
             {
@@ -82,7 +82,7 @@ namespace JukaCompiler
 
         private static void SetupMainMethodRuntimeHook(List<Stmt> statements, Resolver resolver)
         {
-            var mainFunction = statements.OfType<Stmt.Function>().FirstOrDefault(f => f.StmtLexemeName.Equals("main")) ?? throw new Exception("No main function is defined");
+            Stmt.Function mainFunction = statements.OfType<Stmt.Function>().FirstOrDefault(f => f.StmtLexemeName.Equals("main")) ?? throw new Exception("No main function is defined");
             Lexeme lexeme = new(LexemeType.Types.IDENTIFIER, 0, 0);
             lexeme.AddToken("main");
             Expr.Variable subroutineName = new(lexeme);

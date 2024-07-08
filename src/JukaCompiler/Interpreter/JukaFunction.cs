@@ -5,9 +5,9 @@ namespace JukaCompiler.Interpreter
 {
     internal class JukaFunction : IJukaCallable
     {
-        private readonly Stmt.Function declaration;
-        private readonly JukaEnvironment closure;
-        private readonly bool isInitializer;
+        private Stmt.Function declaration;
+        private JukaEnvironment closure;
+        private bool isInitializer;
 
         internal JukaFunction(Stmt.Function declaration, JukaEnvironment closure, bool isInitializer)
         {

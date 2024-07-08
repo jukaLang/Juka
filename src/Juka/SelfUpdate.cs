@@ -10,7 +10,7 @@ namespace Juka;
 
 class SelfUpdate
 {
-    private static readonly string? CurrentVersion = Juka.CurrentVersion.Get();
+    private static string? CurrentVersion = Juka.CurrentVersion.Get();
     public static async Task<string> Check()
     {
         if (CurrentVersion == "DEBUG")

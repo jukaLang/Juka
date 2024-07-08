@@ -12,11 +12,11 @@ namespace JukaCompiler.Scan
         private int current = 0;
         private int line = 1;
         private int column = 0;
-        private readonly byte[] fileData;
-        private readonly List<Lexeme?> lexemes = [];
-        //private readonly ICompilerError compilerError;
+        private byte[] fileData;
+        private List<Lexeme?> lexemes = [];
+        private ICompilerError compilerError;
 
-        private static readonly Dictionary<string, LexemeType.Types> keywordsDictionary = new()
+        private static Dictionary<string, LexemeType.Types> keywordsDictionary = new()
         {
             { "and",    LexemeType.Types.AND },
             { "class",  LexemeType.Types.CLASS },
@@ -43,7 +43,7 @@ namespace JukaCompiler.Scan
             { "delete", LexemeType.Types.DELETE}
         };
 
-        private static readonly Dictionary<string, LexemeType.Types> internalFunctionsList = new()
+        private static Dictionary<string, LexemeType.Types> internalFunctionsList = new()
         {
             {"print", LexemeType.Types.PRINT},
             {"printLine", LexemeType.Types.PRINTLINE}
@@ -251,7 +251,7 @@ namespace JukaCompiler.Scan
 
         internal void AddSymbol(char symbol, LexemeType.Types type)
         {
-            var lex = new Lexeme(type, this.line, this.column);
+            Lexeme lex = new Lexeme(type, this.line, this.column);
             lex.AddToken(symbol);
             this.lexemes.Add(lex);
         }
@@ -309,7 +309,7 @@ namespace JukaCompiler.Scan
                 Advance();
             }
 
-            var svalue = Encoding.Default.GetString(Memcopy(fileData, start));
+            string svalue = Encoding.Default.GetString(Memcopy(fileData, start));
             Lexeme? identifier = new(LexemeType.Types.IDENTIFIER, this.line, this.column);
             
             identifier.AddToken(svalue);
@@ -327,7 +327,7 @@ namespace JukaCompiler.Scan
                 temp = Peek();
             }
 
-            var svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start));
+            string svalue = System.Text.Encoding.Default.GetString(Memcopy(fileData, start));
             Lexeme? number = new(LexemeType.Types.NUMBER, this.line, this.column);
 
             number.AddToken(svalue);
@@ -353,7 +353,7 @@ namespace JukaCompiler.Scan
                 return;
             }
 
-            var svalue = Encoding.Default.GetString(Memcopy(fileData, start + 1));
+            string svalue = Encoding.Default.GetString(Memcopy(fileData, start + 1));
             Lexeme? s = new(LexemeType.Types.STRING, this.line, this.column);
             s.AddToken(svalue.ToString());
             this.lexemes.Add(s);

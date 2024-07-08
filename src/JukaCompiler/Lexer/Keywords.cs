@@ -82,7 +82,7 @@
 
         public const string LPAREN = "(";
         public const string RPAREN = ")";
-        private static readonly List<string> list = new()
+        private static List<string> list = new()
         {
             {"array"},
             {"break"},

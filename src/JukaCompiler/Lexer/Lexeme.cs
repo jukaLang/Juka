@@ -67,11 +67,11 @@ namespace JukaCompiler.Lexer
     }
     internal class Lexeme
     {
-        private readonly StringBuilder tokenBuilder = new();
+        private StringBuilder tokenBuilder = new();
         private bool isKeyWord = false;
         private Int64 typeOfKeyWord;
-        private readonly int lineNumber;
-        private readonly int columnNumber;
+        private int lineNumber;
+        private int columnNumber;
 
         internal LexemeType.Types LexemeType { get; set; }
 

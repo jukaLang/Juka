@@ -41,7 +41,7 @@ namespace JukaCompiler.Expressions
         }
         internal class Assign : Expr
         {
-            internal readonly Expr value;
+            internal Expr value;
 
             internal Assign(Lexeme ExpressionLexeme, Expr value)
             {
@@ -223,7 +223,7 @@ namespace JukaCompiler.Expressions
         }
         internal class Unary : Expr
         {
-            private readonly LexemeType.Types lexemeType;
+            private LexemeType.Types lexemeType;
             internal Unary(Lexeme lex, LexemeType.Types lexemeType)
             {
                 expressionLexeme = lex;
@@ -256,8 +256,8 @@ namespace JukaCompiler.Expressions
         }
         internal class Literal : Expr
         {
-            private readonly object? value;
-            private readonly LexemeType.Types type;
+            private object? value;
+            private LexemeType.Types type;
 
             internal Literal(Lexeme literal, LexemeType.Types type)
             {

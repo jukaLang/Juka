@@ -12,7 +12,7 @@ namespace JukaCompiler.SystemCalls
 
         public object? Call(string methodName, JukaInterpreter interpreter, List<object?> arguments)
         {
-            var lexemeTypeLiteral = new Expr.LexemeTypeLiteral
+            Expr.LexemeTypeLiteral lexemeTypeLiteral = new Expr.LexemeTypeLiteral
             {
                 literal = (double)DateTime.Now.Millisecond / 1000.0
             };
@@ -41,7 +41,7 @@ namespace JukaCompiler.SystemCalls
                 }
             }
 
-            var lexemeTypeLiteral = new Expr.LexemeTypeLiteral
+            Expr.LexemeTypeLiteral lexemeTypeLiteral = new Expr.LexemeTypeLiteral
             {
                 literal = memory
             };

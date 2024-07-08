@@ -216,10 +216,10 @@ namespace JukaCompiler.Statements
 
         internal class For : Stmt
         {
-            private readonly Var init;
-            private readonly Expr breakExpr;
-            private readonly Expr incExpr;
-            private readonly Stmt forBody;
+            private Var init;
+            private Expr breakExpr;
+            private Expr incExpr;
+            private Stmt forBody;
 
             internal For(Stmt.Var init, Expr breakExpr, Expr incExpr, Stmt forBody)
             {

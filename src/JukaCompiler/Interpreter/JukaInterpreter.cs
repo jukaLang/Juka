@@ -12,13 +12,13 @@ namespace JukaCompiler.Interpreter
 {
     internal class JukaInterpreter : Stmt.IVisitor<Stmt>, Expr.IVisitor<object>
     {
-        private readonly ServiceProvider serviceProvider;
-        private readonly JukaEnvironment globals;
+        private ServiceProvider serviceProvider;
+        private JukaEnvironment globals;
         private JukaEnvironment environment;
-        private readonly Dictionary<Expr, int?> locals = new();
-        private readonly Stack<StackFrame> frames = new();
-        private readonly string globalScope = "__global__scope__";
-        private readonly int __max_stack_depth__ = 500;
+        private Dictionary<Expr, int?> locals = new();
+        private Stack<StackFrame> frames = new();
+        private string globalScope = "__global__scope__";
+        private int __max_stack_depth__ = 500;
 
         internal JukaInterpreter(ServiceProvider services)
         {
@@ -189,8 +189,8 @@ namespace JukaCompiler.Interpreter
 
                 if (expr is ArrayAccessExpr)
                 {
-                    var variableExpression = expr as ArrayAccessExpr;
-                    var variableName = variableExpression?.ArrayVariableName.ToString();
+                    ArrayAccessExpr? variableExpression = expr as ArrayAccessExpr;
+                    string? variableName = variableExpression?.ArrayVariableName.ToString();
 
                     if (variableName != null && frames.Peek().TryGetStackVariableByName(variableName, out StackVariableState? stackVariableState))
                     {

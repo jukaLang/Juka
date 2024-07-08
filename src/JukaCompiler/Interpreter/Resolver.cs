@@ -9,15 +9,15 @@ namespace JukaCompiler.Interpreter
 {
     internal class Resolver : Stmt.IVisitor<object>, Expr.IVisitor<object>
     {
-        private readonly JukaInterpreter interpreter;
+        private JukaInterpreter interpreter;
         private FunctionType currentFunction = FunctionType.NONE;
         private ClassType currentClass = ClassType.NONE;
-        private readonly ServiceProvider? ServiceProvider;
-        private readonly Stack<Dictionary<string, bool>> scopes = new();
-        private readonly Dictionary<string, BlockScope?> processScope = [];
-        private readonly Stack<string> blockScope = new();
-        private readonly ICompilerError? compilerError;
-        private readonly string errorMessage = "Resolver error - message:{0}";
+        private ServiceProvider? ServiceProvider;
+        private Stack<Dictionary<string, bool>> scopes = new();
+        private Dictionary<string, BlockScope?> processScope = [];
+        private Stack<string> blockScope = new();
+        private ICompilerError? compilerError;
+        private string errorMessage = "Resolver error - message:{0}";
 
         private enum FunctionType
         {

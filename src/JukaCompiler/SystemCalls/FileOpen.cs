@@ -28,7 +28,7 @@ namespace JukaCompiler.SystemCalls
 
     internal class JukaSystemCalls : IJukaCallable
     {
-        public static readonly Dictionary<string, Type> CallableTypes = new()
+        public static Dictionary<string, Type> CallableTypes = new()
         {
             {"FileOpen", typeof(IFileOpen)},
             {"CSharp", typeof(ICSharp)},
@@ -60,7 +60,7 @@ namespace JukaCompiler.SystemCalls
                 {
                     if (argument is Expr.LexemeTypeLiteral literal)
                     {
-                        var filePath = literal.literal?.ToString() ?? string.Empty;
+                        string filePath = literal.literal?.ToString() ?? string.Empty;
                         byte[] fileBytes = File.ReadAllBytes(filePath);
                         Console.Out.WriteLine(literal);
                         return fileBytes;
@@ -88,13 +88,13 @@ namespace JukaCompiler.SystemCalls
                 {
                     if (argument is Expr.LexemeTypeLiteral literal)
                     {
-                        var csharpCode = literal.literal?.ToString() ?? string.Empty;
+                        string csharpCode = literal.literal?.ToString() ?? string.Empty;
 
                         string result = "";
                         try
                         {
-                            var evaluationTask = CSharpScript.EvaluateAsync(csharpCode, ScriptOptions.Default.WithImports("System.IO", "System.Math"));
-                            var taskResult = evaluationTask.GetAwaiter().GetResult();
+                            Task<object> evaluationTask = CSharpScript.EvaluateAsync(csharpCode, ScriptOptions.Default.WithImports("System.IO", "System.Math"));
+                            object taskResult = evaluationTask.GetAwaiter().GetResult();
                             result = taskResult?.ToString() ?? "";
                         }
                         catch (Exception)

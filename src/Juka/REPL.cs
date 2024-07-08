@@ -9,7 +9,7 @@ namespace Juka
     {
         private static Compiler? compiler;
         private static Stack<string> subData = new();
-        private static readonly Stack<string> redoStack = new();
+        private static Stack<string> redoStack = new();
         private static string? dataStart;
         private static string? dataEnd;
         private static bool isSubOrClass;
@@ -134,11 +134,11 @@ namespace Juka
             }
             else
             {
-                if (code.StartsWith("var"))
-                {
+                //if (code.StartsWith("var"))
+                //{
                     dataStart += code;
                     code = "";
-                }
+                //}
 
                 subData.Push(code);
                 ExecuteLine();
@@ -147,7 +147,7 @@ namespace Juka
 
         private static void DisplayMenu()
         {
-            var table = new Table();
+            Table table = new();
 
             // Add some columns
             table.AddColumn("Command");
@@ -181,7 +181,7 @@ namespace Juka
 
         private static void ListCode()
         {
-            foreach (var data in subData.Reverse())
+            foreach (string? data in subData.Reverse())
             {
                 Console.WriteLine(data);
             }
@@ -197,7 +197,7 @@ namespace Juka
 
         private static void UndoLastCommand()
         {
-            var templine = subData.Pop();
+            string templine = subData.Pop();
             redoStack.Push(templine);
             AnsiConsole.MarkupLine("[bold red]Removed: [/]" + templine);
             DisplayPrompt();
@@ -205,7 +205,7 @@ namespace Juka
 
         private static void RedoLastCommand()
         {
-            var templine = redoStack.Pop();
+            string templine = redoStack.Pop();
             subData.Push(templine);
             AnsiConsole.MarkupLine("[bold green]Added: [/]" + templine);
             DisplayPrompt();

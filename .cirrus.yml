@@ -3,7 +3,7 @@ task:
   matrix:
   - name: FreeBSD Build
     freebsd_instance:
-      image_family: freebsd-14-0
+      image_family: freebsd-13-3
     environment:
       - GITHUB_TOKEN: ENCRYPTED[!b7770b286394d89374afd6ce2ef353693b8b922c6c0d6169c4e55fb926ea26507660d0759f6a2cdf2e2436e514742573!]
       - JUKA_TOKEN: Unix_X64
@@ -34,7 +34,7 @@ task:
       - JUKA_TOKEN: Linux_X86
     setup_script:
     - dpkg --add-architecture i386
-    - sudo add-apt-repository universe
+    - add-apt-repository universe
     - apt-get update
     - apt-get install -y wget curl libc6:i386 libncurses5:i386 libstdc++6:i386 libicu-dev:i386 libssl-dev:i386 zlib1g:i386 
     - mkdir /usr/share/dotnet
