@@ -244,6 +244,7 @@ namespace Juka
             table.AddRow("!!clear", "[green]Clears the REPL[/]");
             table.AddRow("!!list", "[red]Lists the current code[/]");
             table.AddRow("!!get", "[aqua]Get list of libraries for Juka[/]");
+            table.AddRow("!!undo", "[blue]Undoes last entered command[/]");
             table.AddRow("!!redo", "[red]Redoes the undone command[/]");
             table.AddRow("!!download", "[aqua]Download a file from the web. Requires a url. [/]");
             table.AddRow("!!update", "[yellow]Update Juka to latest version[/]");
