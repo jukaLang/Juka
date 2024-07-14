@@ -6,6 +6,12 @@ using static System.Char;
 
 namespace JukaCompiler.Scan
 {
+/// <summary>
+/// This code snippet defines an internal class Scanner that scans a given input string or file data character by character to 
+/// identify different types of lexemes like identifiers, numbers, strings, and symbols. It maintains lexeme type dictionaries for keywords, 
+/// internal functions, and handles various symbols and their respective lexeme types. 
+/// Additionally, it tracks line and column numbers and raises errors for unexpected characters.
+/// </summary>
     internal class Scanner
     {
         private int start = 0;
@@ -49,6 +55,12 @@ namespace JukaCompiler.Scan
             {"printLine", LexemeType.Types.PRINTLINE}
         };
 
+        // Initializes a new instance of the Scanner class with the provided data, service provider, and optional isFile flag.
+        // 
+        // Parameters:
+        //   data: The input data to be scanned.
+        //   serviceProvider: The service provider for the scanner.
+        //   isFile: A flag indicating whether the data is a file path. Default is true.
         internal Scanner(string data, ServiceProvider serviceProvider, bool isFile = true)
         {
             if (isFile)
@@ -70,6 +82,8 @@ namespace JukaCompiler.Scan
             fileData = Encoding.ASCII.GetBytes(data);
         }
 
+        // Scans the input data character by character until the end of the file is reached. It updates the 'start' variable before 
+        // calling the 'ReadToken' method. Finally, it returns a list of lexemes.
         internal List<Lexeme?> Scan()
         {
             while (!IsEndOfFile())
@@ -91,6 +105,10 @@ namespace JukaCompiler.Scan
             return char.IsDigit(c) || c == '.';
         }
 
+        // Reads a single character and identifies its type, such as identifiers, numbers, or symbols. 
+        // This function advances the column count, then based on the character type, calls corresponding functions like Identifier(), Number(), AddSymbol(), or String(). 
+        // It handles various cases for different symbols using a switch statement, such as parentheses, braces, commas, dots, operators, and comments. 
+        // This function also checks for whitespace after processing the character.
 
         internal void ReadToken()
         {

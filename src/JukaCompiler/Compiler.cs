@@ -19,6 +19,10 @@ namespace JukaCompiler
         private ServiceProvider _serviceProvider;
         private HostBuilder _hostBuilder;
 
+
+        // Constructor for Compiler class that initializes service providers for error handling, system calls, file opening, C# operations, system clock, and available memory.
+        // It creates a new HostBuilder instance, configures services by adding singletons for various interfaces like ICompilerError, IJukaCallable, IFileOpener, ICSharp, ISystemClock, and others,
+        // and then builds a service provider to store these singletons. Finally, it builds the HostBuilder.
         public Compiler()
         {
             _hostBuilder = new HostBuilder();
@@ -35,6 +39,11 @@ namespace JukaCompiler
             _hostBuilder.Build();
         }
 
+
+        // Compiles Juka code provided in 'data' and returns the console output after interpreting the statements or an error message if compilation fails.
+        // CompileJukaCode that compiles Juka code provided in the data string. It uses a Parser to parse the code and then interprets the statements.
+        // If successful, it returns the console output.
+        // If there's an error during compilation, it returns an error message with details about the exception.
         public string CompileJukaCode(string data, bool isFile = true)
         {
             CheckServiceProvider();
@@ -53,6 +62,13 @@ namespace JukaCompiler
                 return $"Error compiling {ex.Message}";
             }
         }
+
+
+        // Compiles a list of statements using the JukaInterpreter and Resolver, then sets up a main method runtime hook.
+        // Returns the console output after interpreting the statements or an exception message if an error occurs.
+        //This code defines a method named Compile that compiles a list of statements using a JukaInterpreter and a Resolver.
+        //It sets up a main method runtime hook, redirects console output to capture it, interprets the statements, and returns the console output as a string.
+        //If an exception occurs during interpretation, it returns the exception message.
 
         private string Compile(List<Statement> statements)
         {
@@ -81,6 +97,15 @@ namespace JukaCompiler
             }
         }
 
+
+        /// <summary>
+        /// This code snippet sets up a runtime hook for the main method by identifying the main function from a list of statements. 
+        /// It then creates a call to the main function and resolves it using a resolver object. 
+        /// If the main function is not found, it throws an exception indicating that no main function is defined.
+        /// </summary>
+        /// <param name="statements"></param>
+        /// <param name="resolver"></param>
+        /// <exception cref="Exception"></exception>
         private static void SetupMainMethodRuntimeHook(List<Statement> statements, Resolver resolver)
         {
             Statement.Function mainFunction = statements.OfType<Statement.Function>().FirstOrDefault(f => f.StmtLexemeName.Equals("main")) ?? throw new Exception("No main function is defined");

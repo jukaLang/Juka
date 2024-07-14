@@ -36,6 +36,7 @@ task:
       - JUKA_TOKEN: Linux_X86
     setup_script:
     - dpkg --add-architecture i386
+    - apt-get update
     - apt-get install -y software-properties-common
     - add-apt-repository universe
     - apt-get update

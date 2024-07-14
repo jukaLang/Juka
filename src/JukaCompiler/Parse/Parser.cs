@@ -8,6 +8,9 @@ using static JukaCompiler.Expressions.Expr;
 
 namespace JukaCompiler.Parse
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Parser
     {
         private List<Lexeme> tokens = [];

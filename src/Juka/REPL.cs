@@ -84,7 +84,7 @@ namespace Juka
 
         private static async Task HandleCommandAsync(string command)
         {
-            switch (command.ToLower())
+            switch (command.Split(' ')[0].ToLower())
             {
                 case "!menu":
                     DisplayMenu();
@@ -108,7 +108,35 @@ namespace Juka
                     await UpdateJuka();
                     break;
                 case "!restart":
-                    RestartApplication();
+                    string[] restartTypes = command.Split(' ');
+                    if (restartTypes.Length > 1)
+                    {
+                        string restartType = restartTypes[1];
+                        if (restartType == "full")
+                        {
+                            RestartApplication("full");
+                        }
+                        else
+                        {
+                            RestartApplication("normal");
+                        }
+                    }
+                    else
+                    {
+                        RestartApplication("normal");
+                    }
+                    break;
+                case "!download":
+                    string[] parts = command.Split(' ');
+                    if (parts.Length > 1)
+                    {
+                        string url = parts[1];
+                        await DownloadAFile(url);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid command format. Usage: !download [url]");
+                    }
                     break;
                 case "!exit":
                     ExitRepl();
@@ -163,8 +191,9 @@ namespace Juka
             table.AddRow("!get", "[aqua]Get list of libraries for Juka[/]");
             table.AddRow("!undo", "[blue]Undoes last entered command[/]");
             table.AddRow("!redo", "[red]Redoes the undone command[/]");
+            table.AddRow("!download", "[aqua]Download a file from the web. Requires a url. [/]");
             table.AddRow("!update", "[yellow]Update Juka to latest version[/]");
-            table.AddRow("!restart", "[fuchsia]Restart application[/]");
+            table.AddRow("!restart", "[fuchsia]Restart application. [/] Options: [/aqua]full[/] or [aqua]normal[/]");
             table.AddRow("!exit", "[yellow]Exits REPL[/]");
 
             AnsiConsole.Write(table);
@@ -223,11 +252,20 @@ namespace Juka
             DisplayPrompt();
         }
 
-        private static async void RestartApplication()
+        private static async Task DownloadAFile(string url)
+        {
+            await SelfUpdate.DownloadURLAsync(url);
+            AnsiConsole.MarkupLine("[Green]Finished Downloading from: [/]" + url);
+            DisplayPrompt();
+        }
+
+        
+
+        private static async void RestartApplication(string type)
         {
             IDictionary<string, string> info = SelfUpdate.GetSystemInfo();
             string jukaexepath = info["dir"] + info["name"] + info["extension"];
-            await SelfUpdate.Restart(jukaexepath);
+            await SelfUpdate.Restart(jukaexepath,type);
         }
 
         private static void ExitRepl()

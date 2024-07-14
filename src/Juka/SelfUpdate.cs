@@ -71,6 +71,27 @@ class SelfUpdate
         return "";
     }
 
+    public static async Task DownloadURLAsync(string url)
+    {
+        AnsiConsole.MarkupLine("[yellow]Downloading from [/]" + url);
+        using HttpResponseMessage? response2 = await new HttpClient().GetAsync(url);
+        await using Stream? streamToReadFrom = await response2.Content.ReadAsStreamAsync();
+
+
+        Uri uri = new Uri(url);
+        string fileName = Path.GetFileName(uri.LocalPath);
+
+
+        using (FileStream fileStream = File.Create(fileName))
+        {
+            streamToReadFrom.CopyTo(fileStream);
+        }
+
+    }
+
+
+
+
     /// <summary>
     /// Get system information
     /// </summary>
@@ -206,7 +227,7 @@ class SelfUpdate
 
                         AnsiConsole.MarkupLine("[green]Updated to version: " + latestVersion + "[/]");
 
-                        await Restart(jukaExePath);
+                        await Restart(jukaExePath,"normal");
                     }
                     catch (Exception ex)
                     {
@@ -229,29 +250,39 @@ class SelfUpdate
             }
         }
     }
-    public static async Task Restart(string jukaExePath)
+    public static async Task Restart(string jukaExePath, string type)
     {
-        try
-        {
-            // Perform any cleanup or resource releasing before restarting
-            // Example: Save user data, close connections, etc.
-
-            ProcessStartInfo startInfo = new()
+        if(type == "full") { 
+            try
             {
-                FileName = jukaExePath,
-                UseShellExecute = true
-            };
+                // Perform any cleanup or resource releasing before restarting
+                // Example: Save user data, close connections, etc.
 
-            Process newProcess = Process.Start(startInfo);
+                ProcessStartInfo startInfo = new()
+                {
+                    FileName = jukaExePath,
+                    UseShellExecute = true
+                };
 
-            // Close the current process gracefully
-            await Task.Delay(1000); // Delay to ensure the new process starts
-            Environment.Exit(0);
+                Process newProcess = Process.Start(startInfo);
+
+                // Close the current process gracefully
+                await Task.Delay(1000); // Delay to ensure the new process starts
+                Environment.Exit(0);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occurred during restart: {ex.Message}");
+                // Log the exception for troubleshooting
+            }
         }
-        catch (Exception ex)
+        else
         {
-            Console.WriteLine($"Error occurred during restart: {ex.Message}");
-            // Log the exception for troubleshooting
+            //Start process, friendly name is something like MyApp.exe (from current bin directory)
+            Process.Start(jukaExePath);
+
+            //Close the current process
+            Environment.Exit(0);
         }
     }
 }

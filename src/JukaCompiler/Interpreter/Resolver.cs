@@ -7,6 +7,12 @@ using static JukaCompiler.Expressions.Expr;
 
 namespace JukaCompiler.Interpreter
 {
+    /// <summary>
+    /// Implements visitor interfaces for statements and expressions. 
+    /// It resolves variable scopes, handles function declarations, and tracks class inheritance. 
+    /// The Resolver class helps in analyzing and understanding the structure of code by visiting different types of statements 
+    /// and expressions to resolve variables and function calls within a given context.
+    /// </summary>
     internal class Resolver : Statement.IVisitor<object>, Expr.IVisitor<object>
     {
         private JukaInterpreter interpreter;

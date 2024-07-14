@@ -54,6 +54,12 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitAssignExpr(this);
             }
         }
+
+       /// <summary>
+       /// This code defines a class Variable that inherits from Expr. It stores a LexemeType.Types value and 
+       /// initializes it using the LexemeType of the provided ExpressionLexeme. 
+       /// The class provides an Accept method that calls the VisitVariableExpr method on a visitor object.
+       /// </summary>
         internal class Variable : Expr
         {
             internal LexemeType.Types lexemeType;
@@ -68,6 +74,10 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitVariableExpr(this);
             }
         }
+
+        /// <summary>
+        /// This code defines a class Binary that extends Expr. It represents a binary expression with a left expression, an operator, and a right expression. The class has a constructor to initialize these values and an Accept method to allow visitors to process instances of Binary.
+        /// </summary>
         internal class Binary : Expr
         {
             internal Expr? left;
@@ -88,12 +98,18 @@ namespace JukaCompiler.Expressions
                 this.op=null;
             }
 
+           // Accepts a visitor and calls its VisitBinaryExpr method with 'this' BinaryExpr object.
             internal override R Accept<R>(IVisitor<R> visitor)
             {
                 return visitor.VisitBinaryExpr(this);
             }
         }
 
+
+        /// <summary>
+        /// This code defines a class Increment that extends Expr. 
+        /// It has two internal fields: variable and opLexeme, which are initialized through the constructor. The Accept method is overridden to throw a NotImplementedException.
+        /// </summary>
         internal class Increment : Expr
         {
             internal Lexeme variable;
@@ -111,6 +127,11 @@ namespace JukaCompiler.Expressions
             }
         }
 
+        /// <summary>
+        /// This code defines a class NewDeclarationExpr that extends Expr. 
+        /// It contains a property NewDeclarationExprInit and a constructor that initializes it. 
+        /// The Accept method allows visitors to process instances of NewDeclarationExpr.
+        /// </summary>
         internal class NewDeclarationExpr : Expr
         {
             public Expr NewDeclarationExprInit { get; }
@@ -125,6 +146,11 @@ namespace JukaCompiler.Expressions
             }
         }
 
+        /// <summary>
+        /// This code defines a class DeleteDeclarationExpr that extends Expr. 
+        /// It has a public property variable of type Expr, a constructor to initialize the property, and an Accept method that allows visitors to process instances of DeleteDeclarationExpr 
+        /// by calling VisitDeleteExpr on the visitor with this instance of the class.
+        /// </summary>
         internal class DeleteDeclarationExpr : Expr
         {
             public Expr variable;
@@ -139,6 +165,14 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitDeleteExpr(this);
             }
         }
+
+
+
+        /// <summary>
+        /// This code defines a class ArrayDeclarationExpr that represents an array declaration expression. 
+        /// It contains properties for the array size and name. The class has constructors to create instances with different parameters. 
+        /// The Accept method allows visitors to process instances of ArrayDeclarationExpr.
+        /// </summary>
 
         internal class ArrayDeclarationExpr : Expr
         {
@@ -158,11 +192,22 @@ namespace JukaCompiler.Expressions
                 this.ArrayDeclarationName = arrayDeclarationName;
             }
 
+            // Overrides the Accept method from the base class Expr.
+            // It accepts a visitor implementing the IVisitor interface and calls the VisitArrayExpr method on the visitor with this instance of ArrayExpr.
+            // Returns the result of visiting the ArrayExpr.
             internal override R Accept<R>(IVisitor<R> visitor)
             {
                 return visitor.VisitArrayExpr(this);
             }
         }
+
+        /// <summary>
+        /// This code defines a class ArrayAccessExpr that extends another class Expr. 
+        /// It represents an expression involving array access. 
+        /// The class has properties for ArrayIndex, ArrayVariableName, LvalueExpr, and HasInitializer. 
+        /// It has two constructors, one with an initializer and one without. 
+        /// The Accept method allows visitors to process instances of ArrayAccessExpr.
+        /// </summary>
         internal class ArrayAccessExpr : Expr
         {
             internal int ArrayIndex { get; }
@@ -191,6 +236,11 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitArrayAccessExpr(this);
             }
         }
+
+        /// <summary>
+        /// This code defines a class Call that extends Expr. It represents a function call expression with a callee, a list of arguments, and a flag indicating whether it is callable. 
+        /// The Accept method is overridden to call the VisitCallExpr method on a visitor and return the result.
+        /// </summary>
         internal class Call : Expr
         {
             internal Expr callee;
@@ -208,6 +258,12 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitCallExpr(this);
             }
         }
+
+        /// <summary>
+        /// This code defines a class Get that extends another class Expr. 
+        /// It represents a get operation and accepts an expression and a Lexeme object. 
+        /// The Accept method allows visitors to process instances of Get.
+        /// </summary>
         internal class Get : Expr
         {
             internal Expr expr;
@@ -221,6 +277,12 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitGetExpr(this);
             }
         }
+
+        /// <summary>
+        /// This code defines a class Unary that represents a unary expression in an abstract syntax tree. 
+        /// It stores the lexeme type of the unary operation and provides a method to access this type. 
+        /// The class implements the Accept method to allow visitors to process instances of Unary.
+        /// </summary>
         internal class Unary : Expr
         {
             private LexemeType.Types lexemeType;
@@ -236,6 +298,11 @@ namespace JukaCompiler.Expressions
 
             public LexemeType.Types LexemeType => lexemeType;
         }
+
+        /// <summary>
+        /// This code defines a class Grouping that represents a grouping expression in an abstract syntax tree. 
+        /// It can hold an inner expression (Expr) and implements the Accept method to allow visitors to process instances of Grouping.
+        /// </summary>
         internal class Grouping : Expr
         {
             internal Expr? expression;
@@ -254,6 +321,11 @@ namespace JukaCompiler.Expressions
                 return visitor.VisitGroupingExpr(this);
             }
         }
+
+        /// <summary>
+        /// This code defines a class Literal that represents a literal expression in an abstract syntax tree. It stores the value and type of the literal along with the associated lexeme. The class implements the Accept method to allow visitors to process instances of Literal. 
+        /// It also provides a method LiteralValue to get the value of the literal, and a property Type to access the type of the literal.
+        /// </summary>
         internal class Literal : Expr
         {
             private object? value;
@@ -295,6 +367,11 @@ namespace JukaCompiler.Expressions
                 get { return type; }
             }
         }
+        /// <summary>
+        /// This code defines a class Logical that extends Expr. 
+        /// It has a constructor that takes an Expr, a Lexeme, and another Expr as parameters. 
+        /// The Accept method throws a NotImplementedException.
+        /// </summary>
         internal class Logical : Expr
         {
             internal Logical(Expr expr, Lexeme lex, Expr right)
@@ -306,6 +383,11 @@ namespace JukaCompiler.Expressions
                 throw new NotImplementedException();
             }
         }
+
+        /// <summary>
+        /// This code defines a class Set that extends Expr. It has a constructor that takes three parameters: an Expr, a Lexeme, and another Expr. 
+        /// The Accept method is overridden to throw a NotImplementedException.
+        /// </summary>
         internal class Set : Expr
         {
             internal Set(Expr expr, Lexeme lex, Expr right)
@@ -317,6 +399,11 @@ namespace JukaCompiler.Expressions
                 throw new NotImplementedException();
             }
         }
+        /// <summary>
+        /// This code defines a class named Super that extends the Expr class. 
+        /// It has a constructor that takes three parameters: an Expr, a Lexeme, and another Expr. 
+        /// The Accept method is overridden to throw a NotImplementedException.
+        /// </summary>
         internal class Super : Expr
         {
             internal Super(Expr expr, Lexeme lex, Expr right)
@@ -328,6 +415,11 @@ namespace JukaCompiler.Expressions
                 throw new NotImplementedException();
             }
         }
+
+        /// <summary>
+        /// This code defines a class This that extends Expr. 
+        /// It has a constructor that takes an Expr, a Lexeme, and another Expr as parameters. The Accept method throws a NotImplementedException.
+        /// </summary>
         internal class This : Expr
         {
             internal This(Expr expr, Lexeme lex, Expr right)
@@ -348,6 +440,12 @@ namespace JukaCompiler.Expressions
                 throw new NotImplementedException();
             }
         }
+
+
+        /// <summary>
+        /// This code defines a class LexemeTypeLiteral that extends Expr. It contains fields to store a LexemeType.Types and an object.
+        /// It has properties Literal and LexemeType to access and set these fields. The Accept method allows visitors to process instances of LexemeTypeLiteral.
+        /// </summary>
         internal class LexemeTypeLiteral : Expr
         {
             internal LexemeType.Types lexemeType;

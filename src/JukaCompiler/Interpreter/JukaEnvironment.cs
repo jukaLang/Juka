@@ -3,6 +3,19 @@ using JukaCompiler.Lexer;
 
 namespace JukaCompiler.Interpreter
 {
+    /// <summary>
+    /// This code defines a JukaEnvironment class that represents an environment in which variables can be defined, assigned, and accessed. It allows for nested environments where variables can be inherited from enclosing scopes.
+    /// The class maintains a dictionary of variable names and values
+    /// It has methods to get, assign, and define variables.
+    /// It supports nested environments by having a reference to an enclosing environment.
+    /// The Get method retrieves the value of a variable by name.
+    /// The Assign method sets the value of a variable.
+    /// The Define method adds a new variable to the environment.
+    /// The Ancestor method finds an ancestor environment at a specified distance.
+    /// The GetAt method retrieves the value of a variable at a specified distance.
+    /// The AssignAt method sets the value of a variable at a specified distance.
+    /// The ToString method provides a string representation of the environment, including variable values and its enclosing environment.
+    /// </summary>
     internal class JukaEnvironment
     {
         private JukaEnvironment? enclosing;
