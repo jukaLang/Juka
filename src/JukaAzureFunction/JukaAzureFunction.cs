@@ -10,15 +10,9 @@ using Newtonsoft.Json;
 
 namespace JukaAzureFunction;
 
-public class JukaAzureFunction
+public class JukaAzureFunction(ILogger<JukaAzureFunction> log)
 {
-    private ILogger<JukaAzureFunction> logger;
-
-    public JukaAzureFunction(ILogger<JukaAzureFunction> log)
-    {
-        logger = log;
-    }
-
+    private ILogger<JukaAzureFunction> logger = log;
 
     [Function("JukaAzureFunction")]
     [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]

@@ -69,7 +69,6 @@ namespace JukaCompiler
         //This code defines a method named Compile that compiles a list of statements using a JukaInterpreter and a Resolver.
         //It sets up a main method runtime hook, redirects console output to capture it, interprets the statements, and returns the console output as a string.
         //If an exception occurs during interpretation, it returns the exception message.
-
         private string Compile(List<Statement> statements)
         {
             JukaInterpreter interpreter = new(services: _serviceProvider);

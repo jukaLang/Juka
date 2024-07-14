@@ -46,6 +46,7 @@ namespace Juka
             }
         }
 
+       // A method to initialize the REPL environment with specific configurations and setup.
         private static async Task InitializeRepl()
         {
             Console.Title = "Juka Programming Language";
@@ -71,17 +72,20 @@ namespace Juka
             DisplayPrompt();
         }
 
+        // Displays the prompt for the Juka REPL environment. It constructs a prompt string with Juka, its current version, and the current time, then uses AnsiConsole to markup and display the prompt.
         private static void DisplayPrompt()
         {
             string prompt = "[bold green]Juka[/]([red]" + CurrentVersion.GetVersion() + "[/]){" + DateTime.Now.ToString("HH:mm:ss") + "}> ";
             AnsiConsole.Markup(prompt);
         }
 
+        // A method that checks whether the input line is a command by checking if it starts with '!'.
         private static bool IsCommand(string line)
         {
             return line.StartsWith('!');
         }
 
+        // Asynchronously handles different commands based on the input command string.
         private static async Task HandleCommandAsync(string command)
         {
             switch (command.Split(' ')[0].ToLower())
@@ -147,6 +151,7 @@ namespace Juka
             }
         }
 
+        // A method to handle user input in the REPL environment.
         private static void HandleUserInput(string userInput)
         {
             if (userInput.StartsWith("sub") || userInput.StartsWith("class"))
@@ -178,6 +183,7 @@ namespace Juka
             }
         }
 
+        // Displays the menu with various commands and their descriptions in a table format using AnsiConsole. After displaying the menu, it calls the DisplayPrompt method to show the REPL prompt.
         private static void DisplayMenu()
         {
             Table table = new();
@@ -200,6 +206,7 @@ namespace Juka
             DisplayPrompt();
         }
 
+        // A method to clear the console, initialize a new compiler, reset the class or subroutine flag, clear the subroutine stack, set the starting data for the main subroutine, set the ending data, and display the prompt.
         private static void ClearConsole()
         {
             Console.Clear();
@@ -213,7 +220,7 @@ namespace Juka
             DisplayPrompt();
         }
 
-
+       // Displays the code present in the subRoutineStack in reverse order and then calls the DisplayPrompt method.
         private static void ListCode()
         {
             foreach (string? data in subRoutineStack.Reverse())
@@ -224,12 +231,14 @@ namespace Juka
             DisplayPrompt();
         }
 
+       // A method to get the list of libraries for Juka.
         private static void GetLibraries()
         {
             // Implement your logic to get the list of libraries for Juka
             DisplayPrompt();
         }
 
+        // Undoes the last command by popping a line from the subRoutineStack, pushing it to the redoStack, marking it as removed in the console, and displaying the prompt.
         private static void UndoLastCommand()
         {
             string templine = subRoutineStack.Pop();
@@ -238,6 +247,8 @@ namespace Juka
             DisplayPrompt();
         }
 
+
+        // A method to redo the last command, pushing the popped command from the redo stack to the subRoutineStack, marking it as added, and displaying the prompt.
         private static void RedoLastCommand()
         {
             string templine = redoStack.Pop();
@@ -246,12 +257,14 @@ namespace Juka
             DisplayPrompt();
         }
 
+        // A method to update Juka asynchronously.
         private static async Task UpdateJuka()
         {
             await SelfUpdate.Update();
             DisplayPrompt();
         }
 
+        // A method to download a file asynchronously from the specified URL and display a message upon completion.
         private static async Task DownloadAFile(string url)
         {
             await SelfUpdate.DownloadURLAsync(url);
@@ -260,7 +273,7 @@ namespace Juka
         }
 
         
-
+        // Asynchronously restarts the application based on the provided type parameter.
         private static async void RestartApplication(string type)
         {
             IDictionary<string, string> info = SelfUpdate.GetSystemInfo();
@@ -268,11 +281,14 @@ namespace Juka
             await SelfUpdate.Restart(jukaexepath,type);
         }
 
+        // Exits the REPL environment by terminating the application.
         private static void ExitRepl()
         {
             Environment.Exit(0);
         }
 
+        // Executes the subroutines present in the subRoutineStack by iterating in reverse order, appending each item to userDataToExecute,
+        // resetting the subRoutineStack, updating endData with the concatenated result, and finally displaying the prompt.
         private static void ExecuteSub()
         {
             StringBuilder userDataToExecute = new();
@@ -287,6 +303,7 @@ namespace Juka
             DisplayPrompt();
         }
 
+        // Executes a line of code by compiling and running it, then displays the output.
         private static void ExecuteLine()
         {
             string codeToExecute = startData + endData;

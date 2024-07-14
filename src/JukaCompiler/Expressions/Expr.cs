@@ -4,26 +4,102 @@ namespace JukaCompiler.Expressions
 {
     internal abstract class Expr
     {
+        /// <summary>
+        /// Interface for visiting different expression types
+        /// </summary>
         internal interface IVisitor<R>
         {
+            /// <summary>
+            /// Visit an Assign expression
+            /// </summary>
             R VisitAssignExpr(Assign expr);
+
+            /// <summary>
+            /// Visit a Binary expression
+            /// </summary>
             R VisitBinaryExpr(Binary expr);
+
+            /// <summary>
+            /// Visit a Call expression
+            /// </summary>
             R VisitCallExpr(Call expr);
+
+            /// <summary>
+            /// Visit a Get expression
+            /// </summary>
             R VisitGetExpr(Get expr);
+
+            /// <summary>
+            /// Visit a Grouping expression
+            /// </summary>
             R VisitGroupingExpr(Grouping expr);
+
+
+            /// <summary>
+            /// Visit a Literal expression
+            /// </summary>
             R VisitLiteralExpr(Literal expr);
+
+            /// <summary>
+            /// Visit a Logical expression
+            /// </summary>
             R VisitLogicalExpr(Logical expr);
+
+            /// <summary>
+            /// Visit a Set expression
+            /// </summary>
             R VisitSetExpr(Set expr);
+
+            /// <summary>
+            /// Visit a Super expression
+            /// </summary>
             R VisitSuperExpr(Super expr);
+
+            /// <summary>
+            /// Visit a This expression
+            /// </summary>
             R VisitThisExpr(This expr);
+
+            /// <summary>
+            /// Visit an Unary expression
+            /// </summary>
             R VisitUnaryExpr(Unary expr);
+
+            /// <summary>
+            /// Visit a Variable expression
+            /// </summary>
             R VisitVariableExpr(Variable expr);
+
+            /// <summary>
+            /// Visit a LexemeTypeLiteral expression
+            /// </summary>
             R VisitLexemeTypeLiteral(LexemeTypeLiteral expr);
+
+            /// <summary>
+            /// Visit an ArrayDeclaration expression
+            /// </summary>
             R VisitArrayExpr(ArrayDeclarationExpr expr);
+
+            /// <summary>
+            /// Visit a NewDeclaration expression
+            /// </summary>
             R VisitNewExpr(NewDeclarationExpr expr);
+
+            /// <summary>
+            /// Visit an ArrayAccess expression
+            /// </summary>
             R VisitArrayAccessExpr(ArrayAccessExpr expr);
+
+            /// <summary>
+            /// Visit a DeleteDeclaration expression
+            /// </summary>
             R VisitDeleteExpr(DeleteDeclarationExpr expr);
         }
+
+
+
+
+        
 
         internal abstract R Accept<R>(IVisitor<R> visitor);
 
@@ -39,16 +115,29 @@ namespace JukaCompiler.Expressions
         {
             get => this.expressionLexeme?.ToString()!;
         }
+
+
+        /// <summary>
+        /// Represents an assignment expression in the abstract syntax tree
+        /// </summary>
         internal class Assign : Expr
         {
             internal Expr value;
 
+
+            /// <summary>
+            /// Initializes a new instance of the Assign class with the provided expression lexeme and value
+            /// </summary>
             internal Assign(Lexeme ExpressionLexeme, Expr value)
             {
                 this.expressionLexeme = ExpressionLexeme;
                 this.value = value;
             }
 
+
+            /// <summary>
+            /// Accepts a visitor and calls the VisitAssignExpr method on it
+            /// </summary>
             internal override R Accept<R>(IVisitor<R> visitor)
             {
                 return visitor.VisitAssignExpr(this);
