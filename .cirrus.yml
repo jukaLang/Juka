@@ -35,14 +35,9 @@ task:
       - GITHUB_TOKEN: ENCRYPTED[!b7770b286394d89374afd6ce2ef353693b8b922c6c0d6169c4e55fb926ea26507660d0759f6a2cdf2e2436e514742573!]
       - JUKA_TOKEN: Linux_X86
     setup_script:
-    - dpkg --print-architecture 
-    - dpkg --print-foreign-architectures
     - dpkg --add-architecture i386
     - apt-get update
-    - apt-get install -y software-properties-common
-    - add-apt-repository universe
-    - apt-get update
-    - apt-get install -y wget curl libc6:i386 libncurses5:i386 libstdc++6:i386 libicu-dev:i386 libssl-dev:i386 zlib1g:i386 
+    - apt-get install -y wget curl libc6:i386 libncurses6:i386 libstdc++6:i386 libicu-dev:i386 libssl-dev:i386 zlib1g:i386 
     - mkdir /usr/share/dotnet
     - wget https://github.com/jukaLang/JukaPortLibraries/releases/download/JukaLibs/dotnet-sdk-8.0.204-linux-x86.tar.gz
     - tar xf dotnet-sdk-8.0.204-linux-x86.tar.gz -C /usr/share/dotnet/
