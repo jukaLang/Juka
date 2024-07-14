@@ -24,12 +24,12 @@ public abstract class UnitTestStructure
         Compiler compiler = new();
 
         // Compile and run the source code string
-        var outputValue = compiler.Go(SourceAsString, false);
+        var outputValue = compiler.CompileJukaCode(SourceAsString, false);
 
         // If there are any compilation errors, throw an exception with the error messages
-        if (compiler.HasErrors())
+        if (compiler.CheckForErrors())
         {
-            var errorMessage = "Compilation errors:\r\n" + string.Join("\r\n", compiler.ListErrors());
+            var errorMessage = "Compilation errors:\r\n" + string.Join("\r\n", compiler.GetErrorList());
             throw new InvalidOperationException(errorMessage);
         }
 

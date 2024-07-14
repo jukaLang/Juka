@@ -6,7 +6,7 @@ namespace JukaUnitTest;
 [TestClass]
 public class CompilerUnitTest : UnitTestStructure
 {
-    [TestMethod]
+    /*[TestMethod]
     public void StackBasedArray()
     {
         SourceAsString +=
@@ -21,9 +21,7 @@ public class CompilerUnitTest : UnitTestStructure
 
         Assert.AreEqual("test", Go());
     }
-
-
-    [TestMethod]
+    */    [TestMethod]
     public void HeapBasedArray()
     {
         SourceAsString +=

@@ -20,12 +20,12 @@ public class ExampleUnitTest : UnitTestStructure
     public void TestSourceAsFile()
     {
         // Use the Go method to compile and run the code
-        var outputValue = compiler.Go(@"../../../../../examples/test2.juk");
+        var outputValue = compiler.CompileJukaCode(@"../../../../../examples/test2.juk");
 
         // If there are any compilation errors, fail the test and report the errors
-        if (compiler.HasErrors())
+        if (compiler.CheckForErrors())
         {
-            var errors = compiler.ListErrors();
+            var errors = compiler.GetErrorList();
             foreach (var error in errors)
             {
                 Assert.Fail($"Compilation error: {error}");
