@@ -4,10 +4,10 @@
 
 We are committed to fixing security issues in the latest version of our software. Older versions are not supported.
 
-| Version | Supported |
-| ------- | --------- |
-| latest  | ✅        |
-| < latest| ❌        |
+| Version  | Supported |
+| -------- | --------- |
+| latest   | ✅        |
+| < latest | ❌        |
 
 ## Reporting a Vulnerability
 

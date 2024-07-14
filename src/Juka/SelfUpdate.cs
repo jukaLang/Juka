@@ -123,11 +123,11 @@ class SelfUpdate
         string? extension = platform == "Windows" ? ".exe" : "";
 
         // Display system information
-        AnsiConsole.MarkupLine($"[bold blue]Your Operating System:[/] [green]{platform}[/]");
-        AnsiConsole.MarkupLine($"[bold blue]Current Directory:[/] [green]{dir}[/]");
-        AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Architecture:[/] [green]{architecture}[/]");
-        AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Name:[/] [green]{name}[/]");
-        AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Extension:[/] [green]{extension}[/]");
+        //AnsiConsole.MarkupLine($"[bold blue]Your Operating System:[/] [green]{platform}[/]");
+        //AnsiConsole.MarkupLine($"[bold blue]Current Directory:[/] [green]{dir}[/]");
+        //AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Architecture:[/] [green]{architecture}[/]");
+        //AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Name:[/] [green]{name}[/]");
+        //AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Extension:[/] [green]{extension}[/]");
 
         return new Dictionary<string, string>
         {

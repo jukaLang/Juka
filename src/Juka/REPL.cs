@@ -1,4 +1,5 @@
 ﻿using JukaCompiler;
+using Microsoft.VisualBasic;
 using Spectre.Console;
 using System.Diagnostics;
 using System.Text;
@@ -28,12 +29,9 @@ namespace Juka
 
             while (true)
             {
-                string? readLine = Console.ReadLine();
-                if (string.IsNullOrEmpty(readLine))
-                {
-                    DisplayPrompt();
-                    continue;
-                }
+
+                string? readLine = AnsiConsole.Ask<string>("[bold green]Juka[/]([red]" + CurrentVersion.GetVersion() + "[/]){" + DateTime.Now.ToString("HH:mm:ss") + "}> ");
+
 
                 if (IsCommand(readLine))
                 {
@@ -54,30 +52,81 @@ namespace Juka
             Console.ForegroundColor = ConsoleColor.White;
             Console.OutputEncoding = Encoding.UTF8;
 
-            await SelfUpdate.Check();
-
-            isSubOrClass = false;
-            startData =  @"sub main() = {
-                        ";
-            endData =  @"
-                        }";
 
             subRoutineStack = new Stack<string>();
+            isSubOrClass = false;
+            startData = @"sub main() = {
+                        ";
+            endData = @"
+                        }";
 
-            AnsiConsole.Write(new FigletText("Juka").Color(Color.Purple));
-            AnsiConsole.MarkupLine("[bold yellow]Hello[/] and [bold red]Welcome to 🍲 Juka Programming Language![/] For info visit [link blue]https://jukalang.com[/]. Type [bold palegreen1]!menu[/] to see options");
+
+
+            // Create the layout
+            var layout = new Layout("Root")
+                .SplitColumns(
+                    new Layout("Left").SplitRows(
+                new Layout("Logo"),
+                new Layout("Output")),
+                    new Layout("Menu"));
+
+
+
+            //layout["Left"].Ratio(2);
+            //layout["Output"].Ratio(2);
+
+
+            var archicture = SelfUpdate.GetSystemInfo();
+
+
+
+
+            var logotext = new FigletText("Juka").Color(Color.Purple);
+            var logopanel = new Panel(logotext);
+            logopanel.Header = new PanelHeader("Juka Version: "+CurrentVersion.GetVersion()+" ");
+            layout["Logo"].Update(logopanel);
+
+
+
+            layout["Output"].Update(new Markup("[bold yellow]Hello[/] and [bold red]Welcome to 🍲 Juka Programming Language![/] For info visit [link blue]https://jukalang.com[/].\n\n"+
+                "[bold blue]Your Operating System:[/] [green]"+archicture["platform"]+"[/]\n"+
+                "[bold blue]Current Directory:[/] [green]"+archicture["dir"]+"[/]\n"+
+                "[bold blue]Your Juka Assembly Architecture:[/] [green]"+archicture["architecture"]+"[/]\n"+
+                "[bold blue]Your Juka Assembly Name:[/] [green]"+archicture["name"]+"[/]\n"+
+                "[bold blue]Your Juka Assembly Extension:[/] [green]"+archicture["extension"]+"[/]\n"               
+                
+                ));
+
+
+
+
+            Table table = new();
+
+            table.AddColumn("Command");
+            table.AddColumn(new TableColumn("Description"));
+
+            table.AddRow("!!menu", "[yellow]Displays this menu[/]");
+            table.AddRow("!!clear", "[green]Clears the REPL[/]");
+            table.AddRow("!!list", "[red]Lists the current code[/]");
+            table.AddRow("!!get", "[aqua]Get list of libraries for Juka[/]");
+            table.AddRow("!!undo", "[blue]Undoes last entered command[/]");
+            table.AddRow("!!redo", "[red]Redoes the undone command[/]");
+            table.AddRow("!!download", "[aqua]Download a file from the web. Requires a url. [/]");
+            table.AddRow("!!update", "[yellow]Update Juka to latest version[/]");
+            table.AddRow("!!restart", "[fuchsia]Restart application. [/]");
+            table.AddRow("!!exit", "[yellow]Exits REPL[/]");
+            layout["Menu"].Update(table);
+
+
+            // Render the layout
+
+
+            AnsiConsole.Write(layout);
 
             compiler = new Compiler();
 
-            DisplayPrompt();
         }
 
-        // Displays the prompt for the Juka REPL environment. It constructs a prompt string with Juka, its current version, and the current time, then uses AnsiConsole to markup and display the prompt.
-        private static void DisplayPrompt()
-        {
-            string prompt = "[bold green]Juka[/]([red]" + CurrentVersion.GetVersion() + "[/]){" + DateTime.Now.ToString("HH:mm:ss") + "}> ";
-            AnsiConsole.Markup(prompt);
-        }
 
         // A method that checks whether the input line is a command by checking if it starts with '!'.
         private static bool IsCommand(string line)
@@ -90,28 +139,28 @@ namespace Juka
         {
             switch (command.Split(' ')[0].ToLower())
             {
-                case "!menu":
+                case "!!menu":
                     DisplayMenu();
                     break;
-                case "!clear":
+                case "!!clear":
                     ClearConsole();
                     break;
-                case "!list":
+                case "!!list":
                     ListCode();
                     break;
-                case "!get":
+                case "!!get":
                     GetLibraries();
                     break;
-                case "!undo":
+                case "!!undo":
                     UndoLastCommand();
                     break;
-                case "!redo":
+                case "!!redo":
                     RedoLastCommand();
                     break;
-                case "!update":
+                case "!!update":
                     await UpdateJuka();
                     break;
-                case "!restart":
+                case "!!restart":
                     string[] restartTypes = command.Split(' ');
                     if (restartTypes.Length > 1)
                     {
@@ -130,7 +179,7 @@ namespace Juka
                         RestartApplication("normal");
                     }
                     break;
-                case "!download":
+                case "!!download":
                     string[] parts = command.Split(' ');
                     if (parts.Length > 1)
                     {
@@ -142,7 +191,7 @@ namespace Juka
                         Console.WriteLine("Invalid command format. Usage: !download [url]");
                     }
                     break;
-                case "!exit":
+                case "!!exit":
                     ExitRepl();
                     break;
                 default:
@@ -191,19 +240,17 @@ namespace Juka
             table.AddColumn("Command");
             table.AddColumn(new TableColumn("Description"));
 
-            table.AddRow("!menu", "[yellow]Displays this menu[/]");
-            table.AddRow("!clear", "[green]Clears the REPL[/]");
-            table.AddRow("!list", "[red]Lists the current code[/]");
-            table.AddRow("!get", "[aqua]Get list of libraries for Juka[/]");
-            table.AddRow("!undo", "[blue]Undoes last entered command[/]");
-            table.AddRow("!redo", "[red]Redoes the undone command[/]");
-            table.AddRow("!download", "[aqua]Download a file from the web. Requires a url. [/]");
-            table.AddRow("!update", "[yellow]Update Juka to latest version[/]");
-            table.AddRow("!restart", "[fuchsia]Restart application. [/] Options: [/aqua]full[/] or [aqua]normal[/]");
-            table.AddRow("!exit", "[yellow]Exits REPL[/]");
+            table.AddRow("!!menu", "[yellow]Displays this menu[/]");
+            table.AddRow("!!clear", "[green]Clears the REPL[/]");
+            table.AddRow("!!list", "[red]Lists the current code[/]");
+            table.AddRow("!!get", "[aqua]Get list of libraries for Juka[/]");
+            table.AddRow("!!redo", "[red]Redoes the undone command[/]");
+            table.AddRow("!!download", "[aqua]Download a file from the web. Requires a url. [/]");
+            table.AddRow("!!update", "[yellow]Update Juka to latest version[/]");
+            table.AddRow("!!restart", "[fuchsia]Restart application. [/] Options: [/aqua]full[/] or [aqua]normal[/]");
+            table.AddRow("!!exit", "[yellow]Exits REPL[/]");
 
             AnsiConsole.Write(table);
-            DisplayPrompt();
         }
 
         // A method to clear the console, initialize a new compiler, reset the class or subroutine flag, clear the subroutine stack, set the starting data for the main subroutine, set the ending data, and display the prompt.
@@ -217,7 +264,6 @@ namespace Juka
                         ";
             endData = @"
                         }";
-            DisplayPrompt();
         }
 
        // Displays the code present in the subRoutineStack in reverse order and then calls the DisplayPrompt method.
@@ -228,14 +274,12 @@ namespace Juka
                 Console.WriteLine(data);
             }
 
-            DisplayPrompt();
         }
 
        // A method to get the list of libraries for Juka.
         private static void GetLibraries()
         {
             // Implement your logic to get the list of libraries for Juka
-            DisplayPrompt();
         }
 
         // Undoes the last command by popping a line from the subRoutineStack, pushing it to the redoStack, marking it as removed in the console, and displaying the prompt.
@@ -244,7 +288,6 @@ namespace Juka
             string templine = subRoutineStack.Pop();
             redoStack.Push(templine);
             AnsiConsole.MarkupLine("[bold red]Removed: [/]" + templine);
-            DisplayPrompt();
         }
 
 
@@ -254,14 +297,12 @@ namespace Juka
             string templine = redoStack.Pop();
             subRoutineStack.Push(templine);
             AnsiConsole.MarkupLine("[bold green]Added: [/]" + templine);
-            DisplayPrompt();
         }
 
         // A method to update Juka asynchronously.
         private static async Task UpdateJuka()
         {
             await SelfUpdate.Update();
-            DisplayPrompt();
         }
 
         // A method to download a file asynchronously from the specified URL and display a message upon completion.
@@ -269,7 +310,6 @@ namespace Juka
         {
             await SelfUpdate.DownloadURLAsync(url);
             AnsiConsole.MarkupLine("[Green]Finished Downloading from: [/]" + url);
-            DisplayPrompt();
         }
 
         
@@ -300,7 +340,6 @@ namespace Juka
             subRoutineStack = new Stack<string>();
 
             endData += userDataToExecute.ToString();
-            DisplayPrompt();
         }
 
         // Executes a line of code by compiling and running it, then displays the output.
@@ -327,7 +366,6 @@ namespace Juka
             });
 
             Console.WriteLine(output);
-            DisplayPrompt();
         }
     }
 }

@@ -14,13 +14,11 @@ Build Status: [![Cirrus CI - Base Branch Build Status](https://img.shields.io/ci
 
 [![RunJuka](https://github.com/jukaLang/Juka/assets/11934545/fff8c2c3-e89a-4262-99c0-acc98d3ac6a2)](https://jukalang.com)
 
-
 ## 🌐 Quick Links
 
-- **Official Website:** jukalang.com
-- **Main Git Repository:** github.com/jukaLang/juka
-- **Mirror Git Repository:** codeberg.org/JukaLang/Juka
-
+- **Official Website:** [jukalang.com](http://jukalang.com)
+- **Main Git Repository:** [github.com/jukaLang/juka](https://github.com/jukaLang/juka)
+- **Mirror Git Repository:** [codeberg.org/JukaLang/Juka](https://codeberg.org/JukaLang/Juka)
 
 ## 📣 Follow Us On
 
@@ -35,10 +33,10 @@ Build Status: [![Cirrus CI - Base Branch Build Status](https://img.shields.io/ci
 We accept donations via Bitcoin and Ethereum:
 
 - **Bitcoin Address:**
-3MqJ2pwcuqh2W5mUPZUcKMVzxgTKcjD8ET
+  3MqJ2pwcuqh2W5mUPZUcKMVzxgTKcjD8ET
 
 - **Ethereum (Ethereum Network) Address:**
-0xB56F6aff7a84935E5AF9D93b6d7db0e4F4F26B39
+  0xB56F6aff7a84935E5AF9D93b6d7db0e4F4F26B39
 
 ## 💭 Introduction
 
@@ -68,8 +66,8 @@ Juka is a general-purpose language designed to be used in a wide variety of task
 - [Virtual Box Image (JukaVM)](https://github.com/jukaLang/jukaVM)
 - [Windows App (Windows 10+)](https://github.com/jukaLang/JukaApp)
 - Android App (Can be sideloaded <https://jukalang.com/download>, but not in PlayStore yet)
-- Discord Bot  (Working, but is not currently hosted)
-- Telegram Bot  (Working, but is not currently hosted)
+- Discord Bot (Working, but is not currently hosted)
+- Telegram Bot (Working, but is not currently hosted)
 - Amazon Fire (HD) (Can be sideloaded <https://jukalang.com/download>, but not in Amazon AppStore yet)
 
 **Coming Soon:**
@@ -80,7 +78,7 @@ Juka is a general-purpose language designed to be used in a wide variety of task
 - Tizen (Samsung)
 - MacOS App (AppStore version)
 - TempleOS
- 
+
 Send us a message or Tweet at us to let us know what other systems you want to see!
 
 **Potential Future Support:**
@@ -112,7 +110,7 @@ Send us a message or Tweet at us to let us know what other systems you want to s
 
 ## 📚 Documentation
 
-You can find our dynamic documentation at jukalang.com/docs <https://jukalang.com/docs>. 
+You can find our dynamic documentation at jukalang.com/docs <https://jukalang.com/docs>.
 We also provide a PDF version of our documentation which can be downloaded at <https://github.com/jukaLang/juka-website/releases/download/JukaLang/jukadocs.pdf>
 
 ## 📦 Downloading Juka
@@ -121,11 +119,9 @@ Please download the latest version of Juka from our official website: <https://j
 
 If you are an advanced user and want to download other versions of Juka, visit our releases page <https://github.com/jukaLang/juka/releases>
 
-
 ## ⌛ Running Juka
 
 Juka can be run in various ways depending on your system. Detailed instructions can be found in our documentation.
-
 
 ### Microsoft/Linux/MacOS/FreeBSD
 
