@@ -11,39 +11,40 @@ using JukaCompiler.Lexer;
 
 namespace JukaCompiler
 {
+    /// <summary>
+    /// Represents the Compiler class which is responsible for compiling Juka code.
+    /// </summary>
     public class Compiler
     {
-        private ServiceProvider serviceProvider;
-        private HostBuilder hostBuilder;
-
+        private ServiceProvider _serviceProvider;
+        private HostBuilder _hostBuilder;
 
         public Compiler()
         {
-            hostBuilder = new HostBuilder();
-            hostBuilder.ConfigureServices(services =>
+            _hostBuilder = new HostBuilder();
+            _hostBuilder.ConfigureServices(services =>
             {
                 services.AddSingleton<ICompilerError, CompilerError>();
                 services.AddSingleton<IJukaCallable, JukaSystemCalls>();
-                services.AddSingleton<IFileOpen, FileOpen>();
+                services.AddSingleton<IFileOpener, FileOpen>();
                 services.AddSingleton<ICSharp, CSharp>();
                 services.AddSingleton<ISystemClock, SystemClock>();
                 services.AddSingleton<IGetAvailableMemory, GetAvailableMemory>();
-                this.serviceProvider = services.BuildServiceProvider();
+                _serviceProvider = services.BuildServiceProvider();
             });
-            hostBuilder.Build();
+            _hostBuilder.Build();
         }
 
-
-        public string Go(string data, bool isFile = true)
+        public string CompileJukaCode(string data, bool isFile = true)
         {
             CheckServiceProvider();
 
             try
             {
-                serviceProvider.GetRequiredService<ICompilerError>().SourceFileName(data);
+                _serviceProvider.GetRequiredService<ICompilerError>().SourceFileName(data);
 
-                Parser parser = new(new Scanner(data, serviceProvider, isFile), serviceProvider);
-                List<Stmt> statements = parser.Parse();
+                Parser parser = new(new Scanner(data, _serviceProvider, isFile), _serviceProvider);
+                List<Statement> statements = parser.Parse();
 
                 return Compile(statements);
             }
@@ -53,9 +54,9 @@ namespace JukaCompiler
             }
         }
 
-        private string Compile(List<Stmt> statements)
+        private string Compile(List<Statement> statements)
         {
-            JukaInterpreter interpreter = new(services: serviceProvider);
+            JukaInterpreter interpreter = new(services: _serviceProvider);
             Resolver resolver = new(interpreter);
             resolver.Resolve(statements);
 
@@ -80,32 +81,32 @@ namespace JukaCompiler
             }
         }
 
-        private static void SetupMainMethodRuntimeHook(List<Stmt> statements, Resolver resolver)
+        private static void SetupMainMethodRuntimeHook(List<Statement> statements, Resolver resolver)
         {
-            Stmt.Function mainFunction = statements.OfType<Stmt.Function>().FirstOrDefault(f => f.StmtLexemeName.Equals("main")) ?? throw new Exception("No main function is defined");
+            Statement.Function mainFunction = statements.OfType<Statement.Function>().FirstOrDefault(f => f.StmtLexemeName.Equals("main")) ?? throw new Exception("No main function is defined");
             Lexeme lexeme = new(LexemeType.Types.IDENTIFIER, 0, 0);
             lexeme.AddToken("main");
             Expr.Variable subroutineName = new(lexeme);
             Expr.Call call = new(subroutineName, false, []);
-            Stmt.Expression expression = new(call);
+            Statement.Expression expression = new(call);
             resolver.Resolve([expression]);
         }
 
-        public bool HasErrors()
+        public bool CheckForErrors()
         {
             CheckServiceProvider();
-            return serviceProvider.GetRequiredService<ICompilerError>().HasErrors();
+            return _serviceProvider.GetRequiredService<ICompilerError>().HasErrors();
         }
 
-        public List<string> ListErrors()
+        public List<string> GetErrorList()
         {
             CheckServiceProvider();
-            return serviceProvider.GetRequiredService<ICompilerError>().ListErrors();
+            return _serviceProvider.GetRequiredService<ICompilerError>().ListErrors();
         }
 
         private void CheckServiceProvider()
         {
-            if (serviceProvider == null)
+            if (_serviceProvider == null)
             {
                 throw new JRuntimeException("Service provider is not created");
             }

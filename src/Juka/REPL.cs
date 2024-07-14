@@ -3,15 +3,23 @@ using Spectre.Console;
 using System.Diagnostics;
 using System.Text;
 
+
 namespace Juka
 {
+    /// <summary>
+    /// Represents the REPL.
+    /// This code snippet defines a class Repl that implements a Read-Eval-Print Loop (REPL) for the Juka Programming Language. 
+    /// It includes methods to handle user input, execute commands, display prompts, manage code execution, and perform various REPL operations 
+    /// like clearing the console, listing code, updating the application, and more. 
+    /// The Repl class initializes the REPL environment, processes user commands, and executes code snippets entered by the user.
+    /// </summary>
     public class Repl
     {
         private static Compiler? compiler;
-        private static Stack<string> subData = new();
+        private static Stack<string> subRoutineStack = new();
         private static Stack<string> redoStack = new();
-        private static string? dataStart;
-        private static string? dataEnd;
+        private static string? startData;
+        private static string? endData;
         private static bool isSubOrClass;
 
         public static async Task RunRepl()
@@ -33,7 +41,7 @@ namespace Juka
                 }
                 else
                 {
-                    HandleCode(readLine);
+                    HandleUserInput(readLine);
                 }
             }
         }
@@ -48,10 +56,12 @@ namespace Juka
             await SelfUpdate.Check();
 
             isSubOrClass = false;
-            dataStart = "sub main() = {";
-            dataEnd = "}";
+            startData =  @"sub main() = {
+                        ";
+            endData =  @"
+                        }";
 
-            subData = new Stack<string>();
+            subRoutineStack = new Stack<string>();
 
             AnsiConsole.Write(new FigletText("Juka").Color(Color.Purple));
             AnsiConsole.MarkupLine("[bold yellow]Hello[/] and [bold red]Welcome to 🍲 Juka Programming Language![/] For info visit [link blue]https://jukalang.com[/]. Type [bold palegreen1]!menu[/] to see options");
@@ -63,7 +73,7 @@ namespace Juka
 
         private static void DisplayPrompt()
         {
-            string prompt = "[bold green]Juka[/]([red]" + CurrentVersion.Get() + "[/]){" + DateTime.Now.ToString("HH:mm:ss") + "}> "; 
+            string prompt = "[bold green]Juka[/]([red]" + CurrentVersion.GetVersion() + "[/]){" + DateTime.Now.ToString("HH:mm:ss") + "}> ";
             AnsiConsole.Markup(prompt);
         }
 
@@ -109,38 +119,33 @@ namespace Juka
             }
         }
 
-        private static void HandleCode(string code)
+        private static void HandleUserInput(string userInput)
         {
-            if (code.StartsWith("sub") || code.StartsWith("class"))
+            if (userInput.StartsWith("sub") || userInput.StartsWith("class"))
             {
                 isSubOrClass = true;
-                subData.Push(code);
-                Trace.WriteLine("Starting Subroutine: " + code);
+                subRoutineStack.Push(userInput);
+                Trace.WriteLine("Starting Subroutine: " + userInput);
             }
             else if (isSubOrClass)
             {
-                if (code.StartsWith("}", StringComparison.OrdinalIgnoreCase))
+                if (userInput.StartsWith("}", StringComparison.OrdinalIgnoreCase))
                 {
-                    subData.Push(code);
-                    Trace.WriteLine("Ending Subroutine: " + code);
+                    subRoutineStack.Push(userInput);
+                    Trace.WriteLine("Ending Subroutine: " + userInput);
                     ExecuteSub();
                     isSubOrClass = false;
                 }
                 else
                 {
-                    Trace.WriteLine("Reading Subroutine: " + code);
-                    subData.Push(code);
+                    Trace.WriteLine("Reading Subroutine: " + userInput);
+                    subRoutineStack.Push(userInput);
                 }
             }
             else
             {
-                //if (code.StartsWith("var"))
-                //{
-                    dataStart += code;
-                    code = "";
-                //}
-
-                subData.Push(code);
+                startData += userInput;
+                subRoutineStack.Push(userInput);
                 ExecuteLine();
             }
         }
@@ -149,11 +154,9 @@ namespace Juka
         {
             Table table = new();
 
-            // Add some columns
             table.AddColumn("Command");
             table.AddColumn(new TableColumn("Description"));
 
-            // Add some rows
             table.AddRow("!menu", "[yellow]Displays this menu[/]");
             table.AddRow("!clear", "[green]Clears the REPL[/]");
             table.AddRow("!list", "[red]Lists the current code[/]");
@@ -162,8 +165,8 @@ namespace Juka
             table.AddRow("!redo", "[red]Redoes the undone command[/]");
             table.AddRow("!update", "[yellow]Update Juka to latest version[/]");
             table.AddRow("!restart", "[fuchsia]Restart application[/]");
-            
             table.AddRow("!exit", "[yellow]Exits REPL[/]");
+
             AnsiConsole.Write(table);
             DisplayPrompt();
         }
@@ -173,15 +176,18 @@ namespace Juka
             Console.Clear();
             compiler = new Compiler();
             isSubOrClass = false;
-            subData.Clear();
-            dataStart = "sub main() = {";
-            dataEnd = "}";
+            subRoutineStack.Clear();
+            startData = @"sub main() = {
+                        ";
+            endData = @"
+                        }";
             DisplayPrompt();
         }
 
+
         private static void ListCode()
         {
-            foreach (string? data in subData.Reverse())
+            foreach (string? data in subRoutineStack.Reverse())
             {
                 Console.WriteLine(data);
             }
@@ -197,7 +203,7 @@ namespace Juka
 
         private static void UndoLastCommand()
         {
-            string templine = subData.Pop();
+            string templine = subRoutineStack.Pop();
             redoStack.Push(templine);
             AnsiConsole.MarkupLine("[bold red]Removed: [/]" + templine);
             DisplayPrompt();
@@ -206,7 +212,7 @@ namespace Juka
         private static void RedoLastCommand()
         {
             string templine = redoStack.Pop();
-            subData.Push(templine);
+            subRoutineStack.Push(templine);
             AnsiConsole.MarkupLine("[bold green]Added: [/]" + templine);
             DisplayPrompt();
         }
@@ -217,11 +223,11 @@ namespace Juka
             DisplayPrompt();
         }
 
-        private static void RestartApplication()
+        private static async void RestartApplication()
         {
-            IDictionary<string, string> info = SelfUpdate.Info();
+            IDictionary<string, string> info = SelfUpdate.GetSystemInfo();
             string jukaexepath = info["dir"] + info["name"] + info["extension"];
-            SelfUpdate.Restart(jukaexepath);
+            await SelfUpdate.Restart(jukaexepath);
         }
 
         private static void ExitRepl()
@@ -232,20 +238,20 @@ namespace Juka
         private static void ExecuteSub()
         {
             StringBuilder userDataToExecute = new();
-            foreach (string item in subData.Reverse())
+            foreach (string item in subRoutineStack.Reverse())
             {
                 userDataToExecute.Append(item);
             }
 
-            subData = new Stack<string>();
+            subRoutineStack = new Stack<string>();
 
-            dataEnd += userDataToExecute.ToString();
+            endData += userDataToExecute.ToString();
             DisplayPrompt();
         }
 
         private static void ExecuteLine()
         {
-            string codeToExecute = dataStart + subData.Peek() + dataEnd;
+            string codeToExecute = startData + endData;
 
             Trace.WriteLine(codeToExecute);
             string output = "Something went wrong! Please restart the application";
@@ -257,7 +263,7 @@ namespace Juka
                     //Console.WriteLine(codeToExecute);
                     compiler = new Compiler(); // Clear OLD params -- In future, we don't need to do this
                     DebugMe.DebugMode = 1;
-                    output = compiler.Go(codeToExecute, isFile: false);
+                    output = compiler.CompileJukaCode(codeToExecute, isFile: false);
                 }
                 catch (Exception e)
                 {

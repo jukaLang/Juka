@@ -40,19 +40,27 @@ namespace JukaCompiler.Interpreter
 
         internal void Assign(Lexeme? name, object? value)
         {
-            string nameAsString = name?.ToString() ?? throw new JRuntimeException("unable to get variable name: " + name);
+            string nameAsString = name?.ToString();
+
+            //?? throw new JRuntimeException("unable to get variable name: " + name)
+
+            if (enclosing != null)
+            {
+                enclosing.Assign(name, value);
+                return;
+            }
 
             if (values.ContainsKey(nameAsString))
             {
                 values[name.ToString()] = value;
                 return;
             }
-
-            if (enclosing !=null)
+            else
             {
-                enclosing.Assign(name, value);
+                values[name.ToString()] = value;
                 return;
             }
+            
 
             throw new ArgumentException("JukaEnvironment.Assign() has an undefined variable ('" + name + "') undefined variable");
         }

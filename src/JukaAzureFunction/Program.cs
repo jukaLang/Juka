@@ -5,6 +5,9 @@ namespace JukaAzureFunction;
 
 public class Program
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static void Main()
     {
         IHost host = new HostBuilder()

@@ -2,7 +2,6 @@
 using JukaCompiler.Interpreter;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
-using System.Collections.Generic;
 
 namespace JukaCompiler.SystemCalls
 {
@@ -28,17 +27,17 @@ namespace JukaCompiler.SystemCalls
 
     internal class JukaSystemCalls : IJukaCallable
     {
-        public static Dictionary<string, Type> CallableTypes = new()
-        {
-            {"FileOpen", typeof(IFileOpen)},
-            {"CSharp", typeof(ICSharp)},
-        };
+        private static Dictionary<string, Type> _callableTypes = new()
+    {
+        {"FileOpen", typeof(IFileOpener)},
+        {"CSharp", typeof(ICSharp)},
+    };
 
         public int Arity() => throw new NotImplementedException();
 
         public object? Call(string methodName, JukaInterpreter interpreter, List<object?> arguments)
         {
-            if (CallableTypes.TryGetValue(methodName, out var callableType))
+            if (_callableTypes.TryGetValue(methodName, out var callableType))
             {
                 IJukaCallable? jukaCallable = interpreter.ServiceProvider.GetService(callableType) as IJukaCallable;
                 return jukaCallable?.Call(methodName, interpreter, arguments);
@@ -48,7 +47,7 @@ namespace JukaCompiler.SystemCalls
         }
     }
 
-    internal class FileOpen : IFileOpen, IJukaCallable
+    internal class FileOpen : IFileOpener, IJukaCallable
     {
         public int Arity() => 1;
 

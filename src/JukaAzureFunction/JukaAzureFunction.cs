@@ -52,14 +52,14 @@ public class JukaAzureFunction
 
         JukaCompiler.Compiler compiler = new();
 
-        var outputValue = compiler.Go(code, false);
+        string outputValue = compiler.CompileJukaCode(code, false);
 
-        if (compiler.HasErrors())
+        if (compiler.CheckForErrors())
         {
 
             HttpResponseData response2 = req.CreateResponse(HttpStatusCode.OK);
             response2.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-            var errors = string.Join(Environment.NewLine, compiler.ListErrors());
+            string errors = string.Join(Environment.NewLine, compiler.GetErrorList());
             response2.WriteString(JsonConvert.SerializeObject(new { errors, original = code }));
             return response2;
         }

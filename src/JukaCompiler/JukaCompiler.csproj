@@ -12,7 +12,7 @@
 	  <RepositoryUrl>https://github.com/jukaLang/juka</RepositoryUrl>
 	  <PackageProjectUrl>https://jukalang.com</PackageProjectUrl>
 	  <PackageIcon>logo.png</PackageIcon>
-	  <Copyright>Juka 2022</Copyright>
+	  <Copyright>Juka 2024</Copyright>
 	  <RepositoryTpe>git</RepositoryTpe>
 	  <Authors>JukaLang</Authors>
   </PropertyGroup>

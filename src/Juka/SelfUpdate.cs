@@ -5,46 +5,62 @@ using System.Runtime.InteropServices;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
 using System.Text;
+using System.Diagnostics;
 
 namespace Juka;
 
+/// <summary>
+/// Class responsible for updating the Juka programming language.
+/// </summary>
 class SelfUpdate
 {
-    private static string? CurrentVersion = Juka.CurrentVersion.Get();
+    private static string? _currentVersion = Juka.CurrentVersion.GetVersion();
+
+
+    /// <summary>
+    /// Check for updates for Juka Programming Language
+    /// </summary>
+    /// <returns>An async Task with a string representing the latest version if an update is available, otherwise an empty string</returns>
+
     public static async Task<string> Check()
     {
-        if (CurrentVersion == "DEBUG")
+        if (_currentVersion == "DEBUG")
         {
             AnsiConsole.MarkupLine("[yellow]You seem to be using a DEBUG version of Juka. Can't update a debug version![/]");
             return "";
         }
+
         AnsiConsole.MarkupLine("[bold yellow]Checking for updates for Juka Programming Language...[/]");
-        AnsiConsole.MarkupLine($"[bold red]Current Version:[/] [red]{CurrentVersion}[/]");
+        AnsiConsole.MarkupLine($"[bold red]Current Version:[/] [red]{_currentVersion}[/]");
 
         try
         {
-
             HttpClient? client = new()
             {
                 BaseAddress = null,
                 DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrLower
             };
+
+            // Set up request headers
             client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(
-                new("application/json"));
-            //Do not use this header as GitHub might disable access to the api
-            //client.DefaultRequestHeaders.Add("User-Agent", "Juka HTTPClient");
+            client.DefaultRequestHeaders.Accept.Add(new("application/json"));
             client.DefaultRequestHeaders.Add("User-Agent", "Juka HTTPClient");
+
+            // Make API request to get latest version
             HttpResponseMessage? response = await client.GetAsync("https://api.github.com/repos/JukaLang/juka/releases/latest");
             response.EnsureSuccessStatusCode();
             string? responseBody = await response.Content.ReadAsStringAsync();
             string? latestVersion = (string?)JObject.Parse(responseBody).SelectToken("tag_name") ?? "";
+
             AnsiConsole.MarkupLine($"[bold blue]Latest Version: {latestVersion}[/]");
-            if (string.Compare(CurrentVersion, latestVersion, StringComparison.Ordinal) < 0)
+
+            // Check if update is needed
+            if (string.Compare(_currentVersion, latestVersion, StringComparison.Ordinal) < 0)
             {
                 AnsiConsole.MarkupLine("[red]New version of Juka is available! Please update![/]");
                 return latestVersion;
             }
+
             AnsiConsole.MarkupLine("[green]You are using the latest version![/] No need to update!");
             return "";
         }
@@ -55,11 +71,18 @@ class SelfUpdate
         return "";
     }
 
-    public static Dictionary<string,string> Info()
-    {
-        string? architecture = RuntimeInformation.ProcessArchitecture.ToString();
+    /// <summary>
+    /// Get system information
+    /// </summary>
+    /// <returns>A dictionary containing system information such as platform, directory, architecture, name, and extension</returns>
 
+    public static Dictionary<string, string> GetSystemInfo()
+    {
+        // Get system information
+        string? architecture = RuntimeInformation.ProcessArchitecture.ToString();
         PlatformID? pid = Environment.OSVersion.Platform;
+
+        // Map platform to user-friendly names
         string? platform = pid switch
         {
             PlatformID.Win32NT => "Windows",
@@ -72,37 +95,40 @@ class SelfUpdate
             PlatformID.Other => "Linux",
             _ => "Linux"
         };
+
         string? dir = AppDomain.CurrentDomain.BaseDirectory;
         string? name = typeof(SelfUpdate).Assembly.GetName().Name ?? "";
 
-        string? extension = "";
-        if (platform == "Windows")
-        {
-            extension = ".exe";
-        }
+        string? extension = platform == "Windows" ? ".exe" : "";
 
+        // Display system information
         AnsiConsole.MarkupLine($"[bold blue]Your Operating System:[/] [green]{platform}[/]");
         AnsiConsole.MarkupLine($"[bold blue]Current Directory:[/] [green]{dir}[/]");
         AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Architecture:[/] [green]{architecture}[/]");
         AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Name:[/] [green]{name}[/]");
         AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Extension:[/] [green]{extension}[/]");
+
         return new Dictionary<string, string>
         {
             { "platform", platform },
             { "dir", dir },
             { "architecture", architecture },
-            {"name", name},
+            { "name", name },
             { "extension", extension }
         };
     }
 
+    /// <summary>
+    /// Update the Juka Programming Language to the latest version
+    /// </summary>
+    /// <returns>An async Task</returns>
     public static async Task Update()
     {
         string? latestVersion = await Check();
 
         if (latestVersion != "")
         {
-            IDictionary<string, string>? info = Info();
+            IDictionary<string, string>? info = GetSystemInfo();
 
             try
             {
@@ -180,7 +206,7 @@ class SelfUpdate
 
                         AnsiConsole.MarkupLine("[green]Updated to version: " + latestVersion + "[/]");
 
-                        Restart(jukaExePath);
+                        await Restart(jukaExePath);
                     }
                     catch (Exception ex)
                     {
@@ -203,12 +229,29 @@ class SelfUpdate
             }
         }
     }
-    public static void Restart(string jukaExePath)
+    public static async Task Restart(string jukaExePath)
     {
-        //Start process, friendly name is something like MyApp.exe (from current bin directory)
-        System.Diagnostics.Process.Start(jukaExePath);
+        try
+        {
+            // Perform any cleanup or resource releasing before restarting
+            // Example: Save user data, close connections, etc.
 
-        //Close the current process
-        Environment.Exit(0);
+            ProcessStartInfo startInfo = new()
+            {
+                FileName = jukaExePath,
+                UseShellExecute = true
+            };
+
+            Process newProcess = Process.Start(startInfo);
+
+            // Close the current process gracefully
+            await Task.Delay(1000); // Delay to ensure the new process starts
+            Environment.Exit(0);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error occurred during restart: {ex.Message}");
+            // Log the exception for troubleshooting
+        }
     }
 }

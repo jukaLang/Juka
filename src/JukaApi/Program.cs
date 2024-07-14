@@ -74,11 +74,11 @@ static IResult ExecuteCode(string code)
 {
     JukaCompiler.Compiler compiler = new();
     string decoded = Uri.UnescapeDataString(code);
-    string outputValue = compiler.Go(decoded, isFile: false);
+    string outputValue = compiler.CompileJukaCode(decoded, isFile: false);
 
-    if (compiler.HasErrors())
+    if (compiler.CheckForErrors())
     {
-        string errors = string.Join(Environment.NewLine, compiler.ListErrors());
+        string errors = string.Join(Environment.NewLine, compiler.GetErrorList());
         return Results.Ok(new { errors, original = decoded });
     }
 

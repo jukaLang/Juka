@@ -49,19 +49,18 @@ namespace JukaCompiler.Scan
             {"printLine", LexemeType.Types.PRINTLINE}
         };
 
-        internal Scanner(string data, IServiceProvider serviceProvider, bool isFile = true)
+        internal Scanner(string data, ServiceProvider serviceProvider, bool isFile = true)
         {
-            //this.compilerError = serviceProvider.GetRequiredService<ICompilerError>();
             if (isFile)
             {
                 if (string.IsNullOrEmpty(data))
                 {
-                    throw new ArgumentNullException("The path is null"+data);
+                    throw new ArgumentNullException("The path is null: " + data);
                 }
 
                 if (!File.Exists(data))
                 {
-                    throw new FileLoadException("Unable to find file " + data);
+                    throw new FileLoadException("Unable to find file: " + data);
                 }
 
                 fileData = File.ReadAllBytes(data);
@@ -73,7 +72,7 @@ namespace JukaCompiler.Scan
 
         internal List<Lexeme?> Scan()
         {
-            while(!IsEof())
+            while (!IsEndOfFile())
             {
                 start = current;
                 ReadToken();
@@ -82,14 +81,14 @@ namespace JukaCompiler.Scan
             return lexemes;
         }
 
-        internal bool IsEof()
+        private bool IsEndOfFile()
         {
-            if (current == fileData.Length)
-            {
-                return true;
-            }
+            return current == fileData.Length;
+        }
 
-            return false;
+        private bool IsNumberChar(char c)
+        {
+            return char.IsDigit(c) || c == '.';
         }
 
 
@@ -161,7 +160,7 @@ namespace JukaCompiler.Scan
                     case '/':
                         if (Peek() == '/')
                         {
-                            while (Peek() != '\n' && !IsEof())
+                            while (Peek() != '\n' && !IsEndOfFile())
                             {
                                 Advance();
                             }
@@ -175,7 +174,7 @@ namespace JukaCompiler.Scan
                                     Advance();
                                     break;
                                 }
-                                if (IsEof())
+                                if (IsEndOfFile())
                                 {
                                     throw new Exception("Comment is not closed");
                                 }
@@ -224,24 +223,21 @@ namespace JukaCompiler.Scan
                             break;
                         }
 
-
-                    /*
                     case '!':
-                        { 
-                            if (Match('='))
-                            { 
-                                kind = LexemeType.Types.BANG_EQUAL;
-                                break;
+                        {
+                            if (Peek() == '=')
+                            {
+                                AddSymbol(t, LexemeType.Types.BANG_EQUAL);
                             }
-
-                            kind = LexemeType.Types.BANG;
-                            break;
+                            else
+                            {
+                                AddSymbol(t, LexemeType.Types.BANG);
+                            }
                         }
-                position++;
-                */
+                    break;
                     case '"' : String(); break;
                     default:
-                        //Lox.error(line, "Unexpected character.");
+                        compilerError.AddError(line + "Unexpected character.");
                         break;
                 }
             }
@@ -249,7 +245,7 @@ namespace JukaCompiler.Scan
             IsWhiteSpace();
         }
 
-        internal void AddSymbol(char symbol, LexemeType.Types type)
+        private void AddSymbol(char symbol, LexemeType.Types type)
         {
             Lexeme lex = new Lexeme(type, this.line, this.column);
             lex.AddToken(symbol);
@@ -283,7 +279,7 @@ namespace JukaCompiler.Scan
 
         internal bool IsWhiteSpace()
         {
-            if (IsEof())
+            if (IsEndOfFile())
             {
                 return false;
             }
@@ -337,7 +333,7 @@ namespace JukaCompiler.Scan
 
         private void String()
         {
-            while( Peek() != '"' && !IsEof())
+            while( Peek() != '"' && !IsEndOfFile())
             {
                 if (Peek() == '\n')
                 {
@@ -347,7 +343,7 @@ namespace JukaCompiler.Scan
                 Advance();
             }
 
-            if(IsEof())
+            if(IsEndOfFile())
             {
                 // Log exception;
                 return;
@@ -373,7 +369,7 @@ namespace JukaCompiler.Scan
 
         private char Advance()
         {
-            if (!IsEof())
+            if (!IsEndOfFile())
             {
                 return (char)fileData[current++];
             }
@@ -382,7 +378,7 @@ namespace JukaCompiler.Scan
         }
         internal char Peek()
         {
-            if (!IsEof())
+            if (!IsEndOfFile())
             {
                 return (char)fileData[current]; 
             }

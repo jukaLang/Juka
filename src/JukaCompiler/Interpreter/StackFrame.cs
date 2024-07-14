@@ -38,7 +38,7 @@ namespace JukaCompiler.Interpreter
             }
         }
 
-        internal object? AddVariable(Stmt.Var variable, JukaInterpreter interpreter)
+        internal object? AddVariable(Statement.Var variable, JukaInterpreter interpreter)
         {
             if (variable.exprInitializer != null)
             {

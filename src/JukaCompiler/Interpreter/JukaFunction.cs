@@ -5,11 +5,11 @@ namespace JukaCompiler.Interpreter
 {
     internal class JukaFunction : IJukaCallable
     {
-        private Stmt.Function declaration;
+        private Statement.Function declaration;
         private JukaEnvironment closure;
         private bool isInitializer;
 
-        internal JukaFunction(Stmt.Function declaration, JukaEnvironment closure, bool isInitializer)
+        internal JukaFunction(Statement.Function declaration, JukaEnvironment closure, bool isInitializer)
         {
             this.isInitializer = isInitializer;
             this.declaration = declaration;
@@ -32,7 +32,7 @@ namespace JukaCompiler.Interpreter
             throw new JRuntimeException("Unable to bind");
         }
 
-        internal Stmt.Function? Declaration => declaration;
+        internal Statement.Function? Declaration => declaration;
 
         internal JukaEnvironment? Closure => closure;
 
@@ -57,7 +57,7 @@ namespace JukaCompiler.Interpreter
                 {
                     for (int i = 0; i < declaration.Params.Count; i++)
                     {
-                        var parameterNameExpressionLexeme = declaration.Params[i].parameterName.ExpressionLexeme;
+                        Lexer.Lexeme? parameterNameExpressionLexeme = declaration.Params[i].parameterName.ExpressionLexeme;
                         if (parameterNameExpressionLexeme != null)
                         {
                             string name = parameterNameExpressionLexeme.ToString();
@@ -76,7 +76,7 @@ namespace JukaCompiler.Interpreter
                 {
                     if (declaration?.body != null)
                     {
-                        var body = declaration?.body!;
+                        List<Statement> body = declaration?.body!;
                         interpreter.ExecuteBlock(body, environment);
                     }
                 }
