@@ -10,7 +10,7 @@ using static JukaCompiler.Expressions.Expr;
 
 namespace JukaCompiler.Interpreter
 {
-    internal class JukaInterpreter : Stmt.IVisitor<Stmt>, Expr.IVisitor<object>
+    internal class JukaInterpreter : Statement.IVisitor<Statement>, Expr.IVisitor<object>
     {
         private ServiceProvider serviceProvider;
         private JukaEnvironment globals;
@@ -31,11 +31,11 @@ namespace JukaCompiler.Interpreter
             }
             globals.Define("csharp", serviceProvider.GetService<ICSharp>());
             globals.Define("clock", serviceProvider.GetService<ISystemClock>());
-            globals.Define("fileOpen", services.GetService<IFileOpen>());
+            globals.Define("fileOpen", services.GetService<IFileOpener>());
             globals.Define("getAvailableMemory", services.GetService<IGetAvailableMemory>());
         }
 
-        internal void Interpret(List<Stmt> statements)
+        internal void Interpret(List<Statement> statements)
         {
             // populate the env with the function call locations
             // only functions are populated in the env
@@ -43,9 +43,9 @@ namespace JukaCompiler.Interpreter
             // no local variables.
             frames.Clear();
             frames.Push(new(globalScope));
-            foreach (Stmt stmt in statements)
+            foreach (Statement stmt in statements)
             {
-                if (stmt is Stmt.Function || stmt is Stmt.Class)
+                if (stmt is Statement.Function || stmt is Statement.Class)
                 {
                     Execute(stmt);
                 }
@@ -55,23 +55,23 @@ namespace JukaCompiler.Interpreter
             lexeme.AddToken("main");
             Expr.Variable functionName = new(lexeme);
             Expr.Call call = new(functionName, false, new());
-            Stmt.Expression expression = new(call);
+            Statement.Expression expression = new(call);
             Execute(expression);
         }
 
-        private void Execute(Stmt stmt)
+        private void Execute(Statement stmt)
         {
             stmt.Accept(this);
         }
 
-        internal void ExecuteBlock(List<Stmt> statements, JukaEnvironment env)
+        internal void ExecuteBlock(List<Statement> statements, JukaEnvironment env)
         {
             JukaEnvironment previous = this.environment;
 
             try
             {
                 this.environment = env;
-                foreach (Stmt statement in statements)
+                foreach (Statement statement in statements)
                 {
                     Execute(statement);
                 }
@@ -85,19 +85,19 @@ namespace JukaCompiler.Interpreter
                 this.environment = previous;
             }
         }
-        Stmt Stmt.IVisitor<Stmt>.VisitBlockStmt(Stmt.Block stmt)
+        Statement Statement.IVisitor<Statement>.VisitBlockStmt(Statement.Block stmt)
         {
             ExecuteBlock(stmt.statements, new(this.environment));
-            return new Stmt.DefaultStatement();
+            return new Statement.DefaultStatement();
         }
 
-        Stmt Stmt.IVisitor<Stmt>.VisitFunctionStmt(Stmt.Function stmt)
+        Statement Statement.IVisitor<Statement>.VisitFunctionStmt(Statement.Function stmt)
         {
             JukaFunction? functionCallable = new(stmt, this.environment, false);
             environment.Define(stmt.StmtLexemeName, functionCallable);
-            return new Stmt.DefaultStatement();
+            return new Statement.DefaultStatement();
         }
-        Stmt Stmt.IVisitor<Stmt>.VisitClassStmt(Stmt.Class stmt)
+        Statement Statement.IVisitor<Statement>.VisitClassStmt(Statement.Class stmt)
         {
             object? superclass = null;
             if (stmt.superClass != null)
@@ -129,18 +129,18 @@ namespace JukaCompiler.Interpreter
             }
 
             environment.Assign(stmt.name, jukaClass);
-            return new Stmt.DefaultStatement();
+            return new Statement.DefaultStatement();
         }
 
-        public Stmt VisitExpressionStmt(Stmt.Expression stmt)
+        public Statement VisitExpressionStmt(Statement.Expression stmt)
         {
             Evaluate(stmt.Expr);
-            return new Stmt.DefaultStatement();
+            return new Statement.DefaultStatement();
         }
 
-        public Stmt VisitIfStmt(Stmt.If stmt)
+        public Statement VisitIfStmt(Statement.If stmt)
         {
-            Stmt.DefaultStatement defaultStatement = new();
+            Statement.DefaultStatement defaultStatement = new();
 
             if (IsTrue(Evaluate(stmt.condition)))
             {
@@ -153,31 +153,41 @@ namespace JukaCompiler.Interpreter
 
             return defaultStatement;
         }
-        public Stmt VisitPrintLine(Stmt.PrintLine stmt)
+        public Statement VisitPrintLine(Statement.PrintLine stmt)
         {
             if (stmt.expr != null)
             {
                 VisitPrintAllInternal(stmt.expr, Console.WriteLine);
             }
 
-            return new Stmt.PrintLine();
+            return new Statement.PrintLine();
         }
-        public Stmt VisitPrint(Stmt.Print stmt)
+        public Statement VisitPrint(Statement.Print stmt)
         {
             if (stmt.expr != null)
             {
                 VisitPrintAllInternal(stmt.expr, Console.Write);
             }
 
-            return new Stmt.Print();
+            return new Statement.Print();
         }
 
 
-        private Stmt.Print VisitPrintAllInternal(Expr expr, Action<object> printAction)
+        private Statement.Print VisitPrintAllInternal(Expr expr, Action<object> printAction)
         {
             if (expr != null)
             {
-                PrintLiteralExpr(expr, printAction);
+                if (expr is Expr.Literal || expr is Expr.LexemeTypeLiteral)
+                {
+                    if (Evaluate(expr) is LexemeTypeLiteral lexemeTypeLiteral)
+                    {
+                        PrintLiteral(lexemeTypeLiteral, printAction);
+                    }
+                }
+
+
+
+
 
                 if (expr is Variable)
                 {
@@ -209,16 +219,6 @@ namespace JukaCompiler.Interpreter
             return new();
         }
 
-        private void PrintLiteralExpr(Expr expr, Action<object> printAction)
-        {
-            if (expr is Expr.Literal || expr is Expr.LexemeTypeLiteral)
-            {
-                if (Evaluate(expr) is LexemeTypeLiteral lexemeTypeLiteral)
-                {
-                    PrintLiteral(lexemeTypeLiteral, printAction);
-                }
-            }
-        }
 
         private void PrintLiteral(Expr.Literal expr, Action<object> printAction)
         {
@@ -285,7 +285,7 @@ namespace JukaCompiler.Interpreter
             return false;
         }
 
-        public Stmt VisitReturnStmt(Stmt.Return stmt)
+        public Statement VisitReturnStmt(Statement.Return stmt)
         {
             object? value = null;
             if (stmt.expr != null)
@@ -296,13 +296,13 @@ namespace JukaCompiler.Interpreter
             throw new Return(value);
         }
 
-        public Stmt VisitBreakStmt(Stmt.Break stmt)
+        public Statement VisitBreakStmt(Statement.Break stmt)
         {
-            Stmt.Return returnStatement = new();
+            Statement.Return returnStatement = new();
             return VisitReturnStmt(returnStatement);
         }
 
-        public Stmt VisitForStmt(Stmt.For stmt)
+        public Statement VisitForStmt(Statement.For stmt)
         {
             stmt.Init.Accept(this);
 
@@ -314,10 +314,10 @@ namespace JukaCompiler.Interpreter
                 breakExpression = Evaluate(stmt.BreakExpr);
             }
 
-            return new Stmt.DefaultStatement();
+            return new Statement.DefaultStatement();
         }
 
-        public Stmt VisitVarStmt(Stmt.Var stmt)
+        public Statement VisitVarStmt(Statement.Var stmt)
         {
             // Hack. If the expr is a method call assignment
             // i.e. var x = foo(); 
@@ -337,9 +337,9 @@ namespace JukaCompiler.Interpreter
             }
 
             environment.Define(stmt.name?.ToString()!, value);
-            return new Stmt.DefaultStatement();
+            return new Statement.DefaultStatement();
         }
-        public Stmt VisitWhileStmt(Stmt.While stmt)
+        public Statement VisitWhileStmt(Statement.While stmt)
         {
             if (frames.Count >= __max_stack_depth__)
             {
@@ -350,7 +350,7 @@ namespace JukaCompiler.Interpreter
                 Execute(stmt.whileBlock);
             }
 
-            return new Stmt.DefaultStatement();
+            return new Statement.DefaultStatement();
         }
         public object VisitLexemeTypeLiteral(Expr.LexemeTypeLiteral expr)
         {
@@ -378,7 +378,7 @@ namespace JukaCompiler.Interpreter
             {
                 if (expr.ExpressionLexeme != null)
                 {
-                    var newVar = new Stmt.Var(expr.ExpressionLexeme, expr);
+                    var newVar = new Statement.Var(expr.ExpressionLexeme, expr);
                     stackFrame.AddVariable(newVar, this);
                 }
             }
@@ -598,7 +598,7 @@ namespace JukaCompiler.Interpreter
                 case Get:
                     {
                         object instanceMethod = expr.callee.Accept(this);
-                        Stmt.Function? declaration = ((JukaFunction)instanceMethod).Declaration;
+                        Statement.Function? declaration = ((JukaFunction)instanceMethod).Declaration;
                         if (declaration != null)
                         {
                             StackFrame instanceStackFrame = new(declaration.StmtLexemeName);
@@ -744,7 +744,7 @@ namespace JukaCompiler.Interpreter
                     };
 
                     stackVariableState.Value = lexemeTypeLiteral;
-                    return new Stmt.DefaultStatement();
+                    return new Statement.DefaultStatement();
                 }
             }
 
@@ -807,7 +807,7 @@ namespace JukaCompiler.Interpreter
 
             stackVariableState.arrayValues[expr.ArrayIndex] = expr.LvalueExpr;
 
-            return new Stmt.DefaultStatement();
+            return new Statement.DefaultStatement();
         }
 
         public object VisitDeleteExpr(DeleteDeclarationExpr expr)
@@ -818,7 +818,7 @@ namespace JukaCompiler.Interpreter
 
             Console.WriteLine(currentFrame);
 
-            return new Stmt.DefaultStatement();
+            return new Statement.DefaultStatement();
         }
 
         internal object? LookUpVariable(Lexeme name, Expr expr)

@@ -11,10 +11,11 @@ public class CurrentVersion
 {
     public static string GetVersion()
     {
-        string version = typeof(CurrentVersion).Assembly.GetName().Version?.ToString() ?? "DEBUG";
+        string debugversion = "DEBUG";
+        string version = typeof(CurrentVersion).Assembly.GetName().Version?.ToString() ?? debugversion;
         if (version == "0.0.0.1")
         {
-            version = "DEBUG";
+            version = debugversion;
         }
         return version;
     }

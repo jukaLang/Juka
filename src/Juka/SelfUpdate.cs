@@ -26,7 +26,7 @@ class SelfUpdate
     {
         if (_currentVersion == "DEBUG")
         {
-            AnsiConsole.MarkupLine("[yellow]You seem to be using a DEBUG version of Juka. Can't update a debug version![/]");
+            AnsiConsole.MarkupLine("[yellow]You seem to be using a DEBUG version of Juka. Can't update a debug version![/]" + " Current Time:" + DateTime.Now.ToString());
             return "";
         }
 
