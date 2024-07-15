@@ -37,7 +37,7 @@ namespace JukaCompiler.SystemCalls
 
         public object? Call(string methodName, JukaInterpreter interpreter, List<object?> arguments)
         {
-            if (_callableTypes.TryGetValue(methodName, out var callableType))
+            if (_callableTypes.TryGetValue(methodName, out Type? callableType))
             {
                 IJukaCallable? jukaCallable = interpreter.ServiceProvider.GetService(callableType) as IJukaCallable;
                 return jukaCallable?.Call(methodName, interpreter, arguments);
@@ -55,7 +55,7 @@ namespace JukaCompiler.SystemCalls
         {
             try
             {
-                foreach (var argument in arguments)
+                foreach (object? argument in arguments)
                 {
                     if (argument is Expr.LexemeTypeLiteral literal)
                     {
@@ -83,7 +83,7 @@ namespace JukaCompiler.SystemCalls
         {
             try
             {
-                foreach (var argument in arguments)
+                foreach (object? argument in arguments)
                 {
                     if (argument is Expr.LexemeTypeLiteral literal)
                     {

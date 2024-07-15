@@ -55,14 +55,6 @@ namespace JukaCompiler
                 Parser parser = new(new Scanner(data, _serviceProvider, isFile), _serviceProvider);
                 List<Statement> statements = parser.Parse();
 
-
-                /*foreach (var array in statements)
-                {
-                    Console.WriteLine(array);
-
-
-                }*/
-
                 return Compile(statements);
             }
             catch (Exception ex)

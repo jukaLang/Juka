@@ -71,7 +71,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitAssignExpr(Expr.Assign expr)
         {
-            var frame = blockScope.Peek() ?? throw new Exception(string.Format(errorMessage, "No stack frames"));
+            string frame = blockScope.Peek() ?? throw new Exception(string.Format(errorMessage, "No stack frames"));
             if (processScope.ContainsKey(frame))
             {
                 BlockScope? value = processScope[frame];
@@ -80,7 +80,7 @@ namespace JukaCompiler.Interpreter
                     string lexemeKey = expr.ExpressionLexeme?.ToString()!;
                     if (value.lexemeScope.ContainsKey(lexemeKey))
                     {
-                        var lexeme = value.lexemeScope[lexemeKey];
+                        Lexeme lexeme = value.lexemeScope[lexemeKey];
                         //value.lexemeScope[expr.ExpressionLexeme.ToString] = expr.
                         //var xx= interpreter.LookUpVariable(lexeme, expr);
                     }
@@ -236,6 +236,7 @@ namespace JukaCompiler.Interpreter
 
         public object VisitLiteralExpr(Expr.Literal expr)
         {
+         
             return new Expr.Literal();
         }
 
@@ -401,7 +402,7 @@ namespace JukaCompiler.Interpreter
         {
             if (blockScope != null && blockScope.Count > 0)
             {
-                var block = blockScope.Peek();
+                string block = blockScope.Peek();
                 if (block.Equals(name.ToString()))
                 {
                     // current context is a function

@@ -63,7 +63,7 @@ namespace JukaCompiler.Interpreter
 
         internal void AddVariable(string name, object? variableValue, Type? variableKind, Expr? expressionContext)
         {
-            var stackVariableState = new StackVariableState
+            StackVariableState stackVariableState = new StackVariableState
             {
                 Name = name,
                 Value = variableValue,

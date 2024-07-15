@@ -134,9 +134,9 @@ namespace JukaCompiler.Statements
                 this.expr = null;
             }
 
-            internal override R Accept<R>(IVisitor<R> vistor)
+            internal override R Accept<R>(IVisitor<R> visitor)
             {
-                return vistor.VisitPrintLine(this);
+                return visitor.VisitPrintLine(this);
             }
         }
         internal class Print : Statement

@@ -64,7 +64,7 @@ namespace Juka
 
 
             // Create the layout
-            var layout = new Layout("Root")
+            Layout layout = new Layout("Root")
                 .SplitColumns(
                     new Layout("Left").SplitRows(
                 new Layout("Logo"),
@@ -74,8 +74,8 @@ namespace Juka
 
 
             layout["Left"].Ratio(2);
-            
-            var archicture = SelfUpdate.GetSystemInfo();
+
+            Dictionary<string, string> archicture = SelfUpdate.GetSystemInfo();
 
 
 
@@ -90,8 +90,8 @@ namespace Juka
     )));
 
 
-            var logotext = new FigletText("Juka").Color(Color.Purple);
-            var logopanel = new Panel(logotext).Expand();
+            FigletText logotext = new FigletText("Juka").Color(Color.Purple);
+            Panel logopanel = new Panel(logotext).Expand();
             logopanel.Padding = new Padding(3, 3, 3, 3);
             logopanel.Expand = true;
             logopanel.Border = BoxBorder.None;
@@ -134,7 +134,7 @@ namespace Juka
                     AnsiConsole.Write(DisplayMenuTable());
                     break;
                 case "!!info":
-                    var archtecture = SelfUpdate.GetSystemInfo();
+                    Dictionary<string, string> archtecture = SelfUpdate.GetSystemInfo();
                     // Display system information
                     AnsiConsole.MarkupLine($"[bold blue]Your Operating System:[/] [green]"+archtecture["platform"]+"[/]");
                     AnsiConsole.MarkupLine($"[bold blue]Current Directory:[/] [green]"+archtecture["dir"]+"[/]");

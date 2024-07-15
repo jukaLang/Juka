@@ -102,6 +102,11 @@ namespace JukaCompiler.Parse
                 return VariableDeclaration();
             }
 
+            if (Match(LexemeType.Types.IDENTIFIER))
+            {
+                return VariableDeclaration();
+            }
+
             return Statement();
         }
 
@@ -154,7 +159,7 @@ namespace JukaCompiler.Parse
         {
             Consume(LexemeType.Types.LEFT_PAREN, Previous());
 
-            var condition = Expr();
+            Expr? condition = Expr();
 
             if (condition == null)
             {
@@ -163,7 +168,7 @@ namespace JukaCompiler.Parse
 
             Consume(LexemeType.Types.RIGHT_PAREN, Previous());
 
-            var thenBlock = Statement();
+            Statement thenBlock = Statement();
             Statement? elseBlock = null;
 
             if (Match(LexemeType.Types.ELSE))
@@ -183,11 +188,11 @@ namespace JukaCompiler.Parse
         {
             Consume(LexemeType.Types.LEFT_PAREN, Previous());
 
-            var condition = Expr();
+            Expr condition = Expr();
 
             Consume(LexemeType.Types.RIGHT_PAREN, Previous());
 
-            var whileBlock = Statement();
+            Statement whileBlock = Statement();
 
             return new Statement.While(condition, whileBlock);
         }
@@ -201,8 +206,8 @@ namespace JukaCompiler.Parse
 
                 Expr.Binary breakCondition = (Expr.Binary)Equality();
                 Consume(LexemeType.Types.SEMICOLON, Previous());
-                
-                var incrementCondition = Unary();
+
+                Expr incrementCondition = Unary();
 
                 Consume(LexemeType.Types.RIGHT_PAREN, Previous());
 
@@ -223,14 +228,14 @@ namespace JukaCompiler.Parse
         private Statement.Break BreakStatement()
         {
             Consume(LexemeType.Types.SEMICOLON, Previous());
-            var expr = Expr();
+            Expr expr = Expr();
             return new Statement.Break(expr);
         }
 
 
         private Statement.Return ReturnStatement()
         {
-            var keyword = Previous();
+            Lexeme keyword = Previous();
             Expr value = null!;
 
             if (!Check(LexemeType.Types.SEMICOLON))
@@ -732,6 +737,7 @@ namespace JukaCompiler.Parse
                     return new Expr.ArrayAccessExpr(identifierName, index);
                 }
 
+                 //return Assignment();
                 return new Expr.Variable(identifierName);
             }
 
@@ -770,13 +776,13 @@ namespace JukaCompiler.Parse
             }
 
 
-            var callableServices = Enum.GetValues(typeof(JukaCompiler.SystemCalls.CallableServices));
+            Array callableServices = Enum.GetValues(typeof(JukaCompiler.SystemCalls.CallableServices));
             bool isCallable = false;
-            foreach(var callableService in callableServices)
+            foreach(object? callableService in callableServices)
             {
                 if (callableService != null)
                 {
-                    var serviceName = callableService.ToString();
+                    string? serviceName = callableService.ToString();
                     if (!string.IsNullOrEmpty(serviceName))
                     {
                         isCallable = serviceName.Equals(callee.ExpressionLexeme?.ToString());

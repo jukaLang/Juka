@@ -436,7 +436,7 @@ namespace JukaCompiler.Expressions
 
             internal object? LiteralValue()
             {
-                if (value == null)
+                if (this.value == null)
                 {
                     throw new ArgumentNullException("literal");
                 }
