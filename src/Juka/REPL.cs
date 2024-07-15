@@ -106,22 +106,8 @@ namespace Juka
 
 
 
-            Table table = new();
 
-            table.AddColumn("Command");
-            table.AddColumn(new TableColumn("Description"));
-
-            table.AddRow("!!menu", "[yellow]Displays this menu[/]");
-            table.AddRow("!!clear", "[green]Clears the REPL[/]");
-            table.AddRow("!!list", "[red]Lists the current code[/]");
-            table.AddRow("!!get", "[aqua]Get list of libraries for Juka[/]");
-            table.AddRow("!!undo", "[blue]Undoes last entered command[/]");
-            table.AddRow("!!redo", "[red]Redoes the undone command[/]");
-            table.AddRow("!!download", "[aqua]Download a file from the web. Requires a url. [/]");
-            table.AddRow("!!update", "[yellow]Update Juka to latest version[/]");
-            table.AddRow("!!restart", "[fuchsia]Restart application. [/]");
-            table.AddRow("!!exit", "[yellow]Exits REPL[/]");
-            layout["Menu"].Update(new Padder(table));
+            layout["Menu"].Update(new Padder(DisplayMenuTable()));
 
 
 
@@ -149,7 +135,7 @@ namespace Juka
             switch (command.Split(' ')[0].ToLower())
             {
                 case "!!menu":
-                    DisplayMenu();
+                    AnsiConsole.Write(DisplayMenuTable());
                     break;
                 case "!!clear":
                     ClearConsole();
@@ -242,7 +228,7 @@ namespace Juka
         }
 
         // Displays the menu with various commands and their descriptions in a table format using AnsiConsole. After displaying the menu, it calls the DisplayPrompt method to show the REPL prompt.
-        private static void DisplayMenu()
+        public static Table DisplayMenuTable()
         {
             Table table = new();
 
@@ -257,11 +243,12 @@ namespace Juka
             table.AddRow("!!redo", "[red]Redoes the undone command[/]");
             table.AddRow("!!download", "[aqua]Download a file from the web. Requires a url. [/]");
             table.AddRow("!!update", "[yellow]Update Juka to latest version[/]");
-            table.AddRow("!!restart", "[fuchsia]Restart application. [/] Options: [/aqua]full[/] or [aqua]normal[/]");
+            table.AddRow("!!restart", "[fuchsia]Restart application. [/]");
             table.AddRow("!!exit", "[yellow]Exits REPL[/]");
-
-            AnsiConsole.Write(table);
+            return table;
         }
+
+
 
         // A method to clear the console, initialize a new compiler, reset the class or subroutine flag, clear the subroutine stack, set the starting data for the main subroutine, set the ending data, and display the prompt.
         private static void ClearConsole()
