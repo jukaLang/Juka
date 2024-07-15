@@ -2,6 +2,7 @@
 using Microsoft.VisualBasic;
 using Spectre.Console;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 
 
@@ -73,9 +74,7 @@ namespace Juka
 
 
             layout["Left"].Ratio(2);
-            //layout["Output"].Ratio(2);
-
-
+            
             var archicture = SelfUpdate.GetSystemInfo();
 
 
@@ -97,26 +96,23 @@ namespace Juka
             logopanel.Expand = true;
             logopanel.Border = BoxBorder.None;
             logopanel.Header = new PanelHeader("Juka Version: "+CurrentVersion.GetVersion()+" ");
-            layout["Logo"].Update(new Padder(logopanel).PadTop(1));
+
+            int paddingtop = 3;
+            if (CurrentVersion.GetVersion() == "DEBUG")
+            {
+                paddingtop = 2;
+            }
 
 
 
+            layout["Logo"].Update(new Padder(logopanel).PadTop(paddingtop));
+            layout["Menu"].Update(new Padder(DisplayMenuTable()).PadTop(paddingtop));
 
 
-
-
-
-
-            layout["Menu"].Update(new Padder(DisplayMenuTable()));
-
-
-
-            //layout["Logo"].Size(2);
-
-            // Render the layout
 
 
             AnsiConsole.Write(layout);
+            await SelfUpdate.Check();
 
             compiler = new Compiler();
 
@@ -137,6 +133,15 @@ namespace Juka
                 case "!!menu":
                     AnsiConsole.Write(DisplayMenuTable());
                     break;
+                case "!!info":
+                    var archtecture = SelfUpdate.GetSystemInfo();
+                    // Display system information
+                    AnsiConsole.MarkupLine($"[bold blue]Your Operating System:[/] [green]"+archtecture["platform"]+"[/]");
+                    AnsiConsole.MarkupLine($"[bold blue]Current Directory:[/] [green]"+archtecture["dir"]+"[/]");
+                    AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Architecture:[/] [green]"+archtecture["architecture"]+"[/]");
+                    AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Name:[/] [green]" + archtecture["name"] +"[/]");
+                    AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Extension:[/] [green]"+archtecture["extension"]+"[/]");
+                    break;
                 case "!!clear":
                     ClearConsole();
                     break;
@@ -153,14 +158,30 @@ namespace Juka
                     RedoLastCommand();
                     break;
                 case "!!update":
-                    await UpdateJuka();
+                    string[] updateType = command.Split(' ');
+                    if (updateType.Length > 1)
+                    {
+                        string restartType = updateType[1];
+                        if (restartType == "-force")
+                        {
+                            await UpdateJuka("force");
+                        }
+                        else
+                        {
+                            await UpdateJuka();
+                        }
+                    }
+                    else
+                    {
+                        await UpdateJuka();
+                    }
                     break;
                 case "!!restart":
                     string[] restartTypes = command.Split(' ');
                     if (restartTypes.Length > 1)
                     {
                         string restartType = restartTypes[1];
-                        if (restartType == "full")
+                        if (restartType == "-full")
                         {
                             RestartApplication("full");
                         }
@@ -236,15 +257,16 @@ namespace Juka
             table.AddColumn(new TableColumn("Description"));
 
             table.AddRow("!!menu", "[yellow]Displays this menu[/]");
+            table.AddRow("!!info", "[deeppink3]Lists system information[/]");
             table.AddRow("!!clear", "[green]Clears the REPL[/]");
             table.AddRow("!!list", "[red]Lists the current code[/]");
             table.AddRow("!!get", "[aqua]Get list of libraries for Juka[/]");
             table.AddRow("!!undo", "[blue]Undoes last entered command[/]");
-            table.AddRow("!!redo", "[red]Redoes the undone command[/]");
-            table.AddRow("!!download", "[aqua]Download a file from the web. Requires a url. [/]");
-            table.AddRow("!!update", "[yellow]Update Juka to latest version[/]");
-            table.AddRow("!!restart", "[fuchsia]Restart application. [/]");
-            table.AddRow("!!exit", "[yellow]Exits REPL[/]");
+            table.AddRow("!!redo", "[darkorange3_1]Redoes the undone command[/]");
+            table.AddRow("!!download", "[aqua]Download a file from the web. Requires a url. [/] ");
+            table.AddRow("!!update", "[navajowhite1]Update Juka to latest version[/] Flags: -force");
+            table.AddRow("!!restart", "[fuchsia]Restart application. [/] Flags: -full or -normal");
+            table.AddRow("!!exit", "[mistyrose3]Exits REPL[/]");
             return table;
         }
 
@@ -297,9 +319,9 @@ namespace Juka
         }
 
         // A method to update Juka asynchronously.
-        private static async Task UpdateJuka()
+        private static async Task UpdateJuka(string update = "normal")
         {
-            await SelfUpdate.Update();
+            await SelfUpdate.Update(update);
         }
 
         // A method to download a file asynchronously from the specified URL and display a message upon completion.

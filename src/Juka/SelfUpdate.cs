@@ -26,12 +26,11 @@ class SelfUpdate
     {
         if (_currentVersion == "DEBUG")
         {
-            AnsiConsole.MarkupLine("[yellow]You seem to be using a DEBUG version of Juka. Can't update a debug version![/]" + " Current Time:" + DateTime.Now.ToString());
-            return "";
+            AnsiConsole.MarkupLine("[yellow]You seem to be using a DEBUG version of Juka. Can't update a debug version![/]" + "[gold3] Current Date/Time:" + DateTime.Now.ToString()+"[/]");
+            return _currentVersion;
         }
 
-        AnsiConsole.MarkupLine("[bold yellow]Checking for updates for Juka Programming Language...[/]");
-        AnsiConsole.MarkupLine($"[bold red]Current Version:[/] [red]{_currentVersion}[/]");
+        AnsiConsole.MarkupLine("[bold yellow]Checking for updates for Juka Programming Language...[/]"+$"[bold red]Current Version:[/] [red]{_currentVersion}[/]");
 
         try
         {
@@ -52,23 +51,22 @@ class SelfUpdate
             string? responseBody = await response.Content.ReadAsStringAsync();
             string? latestVersion = (string?)JObject.Parse(responseBody).SelectToken("tag_name") ?? "";
 
-            AnsiConsole.MarkupLine($"[bold blue]Latest Version: {latestVersion}[/]");
-
             // Check if update is needed
             if (string.Compare(_currentVersion, latestVersion, StringComparison.Ordinal) < 0)
             {
-                AnsiConsole.MarkupLine("[red]New version of Juka is available! Please update![/]");
+                AnsiConsole.MarkupLine("[red]New version of Juka is available! [/]" + $"[bold blue]Latest Version: {latestVersion}[/]");
+                await SelfUpdate.Update();
                 return latestVersion;
             }
 
-            AnsiConsole.MarkupLine("[green]You are using the latest version![/] No need to update!");
-            return "";
+            AnsiConsole.MarkupLine("[green]You are using the latest version: "+latestVersion+"[/]");
+            return latestVersion;
         }
         catch (Exception)
         {
-            AnsiConsole.MarkupLine("[bold yellow]Cannot Update! Can't access the Network![/]");
+            AnsiConsole.MarkupLine("[bold yellow]Cannot Update! Can't access the Network! Using version: "+_currentVersion+"[/]");
         }
-        return "";
+        return _currentVersion;
     }
 
     public static async Task DownloadURLAsync(string url)
@@ -122,12 +120,6 @@ class SelfUpdate
 
         string? extension = platform == "Windows" ? ".exe" : "";
 
-        // Display system information
-        //AnsiConsole.MarkupLine($"[bold blue]Your Operating System:[/] [green]{platform}[/]");
-        //AnsiConsole.MarkupLine($"[bold blue]Current Directory:[/] [green]{dir}[/]");
-        //AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Architecture:[/] [green]{architecture}[/]");
-        //AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Name:[/] [green]{name}[/]");
-        //AnsiConsole.MarkupLine($"[bold blue]Your Juka Assembly Extension:[/] [green]{extension}[/]");
 
         return new Dictionary<string, string>
         {
@@ -143,12 +135,33 @@ class SelfUpdate
     /// Update the Juka Programming Language to the latest version
     /// </summary>
     /// <returns>An async Task</returns>
-    public static async Task Update()
+    public static async Task Update(string update = "force")
     {
         string? latestVersion = await Check();
 
-        if (latestVersion != "")
+        if (_currentVersion != latestVersion || update == "force")
         {
+            if (latestVersion == "DEBUG")
+            {
+                HttpClient? client = new()
+                {
+                    BaseAddress = null,
+                    DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrLower
+                };
+
+                // Set up request headers
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new("application/json"));
+                client.DefaultRequestHeaders.Add("User-Agent", "Juka HTTPClient");
+
+                // Make API request to get latest version
+                HttpResponseMessage? response = await client.GetAsync("https://api.github.com/repos/JukaLang/juka/releases/latest");
+                response.EnsureSuccessStatusCode();
+                string? responseBody = await response.Content.ReadAsStringAsync();
+                latestVersion = (string?)JObject.Parse(responseBody).SelectToken("tag_name") ?? "";
+            }
+
+
             IDictionary<string, string>? info = GetSystemInfo();
 
             try
