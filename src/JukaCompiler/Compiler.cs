@@ -56,12 +56,12 @@ namespace JukaCompiler
                 List<Statement> statements = parser.Parse();
 
 
-                foreach (var array in statements)
+                /*foreach (var array in statements)
                 {
                     Console.WriteLine(array);
 
 
-                }
+                }*/
 
                 return Compile(statements);
             }

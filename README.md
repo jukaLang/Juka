@@ -30,13 +30,16 @@ Build Status: [![Cirrus CI - Base Branch Build Status](https://img.shields.io/ci
 
 ## 🤝 Support Us
 
-We accept donations via Bitcoin and Ethereum:
+We accept donations via Bitcoin, Ethereum, and Patreon:
 
 - **Bitcoin Address:**
   3MqJ2pwcuqh2W5mUPZUcKMVzxgTKcjD8ET
 
 - **Ethereum (Ethereum Network) Address:**
   0xB56F6aff7a84935E5AF9D93b6d7db0e4F4F26B39
+
+- **Patreon:**
+  [patreon.com/JukaLang](https://www.patreon.com/JukaLang)
 
 ## 💭 Introduction
 
@@ -168,13 +171,13 @@ Once you install Juka via NuGet: Install-Package JukaCompiler
 You can pass your code as a string to Juka:
 
 ```jsx
-new JukaCompiler.Compiler().Go(codeAsString, (isFile: false));
+new JukaCompiler.Compiler().JukaCompile(codeAsString, (isFile: false));
 ```
 
 If you want to pass a filename instead of a string, you can run the following command
 
 ```jsx
-new JukaCompiler.Compiler().Go(fileName, (isFile: true));
+new JukaCompiler.Compiler().JukaCompile(fileName, (isFile: true));
 ```
 
 We welcome any contribution! Thank you so much for checking out Juka!

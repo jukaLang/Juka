@@ -72,7 +72,7 @@ namespace Juka
 
 
 
-            //layout["Left"].Ratio(2);
+            layout["Left"].Ratio(2);
             //layout["Output"].Ratio(2);
 
 
@@ -81,21 +81,27 @@ namespace Juka
 
 
 
+            layout["Output"].Update(new Padder(new Markup("[bold yellow]Hello[/] and [bold red]Welcome to 🍲 Juka Programming Language![/] For info visit [link blue]https://jukalang.com[/].\n\n" +
+    "[bold blue]Your Operating System:[/] [green]" + archicture["platform"] + "[/]\n" +
+    "[bold blue]Current Directory:[/] [green]" + archicture["dir"] + "[/]\n" +
+    "[bold blue]Your Juka Assembly Architecture:[/] [green]" + archicture["architecture"] + "[/]\n" +
+    "[bold blue]Your Juka Assembly Name:[/] [green]" + archicture["name"] + "[/]\n" +
+    "[bold blue]Your Juka Assembly Extension:[/] [green]" + archicture["extension"] + "[/]\n"
+
+    )));
+
+
             var logotext = new FigletText("Juka").Color(Color.Purple);
-            var logopanel = new Panel(logotext);
+            var logopanel = new Panel(logotext).Expand();
+            logopanel.Padding = new Padding(3, 3, 3, 3);
+            logopanel.Expand = true;
+            logopanel.Border = BoxBorder.None;
             logopanel.Header = new PanelHeader("Juka Version: "+CurrentVersion.GetVersion()+" ");
-            layout["Logo"].Update(logopanel);
+            layout["Logo"].Update(new Padder(logopanel).PadTop(1));
 
 
 
-            layout["Output"].Update(new Markup("[bold yellow]Hello[/] and [bold red]Welcome to 🍲 Juka Programming Language![/] For info visit [link blue]https://jukalang.com[/].\n\n"+
-                "[bold blue]Your Operating System:[/] [green]"+archicture["platform"]+"[/]\n"+
-                "[bold blue]Current Directory:[/] [green]"+archicture["dir"]+"[/]\n"+
-                "[bold blue]Your Juka Assembly Architecture:[/] [green]"+archicture["architecture"]+"[/]\n"+
-                "[bold blue]Your Juka Assembly Name:[/] [green]"+archicture["name"]+"[/]\n"+
-                "[bold blue]Your Juka Assembly Extension:[/] [green]"+archicture["extension"]+"[/]\n"               
-                
-                ));
+
 
 
 
@@ -115,8 +121,11 @@ namespace Juka
             table.AddRow("!!update", "[yellow]Update Juka to latest version[/]");
             table.AddRow("!!restart", "[fuchsia]Restart application. [/]");
             table.AddRow("!!exit", "[yellow]Exits REPL[/]");
-            layout["Menu"].Update(table);
+            layout["Menu"].Update(new Padder(table));
 
+
+
+            //layout["Logo"].Size(2);
 
             // Render the layout
 
@@ -188,7 +197,7 @@ namespace Juka
                     }
                     else
                     {
-                        Console.WriteLine("Invalid command format. Usage: !download [url]");
+                        Console.WriteLine("Invalid command format. Usage: !!download [url]");
                     }
                     break;
                 case "!!exit":
@@ -362,6 +371,7 @@ namespace Juka
                 }
                 catch (Exception e)
                 {
+                    AnsiConsole.WriteException(e);
                     Trace.WriteLine(e);
                 }
             });

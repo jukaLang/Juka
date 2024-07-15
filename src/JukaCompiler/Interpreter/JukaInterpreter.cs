@@ -185,9 +185,17 @@ namespace JukaCompiler.Interpreter
                     }
                 }
 
+                if(expr is Expr.Binary)
+                {
+                    var binaryEval = Evaluate(expr);
 
-
-
+                    if (binaryEval is Expr.LexemeTypeLiteral lexemeTypeLiteral)
+                    {
+                        var literal = lexemeTypeLiteral.literal;
+                        if (literal != null)
+                            printAction(literal);
+                    }
+                }
 
                 if (expr is Variable)
                 {
@@ -229,10 +237,7 @@ namespace JukaCompiler.Interpreter
         {
             if (expr?.Literal != null)
             {
-                if (expr?.Literal != null)
-                {
-                    printAction(expr?.Literal!);
-                }
+               printAction(expr?.Literal!);
             }
         }
 
@@ -248,7 +253,7 @@ namespace JukaCompiler.Interpreter
                     {
                         if (stackVariable.Value is Expr.LexemeTypeLiteral typeLiteral)
                         {
-                            var o = typeLiteral.literal;
+                            object? o = typeLiteral.literal;
                             if (o != null)
                                 printTypeAction(o);
                         }
@@ -266,7 +271,7 @@ namespace JukaCompiler.Interpreter
 
                     if (variable is Expr.LexemeTypeLiteral lexemeTypeLiteral)
                     {
-                        var literal = lexemeTypeLiteral.literal;
+                        object? literal = lexemeTypeLiteral.literal;
                         if (literal != null)
                             printTypeAction(literal);
                     }
@@ -387,7 +392,7 @@ namespace JukaCompiler.Interpreter
             return value;
         }
 
-        private (Literal LiteralValue, LexemeType.Types LiteralType) GetLiteralData(Expr expr)
+        private (string LiteralValue, LexemeType.Types LiteralType) GetLiteralData(Expr expr)
         {
             if (expr is Variable)
             {
@@ -395,26 +400,37 @@ namespace JukaCompiler.Interpreter
 
                 if (stackVariableState?.expressionContext is Literal context)
                 {
-                    var literal = context;
-                    var lexemeType = ((LexemeTypeLiteral)stackVariableState.Value!)!.LexemeType;
+                    Literal literal = context;
+                    LexemeType.Types lexemeType = ((LexemeTypeLiteral)stackVariableState.Value!)!.LexemeType;
 
                     return (
-                        literal,
+                        literal.ExpressionLexeme?.ToString(),
                         lexemeType);
                 }
 
                 if (stackVariableState?.expressionContext is Assign assign)
                 {
-                    var literal = (Literal)assign.value;
-                    var lexemeType = assign.ExpressionLexeme!.LexemeType;
+                    Literal literal = (Literal)assign.value;
+                    LexemeType.Types lexemeType = assign.ExpressionLexeme!.LexemeType;
 
                     return (
-                        literal,
+                        literal.ExpressionLexeme?.ToString(),
                         lexemeType);
                 }
             }
 
-            if (expr is Literal expr1) return (expr1, expr1.Type);
+            if (expr is Expr.Binary binary)
+            {
+                Expr.LexemeTypeLiteral visited = (Expr.LexemeTypeLiteral)VisitBinaryExpr(binary);
+
+
+                var x = 1;
+                return (visited.literal.ToString(), visited.LexemeType);
+
+
+
+            }
+            if (expr is Literal expr1) return (expr1.ExpressionLexeme?.ToString(), expr1.Type);
             throw new JRuntimeException("Can't get literal data" + expr);
 
             //return VisitBinaryExpr(expr);
@@ -422,13 +438,17 @@ namespace JukaCompiler.Interpreter
 
         public object VisitBinaryExpr(Expr.Binary expr)
         {
-            var (literalValue, rightValueType) = GetLiteralData(expr.right!);
-            var (literal, leftValueType) = GetLiteralData(expr.left!);
-            object leftValue = literal.ExpressionLexeme?.ToString()!;
+            (string literalValue, LexemeType.Types rightValueType) = GetLiteralData(expr.right);
+            (string literal, LexemeType.Types leftValueType) = GetLiteralData(expr.left);
+            string leftValue = literal;
 
-            object rightValue = literalValue.ExpressionLexeme?.ToString()!;
+            string rightValue = literalValue;
 
-            return expr.op?.ToString() switch
+
+            //Console.WriteLine(leftValue);
+            //Console.WriteLine(rightValue);
+
+            object output = expr.op.ToString() switch
             {
                 "!=" => !IsEqual(leftValue, rightValue),
                 "==" => IsEqual(leftValue, rightValue),
@@ -440,6 +460,10 @@ namespace JukaCompiler.Interpreter
                 "+" => AddTypes(leftValueType, rightValueType, leftValue, rightValue),
                 _ => new Expr.LexemeTypeLiteral()
             };
+
+            //Console.WriteLine(((Expr.LexemeTypeLiteral)output).Literal.ToString());
+
+            return output;
         }
         private static object IsLessThan(LexemeType.Types leftValueType, LexemeType.Types rightValueType, object leftValue, object rightValue)
         {
@@ -816,7 +840,7 @@ namespace JukaCompiler.Interpreter
             var currentFrame = frames.Peek();
             currentFrame.DeleteVariable(expr.variable.ExpressionLexemeName);
 
-            Console.WriteLine(currentFrame);
+            //Console.WriteLine(currentFrame);
 
             return new Statement.DefaultStatement();
         }
