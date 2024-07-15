@@ -54,8 +54,8 @@ class SelfUpdate
             // Check if update is needed
             if (string.Compare(_currentVersion, latestVersion, StringComparison.Ordinal) < 0)
             {
-                AnsiConsole.MarkupLine("[red]New version of Juka is available! [/]" + $"[bold blue]Latest Version: {latestVersion}[/]");
-                await SelfUpdate.Update("force");
+                AnsiConsole.MarkupLine("[red]New version of Juka is available! Type !!update to update to the latest version[/]" + $"[bold blue]Latest Version: {latestVersion}[/]");
+                //await SelfUpdate.Update("force");
                 return latestVersion;
             }
 

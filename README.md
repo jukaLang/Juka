@@ -41,10 +41,6 @@ We accept donations via Bitcoin, Ethereum, and Patreon:
 - **Patreon:**
   [patreon.com/JukaLang](https://www.patreon.com/JukaLang)
 
-## 💭 Introduction
-
-Juka is a portable, easy-to-use, universal programming language that can run on any platform, including mobile devices, IoT devices, and the cloud. Its philosophy is "code once, run everywhere."
-
 ## 💭 About Juka
 
 Juka is a general-purpose language designed to be used in a wide variety of tasks. It's cloud-native, has native support for Jupyter Notebooks, can be run in a web browser, and comes with an easy-to-use package manager. Juka is a community-driven project with a growing community of users and developers.

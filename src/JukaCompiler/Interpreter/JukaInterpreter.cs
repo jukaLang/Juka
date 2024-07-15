@@ -471,7 +471,7 @@ namespace JukaCompiler.Interpreter
             {
                 var literal = new Expr.LexemeTypeLiteral
                 {
-                    literal = Convert.ToInt32(leftValue) < Convert.ToInt32(rightValue),
+                    literal = Convert.ToDouble(leftValue) < Convert.ToDouble(rightValue),
                     lexemeType = LexemeType.Types.BOOL
                 };
                 return literal;
@@ -491,7 +491,7 @@ namespace JukaCompiler.Interpreter
             {
                 var literal = new Expr.LexemeTypeLiteral
                 {
-                    literal = Convert.ToInt32(leftValue) > Convert.ToInt32(rightValue),
+                    literal = Convert.ToDouble(leftValue) > Convert.ToDouble(rightValue),
                     lexemeType = LexemeType.Types.BOOL
                 };
                 return literal;
@@ -511,10 +511,22 @@ namespace JukaCompiler.Interpreter
             {
                 var literalSum = new Expr.LexemeTypeLiteral
                 {
-                    literal = Convert.ToInt32(leftValue) + Convert.ToInt32(rightValue),
+                    literal = Convert.ToDouble(leftValue) + Convert.ToDouble(rightValue),
                     lexemeType = LexemeType.Types.NUMBER
                 };
                 return literalSum;
+            }
+
+
+            if ((leftValueType == LexemeType.Types.NUMBER && rightValueType == LexemeType.Types.STRING) || (leftValueType == LexemeType.Types.STRING && rightValueType == LexemeType.Types.NUMBER))
+            {
+                var literalStringSum = new Expr.LexemeTypeLiteral
+                {
+                    literal = Convert.ToString(leftValue) + Convert.ToString(rightValue),
+                    lexemeType = LexemeType.Types.STRING
+                };
+
+                return literalStringSum;
             }
 
             if (leftValueType == LexemeType.Types.STRING && rightValueType == LexemeType.Types.STRING)
@@ -536,7 +548,7 @@ namespace JukaCompiler.Interpreter
             {
                 var literalSum = new Expr.LexemeTypeLiteral
                 {
-                    literal = Convert.ToInt32(leftValue) - Convert.ToInt32(rightValue),
+                    literal = Convert.ToDouble(leftValue) - Convert.ToDouble(rightValue),
                     lexemeType = LexemeType.Types.NUMBER
                 };
                 return literalSum;
@@ -556,7 +568,7 @@ namespace JukaCompiler.Interpreter
             {
                 var literalProduction = new Expr.LexemeTypeLiteral
                 {
-                    literal = Convert.ToInt32(leftValue) * Convert.ToInt32(rightValue),
+                    literal = Convert.ToDouble(leftValue) * Convert.ToDouble(rightValue),
                     lexemeType = LexemeType.Types.NUMBER
                 };
                 return literalProduction;
@@ -574,14 +586,14 @@ namespace JukaCompiler.Interpreter
             if (leftValueType == LexemeType.Types.NUMBER && rightValueType == LexemeType.Types.NUMBER)
             {
                 var literalProduction = new Expr.LexemeTypeLiteral();
-                int divident = Convert.ToInt32(rightValue);
+                double divident = Convert.ToDouble(rightValue);
 
                 if (divident == 0)
                 {
                     throw new ArgumentException("Can't divide by zero");
 
                 }
-                literalProduction.literal = Convert.ToInt32(leftValue) / Convert.ToInt32(rightValue);
+                literalProduction.literal = Convert.ToDouble(leftValue) / Convert.ToDouble(rightValue);
                 literalProduction.lexemeType = LexemeType.Types.NUMBER;
                 return literalProduction;
             }
