@@ -158,11 +158,11 @@ namespace Juka
                     RedoLastCommand();
                     break;
                 case "!!update":
-                    string[] updateType = command.Split(' ');
-                    if (updateType.Length > 1)
+                    string[] updateTypes = command.Split(' ');
+                    if (updateTypes.Length > 1)
                     {
-                        string restartType = updateType[1];
-                        if (restartType == "-force")
+                        string updateType = updateTypes[1];
+                        if (updateType == "-force")
                         {
                             await UpdateJuka("force");
                         }

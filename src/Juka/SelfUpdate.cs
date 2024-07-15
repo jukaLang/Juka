@@ -55,7 +55,7 @@ class SelfUpdate
             if (string.Compare(_currentVersion, latestVersion, StringComparison.Ordinal) < 0)
             {
                 AnsiConsole.MarkupLine("[red]New version of Juka is available! [/]" + $"[bold blue]Latest Version: {latestVersion}[/]");
-                await SelfUpdate.Update();
+                await SelfUpdate.Update("force");
                 return latestVersion;
             }
 
@@ -135,7 +135,7 @@ class SelfUpdate
     /// Update the Juka Programming Language to the latest version
     /// </summary>
     /// <returns>An async Task</returns>
-    public static async Task Update(string update = "force")
+    public static async Task Update(string update = "normal")
     {
         string? latestVersion = await Check();
 
@@ -291,11 +291,22 @@ class SelfUpdate
         }
         else
         {
-            //Start process, friendly name is something like MyApp.exe (from current bin directory)
-            Process.Start(jukaExePath);
+            try
+            {
+                // Perform any cleanup or resource releasing before restarting
+                // Example: Save user data, close connections, etc.
 
-            //Close the current process
-            Environment.Exit(0);
+                Process.Start(jukaExePath);
+
+                // Close the current process gracefully
+                await Task.Delay(1000); // Delay to ensure the new process starts
+                Environment.Exit(0);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error occurred during restart: {ex.Message}");
+                // Log the exception for troubleshooting
+            }
         }
     }
 }
