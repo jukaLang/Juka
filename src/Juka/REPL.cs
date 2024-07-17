@@ -1,8 +1,6 @@
 ﻿using JukaCompiler;
-using Microsoft.VisualBasic;
 using Spectre.Console;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Text;
 
 
@@ -45,7 +43,7 @@ namespace Juka
             }
         }
 
-       // A method to initialize the REPL environment with specific configurations and setup.
+        // A method to initialize the REPL environment with specific configurations and setup.
         private static async Task InitializeRepl()
         {
             Console.Title = "Juka Programming Language";
@@ -62,9 +60,10 @@ namespace Juka
                         }";
 
 
-
-            // Create the layout
-            Layout layout = new Layout("Root")
+            try
+            {
+                // Create the layout
+                Layout layout = new Layout("Root")
                 .SplitColumns(
                     new Layout("Left").SplitRows(
                 new Layout("Logo"),
@@ -89,29 +88,38 @@ namespace Juka
 
     )));
 
-
-            FigletText logotext = new FigletText("Juka").Color(Color.Purple);
-            Panel logopanel = new Panel(logotext).Expand();
-            logopanel.Padding = new Padding(3, 3, 3, 3);
-            logopanel.Expand = true;
-            logopanel.Border = BoxBorder.None;
-            logopanel.Header = new PanelHeader("Juka Version: "+CurrentVersion.GetVersion()+" ");
-
             int paddingtop = 3;
             if (CurrentVersion.GetVersion() == "DEBUG")
             {
                 paddingtop = 2;
             }
 
-
-
+            
+            FigletText logotext = new FigletText("Juka").Color(Color.Purple);
+            Panel logopanel = new Panel(logotext).Expand();
+            logopanel.Padding = new Padding(3, 3, 3, 3);
+            logopanel.Expand = true;
+            logopanel.Border = BoxBorder.None;
+            logopanel.Header = new PanelHeader("Juka Version: " + CurrentVersion.GetVersion() + " ");
             layout["Logo"].Update(new Padder(logopanel).PadTop(paddingtop));
+         
+
+
+
+
             layout["Menu"].Update(new Padder(DisplayMenuTable()).PadTop(paddingtop));
 
 
 
 
             AnsiConsole.Write(layout);
+             } catch(Exception ex)
+            {
+                Console.WriteLine("Panel Error>>>");
+                Console.WriteLine(ex.ToString());
+                Console.WriteLine("<<<");
+            }
+
             await SelfUpdate.Check();
 
             compiler = new Compiler();
@@ -386,6 +394,38 @@ namespace Juka
             });
 
             Console.WriteLine(output);
+        }
+
+      
+
+        internal static async Task RunSimpleRepl()
+        {
+            Console.WriteLine("Welcome to Juka version " + CurrentVersion.GetVersion() + "! This REPL works with Juka");
+            DisplayPrompt();
+            while (true)
+            {
+                string? readLine = Console.ReadLine();
+                if (string.IsNullOrEmpty(readLine))
+                {
+                    DisplayPrompt();
+                    continue;
+                }
+
+                if (IsCommand(readLine))
+                {
+                    await HandleCommandAsync(readLine);
+                }
+                else
+                {
+                    HandleUserInput(readLine);
+                }
+            }
+        }
+
+        private static void DisplayPrompt()
+        {
+            string prompt = "Juka(" + CurrentVersion.GetVersion() + "){" + DateTime.Now.ToString("HH:mm:ss") + "}> ";
+            Console.WriteLine(prompt);
         }
     }
 }

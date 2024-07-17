@@ -14,7 +14,15 @@ class Program
     {
         if (arguments.Length == 0)
         {
-            await Repl.RunRepl();
+            try
+            {
+                await Repl.RunRepl();
+            }
+            catch (Exception e) //Embedded Device or other error
+            {
+                Console.WriteLine(e.ToString());
+                await Repl.RunSimpleRepl();
+            }
         }
         else
         {
