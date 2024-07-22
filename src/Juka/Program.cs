@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace Juka;
 
 
@@ -14,14 +16,29 @@ class Program
     {
         if (arguments.Length == 0)
         {
+            //Try to RUN GUI Version using SDL2
             try
             {
-                await Repl.RunRepl();
+                if (CurrentVersion.GetVersion() == "DEBUG")
+                {
+                   await SDL2_Gui.Program.GUI(arguments);
+                   await Repl.RunRepl(); 
+                }
+                await SDL2_Gui.Program.GUI(arguments);
             }
-            catch (Exception e) //Embedded Device or other error
+            catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                await Repl.RunSimpleRepl();
+                //Try to run an advanced REPL
+                try
+                {
+                    await Repl.RunRepl();
+                }
+                catch (Exception err) //Embedded Device or other error. Run a very simpel REPL
+                {
+                    Console.WriteLine(err.ToString());
+                    await Repl.RunSimpleRepl();
+                }
             }
         }
         else

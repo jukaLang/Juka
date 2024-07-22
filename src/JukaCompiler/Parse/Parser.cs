@@ -102,10 +102,10 @@ namespace JukaCompiler.Parse
                 return VariableDeclaration();
             }
 
-            if (Match(LexemeType.Types.IDENTIFIER))
+            /*if (Match(LexemeType.Types.IDENTIFIER))
             {
                 return VariableDeclaration();
-            }
+            }*/
 
             return Statement();
         }

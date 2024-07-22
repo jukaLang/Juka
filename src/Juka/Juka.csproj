@@ -14,6 +14,7 @@
     <DebugType>None</DebugType>
     <DebugSymbols>false</DebugSymbols>
     <AssemblyVersion>0.0.0.1</AssemblyVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
