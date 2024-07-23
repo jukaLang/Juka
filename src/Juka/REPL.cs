@@ -157,7 +157,7 @@ namespace Juka
                     ListCode();
                     break;
                 case "!!get":
-                    GetLibraries();
+                    await GetLibraries();
                     break;
                 case "!!undo":
                     UndoLastCommand();
@@ -239,7 +239,8 @@ namespace Juka
                 {
                     subRoutineStack.Push(userInput);
                     Trace.WriteLine("Ending Subroutine: " + userInput);
-                    ExecuteSub();
+                    //ExecuteSub();
+                    ExecuteLine();
                     isSubOrClass = false;
                 }
                 else
@@ -250,7 +251,7 @@ namespace Juka
             }
             else
             {
-                startData += userInput;
+                //startData += userInput;
                 subRoutineStack.Push(userInput);
                 ExecuteLine();
             }
@@ -304,9 +305,11 @@ namespace Juka
         }
 
        // A method to get the list of libraries for Juka.
-        private static void GetLibraries()
+        private static async Task GetLibraries()
         {
             // Implement your logic to get the list of libraries for Juka
+            string librariesList = await Packages.getList();
+            AnsiConsole.MarkupLine(librariesList);
         }
 
         // Undoes the last command by popping a line from the subRoutineStack, pushing it to the redoStack, marking it as removed in the console, and displaying the prompt.
@@ -356,23 +359,22 @@ namespace Juka
 
         // Executes the subroutines present in the subRoutineStack by iterating in reverse order, appending each item to userDataToExecute,
         // resetting the subRoutineStack, updating endData with the concatenated result, and finally displaying the prompt.
-        private static void ExecuteSub()
+        private static string ExecuteSub()
         {
-            StringBuilder userDataToExecute = new();
+            string codeout = "";
+
+            
             foreach (string item in subRoutineStack.Reverse())
             {
-                userDataToExecute.Append(item);
+                codeout += item + "\n";
             }
-
-            subRoutineStack = new Stack<string>();
-
-            endData += userDataToExecute.ToString();
+            return codeout;
         }
 
         // Executes a line of code by compiling and running it, then displays the output.
         private static void ExecuteLine()
         {
-            string codeToExecute = startData + endData;
+            string codeToExecute = startData + ExecuteSub() + endData;
 
             Trace.WriteLine(codeToExecute);
             string output = "Something went wrong! Please restart the application";

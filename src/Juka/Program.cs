@@ -16,30 +16,17 @@ class Program
     {
         if (arguments.Length == 0)
         {
-            //Try to RUN GUI Version using SDL2
+            //Try to run an advanced REPL
             try
             {
-                if (CurrentVersion.GetVersion() == "DEBUG")
-                {
-                   await SDL2_Gui.Program.GUI(arguments);
-                   await Repl.RunRepl(); 
-                }
-                await SDL2_Gui.Program.GUI(arguments);
+                await Repl.RunRepl();
             }
-            catch (Exception e)
+            catch (Exception err) //Embedded Device or other error. Run a very simpel REPL
             {
-                Console.WriteLine(e.ToString());
-                //Try to run an advanced REPL
-                try
-                {
-                    await Repl.RunRepl();
-                }
-                catch (Exception err) //Embedded Device or other error. Run a very simpel REPL
-                {
-                    Console.WriteLine(err.ToString());
-                    await Repl.RunSimpleRepl();
-                }
+                Console.WriteLine(err.ToString());
+                await Repl.RunSimpleRepl();
             }
+
         }
         else
         {
