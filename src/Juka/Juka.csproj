@@ -14,16 +14,28 @@
     <DebugType>None</DebugType>
     <DebugSymbols>false</DebugSymbols>
     <AssemblyVersion>0.0.0.1</AssemblyVersion>
+	<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\jukalogo.png" />
+    <None Remove="Assets\open-sans.ttf" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="..\juka.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Assets\jukalogo.png" />
+    <EmbeddedResource Include="Assets\open-sans.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="Spectre.Console" Version="0.49.1" />
+    <PackageReference Include="Spectre.Console.ImageSharp" Version="0.49.1" />
   </ItemGroup>
 
   <ItemGroup>

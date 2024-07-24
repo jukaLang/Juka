@@ -19,12 +19,21 @@ class Program
             //Try to run an advanced REPL
             try
             {
+                if (CurrentVersion.GetVersion() == "DEBUG")
+                {
+                    await SDL2_Gui.Program.GUI(arguments);
+                }
                 await Repl.RunRepl();
             }
-            catch (Exception err) //Embedded Device or other error. Run a very simpel REPL
+            catch (Exception err) //Embedded Device? Try SDL Interface  
             {
-                Console.WriteLine(err.ToString());
-                await Repl.RunSimpleRepl();
+                try
+                {
+                    Console.WriteLine(err.ToString());
+                }
+                catch (Exception) { // Run a very simple REPL (for embedded devices or devices that can't render SDL)
+                    await Repl.RunSimpleRepl();
+                }
             }
 
         }

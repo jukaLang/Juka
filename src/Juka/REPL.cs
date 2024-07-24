@@ -102,15 +102,16 @@ namespace Juka
             logopanel.Border = BoxBorder.None;
             logopanel.Header = new PanelHeader("Juka Version: " + CurrentVersion.GetVersion() + " ");
             layout["Logo"].Update(new Padder(logopanel).PadTop(paddingtop));
-         
-
-
 
 
             layout["Menu"].Update(new Padder(DisplayMenuTable()).PadTop(paddingtop));
 
 
-
+            // Load an image
+            var image = new CanvasImage("jukalogo.png");
+            image.MaxWidth(8);
+            // Render the image to the console
+            AnsiConsole.Write(image);
 
             AnsiConsole.Write(layout);
              } catch(Exception ex)
