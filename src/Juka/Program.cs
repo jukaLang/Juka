@@ -16,8 +16,8 @@ class Program
     {
         if (arguments.Length == 0)
         {
-            //Try to run an advanced REPL
-            try
+
+            try //Try to run an advanced REPL
             {
                 if (CurrentVersion.GetVersion() == "DEBUG")
                 {
@@ -29,9 +29,11 @@ class Program
             {
                 try
                 {
+                    await SDL2_Gui.Program.GUI(arguments);                    
                     Console.WriteLine(err.ToString());
                 }
-                catch (Exception) { // Run a very simple REPL (for embedded devices or devices that can't render SDL)
+                catch (Exception e) { // Run a very simple REPL (for embedded devices or devices that can't render SDL)
+                    Console.WriteLine(e.ToString());
                     await Repl.RunSimpleRepl();
                 }
             }

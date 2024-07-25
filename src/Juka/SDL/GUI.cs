@@ -1,5 +1,6 @@
 ﻿using SDL2;
-using System.Threading;
+using JukaCompiler;
+using Microsoft.CodeAnalysis;
 
 namespace SDL2_Gui;
 
@@ -22,12 +23,14 @@ class Program
 
     static List<string> menulines = new List<string>();
     static List<nint> menuOptionsTexture = new List<nint>();
-    static int selectedOption = 0;
     static string openFont = "open-sans.ttf";
     static string logo = "jukalogo.png";
 
-    static int mouseX = 640;
-    static int mouseY = 360;
+    static List<string> jukalines = new List<string>();
+    static List<nint> jukaOptionsTexture = new List<nint>();
+
+    static int mouseX = 600;
+    static int mouseY = 290;
 
     static bool quit = false;
 
@@ -36,25 +39,63 @@ class Program
     static int boxW = 0;
     static int boxH = 0;
 
+    static int currentscreen = 0;
+    static string filetoexecute = "";
 
-    public static async Task GUI(string[] args)
+    static List<string> multioutput = new List<string>();
+
+
+    public static Task GUI(string[] args)
     {
         //Create window
-
+        //SDL.SDL_Init(SDL.SDL_INIT_EVERYTHING);
+        if (SDL.SDL_Init(SDL.SDL_INIT_GAMECONTROLLER) < 0)
+        {
+            Console.WriteLine("SDL could not initialize! SDL_Error: " + SDL.SDL_GetError());
+        }
         window = SDL.SDL_CreateWindow("Juka Programming Language", SDL.SDL_WINDOWPOS_UNDEFINED, SDL.SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL.SDL_WindowFlags.SDL_WINDOW_SHOWN);
         if (window == IntPtr.Zero)
         {
             Console.WriteLine("Failed to create window: " + SDL.SDL_GetError());
-            return;
+            return Task.CompletedTask;
         }
         renderer = SDL.SDL_CreateRenderer(window, -1,
                                 SDL.SDL_RendererFlags.SDL_RENDERER_ACCELERATED);
         if (renderer == IntPtr.Zero)
         {
             Console.WriteLine("Failed to create renderer: " + SDL.SDL_GetError());
-            return;
+            return Task.CompletedTask;
         }
 
+        try
+        {
+            string mapping = "030000005e0400008e02000014010000,Xbox 360 Controller,a:b0,b:b1,x:b2,y:b3,back:b6,guide:b8,start:b7,leftstick:b9,rightstick:b10,leftshoulder:b4,rightshoulder:b5,dpup:h0.1,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,leftx:a0,lefty:a1,rightx:a2,righty:a3,lefttrigger:a4,righttrigger:a5,";
+            SDL.SDL_GameControllerAddMapping(mapping);
+            for (int i = 0; i < SDL.SDL_NumJoysticks(); i++)
+            {
+                if (SDL.SDL_IsGameController(i) == SDL.SDL_bool.SDL_TRUE)
+                {
+                    nint controller = SDL.SDL_GameControllerOpen(i);
+                    if (controller != IntPtr.Zero)
+                    {
+                        Console.WriteLine("Controller opened successfully!");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Could not open gamecontroller! SDL_Error: " + SDL.SDL_GetError());
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Controller not found!");
+                }
+            }
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
         SDL_ttf.TTF_Init();
 
         nint fontBig = SDL_ttf.TTF_OpenFont(openFont, fontSize);
@@ -64,11 +105,26 @@ class Program
         SDL.SDL_Color colorWhite;
         colorWhite.r = colorWhite.g = colorWhite.b = colorWhite.a = 255;
 
+        SDL.SDL_Color colorRed;
+        colorRed.r = colorRed.a = 255;
+        colorRed.g = colorRed.b = 0;
 
-        menulines = new List<string>() { "Run REPL (Coming soon)", "Run File (Coming soon)", "Package Update (Coming soon)", "Exit" };
 
+        menulines = new List<string>() { "Run REPL (Coming soon)", "Run File", "Package Update (Coming soon)", "Exit" };
+        menuOptionsTexture = GenerateMenu(menulines, menufont, colorWhite);
 
-        GenerateMenu(menufont, colorWhite);
+        jukalines = new List<string>();
+        try
+        {
+            string[] files = Directory.GetFiles(".", "*.juk", SearchOption.AllDirectories);
+            jukalines.AddRange(files);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
+        jukalines.Add("Back");
+        jukaOptionsTexture = GenerateMenu(jukalines, menufont, colorWhite);
 
         // Main loop for handling input and rendering
         while (!quit)
@@ -79,13 +135,28 @@ class Program
             // Render terminal content (text and formatting)
             // Render elements
             RenderLogo();
-            RenderText("Juka Programming Language", 160,10,fontBig,colorWhite);
-            RenderText("Contribute to our project at https://github.com/jukaLang/juka", 50,650,fontFooter,colorWhite);
-            RenderMenu();
+            RenderText("Juka Programming Language", 160, 10, fontBig, colorWhite);
+            RenderText("Contribute to our project at https://github.com/jukaLang/juka", 50, 650, fontFooter, colorWhite);
+
+            if (currentscreen == 0)
+            {
+                RenderMenu();
+                
+            }else if(currentscreen == 1)
+            {
+                RenderRun();
+            }
+            else if (currentscreen == 2)
+            {
+                RenderText("Click any button to go back", 160, 150, fontFooter, colorRed);
+                RenderText("Output: ", 160, 190, fontFooter, colorWhite);
+                for (int i = 0; i < multioutput.Count; i++)
+                {
+                    RenderText(multioutput[i], 160, 190+fontSizeC * (i + 1), fontFooter, colorWhite);
+                }
+            }
+
             MouseHandler();
-
-            RenderBrowserAsync();
-
             SDL.SDL_Rect textRect2 = new SDL.SDL_Rect { x = mouseX, y = mouseY, w = 12, h = 12 };
             SDL.SDL_SetRenderDrawColor(renderer, 255, 0, 0, 15); // Red highlight for selection
             SDL.SDL_RenderFillRect(renderer, ref textRect2);
@@ -93,18 +164,18 @@ class Program
             SDL.SDL_SetRenderDrawColor(renderer, 51, 52, 71, 255);
             // Update the display
             SDL.SDL_RenderPresent(renderer);
-            SDL.SDL_Delay(16);
+            //SDL.SDL_Delay(16);
         }
-
 
 
         //Destroy window
         SDL.SDL_DestroyWindow(window);
 
+
         //Quit SDL subsystems
         SDL.SDL_Quit();
-
-        return;
+        Environment.Exit(0);
+        return Task.CompletedTask;
     }
 
     static void MouseHandler()
@@ -114,35 +185,94 @@ class Program
         {
             switch (e.type)
             {
+                case SDL.SDL_EventType.SDL_CONTROLLERAXISMOTION:
+
+                    if (e.caxis.axis == (int)SDL.SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_LEFTY)
+                    {
+                        mouseY += e.caxis.axisValue / 1000;
+                    }
+                    if (e.caxis.axis == (int)SDL.SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_LEFTX)
+                    {
+                        mouseX += e.caxis.axisValue / 1000;
+                    }
+                    if (mouseX < 0)
+                    {
+                        mouseX = 0;
+                    } else if (mouseX > SCREEN_WIDTH - 12)
+                    {
+                        mouseX = SCREEN_WIDTH - 12;
+                    }
+                    if (mouseY < 0)
+                    {
+                        mouseX = 0;
+                    }
+                    else if (mouseY > SCREEN_HEIGHT - 12)
+                    {
+                        mouseX = SCREEN_HEIGHT - 12;
+                    }
+                    break;
                 case SDL.SDL_EventType.SDL_MOUSEMOTION:
                     // Get the current mouse position
 
-                    SDL.SDL_SetRenderDrawColor(renderer, 255, 255, 71, 255); // Background color
 
-                   mouseX = e.motion.x;
-                   mouseY = e.motion.y;
-                   break;
+                    mouseX = e.motion.x;
+                    mouseY = e.motion.y;
+                    break;
+                case SDL.SDL_EventType.SDL_CONTROLLERBUTTONDOWN:
                 case SDL.SDL_EventType.SDL_MOUSEBUTTONDOWN:
-                    for (int i = 0; i < menulines.Count; i++)
+                    if (currentscreen == 0)
                     {
-                        SDL.SDL_Rect optionRect = new SDL.SDL_Rect { x = boxX, y = boxY * (i + 1) - 10, w = boxW, h = boxH };
-                        if (HandleSelection(mouseX, mouseY, optionRect))
+                        for (int i = 0; i < menulines.Count; i++)
                         {
-                            if (menulines[i] == "Exit")
+                            SDL.SDL_Rect optionRect = new SDL.SDL_Rect { x = boxX, y = boxY * (i + 1) - 10, w = boxW, h = boxH };
+                            if (HandleSelection(mouseX, mouseY, optionRect))
                             {
-                                quit = true;
-                            }
-                            else
-                            {
-                                Console.WriteLine("Selected option: " + menulines[i]);
+                                if (menulines[i] == "Exit")
+                                {
+                                    quit = true;
+                                }
+                                else if (menulines[i] == "Run File")
+                                {
+                                    currentscreen = 1;
+
+                                }
+                                else if (menulines[i] == "Package Manager")
+                                {
+
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Selected option: " + menulines[i]);
+                                }
                             }
                         }
+                    } else if(currentscreen == 1)
+                    {
+                        for (int i = 0; i < jukalines.Count; i++)
+                        {
+                            SDL.SDL_Rect optionRect = new SDL.SDL_Rect { x = boxX, y = boxY * (i + 1) - 10, w = boxW, h = boxH };
+                            if (HandleSelection(mouseX, mouseY, optionRect))
+                            {
+                                if (jukalines[i] == "Back")
+                                {
+                                    currentscreen = 0;
+                                }
+                                else
+                                {
+                                    filetoexecute = jukalines[i];
+                                    generateProgram();
+                                    currentscreen = 2;
+                                }
+                            }
+                        }
+                    } else if(currentscreen == 2)
+                    {
+                        currentscreen = 1;
                     }
                     break;
             }
         }
     }
-
 
     static void RenderLogo()
     {
@@ -173,7 +303,7 @@ class Program
         nint surface = SDL_ttf.TTF_RenderText_Solid(font, text, color);
         if (surface == IntPtr.Zero)
         {
-            Console.WriteLine("Failed to render text!");
+            Console.WriteLine("Failed to render in rendetext! " + text);
             return;
         }
 
@@ -232,9 +362,68 @@ class Program
         }
     }
 
-
-    static void GenerateMenu(nint menuFont, SDL.SDL_Color color)
+    static void generateProgram()
     {
+        var output = "";
+        try
+        {
+            Compiler? compiler = new Compiler();
+            output = compiler.CompileJukaCode(filetoexecute, isFile: true);
+        }catch(Exception e)
+        {
+            Console.WriteLine(e);
+            output = "Something went wrong: " + e.ToString();
+        }
+        multioutput = new List<string>(output.Split(new string[] { "\r\n", "\n", "\r" }, StringSplitOptions.None)).Where(line => !string.IsNullOrWhiteSpace(line))
+            .ToList(); 
+    }
+
+    static void RenderRun()
+    {
+
+        int textW, textH;
+
+        SDL.SDL_QueryTexture(jukaOptionsTexture[0], out _, out _, out textW, out textH);
+
+
+        // Calculate menu option positions (centered horizontally)
+        int optionX = (SCREEN_WIDTH - textW) / 2; // Placeholder for text width calculation
+        int optionY = ((SCREEN_HEIGHT) / (menulines.Count + 1));
+
+        SDL.SDL_QueryTexture(jukaOptionsTexture[0], out _, out _, out textW, out textH);
+        SDL.SDL_Rect menuBackgroundRect = new SDL.SDL_Rect { x = optionX - textW / 2 - 150, y = optionY - 10, w = textW + 300, h = (optionY * (menulines.Count)) - 80 };
+        SDL.SDL_SetRenderDrawColor(renderer, 41, 42, 61, 255); // Juka background
+        SDL.SDL_RenderFillRect(renderer, ref menuBackgroundRect);
+
+        var textWtemp = textW;
+
+        // Iterate through menu options and render text
+        for (int i = 0; i < jukalines.Count; ++i)
+        {
+            SDL.SDL_QueryTexture(jukaOptionsTexture[i], out _, out _, out textW, out textH);
+            SDL.SDL_Rect srcTextRect = new SDL.SDL_Rect { x = 0, y = 0, w = textW, h = textH };
+            SDL.SDL_Rect textRect = new SDL.SDL_Rect { x = optionX - textW / 2, y = optionY * (i + 1), w = textW, h = textH };
+
+            // Render menu option text
+            SDL.SDL_RenderCopy(renderer, jukaOptionsTexture[i], ref srcTextRect, ref textRect);
+
+            boxX = optionX - textWtemp / 2 - 150;
+            boxY = optionY;
+            boxW = textWtemp + 300;
+            boxH = textH + 20;
+            SDL.SDL_Rect textRect2 = new SDL.SDL_Rect { x = boxX, y = boxY * (i + 1) - 10, w = boxW, h = boxH };
+            if (HandleSelection(mouseX, mouseY, textRect2))
+            {
+                SDL.SDL_SetRenderDrawColor(renderer, 255, 0, 0, 15); // Red highlight for selection
+                SDL.SDL_RenderDrawRect(renderer, ref textRect2);
+            }
+        }
+    }
+
+
+    static List<nint> GenerateMenu(List<string> menulines, nint menuFont, SDL.SDL_Color color)
+    {
+        List<nint> menuOptionsTexture = new List<nint>();
         List<nint> menuOptions = new List<nint>();
 
         for (var i = 0; i < menulines.Count(); i++)
@@ -246,6 +435,7 @@ class Program
         {
             menuOptionsTexture.Add(SDL.SDL_CreateTextureFromSurface(renderer, menuOptions[i]));
         }
+        return menuOptionsTexture;
     }
 
 
