@@ -80,8 +80,8 @@ namespace Juka.GUI
                             // Rumble the controller
                             SDL.SDL_GameControllerRumble(controller, 0xFFFF, 0xFFFF, 2000); // Strong rumble for 1 second
                         }
+                        SDL.SDL_HapticRunEffect(JoyHaptic, effectID, 1);
 
-                        SDL.SDL_GameControllerRumble(controller, 0xFFFF, 0xFFFF, 2000); // Strong rumble for 1 second
 
 
                         switch ((SDL.SDL_GameControllerButton)e.cbutton.button)

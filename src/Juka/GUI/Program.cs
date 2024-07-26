@@ -1,12 +1,8 @@
 ﻿using SDL2;
-using JukaCompiler;
-using Microsoft.CodeAnalysis;
-using static SDL2.SDL;
-using VideoLibrary;
-using Spectre.Console;
 using static Juka.GUI.Globals;
 using static Juka.GUI.Helper;
 using static Juka.GUI.Renderer;
+using static SDL2.SDL;
 
 namespace Juka.GUI;
 
@@ -16,7 +12,7 @@ class Program
     public static Task GUI(string[] args)
     {
         //Create window
-        if (SDL.SDL_Init(SDL.SDL_INIT_EVERYTHING) < 0)
+        if (SDL.SDL_Init(SDL.SDL_INIT_VIDEO | SDL.SDL_INIT_GAMECONTROLLER | SDL.SDL_INIT_HAPTIC | SDL.SDL_INIT_JOYSTICK) < 0)
         {
             Console.WriteLine("SDL could not initialize! SDL_Error: " + SDL.SDL_GetError());
         }
@@ -36,6 +32,7 @@ class Program
 
         try
         {
+            
             string mapping = "030000005e0400008e02000014010000,Xbox 360 Controller,a:b0,b:b1,x:b2,y:b3,back:b6,guide:b8,start:b7,leftstick:b9,rightstick:b10,leftshoulder:b4,rightshoulder:b5,dpup:h0.1,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,leftx:a0,lefty:a1,rightx:a2,righty:a3,lefttrigger:a4,righttrigger:a5,";
             SDL.SDL_GameControllerAddMapping(mapping);
             for (int i = 0; i < SDL.SDL_NumJoysticks(); i++)
@@ -45,12 +42,31 @@ class Program
                     controller = SDL.SDL_GameControllerOpen(i);
                     if (controller != nint.Zero)
                     {
+                        
+                        SDL_HapticEffect effect = new SDL_HapticEffect()
+                        {
+                            type = SDL.SDL_HAPTIC_SINE,
+                            constant = new SDL_HapticConstant() { level = 0, length = 0x4000, attack_length = 1000 }
+                        };
+                        JoyHaptic = SDL.SDL_HapticOpenFromJoystick(i);
+                        if (JoyHaptic == nint.Zero)
+                        {
+                            // Joystick isn't haptic
+                            Console.WriteLine("Joystick isn't haptic");
+                        }
+                        effectID = SDL.SDL_HapticNewEffect(JoyHaptic, ref effect);
+                        SDL.SDL_HapticRunEffect(JoyHaptic, effectID, 1);
+
                         Console.WriteLine("Controller opened successfully!");
-                        SDL.SDL_GameControllerRumbleTriggers(controller, 0xffff, 0xffff, 8000);
-                        SDL.SDL_GameControllerRumble(controller, 0xffff, 0xffff, 8000);
+                        if(SDL.SDL_GameControllerHasRumbleTriggers(controller) == SDL.SDL_bool.SDL_TRUE)
+                        {
+                            rumble2 = true;
+                        }
                         if (SDL.SDL_GameControllerHasRumble(controller) == SDL.SDL_bool.SDL_TRUE)
                         {
                             rumble = true;
+                            SDL.SDL_GameControllerRumbleTriggers(controller, 0xffff, 0xffff, 8000);
+                            SDL.SDL_GameControllerRumble(controller, 0xffff, 0xffff, 8000);
                             Console.WriteLine("Rumble ON");
                         }
                         else

@@ -16,11 +16,16 @@ namespace Juka.GUI
         public static string version = CurrentVersion.GetVersion();
 
         //SDL2
+        public static nint JoyHaptic;
+        public static int effectID;
+
+
         public static int SCREEN_WIDTH = 1280;
         public static int SCREEN_HEIGHT = 720;
 
         public static string keypressed = SDL.SDL_GetKeyName(SDL.SDL_Keycode.SDLK_UNDEFINED);
         public static bool rumble = false;
+        public static bool rumble2 = false;
 
         public static nint window = nint.Zero;
         public static nint renderer = nint.Zero;

@@ -6,6 +6,7 @@ namespace Juka.GUI
 {
     public class Clicked
     {
+
         public static void itemclicked()
         {
 
@@ -85,7 +86,7 @@ namespace Juka.GUI
 
                                 myfile = videoInfos[i].VideoId + ".mp4";
 
-                                currentscreen = Menus.MediaPlayer;
+                            currentscreen = Menus.MediaDownloaded;
                             }
                         }
                     }
