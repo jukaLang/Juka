@@ -1,9 +1,7 @@
-﻿using Newtonsoft.Json.Linq;
-using System.Net;
-using System.Net.Security;
-using System.Net.Sockets;
-using System.Text;
+﻿using System.Net;
 using System.Text.Json;
+
+namespace Juka.GUI;
 
 public class YouTubeApiService
 {
@@ -65,33 +63,24 @@ public class YouTubeApiService
         {
             foreach (JsonElement item in items.EnumerateArray())
             {
-                //Console.WriteLine($"Item: {item}");
 
                 var videoInfo = new VideoInfo();
 
                 if (item.TryGetProperty("id", out JsonElement id))
                 {
                     videoInfo.VideoId = id.GetString();
-                    //Console.WriteLine($"Video ID: {videoInfo.VideoId}");
+
                 }
 
                 if (item.TryGetProperty("snippet", out JsonElement snippet))
                 {
-                    //Console.WriteLine($"Snippet: {snippet}");
+
                     if (snippet.TryGetProperty("title", out JsonElement title))
                     {
                         videoInfo.Title = title.GetString();
-                        //Console.WriteLine($"Video Title: {videoInfo.Title}");
-                    }
-                    else
-                    {
-                        //Console.WriteLine("Title not found in snippet");
                     }
                 }
-                else
-                {
-                    //Console.WriteLine("Snippet not found");
-                }
+
 
                 youtubeResponse.Items.Add(videoInfo);
             }
@@ -101,14 +90,8 @@ public class YouTubeApiService
     return youtubeResponse;
 }
 
-public class YouTubeResponse
-{
-    public List<VideoInfo> Items { get; set; }
-}
-
-public class VideoInfo
-{
-    public string VideoId { get; set; }
-    public string Title { get; set; }
-}
+    public class YouTubeResponse
+    {
+        public List<VideoInfo> Items { get; set; }
+    }
 }

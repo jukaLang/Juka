@@ -21,7 +21,7 @@ class Program
             {
                 if (CurrentVersion.GetVersion() == "DEBUG")
                 {
-                    await SDL2_Gui.Program.GUI(arguments);
+                    await GUI.Program.GUI(arguments);
                 }
                 await Repl.RunRepl();
             }
@@ -29,7 +29,7 @@ class Program
             {
                 try
                 {
-                    await SDL2_Gui.Program.GUI(arguments);                    
+                    await GUI.Program.GUI(arguments);                    
                     Console.WriteLine(err.ToString());
                 }
                 catch (Exception e) { // Run a very simple REPL (for embedded devices or devices that can't render SDL)

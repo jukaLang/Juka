@@ -1,4 +1,4 @@
-﻿namespace Juka.SDL
+﻿namespace Juka.GUI
 {
     public class VideoInfo
     {
