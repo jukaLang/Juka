@@ -33,9 +33,14 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="ppy.SDL2-CS" Version="1.0.82" />
+    <PackageReference Include="sdl2.nuget" Version="2.30.3" />
+    <PackageReference Include="sdl2_image.nuget" Version="2.8.2" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="Spectre.Console" Version="0.49.1" />
     <PackageReference Include="Spectre.Console.ImageSharp" Version="0.49.1" />
+    <PackageReference Include="VideoLibrary" Version="3.2.4" />
+
   </ItemGroup>
 
   <ItemGroup>

@@ -1,8 +1,13 @@
 ﻿using SDL2;
 using JukaCompiler;
 using Microsoft.CodeAnalysis;
+using static SDL2.SDL;
+using VideoLibrary;
+//using VideoLibrary;
+
 
 namespace SDL2_Gui;
+
 
 class Program
 {
@@ -32,6 +37,7 @@ class Program
     static int mouseX = 600;
     static int mouseY = 290;
 
+
     static bool quit = false;
 
     static int boxX = 0;
@@ -44,6 +50,17 @@ class Program
 
     static List<string> multioutput = new List<string>();
 
+
+    static List<Juka.SDL.VideoInfo> videoInfos = new List<Juka.SDL.VideoInfo>();
+    static string myfile = "";
+
+    static IntPtr controller;
+    static bool rumble = false;
+
+    static Dictionary<string, string> systemInfo = Juka.SelfUpdate.GetSystemInfo();
+    static string version = Juka.CurrentVersion.GetVersion();
+
+    static string keypressed = SDL.SDL_GetKeyName(SDL_Keycode.SDLK_UNDEFINED);
 
     public static Task GUI(string[] args)
     {
@@ -75,10 +92,19 @@ class Program
             {
                 if (SDL.SDL_IsGameController(i) == SDL.SDL_bool.SDL_TRUE)
                 {
-                    nint controller = SDL.SDL_GameControllerOpen(i);
+                    controller = SDL.SDL_GameControllerOpen(i);
                     if (controller != IntPtr.Zero)
                     {
                         Console.WriteLine("Controller opened successfully!");
+                        if (SDL.SDL_GameControllerHasRumble(controller) == SDL.SDL_bool.SDL_TRUE)
+                        {
+                            rumble = true;
+                            Console.WriteLine("Rumble ON");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Rumble OFF");
+                        }
                         break;
                     }
                     else
@@ -110,7 +136,7 @@ class Program
         colorRed.g = colorRed.b = 0;
 
 
-        menulines = new List<string>() { "Run REPL (Coming soon)", "Run File", "Package Update (Coming soon)", "Exit" };
+        menulines = new List<string>() { "Run File", "Update/Install", "Media Downloader", "Exit" };
         menuOptionsTexture = GenerateMenu(menulines, menufont, colorWhite);
 
         jukalines = new List<string>();
@@ -137,12 +163,17 @@ class Program
             RenderLogo();
             RenderText("Juka Programming Language", 160, 10, fontBig, colorWhite);
             RenderText("Contribute to our project at https://github.com/jukaLang/juka", 50, 650, fontFooter, colorWhite);
+            RenderText("Vesion: "+version, 1050, 650, fontFooter, colorWhite);
+            RenderText("Key Pressed: " +keypressed, 1050, 620, fontFooter, colorWhite);
+
+
 
             if (currentscreen == 0)
             {
                 RenderMenu();
-                
-            }else if(currentscreen == 1)
+
+            }
+            else if (currentscreen == 1)
             {
                 RenderRun();
             }
@@ -152,8 +183,16 @@ class Program
                 RenderText("Output: ", 160, 190, fontFooter, colorWhite);
                 for (int i = 0; i < multioutput.Count; i++)
                 {
-                    RenderText(multioutput[i], 160, 190+fontSizeC * (i + 1), fontFooter, colorWhite);
+                    RenderText(multioutput[i], 160, 190 + fontSizeC * (i + 1), fontFooter, colorWhite);
                 }
+            }
+            else if (currentscreen == 10)
+            {
+                RenderMedia(fontFooter, colorWhite, colorRed);
+            }
+            else if (currentscreen == 11)
+            {
+                MediaStreamer(fontFooter, colorWhite, colorRed);
             }
 
             MouseHandler();
@@ -178,6 +217,98 @@ class Program
         return Task.CompletedTask;
     }
 
+    static void clicked()
+    {
+        if (currentscreen == 0)
+        {
+            for (int i = 0; i < menulines.Count; i++)
+            {
+                SDL.SDL_Rect optionRect = new SDL.SDL_Rect { x = boxX, y = boxY * (i + 1) - 10, w = boxW, h = boxH };
+                if (HandleSelection(mouseX, mouseY, optionRect))
+                {
+                    if (menulines[i] == "Exit")
+                    {
+                        quit = true;
+                    }
+                    else if (menulines[i] == "Run File")
+                    {
+                        currentscreen = 1;
+
+                    }
+                    else if (menulines[i] == "Update/Install")
+                    {
+                        GeneratePackages();
+                        currentscreen = 20;
+                    }
+                    else if (menulines[i] == "Media Downloader")
+                    {
+                        GenerateMedia();
+                        currentscreen = 10;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Selected option: " + menulines[i]);
+                    }
+                }
+            }
+        }
+        else if (currentscreen == 1)
+        {
+            for (int i = 0; i < jukalines.Count; i++)
+            {
+                SDL.SDL_Rect optionRect = new SDL.SDL_Rect { x = boxX, y = boxY * (i + 1) - 10, w = boxW, h = boxH };
+                if (HandleSelection(mouseX, mouseY, optionRect))
+                {
+                    if (jukalines[i] == "Back")
+                    {
+                        currentscreen = 0;
+                    }
+                    else
+                    {
+                        filetoexecute = jukalines[i];
+                        generateProgram();
+                        currentscreen = 2;
+                    }
+                }
+            }
+        }
+        else if (currentscreen == 2)
+        {
+            currentscreen = 1;
+        }
+        else if (currentscreen == 10)
+        {
+            for (int i = 0; i < videoInfos.Count + 1; i++)
+            {
+                SDL.SDL_Rect optionRect = new SDL.SDL_Rect { x = 160, y = 190 + fontSizeC * (i + 1) + 5, w = 1280 - 160, h = fontSizeC };
+                if (HandleSelection(mouseX, mouseY, optionRect))
+                {
+                    if (i == videoInfos.Count)
+                    {
+                        currentscreen = 0;
+                    }
+                    else
+                    {
+
+                        var VedioUrl = "https://www.youtube.com/embed/" + videoInfos[i].VideoId + ".mp4";
+                        var youTube = YouTube.Default;
+                        var video = youTube.GetVideo(VedioUrl);
+                        File.WriteAllBytes(videoInfos[i].VideoId + ".mp4", video.GetBytes());
+
+                        myfile = videoInfos[i].VideoId + ".mp4";
+
+                        currentscreen = 11;
+                    }
+                }
+            }
+        }
+        else if (currentscreen == 11)
+        {
+            currentscreen = 10;
+        }
+    }
+
+
     static void MouseHandler()
     {
         SDL.SDL_Event e;
@@ -186,14 +317,23 @@ class Program
             switch (e.type)
             {
                 case SDL.SDL_EventType.SDL_CONTROLLERAXISMOTION:
+                    switch ((SDL.SDL_GameControllerAxis)e.caxis.axis)
+                    {
+                        case SDL.SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_LEFTY:
+                        case SDL.SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_RIGHTY:
+                        case SDL.SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_MAX:
+                        case SDL.SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_INVALID:
+                            mouseY += e.caxis.axisValue / 1000;
+                            break;
 
-                    if (e.caxis.axis == (int)SDL.SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_LEFTY)
-                    {
-                        mouseY += e.caxis.axisValue / 1000;
-                    }
-                    if (e.caxis.axis == (int)SDL.SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_LEFTX)
-                    {
-                        mouseX += e.caxis.axisValue / 1000;
+                        case SDL.SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_LEFTX:
+                        case SDL.SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_RIGHTX:
+                        case SDL.SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_TRIGGERLEFT:
+                        case SDL.SDL_GameControllerAxis.SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
+                            mouseX += e.caxis.axisValue / 1000;
+                            break;
+                        default:
+                            break;
                     }
                     if (mouseX < 0)
                     {
@@ -204,74 +344,143 @@ class Program
                     }
                     if (mouseY < 0)
                     {
-                        mouseX = 0;
+                        mouseY = 0;
                     }
                     else if (mouseY > SCREEN_HEIGHT - 12)
                     {
-                        mouseX = SCREEN_HEIGHT - 12;
+                        mouseY = SCREEN_HEIGHT - 12;
+                    }
+                    break;
+                case SDL.SDL_EventType.SDL_KEYDOWN:
+                    keypressed = SDL.SDL_GetKeyName(e.key.keysym.sym);
+
+                    if (e.key.keysym.sym == SDL.SDL_Keycode.SDLK_DOWN)
+                    {
+                        mouseY += 10;
+                    }
+                    else if (e.key.keysym.sym == SDL.SDL_Keycode.SDLK_UP)
+                    {
+                        mouseY -= 10;
+                    }
+                    else if (e.key.keysym.sym == SDL.SDL_Keycode.SDLK_LEFT)
+                    {
+                        mouseX -= 10;
+                    }
+                    else if (e.key.keysym.sym == SDL.SDL_Keycode.SDLK_RIGHT)
+                    {
+                        mouseX += 10;
                     }
                     break;
                 case SDL.SDL_EventType.SDL_MOUSEMOTION:
                     // Get the current mouse position
-
-
                     mouseX = e.motion.x;
                     mouseY = e.motion.y;
                     break;
                 case SDL.SDL_EventType.SDL_CONTROLLERBUTTONDOWN:
-                case SDL.SDL_EventType.SDL_MOUSEBUTTONDOWN:
-                    if (currentscreen == 0)
+                    keypressed = e.cbutton.button.ToString();
+                    if (rumble)
                     {
-                        for (int i = 0; i < menulines.Count; i++)
-                        {
-                            SDL.SDL_Rect optionRect = new SDL.SDL_Rect { x = boxX, y = boxY * (i + 1) - 10, w = boxW, h = boxH };
-                            if (HandleSelection(mouseX, mouseY, optionRect))
-                            {
-                                if (menulines[i] == "Exit")
-                                {
-                                    quit = true;
-                                }
-                                else if (menulines[i] == "Run File")
-                                {
-                                    currentscreen = 1;
+                        // Rumble the controller
+                        SDL_GameControllerRumble(controller, 0xFFFF, 0xFFFF, 2000); // Strong rumble for 1 second
+                    }
 
-                                }
-                                else if (menulines[i] == "Package Manager")
-                                {
+                    SDL_GameControllerRumble(controller, 0xFFFF, 0xFFFF, 2000); // Strong rumble for 1 second
 
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Selected option: " + menulines[i]);
-                                }
-                            }
-                        }
-                    } else if(currentscreen == 1)
+
+                    switch ((SDL.SDL_GameControllerButton)e.cbutton.button)
                     {
-                        for (int i = 0; i < jukalines.Count; i++)
-                        {
-                            SDL.SDL_Rect optionRect = new SDL.SDL_Rect { x = boxX, y = boxY * (i + 1) - 10, w = boxW, h = boxH };
-                            if (HandleSelection(mouseX, mouseY, optionRect))
-                            {
-                                if (jukalines[i] == "Back")
-                                {
-                                    currentscreen = 0;
-                                }
-                                else
-                                {
-                                    filetoexecute = jukalines[i];
-                                    generateProgram();
-                                    currentscreen = 2;
-                                }
-                            }
-                        }
-                    } else if(currentscreen == 2)
-                    {
-                        currentscreen = 1;
+                        case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_GUIDE:
+                            currentscreen = 0;
+                            break;
+                        case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+                        case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_X:
+                        case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_Y:
+                            currentscreen = 0;
+                            break;
+                        case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_A:
+                        case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_B:
+                        case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_START:
+                        case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+                            clicked();
+                            break;
+                        case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_UP:
+                            mouseY -= 10;
+                            break;
+                        case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+                            mouseY += 10;
+                            break;
+                        case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+                            mouseX -= 10;
+                            break;
+                        case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+                            mouseX += 10;
+                            break;
+                        default:
+                            clicked();
+                            break;
                     }
                     break;
+                case SDL.SDL_EventType.SDL_MOUSEBUTTONDOWN:
+                    if (e.button.button == SDL.SDL_BUTTON_LEFT)
+                    {
+                        clicked();
+                    }
+                    else if (e.button.button == SDL.SDL_BUTTON_RIGHT)
+                    {
+                        currentscreen = 0;
+                    }
+                    break;
+          
             }
         }
+    }
+
+    static void MediaStreamer(nint fontFooter, SDL.SDL_Color colorWhite, SDL.SDL_Color colorRed)
+    {
+        RenderText("Dowloaded to Juka/"+myfile+". Press any button to continue", 160, 190, fontFooter, colorWhite);
+    }
+
+    static void RenderMedia(nint fontFooter, SDL.SDL_Color colorWhite, SDL.SDL_Color colorRed)
+    {
+        RenderText("Videos: ", 160, 190, fontFooter, colorWhite);
+        for (int i = 0; i < videoInfos.Count; i++)
+        {
+           
+            RenderText(videoInfos[i].Title, 160, 190 + fontSizeC * (i + 1), fontFooter, colorWhite);
+        }
+        RenderText("Back", 160, 190 + fontSizeC * (videoInfos.Count + 1), fontFooter, colorWhite);
+
+
+
+        // Iterate through menu options and render text
+        for (int i = 0; i < videoInfos.Count+1; ++i)
+        {
+            SDL.SDL_Rect textRect2 = new SDL.SDL_Rect { x = 160, y = 190 + fontSizeC * (i + 1)+5, w = 1280-160, h = fontSizeC };
+            if (HandleSelection(mouseX, mouseY, textRect2))
+            {
+                SDL.SDL_SetRenderDrawColor(renderer, 255, 0, 0, 15); // Red highlight for selection
+                SDL.SDL_RenderDrawRect(renderer, ref textRect2);
+            }
+        }
+    }
+
+    static void GeneratePackages()
+    {
+
+    }
+
+    static void GenerateMedia()
+    {
+        var apikey = "AIzaSyBzpZzE4nQVxr_EQLgWqTfREpvWON - gWu8";
+        var youtube = new YouTubeApiService(apikey);
+        var videos = youtube.GetTopVideosSync();
+
+        videoInfos = videos.Select(v => new Juka.SDL.VideoInfo
+        {
+            VideoId = v.VideoId,
+            Title = v.Title
+        }).ToList();
+
     }
 
     static void RenderLogo()
