@@ -3,7 +3,8 @@ using JukaCompiler;
 using Microsoft.CodeAnalysis;
 using static SDL2.SDL;
 using VideoLibrary;
-//using VideoLibrary;
+using Spectre.Console;
+using Juka;
 
 
 namespace SDL2_Gui;
@@ -96,6 +97,8 @@ class Program
                     if (controller != IntPtr.Zero)
                     {
                         Console.WriteLine("Controller opened successfully!");
+                        SDL.SDL_GameControllerRumbleTriggers(controller, 0xffff, 0xffff, 8000);
+                        SDL.SDL_GameControllerRumble(controller, 0xffff, 0xffff, 8000);
                         if (SDL.SDL_GameControllerHasRumble(controller) == SDL.SDL_bool.SDL_TRUE)
                         {
                             rumble = true;
@@ -170,6 +173,16 @@ class Program
 
             if (currentscreen == 0)
             {
+
+                var infoOffsetX = 800;
+                var infoOffsetY = 300;
+                var infoOffsetYr = 30;
+                RenderText("System: ", infoOffsetX, infoOffsetY + infoOffsetYr*0, menufont, colorWhite);
+                RenderText("OS: " + systemInfo["platform"], infoOffsetX, infoOffsetY + infoOffsetYr * 1, menufont, colorWhite);
+                RenderText("Directory: " + systemInfo["dir"], infoOffsetX, infoOffsetY + infoOffsetYr * 2, menufont, colorWhite);
+                RenderText("Architecture: " + systemInfo["architecture"], infoOffsetX, infoOffsetY + infoOffsetYr * 3, menufont, colorWhite);
+                RenderText("Assembly Name: " + systemInfo["name"], infoOffsetX, infoOffsetY + infoOffsetYr * 4, menufont, colorWhite);
+                RenderText("Extension: " + systemInfo["extension"], infoOffsetX, infoOffsetY + infoOffsetYr * 5, menufont, colorWhite);
                 RenderMenu();
 
             }
@@ -194,6 +207,11 @@ class Program
             {
                 MediaStreamer(fontFooter, colorWhite, colorRed);
             }
+            else if (currentscreen == 20)
+            {
+                RenderInstallMenu(fontFooter, colorWhite, colorRed);
+            }
+
 
             MouseHandler();
             SDL.SDL_Rect textRect2 = new SDL.SDL_Rect { x = mouseX, y = mouseY, w = 12, h = 12 };
@@ -237,7 +255,6 @@ class Program
                     }
                     else if (menulines[i] == "Update/Install")
                     {
-                        GeneratePackages();
                         currentscreen = 20;
                     }
                     else if (menulines[i] == "Media Downloader")
@@ -435,6 +452,47 @@ class Program
         }
     }
 
+    static void RenderInstallMenu(nint fontFooter, SDL.SDL_Color colorWhite, SDL.SDL_Color colorRed)
+    {
+        int textW, textH;
+
+        SDL.SDL_QueryTexture(menuOptionsTexture[1], out _, out _, out textW, out textH);
+
+
+        // Calculate menu option positions (centered horizontally)
+        int optionX = (SCREEN_WIDTH - textW) / 2; // Placeholder for text width calculation
+        int optionY = ((SCREEN_HEIGHT) / (menulines.Count + 1));
+
+        SDL.SDL_QueryTexture(menuOptionsTexture[0], out _, out _, out textW, out textH);
+        SDL.SDL_Rect menuBackgroundRect = new SDL.SDL_Rect { x = optionX - textW / 2 - 150, y = optionY - 10, w = textW + 300, h = (optionY * (menulines.Count)) - 80 };
+        SDL.SDL_SetRenderDrawColor(renderer, 41, 42, 61, 255); // Juka background
+        SDL.SDL_RenderFillRect(renderer, ref menuBackgroundRect);
+
+        var textWtemp = textW;
+
+        // Iterate through menu options and render text
+        for (int i = 0; i < menulines.Count; ++i)
+        {
+            SDL.SDL_QueryTexture(menuOptionsTexture[i], out _, out _, out textW, out textH);
+            SDL.SDL_Rect srcTextRect = new SDL.SDL_Rect { x = 0, y = 0, w = textW, h = textH };
+            SDL.SDL_Rect textRect = new SDL.SDL_Rect { x = optionX - textW / 2, y = optionY * (i + 1), w = textW, h = textH };
+
+            // Render menu option text
+            SDL.SDL_RenderCopy(renderer, menuOptionsTexture[i], ref srcTextRect, ref textRect);
+
+            boxX = optionX - textWtemp / 2 - 150;
+            boxY = optionY;
+            boxW = textWtemp + 300;
+            boxH = textH + 20;
+            SDL.SDL_Rect textRect2 = new SDL.SDL_Rect { x = boxX, y = boxY * (i + 1) - 10, w = boxW, h = boxH };
+            if (HandleSelection(mouseX, mouseY, textRect2))
+            {
+                SDL.SDL_SetRenderDrawColor(renderer, 255, 0, 0, 15); // Red highlight for selection
+                SDL.SDL_RenderDrawRect(renderer, ref textRect2);
+            }
+        }
+    }
+
     static void MediaStreamer(nint fontFooter, SDL.SDL_Color colorWhite, SDL.SDL_Color colorRed)
     {
         RenderText("Dowloaded to Juka/"+myfile+". Press any button to continue", 160, 190, fontFooter, colorWhite);
@@ -464,9 +522,10 @@ class Program
         }
     }
 
-    static void GeneratePackages()
+    static async Task GeneratePackages()
     {
-
+        string librariesList = await Packages.getList();
+        //packages
     }
 
     static void GenerateMedia()
