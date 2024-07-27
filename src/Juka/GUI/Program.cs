@@ -99,6 +99,12 @@ class Program
         menuOptions[Menus.MenuMain] = new List<string>() { "Run File", "Update/Install", "Media Downloader", "Exit" };
         menuTextures[Menus.MenuMain] = Helper.GenerateMenu(menuOptions[Menus.MenuMain], menufont, Colors.colorWhite);
 
+        menuOptions[Menus.MenuInstall] = new List<string>() { "Update Juka", "Update/Install Packages", "Back" };
+        menuTextures[Menus.MenuInstall] = Helper.GenerateMenu(menuOptions[Menus.MenuInstall], menufont, Colors.colorWhite);
+
+        menuOptions[Menus.MenuInstallJuka] = new List<string>() { "Install", "Back" };
+        menuTextures[Menus.MenuInstallJuka] = Helper.GenerateMenu(menuOptions[Menus.MenuInstallJuka], menufont, Colors.colorWhite);
+
 
         //Juka Run
         menuOptions[Menus.MenuJuka] = new List<string>();
@@ -167,9 +173,12 @@ class Program
             }
             else if (currentscreen == Menus.MenuInstall)
             {
-               
+               RenderMenuInstall();
             }
-
+            else if (currentscreen == Menus.MenuInstallJuka)
+            {
+                RenderMenuJukaInstall();
+            }
 
             Controller.MouseHandler();
             SDL.SDL_Rect textRect2 = new SDL.SDL_Rect { x = mouseX, y = mouseY, w = 12, h = 12 };

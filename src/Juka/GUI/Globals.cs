@@ -1,5 +1,4 @@
 ﻿using SDL2;
-using static SDL2.SDL;
 
 namespace Juka.GUI
 {
@@ -45,12 +44,16 @@ namespace Juka.GUI
             RanJuka,
             MediaPlayer,
             MediaDownloaded,
-            MenuInstall
+            MenuInstall,
+            MenuInstallJuka
         }
+
+
 
         //
         public static Dictionary<Menus, List<string>> menuOptions = new Dictionary<Menus, List<string>>();
         public static Dictionary<Menus, List<nint>> menuTextures= new Dictionary<Menus, List<nint>>();  // PRE-RENDER TEXTURES
+        public static Dictionary<Menus, List<Descript<int>>> menuDescript = new Dictionary<Menus, List<Descript<int>>>();
         //
 
         // WHERE TO PUT MENU CONTENT AND OFFSET
@@ -71,4 +74,13 @@ namespace Juka.GUI
         //Current Screen
         public static Menus currentscreen = Menus.MenuMain;
     }
+
+    public class Descript<T>
+    {
+        public T X { get; set; }
+        public T Y { get; set; }
+        public T Width { get; set; }
+        public T Height { get; set; }
+    }
+
 }

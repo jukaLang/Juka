@@ -6,40 +6,41 @@ namespace Juka.GUI
 {
     public static class Renderer
     {
-        public static void RenderMenu()
+
+        public static void RenderHelper(int width = 300, Menus menu = Menus.MenuMain)
         {
-
-            int textW, textH;
-
-            SDL.SDL_QueryTexture(menuTextures[Menus.MenuMain][0], out _, out _, out textW, out textH);
-
-
-            // Calculate menu option positions (centered horizontally)
-            int optionX = (SCREEN_WIDTH - textW) / 2; // Placeholder for text width calculation
-            int optionY = SCREEN_HEIGHT / (menuOptions[Menus.MenuMain].Count + 1);
-
-            SDL.SDL_QueryTexture(menuTextures[Menus.MenuMain][0], out _, out _, out textW, out textH);
-            SDL.SDL_Rect menuBackgroundRect = new SDL.SDL_Rect { x = optionX - textW / 2 - 150, y = optionY - 10, w = textW + 300, h = optionY * menuOptions[Menus.MenuMain].Count - 80 };
+            int height = 500;
+            SDL.SDL_Rect menuBackgroundRect = new SDL.SDL_Rect { x = (SCREEN_WIDTH / 2)-width/2, y = 130, w = width, h = height};
             SDL.SDL_SetRenderDrawColor(renderer, 41, 42, 61, 255); // Juka background
             SDL.SDL_RenderFillRect(renderer, ref menuBackgroundRect);
 
-            var textWtemp = textW;
-
-            // Iterate through menu options and render text
-            for (int i = 0; i < menuOptions[Menus.MenuMain].Count; ++i)
+            menuDescript[menu] = new List<Descript<int>>();
+            for (int i = 0; i < menuOptions[menu].Count; ++i)
             {
-                SDL.SDL_QueryTexture(menuTextures[Menus.MenuMain][i], out _, out _, out textW, out textH);
+                int textW, textH;
+                SDL.SDL_QueryTexture(menuTextures[menu][i], out _, out _, out textW, out textH);
                 SDL.SDL_Rect srcTextRect = new SDL.SDL_Rect { x = 0, y = 0, w = textW, h = textH };
-                SDL.SDL_Rect textRect = new SDL.SDL_Rect { x = optionX - textW / 2, y = optionY * (i + 1), w = textW, h = textH };
+
+                int x = (SCREEN_WIDTH / 2) - textW / 2;
+                int y = 130 + textH + (height / menuOptions[menu].Count) * (i);
+                int w = textW;
+                int h = textH;
+
+                var menuOptionDescript = new Descript<int>
+                {
+                    X = (SCREEN_WIDTH / 2) - width / 2,
+                    Y = y - 10,
+                    Width = width,
+                    Height = h + 20
+                };
+                menuDescript[menu].Add(menuOptionDescript);
+
+                SDL.SDL_Rect textRect = new SDL.SDL_Rect { x = x, y = y, w = textW, h = textH };
 
                 // Render menu option text
-                SDL.SDL_RenderCopy(renderer, menuTextures[Menus.MenuMain][i], ref srcTextRect, ref textRect);
+                SDL.SDL_RenderCopy(renderer, menuTextures[menu][i], ref srcTextRect, ref textRect);
 
-                boxX = optionX - textWtemp / 2 - 150;
-                boxY = optionY;
-                boxW = textWtemp + 300;
-                boxH = textH + 20;
-                SDL.SDL_Rect textRect2 = new SDL.SDL_Rect { x = boxX, y = boxY * (i + 1) - 10, w = boxW, h = boxH };
+                SDL.SDL_Rect textRect2 = new SDL.SDL_Rect { x = (SCREEN_WIDTH / 2) - width / 2, y = y - 10, w = width, h = h+20 };
                 if (HandleSelection(mouseX, mouseY, textRect2))
                 {
                     SDL.SDL_SetRenderDrawColor(renderer, 255, 0, 0, 15); // Red highlight for selection
@@ -47,51 +48,28 @@ namespace Juka.GUI
                 }
             }
         }
-
+        public static void RenderMenu()
+        {
+            RenderHelper(300, Menus.MenuMain);
+        }
 
 
         public static void RenderRun()
         {
-
-            int textW, textH;
-
-            SDL.SDL_QueryTexture(menuTextures[Menus.MenuJuka][0], out _, out _, out textW, out textH);
-
-
-            // Calculate menu option positions (centered horizontally)
-            int optionX = (SCREEN_WIDTH - textW) / 2; // Placeholder for text width calculation
-            int optionY = SCREEN_HEIGHT / (menuOptions[Menus.MenuJuka].Count + 1);
-
-            SDL.SDL_QueryTexture(menuTextures[Menus.MenuJuka][0], out _, out _, out textW, out textH);
-            SDL.SDL_Rect menuBackgroundRect = new SDL.SDL_Rect { x = optionX - textW / 2 - 150, y = optionY - 10, w = textW + 300, h = optionY * menuOptions[Menus.MenuMain].Count - 80 };
-            SDL.SDL_SetRenderDrawColor(renderer, 41, 42, 61, 255); // Juka background
-            SDL.SDL_RenderFillRect(renderer, ref menuBackgroundRect);
-
-            var textWtemp = textW;
-
-            // Iterate through menu options and render text
-            for (int i = 0; i < menuOptions[Menus.MenuJuka].Count; ++i)
-            {
-                SDL.SDL_QueryTexture(menuTextures[Menus.MenuJuka][i], out _, out _, out textW, out textH);
-                SDL.SDL_Rect srcTextRect = new SDL.SDL_Rect { x = 0, y = 0, w = textW, h = textH };
-                SDL.SDL_Rect textRect = new SDL.SDL_Rect { x = optionX - textW / 2, y = optionY * (i + 1), w = textW, h = textH };
-
-                // Render menu option text
-                SDL.SDL_RenderCopy(renderer, menuTextures[Menus.MenuJuka][i], ref srcTextRect, ref textRect);
-
-                boxX = optionX - textWtemp / 2 - 150;
-                boxY = optionY;
-                boxW = textWtemp + 300;
-                boxH = textH + 20;
-                SDL.SDL_Rect textRect2 = new SDL.SDL_Rect { x = boxX, y = boxY * (i + 1) - 10, w = boxW, h = boxH };
-                if (HandleSelection(mouseX, mouseY, textRect2))
-                {
-                    SDL.SDL_SetRenderDrawColor(renderer, 255, 0, 0, 15); // Red highlight for selection
-                    SDL.SDL_RenderDrawRect(renderer, ref textRect2);
-                }
-            }
+            RenderHelper(600, Menus.MenuJuka);
         }
-    
+
+
+        public static void RenderMenuInstall()
+        {
+            RenderHelper(300, Menus.MenuInstall);
+        }
+
+        public static void RenderMenuJukaInstall()
+        {
+            RenderHelper(300, Menus.MenuInstallJuka);
+        }
+
 
         public static void MediaStreamer(nint fontFooter, SDL.SDL_Color colorWhite, SDL.SDL_Color colorRed)
         {
