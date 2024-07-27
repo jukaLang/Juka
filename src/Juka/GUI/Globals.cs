@@ -1,4 +1,5 @@
 ﻿using SDL2;
+using VideoLibrary;
 
 namespace Juka.GUI
 {
@@ -33,9 +34,20 @@ namespace Juka.GUI
         public static nint controller; //GET THE CONTROLLER
         public static bool quit = false; //Render UNTIL QUIT
 
+
+        //keyboard
+        public static string keyboardbuffer = "";
+
         // Screen Selection
         public static int mouseX = SCREEN_WIDTH / 2;
         public static int mouseY = SCREEN_HEIGHT / 2;
+
+        public static nint fontBig;
+        public static nint fontFooter;
+        public static nint menufont;
+        public static nint descriptionfont;
+        public static bool keyboardOn = false;
+        public static int keyboardy = SCREEN_HEIGHT / 2;
 
         public enum Menus
         {
@@ -45,7 +57,8 @@ namespace Juka.GUI
             MediaPlayer,
             MediaDownloaded,
             MenuInstall,
-            MenuInstallJuka
+            MenuInstallJuka,
+            VirtualKeyboard
         }
 
 

@@ -9,8 +9,50 @@ namespace Juka.GUI
 
         public static void itemclicked()
         {
+            if (keyboardOn == true)
+            {
+                for (int i = 0; i < menuOptions[Menus.VirtualKeyboard].Count; i++)
+                {
+                    SDL.SDL_Rect keyRect = new SDL.SDL_Rect { x = menuDescript[Menus.VirtualKeyboard][i].X, y = menuDescript[Menus.VirtualKeyboard][i].Y, w = menuDescript[Menus.VirtualKeyboard][i].Width, h = menuDescript[Menus.VirtualKeyboard][i].Height };
 
-            if (currentscreen == Menus.MenuMain)
+                    if (Helper.HandleSelection(mouseX, mouseY, keyRect))
+                    {
+                        if (menuOptions[Menus.VirtualKeyboard][i] == "<-")
+                        {
+                            if (keyboardbuffer.Length > 0)
+                            {
+                                keyboardbuffer = keyboardbuffer.Substring(0, keyboardbuffer.Length - 1);
+                            }
+                        } else if(menuOptions[Menus.VirtualKeyboard][i] == "Ext")
+                        {
+                            keyboardOn = false;
+                        }
+                        else if (menuOptions[Menus.VirtualKeyboard][i] == "Ent")
+                        {
+                            if (Menus.MediaPlayer == currentscreen)
+                            {
+                                var apikey = "AIzaSyBzpZzE4nQVxr_EQLgWqTfREpvWON - gWu8";
+                                var youtube = new YouTubeApiService(apikey);
+                                var videos = youtube.GetTopVideosSync();
+
+                                videoInfos = videos.Select(v => new VideoInfo
+                                {
+                                    VideoId = v.VideoId,
+                                    Title = v.Title,
+                                    Description = v.Description
+                                }).ToList();
+                            }
+                            keyboardOn = false;
+                        }
+                        else
+                        {
+                            keyboardbuffer += menuOptions[Menus.VirtualKeyboard][i];
+                        }
+                    }
+                }
+            }
+
+            else if (currentscreen == Menus.MenuMain)
             {
                 for (int i = 0; i < menuOptions[Menus.MenuMain].Count; i++)
                 {
@@ -67,19 +109,25 @@ namespace Juka.GUI
             }
             else if (currentscreen == Menus.MediaPlayer)
             {
-                for (int i = 0; i < videoInfos.Count + 1; i++)
+                for (int i = 0; i < videoInfos.Count + 2; i++)
                 {
-                    SDL.SDL_Rect optionRect = new SDL.SDL_Rect { x = 160, y = 190 + fontSizeC * (i + 1) + 5, w = 1280 - 160, h = fontSizeC };
+                    SDL.SDL_Rect optionRect = new SDL.SDL_Rect { x = menuDescript[Menus.MediaPlayer][i].X, y = menuDescript[Menus.MediaPlayer][i].Y, w = menuDescript[Menus.MediaPlayer][i].Width, h = menuDescript[Menus.MediaPlayer][i].Height };
                     if (Helper.HandleSelection(mouseX, mouseY, optionRect))
                     {
-                        if (i == videoInfos.Count)
+                        if (menuOptions[Menus.MediaPlayer][i] == "Back")
                         {
-                            currentscreen = 0;
+                            YouTubeApiService.DeleteThumbnails(videoInfos);
+                            currentscreen = Menus.MenuMain;
+                        }
+                        else if(menuOptions[Menus.MediaPlayer][i] == "Search")
+                        {
+                            keyboardy = 159;
+                            keyboardOn = true;
                         }
                         else
                         {
 
-                            var VedioUrl = "https://www.youtube.com/embed/" + videoInfos[i].VideoId + ".mp4";
+                            var VedioUrl = "https://www.youtube.com/embed/" + menuOptions[Menus.MediaPlayer][i] + ".mp4";
                             var youTube = YouTube.Default;
                             var video = youTube.GetVideo(VedioUrl);
                             File.WriteAllBytes(videoInfos[i].VideoId + ".mp4", video.GetBytes());

@@ -1,5 +1,7 @@
 ﻿using JukaCompiler;
 using SDL2;
+using System.Net.Sockets;
+using System.Net;
 using static Juka.GUI.Globals;
 
 namespace Juka.GUI
@@ -45,24 +47,27 @@ namespace Juka.GUI
 
         public static void RenderText(string text, int x, int y, nint font, SDL.SDL_Color color)
         {
-            nint surface = SDL_ttf.TTF_RenderText_Solid(font, text, color);
-            if (surface == nint.Zero)
+            if (text.Length > 0)
             {
-                Console.WriteLine("Failed to render in rendetext! " + text);
-                return;
+                nint surface = SDL_ttf.TTF_RenderText_Solid(font, text, color);
+                if (surface == nint.Zero)
+                {
+                    Console.WriteLine("Failed to render in rendetext! " + text);
+                    return;
+                }
+
+                nint message = SDL.SDL_CreateTextureFromSurface(renderer, surface);
+
+                // Get the text surface dimensions
+                int w, h;
+                SDL.SDL_QueryTexture(message, out _, out _, out w, out h);
+                SDL.SDL_Rect dstrect = new SDL.SDL_Rect { x = x, y = y, w = w, h = h }; // Adjust position if needed
+
+                SDL.SDL_RenderCopy(renderer, message, nint.Zero, ref dstrect);
+
+                SDL.SDL_DestroyTexture(message);
+                SDL.SDL_FreeSurface(surface);
             }
-
-            nint message = SDL.SDL_CreateTextureFromSurface(renderer, surface);
-
-            // Get the text surface dimensions
-            int w, h;
-            SDL.SDL_QueryTexture(message, out _, out _, out w, out h);
-            SDL.SDL_Rect dstrect = new SDL.SDL_Rect { x = x, y = y, w = w, h = h }; // Adjust position if needed
-
-            SDL.SDL_RenderCopy(renderer, message, nint.Zero, ref dstrect);
-
-            SDL.SDL_DestroyTexture(message);
-            SDL.SDL_FreeSurface(surface);
         }
 
         public static async Task GeneratePackages()
@@ -80,9 +85,12 @@ namespace Juka.GUI
             videoInfos = videos.Select(v => new VideoInfo
             {
                 VideoId = v.VideoId,
-                Title = v.Title
+                Title = v.Title,
+                Description = v.Description
             }).ToList();
 
         }
+
+
     }
 }
