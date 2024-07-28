@@ -1,4 +1,5 @@
 ﻿using SDL2;
+using System.Diagnostics;
 using VideoLibrary;
 using static Juka.GUI.Globals;
 
@@ -6,9 +7,68 @@ namespace Juka.GUI
 {
     public class Clicked
     {
+        public static void PlayVideo(string filePath)
+        {
+            if (ffplayProcess == null || ffplayProcess.HasExited)
+            {
+                ProcessStartInfo processStartInfo = new ProcessStartInfo
+                {
+                    FileName = "ffplay",
+                    Arguments = $"-vf \"fps=30\" -fs -autoexit -preset ultrafast -maxrate 8000k -bufsize 48000k \"{filePath}\"",
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+
+                ffplayProcess = new Process { StartInfo = processStartInfo };
+                ffplayProcess.OutputDataReceived += (sender, e) => Console.WriteLine(e.Data);
+                ffplayProcess.ErrorDataReceived += (sender, e) => Console.WriteLine($"ERROR: {e.Data}");
+
+                ffplayProcess.Start();
+                ffplayProcess.BeginOutputReadLine();
+                ffplayProcess.BeginErrorReadLine();
+                ffplayInput = ffplayProcess.StandardInput;
+            }
+        }
+
+        public static void StopVideo()
+        {
+            if (ffplayProcess != null && !ffplayProcess.HasExited)
+            {
+                ffplayInput.WriteLine("q"); // Send 'q' to quit
+                ffplayProcess.WaitForExit();
+            }
+        }
+
+        public static void RewindVideo()
+        {
+            if (ffplayProcess != null && !ffplayProcess.HasExited)
+            {
+                ffplayInput.WriteLine("left"); // Send 'left' to rewind
+            }
+        }
+
+        public static void PauseVideo()
+        {
+            if (ffplayProcess != null && !ffplayProcess.HasExited)
+            {
+                ffplayInput.WriteLine("p"); // Send 'p' to pause
+            }
+        }
+
+        public static void ResumeVideo()
+        {
+            if (ffplayProcess != null && !ffplayProcess.HasExited)
+            {
+                ffplayInput.WriteLine("p"); // Send 'p' to resume (toggle pause)
+            }
+        }
 
         public static void itemclicked()
         {
+            
             if (keyboardOn == true)
             {
                 for (int i = 0; i < menuOptions[Menus.VirtualKeyboard].Count; i++)
@@ -126,14 +186,25 @@ namespace Juka.GUI
                         }
                         else
                         {
+                            running = true;
 
-                            var VedioUrl = "https://www.youtube.com/embed/" + menuOptions[Menus.MediaPlayer][i] + ".mp4";
-                            var youTube = YouTube.Default;
-                            var video = youTube.GetVideo(VedioUrl);
-                            File.WriteAllBytes(videoInfos[i].VideoId + ".mp4", video.GetBytes());
+                            if (!File.Exists(videoInfos[i].VideoId + ".mp4"))
+                            {
+                                var VedioUrl = "https://www.youtube.com/embed/" + menuOptions[Menus.MediaPlayer][i] + ".mp4";
+                                var youTube = YouTube.Default;
+                                var video = youTube.GetVideo(VedioUrl);
+                                File.WriteAllBytes(videoInfos[i].VideoId + ".mp4", video.GetBytes());
+                            }
 
                             myfile = videoInfos[i].VideoId + ".mp4";
-
+                            try
+                            {
+                                var ffplayThread = new Thread(() => PlayVideo(myfile));
+                                ffplayThread.Start();
+                            }
+                            catch (Exception e) { 
+                                Console.WriteLine("Can't plaay video: "+e); 
+                            }
                             currentscreen = Menus.MediaDownloaded;
                         }
                     }

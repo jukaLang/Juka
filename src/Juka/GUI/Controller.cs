@@ -1,5 +1,6 @@
 ﻿using SDL2;
 using static Juka.GUI.Globals;
+using static Juka.GUI.Clicked;
 
 namespace Juka.GUI
 {
@@ -74,47 +75,75 @@ namespace Juka.GUI
                         mouseY = e.motion.y;
                         break;
                     case SDL.SDL_EventType.SDL_CONTROLLERBUTTONDOWN:
-                        keypressed = e.cbutton.button.ToString();
-                        if (rumble)
+                        if (running)
                         {
-                            // Rumble the controller
-                            SDL.SDL_GameControllerRumble(controller, 0xFFFF, 0xFFFF, 2000); // Strong rumble for 1 second
+                            switch ((SDL.SDL_GameControllerButton)e.cbutton.button)
+                            {
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_START:
+                                    PlayVideo(myfile);
+                                    break;
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_BACK:
+                                    StopVideo();
+                                    running = false;
+                                    break;
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+                                    RewindVideo();
+                                    break;
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+                                    ResumeVideo();
+                                    break;
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_A:
+                                    PauseVideo();
+                                    break;
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_B:
+                                    ResumeVideo();
+                                    break;
+                            }
                         }
-                        SDL.SDL_HapticRunEffect(JoyHaptic, effectID, 1);
-
-
-
-                        switch ((SDL.SDL_GameControllerButton)e.cbutton.button)
+                        else
                         {
-                            case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_GUIDE:
-                                currentscreen = Menus.MenuMain;
-                                break;
-                            case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
-                            case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_X:
-                            case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_Y:
-                                currentscreen = Menus.MenuMain;
-                                break;
-                            case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_A:
-                            case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_B:
-                            case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_START:
-                            case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
-                                Clicked.itemclicked();
-                                break;
-                            case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_UP:
-                                mouseY -= 10;
-                                break;
-                            case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-                                mouseY += 10;
-                                break;
-                            case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-                                mouseX -= 10;
-                                break;
-                            case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-                                mouseX += 10;
-                                break;
-                            default:
-                                Clicked.itemclicked();
-                                break;
+                            keypressed = e.cbutton.button.ToString();
+                            if (rumble)
+                            {
+                                // Rumble the controller
+                                SDL.SDL_GameControllerRumble(controller, 0xFFFF, 0xFFFF, 2000); // Strong rumble for 1 second
+                            }
+                            SDL.SDL_HapticRunEffect(JoyHaptic, effectID, 1);
+
+
+
+                            switch ((SDL.SDL_GameControllerButton)e.cbutton.button)
+                            {
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_GUIDE:
+                                    currentscreen = Menus.MenuMain;
+                                    break;
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_X:
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_Y:
+                                    currentscreen = Menus.MenuMain;
+                                    break;
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_A:
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_B:
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_START:
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+                                    Clicked.itemclicked();
+                                    break;
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_UP:
+                                    mouseY -= 10;
+                                    break;
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_DOWN:
+                                    mouseY += 10;
+                                    break;
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+                                    mouseX -= 10;
+                                    break;
+                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+                                    mouseX += 10;
+                                    break;
+                                default:
+                                    Clicked.itemclicked();
+                                    break;
+                            }
                         }
                         break;
                     case SDL.SDL_EventType.SDL_MOUSEBUTTONDOWN:

@@ -88,7 +88,25 @@ class SelfUpdate
     }
 
 
+    public static string RunCommand(string command, string arguments)
+    {
+        ProcessStartInfo processStartInfo = new ProcessStartInfo
+        {
+            FileName = command,
+            Arguments = arguments,
+            RedirectStandardOutput = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
 
+        using (Process process = new Process { StartInfo = processStartInfo })
+        {
+            process.Start();
+            string result = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+            return result;
+        }
+    }
 
     /// <summary>
     /// Get system information
@@ -115,6 +133,18 @@ class SelfUpdate
             _ => "Linux"
         };
 
+        var fullplatform = platform;
+        if(platform == "Unix")
+        {
+            string unameOutput = RunCommand("uname", "-a");
+
+            if (unameOutput.Contains("Linux TinaLinux"))
+            {
+                fullplatform = unameOutput;
+                platform = "Linux";
+            }
+        }
+
         string? dir = AppDomain.CurrentDomain.BaseDirectory;
         string? name = typeof(SelfUpdate).Assembly.GetName().Name ?? "";
 
@@ -123,6 +153,7 @@ class SelfUpdate
 
         return new Dictionary<string, string>
         {
+            { "fullplatform", fullplatform },
             { "platform", platform },
             { "dir", dir },
             { "architecture", architecture },

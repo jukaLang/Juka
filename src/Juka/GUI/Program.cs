@@ -144,7 +144,7 @@ class Program
                 var infoOffsetY = 250;
                 var infoOffsetYr = 30;
                 RenderText("System: ", infoOffsetX, infoOffsetY + infoOffsetYr * 0, menufont, Colors.colorWhite);
-                RenderText("OS: " + systemInfo["platform"], infoOffsetX, infoOffsetY + infoOffsetYr * 1, menufont, Colors.colorWhite);
+                RenderText("OS: " + systemInfo["fullplatform"], infoOffsetX, infoOffsetY + infoOffsetYr * 1, menufont, Colors.colorWhite);
                 RenderText("Directory: " + systemInfo["dir"], infoOffsetX, infoOffsetY + infoOffsetYr * 2, menufont, Colors.colorWhite);
                 RenderText("Architecture: " + systemInfo["architecture"], infoOffsetX, infoOffsetY + infoOffsetYr * 3, menufont, Colors.colorWhite);
                 RenderText("Assembly Name: " + systemInfo["name"], infoOffsetX, infoOffsetY + infoOffsetYr * 4, menufont, Colors.colorWhite);

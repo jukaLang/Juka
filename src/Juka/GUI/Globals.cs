@@ -1,4 +1,5 @@
 ﻿using SDL2;
+using System.Diagnostics;
 using VideoLibrary;
 
 namespace Juka.GUI
@@ -83,9 +84,14 @@ namespace Juka.GUI
         // Video
         public static string myfile = "";
         public static List<VideoInfo> videoInfos = new List<VideoInfo>();
-
+        
         //Current Screen
         public static Menus currentscreen = Menus.MenuMain;
+
+        public static bool running = false;
+        public static Process ffplayProcess;
+        public static StreamWriter ffplayInput;
+
     }
 
     public class Descript<T>
