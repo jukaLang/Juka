@@ -19,7 +19,7 @@ namespace Juka.GUI
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
                     UseShellExecute = false,
-                    CreateNoWindow = true
+                    CreateNoWindow = false // Ensure ffplay runs in its own window
                 };
 
                 ffplayProcess = new Process { StartInfo = processStartInfo };
@@ -197,13 +197,48 @@ namespace Juka.GUI
                             }
 
                             myfile = videoInfos[i].VideoId + ".mp4";
+
+
                             try
                             {
                                 var ffplayThread = new Thread(() => PlayVideo(myfile));
                                 ffplayThread.Start();
+                                bool running = true;
+                                while (running)
+                                {
+                                    while (SDL.SDL_PollEvent(out SDL.SDL_Event e) != 0)
+                                    {
+                                        if (e.type == SDL.SDL_EventType.SDL_CONTROLLERBUTTONDOWN)
+                                        {
+                                            switch ((SDL.SDL_GameControllerButton)e.cbutton.button)
+                                            {
+                                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_START:
+                                                    PlayVideo(myfile);
+                                                    break;
+                                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_BACK:
+                                                    StopVideo();
+                                                    running = false;
+                                                    break;
+                                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_LEFT:
+                                                    RewindVideo();
+                                                    break;
+                                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
+                                                    ResumeVideo();
+                                                    break;
+                                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_A:
+                                                    PauseVideo();
+                                                    break;
+                                                case SDL.SDL_GameControllerButton.SDL_CONTROLLER_BUTTON_B:
+                                                    ResumeVideo();
+                                                    break;
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                            catch (Exception e) { 
-                                Console.WriteLine("Can't plaay video: "+e); 
+                            catch (Exception e)
+                            {
+                                Console.WriteLine("Can't plaay video: " + e);
                             }
                             currentscreen = Menus.MediaDownloaded;
                         }
