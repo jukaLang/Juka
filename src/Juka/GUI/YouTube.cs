@@ -1,229 +1,198 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading.Tasks;
 using static Juka.GUI.Globals;
 
-namespace Juka.GUI;
-
-public class YouTubeApiService
+namespace Juka.GUI
 {
-    private string _apiKey;
-
-    public YouTubeApiService(string apiKey)
+    public class YouTubeApiService
     {
-        _apiKey = apiKey;
-    }
+        private readonly string _apiKey;
+        private readonly HttpClient _httpClient;
+        private readonly string _tempDirectory;
 
-    public List<VideoInfo> GetTopVideosSync(string regionCode = "US")
-    {
-        var chart = "mostPopular";
-        var url = $"https://www.googleapis.com/youtube/v3/videos?part=snippet&chart={chart}&regionCode={Uri.EscapeDataString(regionCode)}&maxResults=4&key={Uri.EscapeDataString(_apiKey)}";
-
-        if (keyboardbuffer.Length > 0)
+        public YouTubeApiService(string apiKey)
         {
-            var encodedSearchTerm = Uri.EscapeDataString(keyboardbuffer);
-            url = $"https://www.googleapis.com/youtube/v3/search?part=snippet&q={encodedSearchTerm}&regionCode={Uri.EscapeDataString(regionCode)}&maxResults=4&key={Uri.EscapeDataString(_apiKey)}";
-
+            _apiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey));
+            _httpClient = new HttpClient();
+            _tempDirectory = Path.Combine(Directory.GetCurrentDirectory(), "temp");
+            InitializeTempDirectory();
         }
 
-
-        ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
-
-        try
+        private void InitializeTempDirectory()
         {
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "GET";
-
-            using (var response = (HttpWebResponse)request.GetResponse())
-
+            if (Directory.Exists(_tempDirectory))
             {
-                if (response.StatusCode == HttpStatusCode.OK)
+                Directory.Delete(_tempDirectory, true);
+            }
+            Directory.CreateDirectory(_tempDirectory);
+        }
+
+        public async Task<List<VideoInfo>> GetTopVideosAsync(string regionCode = "US")
+        {
+            var chart = "mostPopular";
+            var url = $"https://www.googleapis.com/youtube/v3/videos?part=snippet&chart={chart}&regionCode={Uri.EscapeDataString(regionCode)}&maxResults=4&key={Uri.EscapeDataString(_apiKey)}";
+
+            if (!string.IsNullOrEmpty(keyboardbuffer))
+            {
+                var encodedSearchTerm = Uri.EscapeDataString(keyboardbuffer);
+                url = $"https://www.googleapis.com/youtube/v3/search?part=snippet&q={encodedSearchTerm}&regionCode={Uri.EscapeDataString(regionCode)}&maxResults=4&key={Uri.EscapeDataString(_apiKey)}";
+            }
+
+            try
+            {
+                var response = await _httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
                 {
-                    using (Stream stream = response.GetResponseStream())
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+                    var youtubeResponse = DeserializeYouTubeResponse(jsonResponse);
 
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        string jsonResponse
- = reader.ReadToEnd();
-
-                        YouTubeResponse youtubeResponse = DeserializeYouTubeResponse(jsonResponse); // Needs implementation
-
-                        DownloadThumbnails(youtubeResponse.Items);
-                        return youtubeResponse.Items;
-                    }
+                    await DownloadThumbnailsAsync(youtubeResponse.Items);
+                    return youtubeResponse.Items;
                 }
                 else
                 {
-                    Console.WriteLine($"Error: {response.StatusCode} - {response.StatusDescription}");
-                    return null; // Handle error or return a defaultvalue
+                    Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+                return null;
+            }
+        }
+
+        private async Task DownloadThumbnailsAsync(List<VideoInfo> videos)
+        {
+            var tasks = new List<Task>();
+
+            foreach (var video in videos)
+            {
+                var filePath = Path.Combine(_tempDirectory, $"{video.VideoId}.jpg");
+                if (!File.Exists(filePath))
+                {
+                    tasks.Add(DownloadImageAsync($"https://img.youtube.com/vi/{video.VideoId}/0.jpg", filePath));
+                }
+            }
+
+            await Task.WhenAll(tasks);
+        }
+
+        public void DeleteThumbnails(List<VideoInfo> videos)
+        {
+            foreach (var video in videos)
+            {
+                var filePath = Path.Combine(_tempDirectory, $"{video.VideoId}.jpg");
+                if (File.Exists(filePath))
+                {
+                    DeleteImage(filePath);
                 }
             }
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error: {ex.Message}");
-            return null;
-        }
-    }
-    private void DownloadThumbnails(List<VideoInfo> videos)
-    {
-        foreach (var video in videos)
-        {
-            if (!File.Exists(video.VideoId + ".jpg"))
-            {
-                DownloadImage("https://img.youtube.com/vi/" + video.VideoId + "/0.jpg", video.VideoId + ".jpg");
-            }
-        }
-    }
 
-    public static void DeleteThumbnails(List<VideoInfo> videos)
-    {
-        foreach (var video in videos)
+        public bool DeleteImage(string filePath)
         {
-            if (File.Exists(video.VideoId + ".jpg"))
+            try
             {
-                DeleteImage(video.VideoId + ".jpg");
-            }
-        }
-    }
-
-    public static bool DeleteImage(string filePath)
-    {
-        try
-        {
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-            return true;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error deleting image: {ex.Message}");
-            return false;
-        }
-    }
-
-    private bool DownloadImage(string url, string filePath)
-    {
-        try
-        {
-            using (var client = new WebClient())
-            {
-                client.DownloadFile(url, filePath);
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
                 return true;
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error downloading thumbnail for {url}: {ex.Message}");
-            return false;
-        }
-    }
-
-    private YouTubeResponse DeserializeYouTubeResponse(string json)
-    {
-        if(keyboardbuffer.Length > 0)
-        {
-            return DeserializeSearchResponse(json);
-        }
-        else
-        {
-            return DeserializeVideoResponse(json);
-        }
-    }
-
-    private YouTubeResponse DeserializeVideoResponse(string json)
-    {
-        // Your existing deserialization logic for videos
-        var youtubeResponse = new YouTubeResponse { Items = new List<VideoInfo>() };
-
-        using (JsonDocument doc = JsonDocument.Parse(json))
-        {
-            if (doc.RootElement.TryGetProperty("items", out JsonElement items))
+            catch (Exception ex)
             {
-                foreach (JsonElement item in items.EnumerateArray())
-                {
-                    var videoInfo = new VideoInfo();
-
-                    if (item.TryGetProperty("id", out JsonElement id))
-                    {
-                        videoInfo.VideoId = id.GetString();
-                    }
-
-                    if (item.TryGetProperty("snippet", out JsonElement snippet))
-                    {
-                        if (snippet.TryGetProperty("title", out JsonElement title))
-                        {
-                            videoInfo.Title = title.GetString();
-                        }
-
-                        if (snippet.TryGetProperty("description", out JsonElement description))
-                        {
-                            videoInfo.Description = description.GetString();
-                        }
-                    }
-
-                    youtubeResponse.Items.Add(videoInfo);
-                }
+                Console.WriteLine($"Error deleting image: {ex.Message}");
+                return false;
             }
         }
-        return youtubeResponse;
-    }
 
-    private YouTubeResponse DeserializeSearchResponse(string json)
-    {
-        var youtubeResponse = new YouTubeResponse { Items = new List<VideoInfo>() };
-
-        try
+        private async Task<bool> DownloadImageAsync(string url, string filePath)
         {
-            using (var document = JsonDocument.Parse(json))
+            try
             {
-                if (document.RootElement.TryGetProperty("items", out JsonElement items))
+                var imageBytes = await _httpClient.GetByteArrayAsync(url);
+                await File.WriteAllBytesAsync(filePath, imageBytes);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error downloading thumbnail for {url}: {ex.Message}");
+                return false;
+            }
+        }
+
+        private YouTubeResponse DeserializeYouTubeResponse(string json)
+        {
+            return !string.IsNullOrEmpty(keyboardbuffer) ? DeserializeSearchResponse(json) : DeserializeVideoResponse(json);
+        }
+
+        private YouTubeResponse DeserializeVideoResponse(string json)
+        {
+            var youtubeResponse = new YouTubeResponse { Items = new List<VideoInfo>() };
+
+            using (var doc = JsonDocument.Parse(json))
+            {
+                if (doc.RootElement.TryGetProperty("items", out var items))
                 {
                     foreach (var item in items.EnumerateArray())
                     {
-                        var videoInfo = new VideoInfo();
-
-                        if (item.TryGetProperty("id", out JsonElement idElement))
+                        var videoInfo = new VideoInfo
                         {
-                            if (idElement.TryGetProperty("videoId", out JsonElement videoIdElement))
-                            {
-                                videoInfo.VideoId = videoIdElement.GetString();
-                            }
-                        }
+                            VideoId = item.GetProperty("id").GetString()
+                        };
 
-                        if (item.TryGetProperty("snippet", out JsonElement snippet))
+                        if (item.TryGetProperty("snippet", out var snippet))
                         {
-                            if (snippet.TryGetProperty("title", out JsonElement title))
-                            {
-                                videoInfo.Title = title.GetString();
-                            }
-
-                            if (snippet.TryGetProperty("description", out JsonElement description))
-                            {
-                                videoInfo.Description = description.GetString();
-                            }
-
-
+                            videoInfo.Title = snippet.GetProperty("title").GetString();
+                            videoInfo.Description = snippet.GetProperty("description").GetString();
                         }
 
                         youtubeResponse.Items.Add(videoInfo);
                     }
                 }
             }
+            return youtubeResponse;
         }
-        catch (JsonException ex)
+
+        private YouTubeResponse DeserializeSearchResponse(string json)
         {
-            Console.WriteLine($"Error deserializing YouTube search response: {ex.Message}");
-            // Handle the error appropriately
+            var youtubeResponse = new YouTubeResponse { Items = new List<VideoInfo>() };
+
+            using (var doc = JsonDocument.Parse(json))
+            {
+                if (doc.RootElement.TryGetProperty("items", out var items))
+                {
+                    foreach (var item in items.EnumerateArray())
+                    {
+                        var videoInfo = new VideoInfo();
+
+                        if (item.TryGetProperty("id", out var idElement) && idElement.TryGetProperty("videoId", out var videoIdElement))
+                        {
+                            videoInfo.VideoId = videoIdElement.GetString();
+                        }
+
+                        if (item.TryGetProperty("snippet", out var snippet))
+                        {
+                            videoInfo.Title = snippet.GetProperty("title").GetString();
+                            videoInfo.Description = snippet.GetProperty("description").GetString();
+                        }
+
+                        youtubeResponse.Items.Add(videoInfo);
+                    }
+                }
+            }
+            return youtubeResponse;
         }
 
-        return youtubeResponse;
-    }
-
-
-    public class YouTubeResponse
-    {
-        public List<VideoInfo> Items { get; set; }
+        public class YouTubeResponse
+        {
+            public List<VideoInfo> Items { get; set; }
+        }
     }
 }

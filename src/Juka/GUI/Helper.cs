@@ -76,11 +76,11 @@ namespace Juka.GUI
             //packages
         }
 
-        public static void GenerateMedia()
+        public static async Task GenerateMedia()
         {
             var apikey = "AIzaSyBzpZzE4nQVxr_EQLgWqTfREpvWON - gWu8";
             var youtube = new YouTubeApiService(apikey);
-            var videos = youtube.GetTopVideosSync();
+            var videos = await youtube.GetTopVideosAsync();
 
             videoInfos = videos.Select(v => new VideoInfo
             {

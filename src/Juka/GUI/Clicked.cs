@@ -66,7 +66,7 @@ namespace Juka.GUI
             }
         }
 
-        public static void itemclicked()
+        public static async void itemclicked()
         {
             
             if (keyboardOn == true)
@@ -92,8 +92,8 @@ namespace Juka.GUI
                             if (Menus.MediaPlayer == currentscreen)
                             {
                                 var apikey = "AIzaSyBzpZzE4nQVxr_EQLgWqTfREpvWON - gWu8";
-                                var youtube = new YouTubeApiService(apikey);
-                                var videos = youtube.GetTopVideosSync();
+                                youtube = new YouTubeApiService(apikey);
+                                var videos = await youtube.GetTopVideosAsync();
 
                                 videoInfos = videos.Select(v => new VideoInfo
                                 {
@@ -133,7 +133,7 @@ namespace Juka.GUI
                         }
                         else if (menuOptions[Menus.MenuMain][i] == "Media Downloader")
                         {
-                            Helper.GenerateMedia();
+                            await Helper.GenerateMedia();
                             currentscreen = Menus.MediaPlayer;
                         }
                         else
@@ -176,7 +176,7 @@ namespace Juka.GUI
                     {
                         if (menuOptions[Menus.MediaPlayer][i] == "Back")
                         {
-                            YouTubeApiService.DeleteThumbnails(videoInfos);
+                            youtube.DeleteThumbnails(videoInfos);
                             currentscreen = Menus.MenuMain;
                         }
                         else if(menuOptions[Menus.MediaPlayer][i] == "Search")

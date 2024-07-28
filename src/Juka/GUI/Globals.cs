@@ -92,6 +92,8 @@ namespace Juka.GUI
         public static Process ffplayProcess;
         public static StreamWriter ffplayInput;
 
+        public static YouTubeApiService youtube;
+
     }
 
     public class Descript<T>
