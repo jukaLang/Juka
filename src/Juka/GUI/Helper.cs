@@ -86,7 +86,8 @@ namespace Juka.GUI
             {
                 VideoId = v.VideoId,
                 Title = v.Title,
-                Description = v.Description
+                Description = v.Description,
+                Published = v.Published
             }).ToList();
 
         }

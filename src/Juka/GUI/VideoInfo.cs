@@ -6,5 +6,7 @@
         public string VideoId { get; set; }
 
         public string Description { get; set; }
+
+        public string Published { get; set; }
     }
 }

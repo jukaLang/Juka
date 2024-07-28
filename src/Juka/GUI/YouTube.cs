@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Juka.GUI.Globals;
 
@@ -73,7 +74,8 @@ namespace Juka.GUI
 
             foreach (var video in videos)
             {
-                var filePath = Path.Combine(_tempDirectory, $"{video.VideoId}.jpg");
+                var sanitizedTitle = SanitizeFileName(video.Title);
+                var filePath = Path.Combine(_tempDirectory, $"{sanitizedTitle}.jpg");
                 if (!File.Exists(filePath))
                 {
                     tasks.Add(DownloadImageAsync($"https://img.youtube.com/vi/{video.VideoId}/0.jpg", filePath));
@@ -83,11 +85,19 @@ namespace Juka.GUI
             await Task.WhenAll(tasks);
         }
 
+        public static string SanitizeFileName(string title)
+        {
+            var invalidChars = Path.GetInvalidFileNameChars();
+            var sanitizedTitle = new string(title.Select(ch => invalidChars.Contains(ch) ? '_' : ch).ToArray());
+            return sanitizedTitle.Length > 25 ? sanitizedTitle.Substring(0, 25) : sanitizedTitle;
+        }
+
         public void DeleteThumbnails(List<VideoInfo> videos)
         {
             foreach (var video in videos)
             {
-                var filePath = Path.Combine(_tempDirectory, $"{video.VideoId}.jpg");
+                var sanitizedTitle = SanitizeFileName(video.Title);
+                var filePath = Path.Combine(_tempDirectory, $"{sanitizedTitle}.jpg");
                 if (File.Exists(filePath))
                 {
                     DeleteImage(filePath);
@@ -151,6 +161,7 @@ namespace Juka.GUI
                         {
                             videoInfo.Title = snippet.GetProperty("title").GetString();
                             videoInfo.Description = snippet.GetProperty("description").GetString();
+                            videoInfo.Published = snippet.GetProperty("publishedAt").GetString();
                         }
 
                         youtubeResponse.Items.Add(videoInfo);

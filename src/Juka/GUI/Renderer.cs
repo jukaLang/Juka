@@ -1,6 +1,8 @@
 ﻿using SDL2;
 using static Juka.GUI.Globals;
 using static Juka.GUI.Helper;
+using static Juka.GUI.Colors;
+using System;
 
 namespace Juka.GUI
 {
@@ -86,7 +88,7 @@ namespace Juka.GUI
 
             for (int i = 0; i < videoInfos.Count; i++)
             {
-                RenderYThumb(videoInfos[i].VideoId,i);
+                RenderYThumb(videoInfos[i].Title,videoInfos[i].Published, i);
                 RenderText(videoInfos[i].Title, 160, 200 + (100 * i), menufont, colorWhite);
                 var mydesc = videoInfos[i].Description;
                 string[] lines = mydesc.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
@@ -167,11 +169,11 @@ namespace Juka.GUI
             RenderText(keyboardbuffer,430,122,fontFooter, colorRed);
         }
 
-        public static void RenderYThumb(string videoId, int offset)
+        public static void RenderYThumb(string title, string published, int offset)
         {
 
             // Load the logo image
-            nint ylogo = SDL_image.IMG_Load(videoId+".jpg");
+            nint ylogo = SDL_image.IMG_Load("temp/"+ YouTubeApiService.SanitizeFileName(title)+ ".jpg");
             if (ylogo == nint.Zero)
             {
                 Console.WriteLine("Failed to load image!" + SDL_image.IMG_GetError());
@@ -190,6 +192,10 @@ namespace Juka.GUI
             // Free the surface and destroy the texture after rendering
             SDL.SDL_FreeSurface(ylogo);
             SDL.SDL_DestroyTexture(texture);
+
+            string[] parts = published.Split('T');
+            string datePart = parts[0];
+            RenderText(datePart, 10, 272 + (100 * offset), descriptionfont, colorWhite);
         }
 
 
