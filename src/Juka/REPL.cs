@@ -1,4 +1,5 @@
-﻿using JukaCompiler;
+﻿using Juka.Packages;
+using JukaCompiler;
 using Spectre.Console;
 using System.Diagnostics;
 using System.Text;
@@ -157,13 +158,25 @@ namespace Juka
                     ListCode();
                     break;
                 case "!!get":
-                    GetLibraries();
+                    await GetLibraries();
                     break;
                 case "!!undo":
                     UndoLastCommand();
                     break;
                 case "!!redo":
                     RedoLastCommand();
+                    break;
+                case "!!debug":
+                    if (CurrentVersion.GetVersion() == "DEBUG")
+                    {
+                        DebugMe.DebugMode = 1;
+                        Console.WriteLine(new Compiler().CompileJukaCode("""
+                            sub main() = {
+                            println("Hello World");
+                           }
+
+                        """, isFile: false));
+                    }
                     break;
                 case "!!update":
                     string[] updateTypes = command.Split(' ');
@@ -303,27 +316,54 @@ namespace Juka
 
         }
 
-       // A method to get the list of libraries for Juka.
-        private static void GetLibraries()
+        // A method to get the list of libraries for Juka.
+        private static async Task GetLibraries()
         {
-            // Implement your logic to get the list of libraries for Juka
+            List<Package> packages = await ListPackages.GetPackages();
+
+            var amountdisplayed = 0;
+            foreach (var package in packages)
+            {
+                amountdisplayed++;
+                if(amountdisplayed > 10)
+                {
+                    break;
+                }
+                AnsiConsole.MarkupLine($"Name: {package.Name}");
+                AnsiConsole.MarkupLine($"Author: {package.Author}");
+                AnsiConsole.MarkupLine($"Description: {package.Description}");
+            }
         }
 
         // Undoes the last command by popping a line from the subRoutineStack, pushing it to the redoStack, marking it as removed in the console, and displaying the prompt.
         private static void UndoLastCommand()
         {
-            string templine = subRoutineStack.Pop();
-            redoStack.Push(templine);
-            AnsiConsole.MarkupLine("[bold red]Removed: [/]" + templine);
+            if (subRoutineStack.Count != 0)
+            {
+                string templine = subRoutineStack.Pop();
+                redoStack.Push(templine);
+                AnsiConsole.MarkupLine("[bold red]Removed: [/]" + templine);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[bold yellow]No commands to undo.[/]");
+            }
         }
 
 
         // A method to redo the last command, pushing the popped command from the redo stack to the subRoutineStack, marking it as added, and displaying the prompt.
         private static void RedoLastCommand()
         {
-            string templine = redoStack.Pop();
-            subRoutineStack.Push(templine);
-            AnsiConsole.MarkupLine("[bold green]Added: [/]" + templine);
+            if (redoStack.Count != 0)
+            {
+                string templine = redoStack.Pop();
+                subRoutineStack.Push(templine);
+                AnsiConsole.MarkupLine("[bold green]Added: [/]" + templine);
+            }
+            else
+            {
+                AnsiConsole.MarkupLine("[bold yellow]No commands to redo.[/]");
+            }
         }
 
         // A method to update Juka asynchronously.

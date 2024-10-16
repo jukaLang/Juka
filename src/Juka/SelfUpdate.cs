@@ -14,7 +14,7 @@ namespace Juka;
 /// </summary>
 class SelfUpdate
 {
-    private static string? _currentVersion = Juka.CurrentVersion.GetVersion();
+    private static string? _currentVersion = CurrentVersion.GetVersion();
 
 
     /// <summary>
@@ -76,14 +76,12 @@ class SelfUpdate
         await using Stream? streamToReadFrom = await response2.Content.ReadAsStreamAsync();
 
 
-        Uri uri = new Uri(url);
+        Uri uri = new(url);
         string fileName = Path.GetFileName(uri.LocalPath);
 
 
-        using (FileStream fileStream = File.Create(fileName))
-        {
-            streamToReadFrom.CopyTo(fileStream);
-        }
+        using FileStream fileStream = File.Create(fileName);
+        streamToReadFrom.CopyTo(fileStream);
 
     }
 
