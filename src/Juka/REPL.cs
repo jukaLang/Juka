@@ -225,7 +225,7 @@ namespace Juka
                     }
                     else
                     {
-                        Console.WriteLine("Invalid command format. Usage: !!download [url]");
+                        AnsiConsole.MarkupLine("[red]Invalid command format.[/] [yellow]Usage: [/]!!download url");
                     }
                     break;
                 case "!!exit":
@@ -332,6 +332,7 @@ namespace Juka
                 AnsiConsole.MarkupLine($"Name: {package.Name}");
                 AnsiConsole.MarkupLine($"Author: {package.Author}");
                 AnsiConsole.MarkupLine($"Description: {package.Description}");
+                AnsiConsole.MarkupLine($"Date: {package.Date}");
             }
         }
 

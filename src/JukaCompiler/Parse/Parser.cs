@@ -46,12 +46,7 @@ namespace JukaCompiler.Parse
 
         private bool IsAtEnd()
         {
-            if (current == tokens.Count || Peek().LexemeType == LexemeType.Types.EOF)
-            {
-                return true;
-            }
-
-            return false;
+            return current == tokens.Count || Peek().LexemeType == LexemeType.Types.EOF;
         }
 
         private Lexeme Peek()
@@ -306,6 +301,7 @@ namespace JukaCompiler.Parse
 
         private Lexeme Consume(LexemeType.Types type, Lexeme currentLexeme)
         {
+            
             if (Check(type))
             {
                 return Advance();
@@ -385,7 +381,7 @@ namespace JukaCompiler.Parse
             Lexeme name = Consume(LexemeType.Types.IDENTIFIER, Peek());
 
             Consume(LexemeType.Types.LEFT_PAREN, Peek());
-            List<TypeParameterMap> typeMap = new List<TypeParameterMap>();
+            List<TypeParameterMap> typeMap = [];
 
             if (!Check(LexemeType.Types.RIGHT_PAREN))
             {
@@ -407,7 +403,7 @@ namespace JukaCompiler.Parse
 
             List<Statement> statements = Block();
 
-            Statement.Function stmt = new Statement.Function(name, typeMap, statements);
+            Statement.Function stmt = new(name, typeMap, statements);
             return stmt;
         }
 
@@ -448,8 +444,8 @@ namespace JukaCompiler.Parse
 
         private List<Statement> Block()
         {
-            List<Statement> stmts = new List<Statement>();
-            while(!Check(LexemeType.Types.RIGHT_BRACE) && !IsAtEnd())
+            List<Statement> stmts = [];
+            while (!Check(LexemeType.Types.RIGHT_BRACE) && !IsAtEnd())
             {
                 stmts.Add(Declaration());
             }
@@ -557,7 +553,7 @@ namespace JukaCompiler.Parse
             {
                 Lexeme op = Previous();
                 Expr right = And();
-                expr = new Expr.Logical(expr, op, right);
+                expr = new Logical(expr, op, right);
             }
 
             return expr;
@@ -646,7 +642,7 @@ namespace JukaCompiler.Parse
                     // If we get here then we have an identifier on the right hand side.
                     // the parent expression will need to validate that it is a variable.
                     Lexeme lexeme = Consume(LexemeType.Types.IDENTIFIER, Peek());
-                    Variable variable = new Expr.Variable(lexeme);
+                    Variable variable = new(lexeme);
                     return new DeleteDeclarationExpr(variable);
                 }
             }

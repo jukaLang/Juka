@@ -3,7 +3,7 @@
     internal class CompilerError : ICompilerError
     {
         internal List<string> Errors = [];
-        internal string sourceFileName = string.Empty;
+        internal string sourceFileName = "";
 
         public CompilerError()
         {
@@ -11,7 +11,7 @@
         void ICompilerError.AddError(string errorMessage)
         {
             Errors.Add(errorMessage);
-            //System.Diagnostics.Debugger.Break();
+            System.Diagnostics.Debugger.Break();
         }
 
         bool ICompilerError.HasErrors()
@@ -19,14 +19,11 @@
             return Errors.Count > 0;
         }
 
-        List<String> ICompilerError.ListErrors()
-        {
-            return Errors;
-        }
+        List<string> ICompilerError.ListErrors => Errors;
 
         void ICompilerError.SourceFileName(string fileName)
         {
-            this.sourceFileName = fileName;
+            sourceFileName = fileName;
         }
     }
 }

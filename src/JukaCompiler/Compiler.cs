@@ -38,7 +38,7 @@ namespace JukaCompiler
             });
             _hostBuilder.Build();
         }
-
+        
 
         // Compiles Juka code provided in 'data' and returns the console output after interpreting the statements or an error message if compilation fails.
         // CompileJukaCode that compiles Juka code provided in the data string. It uses a Parser to parse the code and then interprets the statements.
@@ -52,7 +52,8 @@ namespace JukaCompiler
             {
                 _serviceProvider.GetRequiredService<ICompilerError>().SourceFileName(data);
 
-                Parser parser = new(new Scanner(data, _serviceProvider, isFile), _serviceProvider);
+                Scanner scanned = new(data, _serviceProvider, isFile);
+                Parser parser = new(scanned, _serviceProvider);
                 List<Statement> statements = parser.Parse();
 
                 return Compile(statements);
@@ -125,7 +126,7 @@ namespace JukaCompiler
         public List<string> GetErrorList()
         {
             CheckServiceProvider();
-            return _serviceProvider.GetRequiredService<ICompilerError>().ListErrors();
+            return _serviceProvider.GetRequiredService<ICompilerError>().ListErrors;
         }
 
         private void CheckServiceProvider()

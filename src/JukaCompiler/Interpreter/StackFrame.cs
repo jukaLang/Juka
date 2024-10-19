@@ -7,10 +7,10 @@ namespace JukaCompiler.Interpreter
 {
     internal class StackFrame
     {
-        private Dictionary<string, Lexeme> frameVariables = new();
+        private Dictionary<string, Lexeme> frameVariables = [];
         private string frameName;
-        private Dictionary<string, object?> variables = new();
-        private Dictionary<string, StackVariableState> variableAndKind = new();
+        private Dictionary<string, object?> variables = [];
+        private Dictionary<string, StackVariableState> variableAndKind = [];
 
         internal StackFrame(string name)
         {
@@ -24,6 +24,7 @@ namespace JukaCompiler.Interpreter
                 string name = variable.Key;
 
                 object? value = null;
+
                 if (variable.Value is Expr.Literal)
                 {
                     value = variable.Value;
@@ -42,13 +43,7 @@ namespace JukaCompiler.Interpreter
         {
             if (variable.exprInitializer != null)
             {
-                object? variableValue = interpreter.Evaluate(variable.exprInitializer);
-
-                if (variableValue == null)
-                {
-                    throw new JRuntimeException("the value of the variable is null");
-                }
-
+                object? variableValue = interpreter.Evaluate(variable.exprInitializer) ?? throw new JRuntimeException("the value of the variable is null");
                 if (!(variable.exprInitializer is Expr.Call))
                 {
                     string variableName = variable.name?.ToString() ?? throw new JRuntimeException("variable name is missing");
@@ -63,7 +58,7 @@ namespace JukaCompiler.Interpreter
 
         internal void AddVariable(string name, object? variableValue, Type? variableKind, Expr? expressionContext)
         {
-            StackVariableState stackVariableState = new StackVariableState
+            StackVariableState stackVariableState = new()
             {
                 Name = name,
                 Value = variableValue,
@@ -94,22 +89,16 @@ namespace JukaCompiler.Interpreter
 
         internal bool DeleteVariable(string name)
         {
-            if (variables.ContainsKey(name))
-            {
-                variables.Remove(name);
-                return true;
-            }
-
-            return false;
+            return variables.Remove(name);
         }
 
         internal bool TryGetStackVariableByName(string name, out StackVariableState? variable)
         {
             variable = null;
 
-            if (variables.ContainsKey(name))
+            if (variables.TryGetValue(name, out object? value))
             {
-                variable = (StackVariableState?)this.variables[name];
+                variable = (StackVariableState?)value;
                 return true;
             }
 

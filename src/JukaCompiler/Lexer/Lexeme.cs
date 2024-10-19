@@ -93,12 +93,12 @@ namespace JukaCompiler.Lexer
 
         internal void AddToken(string token)
         {
-            this.tokenBuilder.Append(token);
+            tokenBuilder.Append(token);
         }
 
         internal void AddToken(Lexeme? token)
         {
-            this.tokenBuilder.Append(token?.ToString());
+            tokenBuilder.Append(token?.ToString());
         }
 
         internal bool IsKeyWord
@@ -109,28 +109,16 @@ namespace JukaCompiler.Lexer
 
         internal Int64 TypeOfKeyWord
         {
-            get { return this.typeOfKeyWord; } 
-            set { this.typeOfKeyWord = value;}
+            get => typeOfKeyWord;
+            set => typeOfKeyWord = value;
         }
 
-        internal int LineNumber
-        {
-            get { return lineNumber; }
-        }
+        internal int LineNumber => lineNumber;
 
-        internal int ColumnNumber
-        {
-            get { return columnNumber; }
-        }
+        internal int ColumnNumber => columnNumber;
 
-        public override string ToString()
-        {
-            return tokenBuilder.ToString();
-        }
+        public override string ToString() => tokenBuilder.ToString();
 
-        internal string Literal()
-        {
-            return ToString();
-        }
+        internal string Literal() => ToString();
     }
 }

@@ -48,34 +48,37 @@ namespace JukaCompiler.Interpreter
                 return enclosing.Get(name);
             }
 
-            throw new ArgumentException("JukaEnvironment.Get() has an undefined variable ('" + name.ToString() + "') undefined variable");
+            throw new ArgumentException("'" + name.ToString() + "' variable is undefined. (Error at JukaEnvironment.Get(): undefined variable)");
         }
 
         internal void Assign(Lexeme? name, object? value)
         {
-            string nameAsString = name?.ToString();
-
             //?? throw new JRuntimeException("unable to get variable name: " + name)
 
-            if (enclosing != null)
+            if (name != null)
             {
-                enclosing.Assign(name, value);
-                return;
-            }
+                if (enclosing != null)
+                {
+                    enclosing.Assign(name, value);
+                    return;
+                }
 
-            if (values.ContainsKey(nameAsString))
-            {
-                values[name.ToString()] = value;
-                return;
+                if (values.ContainsKey(name.ToString()))
+                {
+                    values[name.ToString()] = value;
+                    return;
+                }
+                else
+                {
+                    //DEFINE IF VARIABLE DOES NOT EXIST
+                    values[name.ToString()] = value;
+                    return;
+                }
             }
             else
             {
-                values[name.ToString()] = value;
-                return;
+                throw new JRuntimeException("Name of variable cannot be blank. Something went wrong!");
             }
-            
-
-            throw new ArgumentException("JukaEnvironment.Assign() has an undefined variable ('" + name + "') undefined variable");
         }
 
         internal void Define(string name, object? value)

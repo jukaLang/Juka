@@ -66,7 +66,7 @@ class SelfUpdate
         {
             AnsiConsole.MarkupLine("[bold yellow]Cannot Update! Can't access the Network! Using version: "+_currentVersion+"[/]");
         }
-        return _currentVersion;
+        return _currentVersion ?? "DEBUG";
     }
 
     public static async Task DownloadURLAsync(string url)
@@ -275,7 +275,7 @@ class SelfUpdate
                     UseShellExecute = true
                 };
 
-                Process newProcess = Process.Start(startInfo);
+                Process.Start(startInfo);
 
                 // Close the current process gracefully
                 await Task.Delay(1000); // Delay to ensure the new process starts

@@ -28,7 +28,7 @@ namespace JukaCompiler.Scan
             { "class",  LexemeType.Types.CLASS },
             { "else",   LexemeType.Types.ELSE },
             { "func",   LexemeType.Types.FUNC },
-            { "sub",   LexemeType.Types.SUB },
+            { "sub",    LexemeType.Types.SUB },
             { "for",    LexemeType.Types.FOR },
             { "if",     LexemeType.Types.IF },
             { "null",   LexemeType.Types.NULL },
@@ -51,8 +51,8 @@ namespace JukaCompiler.Scan
 
         private static Dictionary<string, LexemeType.Types> internalFunctionsList = new()
         {
-            {"print", LexemeType.Types.PRINT},
-            {"printLine", LexemeType.Types.PRINTLINE}
+            {"print",    LexemeType.Types.PRINT},
+            {"printLine",LexemeType.Types.PRINTLINE}
         };
 
         // Initializes a new instance of the Scanner class with the provided data, service provider, and optional isFile flag.
@@ -112,7 +112,7 @@ namespace JukaCompiler.Scan
 
         internal void ReadToken()
         {
-            this.column++;
+            column++;
             char t = Advance();
 
 
@@ -138,7 +138,7 @@ namespace JukaCompiler.Scan
                         break;
                     }
                     case ')': AddSymbol( t, LexemeType.Types.RIGHT_PAREN); break;
-                    case '{': AddSymbol(t, LexemeType.Types.LEFT_BRACE); break;
+                    case '{': AddSymbol( t, LexemeType.Types.LEFT_BRACE); break;
                     case '}': AddSymbol( t, LexemeType.Types.RIGHT_BRACE); break;
                     case ',': AddSymbol( t, LexemeType.Types.COMMA); break;
                     case '.': AddSymbol( t, LexemeType.Types.DOT); break;
@@ -265,7 +265,7 @@ namespace JukaCompiler.Scan
 
         private void AddSymbol(char symbol, LexemeType.Types type)
         {
-            Lexeme lex = new Lexeme(type, this.line, this.column);
+            Lexeme lex = new(type, this.line, this.column);
             lex.AddToken(symbol);
             this.lexemes.Add(lex);
         }
@@ -329,7 +329,7 @@ namespace JukaCompiler.Scan
             identifier.AddToken(svalue);
 
             TryGetKeyWord(identifier);
-            this.lexemes.Add(identifier);
+            lexemes.Add(identifier);
         }
         internal void Number()
         {

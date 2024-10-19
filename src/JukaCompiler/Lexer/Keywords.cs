@@ -122,7 +122,7 @@
             {"class"},
             {"main"},
         };
-        public static List<string> keyWordNames = list;
+        public static List<string> keyWordNames = List;
 
         public static Dictionary<string, KeyWordsEnum> keyValuePairs = new()
         {
@@ -164,5 +164,7 @@
             { "class",      KeyWordsEnum.Class },        
             { "main",       KeyWordsEnum.Main },         
         };
+
+        public static List<string> List { get => list; set => list = value; }
     }
 }

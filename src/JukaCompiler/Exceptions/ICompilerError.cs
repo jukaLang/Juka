@@ -5,6 +5,6 @@
         internal void SourceFileName(string fileName);
         internal void AddError(string errorMessage);
         internal bool HasErrors();
-        internal List<String> ListErrors();
+        internal List<string> ListErrors { get; }
     }
 }

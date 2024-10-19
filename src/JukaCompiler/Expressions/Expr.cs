@@ -548,14 +548,14 @@ namespace JukaCompiler.Expressions
 
             internal LexemeType.Types LexemeType
             {
-                get => this.lexemeType;
-                set => this.lexemeType = value;
+                get => lexemeType;
+                set => lexemeType = value;
             }
 
             internal override R Accept<R>(IVisitor<R> visitor)
             {
                 return visitor.VisitLexemeTypeLiteral(this);
-            }
+            } 
         }
     }
 }

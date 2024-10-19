@@ -10,16 +10,24 @@ public class ArithmeticUnitTest : UnitTestStructure
     [DataRow(-5, -5, "-10")]
     public void Add(dynamic a, dynamic b, string expected)
     {
-        SourceAsString += @"
-                sub test_func() = {
+        SourceAsString = @" 
+              sub test_func() = {
                     var x=" + a + @";
                     var y=" + b + @";
                     var z=x+y;
                     print(z);
-                 }";
+                 }
+              sub main() = {
+                test_func();
+               }";
 
         Assert.AreEqual(expected, Go());
     }
+    /*var x=" + a + @";
+                    var y=" + b + @";
+                    var z=x+y;
+                    print(z);*/
+
 
     [TestMethod]
     [DataRow(32, 33, "-1")]

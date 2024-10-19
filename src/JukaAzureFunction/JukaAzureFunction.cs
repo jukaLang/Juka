@@ -15,7 +15,7 @@ public class JukaAzureFunction(ILogger<JukaAzureFunction> log)
     private ILogger<JukaAzureFunction> logger = log;
 
     [Function("JukaAzureFunction")]
-    [OpenApiOperation(operationId: "Run", tags: new[] { "name" })]
+    [OpenApiOperation(operationId: "Run", tags: ["name"])]
     [OpenApiSecurity("function_key", SecuritySchemeType.ApiKey, Name = "Pass Code as Get or Post", In = OpenApiSecurityLocationType.Query)]
     [OpenApiParameter(name: "code", In = ParameterLocation.Query, Required = true, Type = typeof(string), Description = "Enter the **Code**")]
     [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "text/plain", bodyType: typeof(string), Description = "The OK response")]

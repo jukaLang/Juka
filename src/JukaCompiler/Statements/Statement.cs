@@ -56,8 +56,8 @@ namespace JukaCompiler.Statements
                 {
                     throw new Exception("Function {ExpressionLexeme.ToString()} has an invalid ExpressionLexeme");
                 }
-                this.StmtLexeme = stmtLexeme;
-                this.typeParameterMaps = parametersMap;
+                StmtLexeme = stmtLexeme;
+                typeParameterMaps = parametersMap;
                 this.body = body;
             }
 
@@ -131,7 +131,7 @@ namespace JukaCompiler.Statements
 
             internal PrintLine()
             {
-                this.expr = null;
+                expr = null;
             }
 
             internal override R Accept<R>(IVisitor<R> visitor)
@@ -150,7 +150,7 @@ namespace JukaCompiler.Statements
 
             internal Print()
             {
-                this.expr = null;
+                expr = null;
             }
 
             internal override R Accept<R>(IVisitor<R> vistor)
@@ -251,8 +251,8 @@ namespace JukaCompiler.Statements
 
             internal Return()
             {
-                this.expr = null;
-                this.keyword = null;
+                expr = null;
+                keyword = null;
             }
 
             internal override R Accept<R>(IVisitor<R> vistor)
@@ -289,7 +289,7 @@ namespace JukaCompiler.Statements
 
             internal LiteralLexemeExpression(Expr.LexemeTypeLiteral lexemeTypeLiteral)
             {
-                this.ltl = lexemeTypeLiteral;
+                ltl = lexemeTypeLiteral;
             }
 
             internal override R Accept<R>(IVisitor<R> vistor)

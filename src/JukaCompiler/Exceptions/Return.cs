@@ -6,7 +6,7 @@
         internal Return(object? value)
             : base("return")
         {
-            this.value = value; 
+            this.value = value;
         }
     }
 }

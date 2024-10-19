@@ -14,7 +14,7 @@ namespace JukaCompiler.SystemCalls
         {
             Expr.LexemeTypeLiteral lexemeTypeLiteral = new()
             {
-                literal = (double)DateTime.Now.Millisecond / 1000.0
+                literal = DateTime.Now.Millisecond / 1000.0
             };
             return lexemeTypeLiteral;
         }

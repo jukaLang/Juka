@@ -37,9 +37,9 @@
 
         internal JukaFunction? FindMethod(string name)
         {
-            if (methods.ContainsKey(name))
+            if (methods.TryGetValue(name, out JukaFunction? value))
             {
-                return methods[name];
+                return value;
             }
 
             if (superClass != null)

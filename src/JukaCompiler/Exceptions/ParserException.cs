@@ -1,6 +1,4 @@
-﻿using JukaCompiler.Lexer;
-
-namespace JukaCompiler.Exceptions
+﻿namespace JukaCompiler.Exceptions
 {
     internal class ParserException : Exception
     {
