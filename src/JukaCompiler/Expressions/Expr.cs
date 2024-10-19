@@ -398,7 +398,7 @@ namespace JukaCompiler.Expressions
 
             internal Grouping(Expr expr)
             {
-                this.expression = expr;
+                expression = expr;
             }
 
             internal Grouping()
@@ -422,8 +422,8 @@ namespace JukaCompiler.Expressions
 
             internal Literal(Lexeme literal, LexemeType.Types type)
             {
-                this.ExpressionLexeme = literal;
-                this.value = literal;
+                ExpressionLexeme = literal;
+                value = literal;
                 this.type = type;
             }
             internal Literal()
@@ -436,15 +436,15 @@ namespace JukaCompiler.Expressions
 
             internal object? LiteralValue()
             {
-                if (this.value == null)
+                if (value == null)
                 {
                     throw new ArgumentNullException("literal");
                 }
 
                 LexemeTypeLiteral? v = new()
                 {
-                    lexemeType = this.Type,
-                    literal = this.value.ToString()
+                    lexemeType = Type,
+                    literal = value.ToString()
                 };
 
                 return v;

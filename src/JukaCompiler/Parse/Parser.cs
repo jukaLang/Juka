@@ -22,9 +22,9 @@ namespace JukaCompiler.Parse
         internal Parser(Scanner scanner, ServiceProvider services)
         {
             this.scanner = scanner;
-            this.Services = services;
+            Services = services;
 
-            this.compilerError = services.GetRequiredService<ICompilerError>();
+            compilerError = services.GetRequiredService<ICompilerError>();
         }
 
         internal List<Statement> Parse()
@@ -97,10 +97,17 @@ namespace JukaCompiler.Parse
                 return VariableDeclaration();
             }
 
+            if (MatchInternalFunction())
+            {
+                return VariableDeclaration();
+            }
+
             if (Match(LexemeType.Types.IDENTIFIER))
             {
                 return VariableDeclaration();
             }
+
+            
 
             return Statement();
         }
@@ -199,7 +206,7 @@ namespace JukaCompiler.Parse
             {
                 Statement.Var initCondition = VariableDeclaration();
 
-                Expr.Binary breakCondition = (Expr.Binary)Equality();
+                Binary breakCondition = (Binary)Equality();
                 Consume(LexemeType.Types.SEMICOLON, Previous());
 
                 Expr incrementCondition = Unary();
@@ -282,10 +289,7 @@ namespace JukaCompiler.Parse
 
         private bool MatchKeyWord()
         {
-            if (MatchInternalFunction())
-            {
-                return true;
-            }
+
 
             if(Match(LexemeType.Types.INT)        || 
                 Match(LexemeType.Types.STRING)    ||
@@ -301,8 +305,8 @@ namespace JukaCompiler.Parse
 
         private Lexeme Consume(LexemeType.Types type, Lexeme currentLexeme)
         {
-            
-            if (Check(type))
+            var mytemp = Check(type);
+            if (mytemp)
             {
                 return Advance();
             }
@@ -403,6 +407,7 @@ namespace JukaCompiler.Parse
 
             List<Statement> statements = Block();
 
+            Consume(LexemeType.Types.RIGHT_BRACE, Peek());
             Statement.Function stmt = new(name, typeMap, statements);
             return stmt;
         }
@@ -567,7 +572,7 @@ namespace JukaCompiler.Parse
             {
                 Lexeme op = Previous();
                 Expr right = Equality();
-                expr = new Expr.Logical(expr, op, right);
+                expr = new Logical(expr, op, right);
             }
 
             return expr;
@@ -581,7 +586,7 @@ namespace JukaCompiler.Parse
             {
                 Lexeme op = Previous();
                 Expr right = Term();
-                expr = new Expr.Binary(expr, op, right);
+                expr = new Binary(expr, op, right);
             }
 
             return expr;
@@ -595,7 +600,7 @@ namespace JukaCompiler.Parse
             {
                 Lexeme op = Previous();
                 Expr right = Factor();
-                expr = new Expr.Binary(expr, op, right);
+                expr = new Binary(expr, op, right);
             }
 
             return expr;
@@ -657,7 +662,7 @@ namespace JukaCompiler.Parse
                     Match(LexemeType.Types.PLUS);
                     Match(LexemeType.Types.PLUS);
                     Match(LexemeType.Types.SEMICOLON);
-                    return new Expr.Unary(idLexeme, LexemeType.Types.PLUSPLUS);
+                    return new Unary(idLexeme, LexemeType.Types.PLUSPLUS);
                 }
             }
 
@@ -677,7 +682,7 @@ namespace JukaCompiler.Parse
                 else if (Match(LexemeType.Types.DOT))
                 {
                     Lexeme name = Consume(LexemeType.Types.IDENTIFIER, Peek());
-                    expr = new Expr.Get(expr, name);
+                    expr = new Get(expr, name);
                 }
                 else
                 {
@@ -689,18 +694,18 @@ namespace JukaCompiler.Parse
 
         private Expr Primary()
         {
-            if (Match(LexemeType.Types.FALSE)) return new Expr.Literal(Previous(), LexemeType.Types.FALSE);
-            if (Match(LexemeType.Types.TRUE)) return new Expr.Literal(Previous(), LexemeType.Types.TRUE);
-            if (Match(LexemeType.Types.NULL)) return new Expr.Literal(Previous(), LexemeType.Types.NULL);
+            if (Match(LexemeType.Types.FALSE)) return new Literal(Previous(), LexemeType.Types.FALSE);
+            if (Match(LexemeType.Types.TRUE)) return new Literal(Previous(), LexemeType.Types.TRUE);
+            if (Match(LexemeType.Types.NULL)) return new Literal(Previous(), LexemeType.Types.NULL);
 
             if (Match(LexemeType.Types.STRING))
             {
-                return new Expr.Literal(Previous(), LexemeType.Types.STRING);
+                return new Literal(Previous(), LexemeType.Types.STRING);
             }
 
             if (Match(LexemeType.Types.NUMBER))
             {
-                return new Expr.Literal(Previous(), LexemeType.Types.NUMBER);
+                return new Literal(Previous(), LexemeType.Types.NUMBER);
             }
 
             if (Match(LexemeType.Types.ARRAY))
@@ -710,7 +715,7 @@ namespace JukaCompiler.Parse
                 Consume(LexemeType.Types.RIGHT_BRACE, Peek());
                 var name = new Lexeme(LexemeType.Types.ARRAY, 0, 0);
                 name.AddToken("array");
-                return new Expr.ArrayDeclarationExpr(name,size);
+                return new ArrayDeclarationExpr(name,size);
             }
 
             if (Match(LexemeType.Types.NEW))
@@ -727,10 +732,10 @@ namespace JukaCompiler.Parse
                     Consume(LexemeType.Types.RIGHT_BRACE, Peek());
                     if (Match(LexemeType.Types.EQUAL))
                     {
-                        return new Expr.ArrayAccessExpr(identifierName, index, Expr());
+                        return new ArrayAccessExpr(identifierName, index, Expr());
                     }
 
-                    return new Expr.ArrayAccessExpr(identifierName, index);
+                    return new ArrayAccessExpr(identifierName, index);
                 }
 
                  //return Assignment();
@@ -752,7 +757,7 @@ namespace JukaCompiler.Parse
             throw new Exception(Peek() + "Expect expr");
         }
 
-        private Expr.Call FinishCall(Expr callee)
+        private Call FinishCall(Expr callee)
         {
             List<Expr> arguments = [];
             if (!Check(LexemeType.Types.RIGHT_PAREN))
@@ -772,7 +777,7 @@ namespace JukaCompiler.Parse
             }
 
 
-            Array callableServices = Enum.GetValues(typeof(JukaCompiler.SystemCalls.CallableServices));
+            Array callableServices = Enum.GetValues(typeof(SystemCalls.CallableServices));
             bool isCallable = false;
             foreach(object? callableService in callableServices)
             {
@@ -788,7 +793,7 @@ namespace JukaCompiler.Parse
 
             Consume(LexemeType.Types.RIGHT_PAREN, Peek());
 
-            return new Expr.Call(callee, isCallable, arguments);
+            return new Call(callee, isCallable, arguments);
         }
     }
 }

@@ -15,6 +15,50 @@ class TerminalJuka
 
         switch (option)
         {
+            /*case "--asyncencrypt":
+                string sourceFile = args[1];
+                string destFile = sourceFile + ".encrypt";
+
+                AnsiConsole.MarkupLine($"[bold yellow]Encrypting File: {sourceFile} to {destFile}[/]");
+
+                await using (FileStream sourceStream = File.OpenRead(sourceFile))
+                await using (FileStream destStream = File.Create(destFile))
+                using (Aes aesProvider = Aes.Create())
+                using (ICryptoTransform encryptor = aesProvider.CreateEncryptor())
+                await using (CryptoStream cryptoStream = new(destStream, encryptor, CryptoStreamMode.Write))
+                {
+                    destStream.Write(aesProvider.IV, 0, aesProvider.IV.Length);
+                    await sourceStream.CopyToAsync(cryptoStream);
+                    string key = Convert.ToBase64String(aesProvider.Key);
+                    await File.WriteAllTextAsync(sourceFile + ".key", key);
+                    Console.WriteLine(key);
+                }
+                break;
+            case "--asyncdecryptrun":
+                string sourceFile = args[1];
+                string destFile = sourceFile + ".encrypt";
+
+                AnsiConsole.MarkupLine($"[bold yellow]Encrypting File: {sourceFile} to {destFile}[/]");
+
+                await using (FileStream sourceStream = File.OpenRead(sourceFile))
+                await using (FileStream destStream = File.Create(destFile))
+                using (Aes aesProvider = Aes.Create())
+                using (ICryptoTransform encryptor = aesProvider.CreateEncryptor())
+                await using (CryptoStream cryptoStream = new(destStream, encryptor, CryptoStreamMode.Write))
+                {
+                    destStream.Write(aesProvider.IV, 0, aesProvider.IV.Length);
+                    await sourceStream.CopyToAsync(cryptoStream);
+                    string key = Convert.ToBase64String(aesProvider.Key);
+                    await File.WriteAllTextAsync(sourceFile + ".key", key);
+                    Console.WriteLine(key);
+                }
+                break;*/
+            /*case "--clouddecrypt":
+                string sourceFileC = args[1];
+                string destFile = sourceFile + ".encrypt";
+
+                AnsiConsole.MarkupLine($"[bold yellow]Decrypting File: {sourceFile} to {destFile}[/]");
+            */
             case "--encrypt":
                 string sourceFile = args[1];
                 string destFile = sourceFile + ".encrypt";
@@ -74,6 +118,26 @@ class TerminalJuka
                     using ICryptoTransform decryptor = aesProvider.CreateDecryptor(decryptionKey, IV);
                     await using CryptoStream cryptoStream = new(encFileStream, decryptor, CryptoStreamMode.Read);
                     await cryptoStream.CopyToAsync(decFileStream);
+                }
+                break;
+
+            case "--decryptrun":
+                string encFileDR = args[1] + ".encrypt";
+                string deckeyFileDR = args[1] + ".key";
+
+                byte[] decryptionKeyDR = Convert.FromBase64String(await File.ReadAllTextAsync(deckeyFileDR));
+
+                AnsiConsole.MarkupLine($"[bold yellow]Decrypting and running File: {encFileDR} with key: {deckeyFileDR}[/]");
+
+                await using (FileStream encFileStream = File.OpenRead(encFileDR))
+                using (Aes aesProvider = Aes.Create())
+                {
+                    byte[] IV = new byte[aesProvider.IV.Length];
+                    encFileStream.Read(IV, 0, IV.Length);
+                    using ICryptoTransform decryptor = aesProvider.CreateDecryptor(decryptionKeyDR, IV);
+                    await using CryptoStream cryptoStream = new(encFileStream, decryptor, CryptoStreamMode.Read);
+                    string mydecryptedfile = cryptoStream.ToString() ?? "";
+                    Console.WriteLine(new Compiler().CompileJukaCode(mydecryptedfile, isFile: false));
                 }
                 break;
 

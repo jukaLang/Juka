@@ -14,7 +14,7 @@ namespace JukaCompiler.Interpreter
 
         internal StackFrame(string name)
         {
-            this.frameName = name;
+            frameName = name;
         }
 
         internal void AddVariables(Dictionary<string, object?> variables, JukaInterpreter interpreter)

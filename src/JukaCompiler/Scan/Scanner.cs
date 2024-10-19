@@ -398,7 +398,7 @@ namespace JukaCompiler.Scan
         {
             if (!IsEndOfFile())
             {
-                return (char)fileData[current]; 
+                return (char)fileData[current];
             }
             return '\0';
         }

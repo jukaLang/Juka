@@ -10,7 +10,6 @@ using static JukaCompiler.Expressions.Expr;
 
 namespace JukaCompiler.Interpreter
 {
-    internal class JukaInterpreter : Statement.IVisitor<Statement>, Expr.IVisitor<object>
     {
         private ServiceProvider serviceProvider;
         private JukaEnvironment globals;
@@ -24,15 +23,16 @@ namespace JukaCompiler.Interpreter
         {
             environment = globals = new();
             this.serviceProvider = services;
+            serviceProvider = services;
 
             if (serviceProvider == null)
             {
                 throw new ArgumentNullException(nameof(services));
             }
-            globals.Define("csharp", serviceProvider.GetService<ICSharp>());
-            globals.Define("clock", serviceProvider.GetService<ISystemClock>());
-            globals.Define("fileOpen", services.GetService<IFileOpener>());
-            globals.Define("getAvailableMemory", services.GetService<IGetAvailableMemory>());
+            globals.Define("CSharp", serviceProvider.GetService<ICSharp>());
+            globals.Define("Clock", serviceProvider.GetService<ISystemClock>());
+            globals.Define("FileOpen", services.GetService<IFileOpener>());
+            globals.Define("GetAvailableMemory", services.GetService<IGetAvailableMemory>());
         }
 
         internal void Interpret(List<Statement> statements)

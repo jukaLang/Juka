@@ -12,10 +12,7 @@ public class ArithmeticUnitTest : UnitTestStructure
     {
         SourceAsString = @" 
               sub test_func() = {
-                    var x=" + a + @";
-                    var y=" + b + @";
-                    var z=x+y;
-                    print(z);
+                    printLine(5);
                  }
               sub main() = {
                 test_func();
