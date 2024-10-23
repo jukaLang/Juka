@@ -10,6 +10,7 @@ using static JukaCompiler.Expressions.Expr;
 
 namespace JukaCompiler.Interpreter
 {
+    internal class JukaInterpreter : Statement.IVisitor<Statement>, IVisitor<object>
     {
         private ServiceProvider serviceProvider;
         private JukaEnvironment globals;
@@ -22,7 +23,6 @@ namespace JukaCompiler.Interpreter
         internal JukaInterpreter(ServiceProvider services)
         {
             environment = globals = new();
-            this.serviceProvider = services;
             serviceProvider = services;
 
             if (serviceProvider == null)
